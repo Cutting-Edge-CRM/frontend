@@ -7,7 +7,8 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  User
 } from "firebase/auth";
 import {
   getFirestore,
@@ -19,7 +20,7 @@ import {
 } from "firebase/firestore";
 import { getTenantForUser } from "../api/tenant.api";
 import { addUserToTenant, inviteUser } from "../api/user.api";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import { ErrorTypes } from "../util/errors";
 
 // Your web app's Firebase configuration
@@ -34,7 +35,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-var currentUser = {};
+var currentUser: User;
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 
@@ -52,13 +53,13 @@ const signInWithGoogle = async () => {
         email: user.email,
       });
     }
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
     alert(err.message);
   }
 };
 
-const logInWithEmailAndPassword = async (email, password) => {
+const logInWithEmailAndPassword = async (email: string, password: string) => {
   try {
     return getTenantForUser(email).then(res => {
       let tenantId = res.company;
@@ -77,7 +78,7 @@ const logInWithEmailAndPassword = async (email, password) => {
   }
 };
 
-const registerWithEmailAndPassword = async (email, password) => {
+const registerWithEmailAndPassword = async (email: string, password: string) => {
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
@@ -86,13 +87,13 @@ const registerWithEmailAndPassword = async (email, password) => {
       authProvider: "local",
       email,
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
     alert(err.message);
   }
 };
 
-const registerNewTenantUser = async (id, email, password) => {
+const registerNewTenantUser = async (id: string, email: string, password: string) => {
   try {
     auth.tenantId = id;
     const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -103,17 +104,15 @@ const registerNewTenantUser = async (id, email, password) => {
       authProvider: "local",
       email,
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
     alert(err.message);
   }
 };
 
-const inviteNewUser = async (name, email) => {
+const inviteNewUser = async (name: string, email: string) => {
   try {
-    console.log(name);
-    console.log(email);
-    console.log(auth);
+    // TODO: pass params to server and create user there so it doesn't login user
     const tmpPass = uuidv4();
     createUserWithEmailAndPassword(auth, email, tmpPass).then(userCred => {
       inviteUser(email, name, userCred.user.uid);
@@ -125,7 +124,7 @@ const inviteNewUser = async (name, email) => {
   }
 }
 
-const sendPasswordReset = async (email) => {
+const sendPasswordReset = async (email: string) => {
   try {
     getTenantForUser(email).then(res => {
       let tenantId = res.company;
@@ -135,7 +134,7 @@ const sendPasswordReset = async (email) => {
       console.error(err);
     })
     alert("Password reset link sent!");
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
     alert(err.message);
   }
@@ -147,7 +146,6 @@ const logout = () => {
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    const uid = user.uid;
     auth.tenantId = user.tenantId;
     currentUser = user;
     console.log(currentUser);

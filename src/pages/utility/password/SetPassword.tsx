@@ -1,13 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class SetPassword extends Component {
-    render() {
+function SetPassword() {
         return (
             <div>
                 
             </div>
         );
-    }
 }
 
 export default SetPassword;

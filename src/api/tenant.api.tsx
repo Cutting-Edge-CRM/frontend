@@ -1,8 +1,7 @@
-import { auth } from '../auth/firebase.js';
-import { ErrorTypes } from '../util/errors.js';
+import { ErrorTypes } from '../util/errors';
 
 
-async function registerNewTenant(name, email) {
+async function registerNewTenant(name: string, email: string) {
     var body = JSON.stringify({
         company: name,
         email: email
@@ -23,7 +22,7 @@ async function registerNewTenant(name, email) {
     }
 }
 
-async function getTenantForUser(email) {
+async function getTenantForUser(email: string) {
     try {
         var headers = {
             'Content-Type': 'application/json',

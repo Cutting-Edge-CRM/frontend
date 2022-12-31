@@ -1,6 +1,6 @@
 import { auth } from "../auth/firebase";
 
-async function addUserToTenant(tenantId, email, uid) {
+async function addUserToTenant(tenantId: string, email: string, uid: string) {
     try {
     var body = JSON.stringify({
         company: tenantId,
@@ -22,19 +22,19 @@ async function addUserToTenant(tenantId, email, uid) {
     }
 }
 
-async function inviteUser(email, name, uid) {
+async function inviteUser(email: string, name: string, uid: string) {
     try {
     var body = JSON.stringify({
         name: name,
         email: email,
         uid: uid,
     })
-    var headers = {
+    var headers: HeadersInit = {
         'Content-Type': 'application/json',
-        'tenantId': auth.tenantId,
-        'userId': auth.currentUser.uid
+        'tenantId': auth.tenantId as string,
+        'userId': auth.currentUser?.uid as string
     }
-    const requestOptions = {
+    const requestOptions: RequestInit = {
         method: 'POST',
         headers: headers,
         body: body,

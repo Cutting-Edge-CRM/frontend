@@ -1,10 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { Navigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from './firebase.js';
+import { auth } from './firebase';
 
-
-const GuardedRoute = ({ children }) => {
+const GuardedRoute: React.FunctionComponent<any> = ({ children }) => {
     const [user, loading] = useAuthState(auth);
 
     if (loading) {
