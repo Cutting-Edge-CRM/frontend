@@ -66,7 +66,7 @@ function Clients() {
     return (
         
         <Box>
-          <Table rows={rows} columns={columns} onImportClick={handleClickOpen}></Table>
+          <Table rows={rows} columns={columns} onImportClick={handleClickOpen} type="Clients"></Table>
           <ImportClients
             selectedValue={selectedValue}
             open={open}

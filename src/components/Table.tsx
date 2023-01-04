@@ -18,19 +18,19 @@ export default function Table(props: any) {
       setAnchorEl(null);
     };
 
-    switch (props.type) {
-      default:
-        return (
-          <GridToolbarContainer>
-            <Box>
-              <Typography>
-              Clients
-              </Typography>
-            </Box>
-            <Divider variant="middle" />
-            <Box>
-              <GridToolbarQuickFilter />
-              <Button
+    return (
+      <GridToolbarContainer>
+        <Box>
+          <Typography>
+          {props.type}
+          </Typography>
+        </Box>
+        <Divider variant="middle" />
+        <Box>
+          <>
+          <GridToolbarQuickFilter />
+        { props.type === 'Clients' &&
+              <><Button
                 startIcon={<ImportExport />}
                 aria-controls={open ? 'basic-menu' : undefined}
                 aria-haspopup="true"
@@ -38,8 +38,7 @@ export default function Table(props: any) {
                 onClick={openMenu}
               >
                 Import/Export
-              </Button>
-              <Menu
+              </Button><Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
                 open={open}
@@ -48,27 +47,27 @@ export default function Table(props: any) {
                   'aria-labelledby': 'basic-button',
                 }}
               >
-                <MenuList>
-                  <MenuItem onClick={props.onImportClick}>
-                    <ListItemIcon>
-                      <FileDownloadOutlined/>
-                    </ListItemIcon>
-                    <ListItemText>Import</ListItemText>
-                  </MenuItem>
-                  <MenuItem>
-                    <ListItemIcon>
-                      <FileUploadOutlined/>
-                    </ListItemIcon>
-                    <ListItemText>Export</ListItemText>
-                  </MenuItem>
-                </MenuList>
-              </Menu>
-              <Button startIcon={<PersonAddOutlined />}>New Client</Button>
-            </Box>
-          </GridToolbarContainer>
-        );
-    }
-  
+                  <MenuList>
+                    <MenuItem onClick={props.onImportClick}>
+                      <ListItemIcon>
+                        <FileDownloadOutlined />
+                      </ListItemIcon>
+                      <ListItemText>Import</ListItemText>
+                    </MenuItem>
+                    <MenuItem>
+                      <ListItemIcon>
+                        <FileUploadOutlined />
+                      </ListItemIcon>
+                      <ListItemText>Export</ListItemText>
+                    </MenuItem>
+                  </MenuList>
+                </Menu></>
+          }
+        <Button startIcon={<PersonAddOutlined />}>New {props.type.slice(0,-1)}</Button>
+        </>
+        </Box>
+      </GridToolbarContainer>
+    );
   }
 
 
