@@ -7,7 +7,6 @@ import IconButton from '@mui/material/IconButton';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MailIcon from '@mui/icons-material/Mail';
@@ -15,11 +14,18 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Menu from '@mui/material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Avatar, MenuItem } from '@mui/material';
+import { Avatar, ListItemButton, MenuItem } from '@mui/material';
 import { Logout, Settings } from '@mui/icons-material';
 import Dashboard from '../dashboard/Dashboard';
+import { Link, Route, Routes } from 'react-router-dom';
+import Clients from '../clients/Clients';
+import Quotes from '../quotes/Quotes';
+import Jobs from '../jobs/Jobs';
+import Invoices from '../invoices/invoices';
 
 const drawerWidth = 240;
+const topTabs = ['Dashboard', 'Clients', 'Quotes', 'Jobs', 'Invoices'];
+const bottomTabs = ['Timesheets', 'Reports', 'Settings']
 
 function Shell() {
 
@@ -49,27 +55,31 @@ function Shell() {
       </Toolbar>
       <Divider />
       <List>
-        {['Dashboard', 'Clients', 'Quotes', 'Jobs', 'Invoices'].map((text, index) => (
+        {topTabs.map((text, index) => (
           <ListItem key={text} disablePadding>
+            <Link to={topTabs[index]}>
             <ListItemButton>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText primary={text} />
-            </ListItemButton>
+              </ListItemButton>
+            </Link>
           </ListItem>
         ))}
       </List>
       <Divider />
       <List>
-        {['Timesheets', 'Reports', 'Settings'].map((text, index) => (
+        {bottomTabs.map((text, index) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton>
+            <Link to={bottomTabs[index]}>
+              <ListItemButton>
               <ListItemIcon>
                 <MailIcon />
               </ListItemIcon>
               <ListItemText primary={text} />
-            </ListItemButton>
+              </ListItemButton>
+            </Link>
           </ListItem>
         ))}
       </List>
@@ -204,8 +214,15 @@ function Shell() {
       <Toolbar />
 
       {/* body */}
-
-      <Dashboard/>
+      <Routes>
+            <Route path="/dashboard" element={<Dashboard />}/>
+            <Route path="/clients" element={<Clients />}/>
+            <Route path="/quotes" element={<Quotes />}/>
+            <Route path="/jobs" element={<Jobs />}/>
+            <Route path="/invoices" element={<Invoices />}/>
+            <Route path="/settings" element={<Settings />}/>
+            <Route path="/" element={<Dashboard />}/>
+        </Routes>
 
     </Box>
     </Box>
