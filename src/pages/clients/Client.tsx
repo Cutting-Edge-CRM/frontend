@@ -1,6 +1,10 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Typography } from '@mui/material';
 import TabbedTable from '../../components/TabbedTable';
+import Properties from '../../components/Properties';
+import Grid from '@mui/material/Unstable_Grid2'
+import { Stack } from '@mui/system';
+import Contact from '../../components/Contact';
 
 const invoiceRows = [
     { id: 1, client: "Name" , price: 'Snow', balance: 'Jon', status: 35 },
@@ -40,14 +44,21 @@ const quoteRows = [
 
 function Client() {
     return (
-        <>
-            {/* <Box>
-                <Properties />
-            </Box> */}
-            <Box>
-                <TabbedTable quoteRows={quoteRows} jobRows={jobRows} invoiceRows={invoiceRows} />
-            </Box>
-        </>
+        <Grid container spacing={2}>
+            <Grid xs={8}>
+                <Stack spacing={2}>
+                    <Properties />
+                    <TabbedTable quoteRows={quoteRows} jobRows={jobRows} invoiceRows={invoiceRows} />
+                </Stack>
+            </Grid>
+            <Grid xs={4}>
+                <Stack spacing={2}>
+                    <Contact/>
+                    <Typography>Visits</Typography>
+                    <Typography>Notes</Typography>
+                </Stack>
+            </Grid>
+        </Grid>
     )
 }
 

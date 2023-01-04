@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import React from 'react';
 import Table from '../../components/Table';
-import ImportClients from './ImportClients';
+import ImportClients from '../../components/ImportClients';
 import { clientColumns } from '../../util/columns';
   
   const rows = [
