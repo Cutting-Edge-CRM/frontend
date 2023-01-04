@@ -4,17 +4,15 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
-import MenuIcon from '@mui/icons-material/Menu';
-import Menu from '@mui/material/Menu';
+import { AttachMoney, FormatPaintOutlined, PeopleOutlineOutlined, CalendarMonthOutlined, TrendingUpOutlined, SellOutlined, AccessTimeOutlined, SummarizeOutlined, SettingsOutlined } from '@mui/icons-material';
+import MenuIcon from '@mui/icons-material/Menu'
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Avatar, ListItemButton, MenuItem } from '@mui/material';
+import { Avatar, ListItemButton, Menu, MenuItem } from '@mui/material';
 import { Logout, Settings } from '@mui/icons-material';
 import Dashboard from '../dashboard/Dashboard';
 import { Link, Route, Routes } from 'react-router-dom';
@@ -22,10 +20,11 @@ import Clients from '../clients/Clients';
 import Quotes from '../quotes/Quotes';
 import Jobs from '../jobs/Jobs';
 import Invoices from '../invoices/invoices';
+import { logout } from '../../auth/firebase';
 
 const drawerWidth = 240;
-const topTabs = ['Dashboard', 'Clients', 'Quotes', 'Jobs', 'Invoices'];
-const bottomTabs = ['Timesheets', 'Reports', 'Settings']
+const topTabs = [{display: 'Dashboard', icon: <TrendingUpOutlined/>}, {display: 'Schedule', icon: <CalendarMonthOutlined/>}, {display: 'Clients', icon: <PeopleOutlineOutlined/>}, {display: 'Quotes', icon: <SellOutlined/>}, {display: 'Jobs', icon: <FormatPaintOutlined/>}, {display: 'Invoices', icon: <AttachMoney/>}];
+const bottomTabs = [{display: 'Timesheets', icon: <AccessTimeOutlined/>}, {display: 'Reports', icon: <SummarizeOutlined/>}, {display: 'Settings', icon: <SettingsOutlined/>}];
 
 function Shell() {
 
@@ -55,14 +54,14 @@ function Shell() {
       </Toolbar>
       <Divider />
       <List>
-        {topTabs.map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <Link to={topTabs[index]}>
+        {topTabs.map((tab, index) => (
+          <ListItem key={tab.display} disablePadding>
+            <Link to={topTabs[index].display}>
             <ListItemButton>
               <ListItemIcon>
-                <InboxIcon />
+                {tab.icon}
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={tab.display} />
               </ListItemButton>
             </Link>
           </ListItem>
@@ -70,14 +69,14 @@ function Shell() {
       </List>
       <Divider />
       <List>
-        {bottomTabs.map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <Link to={bottomTabs[index]}>
+        {bottomTabs.map((tab, index) => (
+          <ListItem key={tab.display} disablePadding>
+            <Link to={bottomTabs[index].display}>
               <ListItemButton>
               <ListItemIcon>
-                <MailIcon />
+                {tab.icon}
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={tab.display} />
               </ListItemButton>
             </Link>
           </ListItem>
@@ -166,7 +165,7 @@ function Shell() {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={logout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

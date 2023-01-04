@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { Button, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Typography } from '@mui/material';
-import { ImportExport, PersonAddOutlined, FileDownloadOutlined, FileUploadOutlined } from '@mui/icons-material';
+import { ImportExport, FileDownloadOutlined, FileUploadOutlined, AddCircleOutlineOutlined } from '@mui/icons-material';
 
 
 export default function Table(props: any) {
@@ -63,7 +63,7 @@ export default function Table(props: any) {
                   </MenuList>
                 </Menu></>
           }
-        <Button startIcon={<PersonAddOutlined />}>New {props.type.slice(0,-1)}</Button>
+        <Button startIcon={<AddCircleOutlineOutlined />}>New {props.type.slice(0,-1)}</Button>
         </>
         </Box>
       </GridToolbarContainer>
