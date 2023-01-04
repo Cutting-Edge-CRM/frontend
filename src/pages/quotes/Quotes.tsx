@@ -1,39 +1,7 @@
-import { Box, Chip } from '@mui/material';
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { Box } from '@mui/material';
 import React from 'react';
 import Table from '../../components/Table'
-
-const columns: GridColDef[] = [
-    { 
-        field: 'client',
-        headerName: 'Client',
-        width: 150 },
-    {
-      field: 'address',
-      headerName: 'Address',
-      width: 150,
-    },
-    {
-      field: 'price',
-      headerName: 'Price',
-      width: 150,
-    },
-    {
-      field: 'status',
-      headerName: 'Status',
-      width: 150,
-      renderCell: (params: GridRenderCellParams<string>) => {    
-        return (
-          <Chip label={params.value} color="success" />
-        );
-      }
-    },
-    {
-      field: 'created',
-      headerName: 'Created',
-      width: 150,
-    },
-  ];
+import { quoteColumns } from '../../util/columns';
   
   const rows = [
     { id: 1, client: "Name" , address: 'Snow', price: 'Jon', status: 35 },
@@ -53,7 +21,7 @@ function Quotes() {
     return (
         
         <Box>
-          <Table rows={rows} columns={columns} type="Quotes"></Table>
+          <Table rows={rows} columns={quoteColumns} type="Quotes" title="Quotes"></Table>
       </Box>
     )
 }

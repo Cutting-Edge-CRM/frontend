@@ -22,7 +22,7 @@ export default function Table(props: any) {
       <GridToolbarContainer>
         <Box>
           <Typography>
-          {props.type}
+          {props.title}
           </Typography>
         </Box>
         <Divider variant="middle" />

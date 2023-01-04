@@ -1,40 +1,8 @@
-import { Box, Chip } from '@mui/material';
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { Box } from '@mui/material';
 import React from 'react';
-import Table from '../../components/Table'
+import Table from '../../components/Table';
 import ImportClients from './ImportClients';
-
-const columns: GridColDef[] = [
-    { 
-        field: 'name',
-        headerName: 'Name',
-        width: 150 },
-    {
-      field: 'address',
-      headerName: 'Address',
-      width: 150,
-    },
-    {
-      field: 'contact',
-      headerName: 'Contact',
-      width: 150,
-    },
-    {
-      field: 'status',
-      headerName: 'Status',
-      width: 150,
-      renderCell: (params: GridRenderCellParams<string>) => {    
-        return (
-          <Chip label={params.value} color="success" />
-        );
-      }
-    },
-    {
-      field: 'created',
-      headerName: 'Created',
-      width: 150,
-    },
-  ];
+import { clientColumns } from '../../util/columns';
   
   const rows = [
     { id: 1, name: "Name" , address: 'Snow', contact: 'Jon', status: 35 },
@@ -66,7 +34,7 @@ function Clients() {
     return (
         
         <Box>
-          <Table rows={rows} columns={columns} onImportClick={handleClickOpen} type="Clients"></Table>
+          <Table rows={rows} columns={clientColumns} onImportClick={handleClickOpen} type="Clients" title="Clients"></Table>
           <ImportClients
             selectedValue={selectedValue}
             open={open}
