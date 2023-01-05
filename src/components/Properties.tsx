@@ -1,10 +1,52 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Button, Card, IconButton, Typography } from '@mui/material';
-import { AddCircleOutlineOutlined, MoreVert } from '@mui/icons-material';
+import { Box, Button, Card, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Typography } from '@mui/material';
+import { AddCircleOutlineOutlined, CreateOutlined, DeleteOutline, MoreVert } from '@mui/icons-material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import mapboxgl from 'mapbox-gl';
+import NewProperty from './NewProperty';
+import EditProperty from './EditProperty';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3V0dGluZ2VkZ2Vjcm0iLCJhIjoiY2xjaHk1cWZrMmYzcDN3cDQ5bGRzYTY1bCJ9.0B4ntLJoCZzxQ0SUxqaQxg';
+  
+  const rows = [
+    { id: 1, address: "Name" , city: 'Snow', state: 'Jon', zip: 35 },
+    { id: 2, address: "Name" , city: 'Lannister', state: 'Cersei', zip: 42 },
+    { id: 3, address: "Name" , city: 'Lannister', state: 'Jaime', zip: 45 },
+  ];
+
+function Properties() {
+    const [newOpen, setNewOpen] = React.useState(false);
+const [editOpen, setEditOpen] = React.useState(false);
+const [selectedValue, setSelectedValue] = React.useState("");
+const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+const isOpen = Boolean(anchorEl);
+
+const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+  setAnchorEl(event.currentTarget);
+};
+const closeMenu = () => {
+  setAnchorEl(null);
+};
+
+const handleNewOpen = () => {
+    setNewOpen(true);
+};
+
+const handleNewClose = (value: string) => {
+  setNewOpen(false);
+  setSelectedValue(value);
+};
+
+const handleEditOpen = () => {
+    // set state to pass into modal
+    setEditOpen(true);
+};
+
+const handleEditClose = (value: string) => {
+  setEditOpen(false);
+  setSelectedValue(value);
+};
+
 
 const columns: GridColDef[] = [
     { 
@@ -32,21 +74,37 @@ const columns: GridColDef[] = [
         width: 150,
         renderCell: (params: GridRenderCellParams<string>) => {    
             return (
-                <IconButton>
+                <>
+                <IconButton
+                    onClick={openMenu}
+                >
                     <MoreVert />
                 </IconButton>
+                <Menu
+                    id="visit-menu"
+                    anchorEl={anchorEl}
+                    open={isOpen}
+                    onClose={closeMenu}
+                >
+                    <MenuList>
+                        <MenuItem onClick={() => { handleEditOpen(); } }>
+                            <ListItemIcon>
+                                <CreateOutlined />
+                            </ListItemIcon>
+                            <ListItemText>Edit Note</ListItemText>
+                        </MenuItem>
+                        <MenuItem>
+                            <ListItemIcon>
+                                <DeleteOutline />
+                            </ListItemIcon>
+                            <ListItemText>Delete Note</ListItemText>
+                        </MenuItem>
+                    </MenuList>
+                </Menu></>
             );
           },
     }
   ];
-  
-  const rows = [
-    { id: 1, address: "Name" , city: 'Snow', state: 'Jon', zip: 35 },
-    { id: 2, address: "Name" , city: 'Lannister', state: 'Cersei', zip: 42 },
-    { id: 3, address: "Name" , city: 'Lannister', state: 'Jaime', zip: 45 },
-  ];
-
-function Properties() {
     const mapContainer = useRef<HTMLDivElement>(null);
     const map = useRef<mapboxgl.Map | null>(null);
     const [lng] = useState(-70.9);
@@ -67,7 +125,12 @@ function Properties() {
         <Card sx={{ height: 650}}>
             <Box>
                 <Typography>Properties</Typography>
-                <Button startIcon={<AddCircleOutlineOutlined />}>New Property</Button>
+                <Button onClick={handleNewOpen} startIcon={<AddCircleOutlineOutlined />}>New Property</Button>
+                <NewProperty
+                    selectedValue={selectedValue}
+                    open={newOpen}
+                    onClose={handleNewClose}
+                />
             </Box>
             <Box>
             <div style={{height: 290}} ref={mapContainer} className="map-container" />
@@ -78,6 +141,11 @@ function Properties() {
                 columns={columns}
                 />
             </Box>
+            <EditProperty
+            selectedValue={selectedValue}
+            open={editOpen}
+            onClose={handleEditClose}
+            />
         </Card>
     )
 }
