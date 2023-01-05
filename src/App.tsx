@@ -12,12 +12,15 @@ import Shell from './pages/shell/Shell';
 import GuardedRoute from './auth/GuardedRoute';
 import Subscribe from './pages/demo/Subscribe';
 import Portal from './pages/demo/Portal';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers';
 
 function App() {
   
     return (
       <>
-      <Router>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Router>
           <div className="App">
             <Routes>
               <Route path='/login' element={<Login />}></Route>
@@ -30,6 +33,7 @@ function App() {
             </Routes>
           </div>
         </Router>
+      </LocalizationProvider>
       </>
     );
 }

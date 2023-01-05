@@ -1,10 +1,11 @@
 import React from 'react';
-import { Typography } from '@mui/material';
 import TabbedTable from '../../components/TabbedTable';
 import Properties from '../../components/Properties';
 import Grid from '@mui/material/Unstable_Grid2'
 import { Stack } from '@mui/system';
 import Contact from '../../components/Contact';
+import Visits from '../../components/Visits';
+import Notes from '../../components/Notes';
 
 const invoiceRows = [
     { id: 1, client: "Name" , price: 'Snow', balance: 'Jon', status: 35 },
@@ -54,8 +55,8 @@ function Client() {
             <Grid xs={4}>
                 <Stack spacing={2}>
                     <Contact/>
-                    <Typography>Visits</Typography>
-                    <Typography>Notes</Typography>
+                    <Visits/>
+                    <Notes />
                 </Stack>
             </Grid>
         </Grid>
