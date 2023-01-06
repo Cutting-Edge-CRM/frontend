@@ -22,6 +22,7 @@ import Jobs from '../jobs/Jobs';
 import Invoices from '../invoices/invoices';
 import { logout } from '../../auth/firebase';
 import Client from '../clients/Client';
+import Quote from '../quotes/Quote';
 
 const drawerWidth = 240;
 const topTabs = [{display: 'Dashboard', icon: <TrendingUpOutlined/>}, {display: 'Schedule', icon: <CalendarMonthOutlined/>}, {display: 'Clients', icon: <PeopleOutlineOutlined/>}, {display: 'Quotes', icon: <SellOutlined/>}, {display: 'Jobs', icon: <FormatPaintOutlined/>}, {display: 'Invoices', icon: <AttachMoney/>}];
@@ -219,6 +220,7 @@ function Shell() {
             <Route path="/clients" element={<Clients />}/>
             <Route path="/clients/:id" element={<Client />}/>
             <Route path="/quotes" element={<Quotes />}/>
+            <Route path="/quotes/:id" element={<Quote />}/>
             <Route path="/jobs" element={<Jobs />}/>
             <Route path="/invoices" element={<Invoices />}/>
             <Route path="/settings" element={<Settings />}/>

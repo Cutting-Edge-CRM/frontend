@@ -48,7 +48,7 @@ function Client() {
         <Grid container spacing={2}>
             <Grid xs={8}>
                 <Stack spacing={2}>
-                    <Properties />
+                    <Properties type="client"/>
                     <TabbedTable quoteRows={quoteRows} jobRows={jobRows} invoiceRows={invoiceRows} />
                 </Stack>
             </Grid>
