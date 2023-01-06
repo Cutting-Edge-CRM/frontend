@@ -1,9 +1,9 @@
 import { CreateOutlined, DeleteOutline, MoreVert, PersonOutline } from '@mui/icons-material';
-import { Box, Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, Switch, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Typography } from '@mui/material';
 import React from 'react';
 import RichText from './RichText';
 
-function QuoteItemSaved(props: any) {
+function JobItemSaved(props: any) {
     return (
         <>
             <Grid container spacing={2}>
@@ -14,10 +14,6 @@ function QuoteItemSaved(props: any) {
                     </Stack>
                 </Grid>
                 <Grid item={true} xs={4}>
-                    <Stack>
-                        <Typography>Add-on</Typography>
-                        <Switch></Switch>
-                    </Stack>
                 </Grid>
                 <Grid item={true} xs={4}>
                     <Stack>
@@ -35,7 +31,7 @@ function QuoteItemSaved(props: any) {
     );
 }
 
-function QuoteItemEdit(props: any) {
+function JobItemEdit(props: any) {
 
     return (
         <>
@@ -54,10 +50,6 @@ function QuoteItemEdit(props: any) {
                     />
                 </Grid>
                 <Grid item={true} xs={4}>
-                    <Stack>
-                        <Typography>Add-on</Typography>
-                        <Switch></Switch>
-                    </Stack>
                 </Grid>
                 <Grid item={true} xs={4}>
                     <Stack>
@@ -84,62 +76,10 @@ function QuoteItemEdit(props: any) {
     );
 }
 
-function TabPanel(props: any) {
-    const { children, value, index, editting, ...other } = props;
-
-    return (
-        <Box
-        role="tabpanel"
-        hidden={value !== index}
-        id={`option-${index}`}
-        aria-labelledby={`options-${index}`}
-        {...other}
-        >
-        {value === index && (
-            <>
-            {props.editting && 
-                <>
-                <QuoteItemEdit />
-                <QuoteItemEdit />
-                <QuoteItemEdit />
-                </>
-            }
-            {!props.editting && 
-                <>
-                <QuoteItemSaved />
-                <QuoteItemSaved />
-                <QuoteItemSaved />
-                </>
-            }
-            <Divider />
-            <Stack direction="row">
-                <Typography>Subtotal</Typography>
-                <Typography>$329</Typography>
-            </Stack><Stack direction="row">
-                <Typography>Deposit</Typography>
-                {editting ? <TextField id="deposit" label="$ or %"/> : <Typography>$50</Typography>}
-            </Stack><Stack direction="row">
-                <Typography>Taxes</Typography>
-                {editting ? <Select placeholder='Select tax'/> : <Typography>$35</Typography>}
-            </Stack><Divider /><Stack direction="row">
-                <Typography>Total</Typography>
-                <Typography>$314</Typography>
-            </Stack>
-            </>
-        )}
-        </Box>
-    );
-}
-
-function QuoteDetails() {
+function JobDetails() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const isOpen = Boolean(anchorEl);
-    const [value, setValue] = React.useState(0);
     const [editting, setEditting] = React.useState(false);
-
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-      setValue(newValue);
-    };
 
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -155,8 +95,8 @@ function QuoteDetails() {
     return (
         <Card>
             <Stack direction="row">
-                <Typography>Quote Details</Typography>
-                <Button onClick={handleEditting}>{editting ? 'Save Changes' : 'Edit Quote'}</Button>
+                <Typography>Job Details</Typography>
+                <Button onClick={handleEditting}>{editting ? 'Save Changes' : 'Edit Job'}</Button>
                 <IconButton
                     onClick={openMenu}
                     >
@@ -190,30 +130,39 @@ function QuoteDetails() {
                     <Typography>11/27/2022</Typography>
                 </Stack>
                 <Stack>
-                    <Typography>Opened by client</Typography>
-                    <Typography>11/27/2022</Typography>
+                    <Typography>From</Typography>
+                    <Typography>Quote 3</Typography>
                 </Stack>
                 <Stack>
-                    <Typography>From</Typography>
-                    <Typography>Job 2</Typography>
+                    <Typography>Used for</Typography>
+                    <Typography>Invoice 2</Typography>
                 </Stack>
                 <Stack>
                     <Typography>Status</Typography>
-                    <Chip label="Booked"/>
+                    <Chip label="Upcoming"/>
                 </Stack>
             </Stack>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={value} onChange={handleChange} aria-label="options">
-                <Tab label="Option 1" id="1" />
-                <Tab label="Option 2" id="2" />
-                <Tab label="Option 3" id="3" />
-            </Tabs>
-            </Box>
-            <TabPanel value={value} index={0} editting={editting}/>
-            <TabPanel value={value} index={1} editting={editting}/>
-            <TabPanel value={value} index={2} editting={editting}/>
+            {editting && 
+                <>
+                <JobItemEdit />
+                <JobItemEdit />
+                <JobItemEdit />
+                </>
+            }
+            {!editting && 
+                <>
+                <JobItemSaved />
+                <JobItemSaved />
+                <JobItemSaved />
+                </>
+            }
+            <Divider />
+            <Stack direction="row">
+                <Typography>Subtotal</Typography>
+                <Typography>$329</Typography>
+            </Stack>
         </Card>
     )
 }
 
-export default QuoteDetails;
+export default JobDetails;

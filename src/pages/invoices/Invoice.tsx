@@ -4,14 +4,14 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { Stack } from '@mui/system';
 import Contact from '../../components/Contact';
 import Notes from '../../components/Notes';
-import QuoteDetails from '../../components/QuoteDetails';
+import InvoiceDetails from '../../components/InvoiceDetails';
 
-function Quote() {
+function Invoice() {
     return (
         <Grid container spacing={2}>
             <Grid xs={8}>
                 <Stack spacing={2}>
-                    <QuoteDetails/>
+                    <InvoiceDetails/>
                     <Properties />
                 </Stack>
             </Grid>
@@ -25,4 +25,4 @@ function Quote() {
     )
 }
 
-export default Quote;
+export default Invoice;

@@ -5,7 +5,6 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import mapboxgl from 'mapbox-gl';
 import NewProperty from './NewProperty';
 import EditProperty from './EditProperty';
-import { Stack } from '@mui/system';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3V0dGluZ2VkZ2Vjcm0iLCJhIjoiY2xjaHk1cWZrMmYzcDN3cDQ5bGRzYTY1bCJ9.0B4ntLJoCZzxQ0SUxqaQxg';
   
@@ -146,33 +145,12 @@ function Properties(props: any) {
             <Box>
             <div style={{height: 290}} ref={mapContainer} className="map-container" />
             </Box>
-            {props.type === 'client' ? 
-                <Box sx={{ display: 'flex', height: '100%' }}>
-                    <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    />
-                </Box>
-             : 
-             <Stack spacing={2}>
-                <Stack direction='row' spacing={2}>
-                    <Typography>Address</Typography>
-                    <Typography>2202 7th St E</Typography>
-                </Stack>
-                <Stack direction='row' spacing={2}>
-                    <Typography>City</Typography>
-                    <Typography>Saskatoon</Typography>
-                </Stack>
-                <Stack direction='row' spacing={2}>
-                    <Typography>State</Typography>
-                    <Typography>SK</Typography>
-                </Stack>
-                <Stack direction='row' spacing={2}>
-                    <Typography>Postal</Typography>
-                    <Typography>s7h1a1</Typography>
-                </Stack>
-             </Stack>
-              }
+            <Box sx={{ display: 'flex', height: '100%' }}>
+                <DataGrid
+                rows={rows}
+                columns={columns}
+                />
+            </Box>
             
             <EditProperty
             selectedValue={selectedValue}
