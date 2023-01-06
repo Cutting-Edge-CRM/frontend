@@ -25,6 +25,7 @@ import Client from '../clients/Client';
 import Quote from '../quotes/Quote';
 import Job from '../jobs/Job';
 import Invoice from '../invoices/Invoice';
+import Schedule from '../schedule/Schedule';
 
 const drawerWidth = 240;
 const topTabs = [{display: 'Dashboard', icon: <TrendingUpOutlined/>}, {display: 'Schedule', icon: <CalendarMonthOutlined/>}, {display: 'Clients', icon: <PeopleOutlineOutlined/>}, {display: 'Quotes', icon: <SellOutlined/>}, {display: 'Jobs', icon: <FormatPaintOutlined/>}, {display: 'Invoices', icon: <AttachMoney/>}];
@@ -219,6 +220,7 @@ function Shell() {
       {/* body */}
       <Routes>
             <Route path="/dashboard" element={<Dashboard />}/>
+            <Route path="/schedule" element={<Schedule />}/>
             <Route path="/clients" element={<Clients />}/>
             <Route path="/clients/:id" element={<Client />}/>
             <Route path="/quotes" element={<Quotes />}/>

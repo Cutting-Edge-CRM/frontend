@@ -3,7 +3,8 @@ import { auth, logInWithEmailAndPassword } from '../../../auth/firebase';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { ErrorTypes } from '../../../util/errors';
-import { Card, CardContent, Box, TextField, Button, Stack } from '@mui/material';
+import { Card, CardContent, Box, TextField, Button, Stack, Typography, InputAdornment, Divider } from '@mui/material';
+import { EmailOutlined, Https } from '@mui/icons-material';
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -11,7 +12,7 @@ function Login() {
   const navigate = useNavigate();
   const [user, loading] = useAuthState(auth);
 
-  function loginUser(email: string, password: string) {
+  function loginUser() {
     logInWithEmailAndPassword(email, password)
     .then(res => {
 
@@ -40,16 +41,45 @@ function Login() {
 
   return (
     <Box>
-      <Card>
-        <CardContent>
-          <Stack>
-          <TextField type="email" name="email" label="Email" onChange={(e) => setEmail(e.target.value)}/>
-          <TextField type="password" name='password' label="Password" onChange={(e) => setPassword(e.target.value)}/>
-          <Button onClick={() => loginUser(email, password)}>Submit</Button>
-          </Stack>
-        </CardContent>
-      </Card>
-    </Box>
+    <Card>
+      <CardContent>
+        <Stack>
+          <Typography>Log In</Typography>
+          <Button>Login with Google</Button>
+          <Divider>or</Divider>
+        <TextField 
+          name="email"
+          type='email'
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
+          InputProps={{
+            startAdornment: (
+            <InputAdornment position="start">
+                <EmailOutlined />
+            </InputAdornment>
+            ),
+            }}/>
+        <TextField 
+          name="password"
+          type='password'
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
+          InputProps={{
+            startAdornment: (
+            <InputAdornment position="start">
+                <Https />
+            </InputAdornment>
+            ),
+            }}/>
+        <Button onClick={loginUser}>Login</Button>
+        <Stack direction='row'>
+          <Typography>Don't have an account yet?</Typography>
+          <Button>Sign Up</Button>
+        </Stack>
+        </Stack>
+      </CardContent>
+    </Card>
+  </Box>
   )
 }
 export default Login;
