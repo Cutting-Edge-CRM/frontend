@@ -3,9 +3,11 @@ import Box from '@mui/material/Box';
 import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { Button, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Typography } from '@mui/material';
 import { ImportExport, FileDownloadOutlined, FileUploadOutlined, AddCircleOutlineOutlined } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Table(props: any) {
+  const navigate = useNavigate();
 
   function CustomToolbar() {
 
@@ -70,6 +72,10 @@ export default function Table(props: any) {
     );
   }
 
+  const handleRowClick = (event: any) => {
+    navigate(`/${props.type}/${event.id}`)
+  }
+
 
   return (
     <Box sx={{ height: 400, width: '100%' }}>
@@ -87,6 +93,7 @@ export default function Table(props: any) {
         }}
         checkboxSelection
         disableSelectionOnClick
+        onRowClick={handleRowClick}
       />
     </Box>
   );

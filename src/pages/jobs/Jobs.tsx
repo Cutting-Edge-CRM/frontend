@@ -12,7 +12,6 @@ function Jobs() {
   useEffect(() => {
     listJobs()
     .then((result) => {
-      console.log(result);
       setIsLoaded(true);
       setRows(result)
     }, (err) => {

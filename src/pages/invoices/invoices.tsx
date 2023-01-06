@@ -12,7 +12,6 @@ function Invoices() {
   useEffect(() => {
     listInvoices()
     .then((result) => {
-      console.log(result);
       setIsLoaded(true);
       setRows(result)
     }, (err) => {

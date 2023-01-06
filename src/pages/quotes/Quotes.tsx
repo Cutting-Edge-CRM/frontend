@@ -13,7 +13,6 @@ function Quotes() {
   useEffect(() => {
     listQuotes()
     .then((result) => {
-      console.log(result);
       setIsLoaded(true);
       setRows(result)
     }, (err) => {

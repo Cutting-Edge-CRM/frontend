@@ -24,7 +24,6 @@ function Clients() {
   useEffect(() => {
     listClients()
     .then((result) => {
-      console.log(result);
       setIsLoaded(true);
       setRows(result)
     }, (err) => {

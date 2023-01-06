@@ -18,7 +18,7 @@ async function registerNewTenant(name: string, email: string) {
         let res = await fetch('http://localhost:3000/tenants/register-tenant', requestOptions);
         return await res.json();
     } catch (err) {
-        console.log(err);
+        console.error(err);
     }
 }
 

@@ -1,6 +1,6 @@
 import { auth, currentUser } from "../auth/firebase";
 
-async function listQuotes() {
+async function listQuotes(client?: string) {
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -12,7 +12,9 @@ async function listQuotes() {
         method: 'GET',
         headers: headers,
     };
-        return fetch('http://localhost:3000/quotes/list-quotes', requestOptions)
+        let url = new URL('http://localhost:3000/quotes/list-quotes');
+        if (client) url.searchParams.set('client', client);
+        return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
                 return res.json();

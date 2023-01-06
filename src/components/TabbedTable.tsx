@@ -1,7 +1,10 @@
 import { Box, Card, Divider, Tab, Tabs, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from './Table';
 import { quoteColumns, jobColumns, invoiceColumns } from '../util/columns';
+import { listQuotes } from '../api/quote.api';
+import { listJobs } from '../api/job.api';
+import { listInvoices } from '../api/invoice.api';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -30,7 +33,44 @@ function TabPanel(props: TabPanelProps) {
 }
 
 function TabbedTable(props: any) {
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = useState(0);
+    const [quoteRows, setQuoteRows] = useState([]);
+    const [quotesAreLoaded, setQuotesAreLoaded] = useState(false);
+    const [quotesError, setQuotesError] = useState(null);
+    const [jobRows, setJobRows] = useState([]);
+    const [jobsAreLoaded, setJobsAreLoaded] = useState(false);
+    const [jobsError, setJobsError] = useState(null);
+    const [invoiceRows, setInvoiceRows] = useState([]);
+    const [invoicesAreLoaded, setInvoicesAreLoaded] = useState(false);
+    const [invoicesError, setInvoicesError] = useState(null);
+  
+    useEffect(() => {
+      listQuotes(props.client)
+      .then((result) => {
+        setQuotesAreLoaded(true);
+        setQuoteRows(result)
+      }, (err) => {
+        setQuotesAreLoaded(true);
+        setQuotesError(err.message)
+      })
+      listJobs(props.client)
+      .then((result) => {
+        setJobsAreLoaded(true);
+        setJobRows(result)
+      }, (err) => {
+        setJobsAreLoaded(true);
+        setJobsError(err.message)
+      })
+      listInvoices(props.client)
+      .then((result) => {
+        setInvoicesAreLoaded(true);
+        setInvoiceRows(result)
+      }, (err) => {
+        setInvoicesAreLoaded(true);
+        setInvoicesError(err.message)
+      })
+    }, [props.client])
+  
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
       setValue(newValue);
@@ -48,13 +88,19 @@ function TabbedTable(props: any) {
             </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-                <Table rows={props.quoteRows} columns={quoteColumns} type="Quotes" title={null}></Table>
+                {quotesError && <Typography>{quotesError}</Typography>}
+                {!quotesAreLoaded && <Typography>Loading...</Typography>}
+                {quotesAreLoaded && !quotesError && <Table rows={quoteRows} columns={quoteColumns} type="Quotes" title={null}></Table>}
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <Table rows={props.jobRows} columns={jobColumns} type="Jobs" title={null}></Table>
+                {jobsError && <Typography>{jobsError}</Typography>}
+                {!jobsAreLoaded && <Typography>Loading...</Typography>}
+                {jobsAreLoaded && !jobsError && <Table rows={jobRows} columns={jobColumns} type="Jobs" title={null}></Table>}
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <Table rows={props.invoiceRows} columns={invoiceColumns} type="Invoices" title={null}></Table>
+                {invoicesError && <Typography>{invoicesError}</Typography>}
+                {!invoicesAreLoaded && <Typography>Loading...</Typography>}
+                {invoicesAreLoaded && !invoicesError && <Table rows={invoiceRows} columns={invoiceColumns} type="Invoices" title={null}></Table>}
             </TabPanel>
         </Card>
     )

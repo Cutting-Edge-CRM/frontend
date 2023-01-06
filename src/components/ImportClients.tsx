@@ -155,7 +155,6 @@ export default function ImportClients(props: ImportClientsProps) {
   
     const handleClose = () => {
       onClose(selectedValue);
-      console.log(first);
     };
   
     const handleNext = () => {  
