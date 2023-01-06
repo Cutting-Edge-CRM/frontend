@@ -36,9 +36,9 @@ const clientColumns: GridColDef[] = [
 
 const quoteColumns: GridColDef[] = [
     { 
-        field: 'client',
-        headerName: 'Client',
-        width: 150 },
+      field: 'clientName',
+      headerName: 'Client',
+      width: 150 },
     {
       field: 'address',
       headerName: 'Address',
@@ -68,9 +68,10 @@ const quoteColumns: GridColDef[] = [
 
 const jobColumns: GridColDef[] = [
     { 
-        field: 'client',
-        headerName: 'Client',
-        width: 150 },
+      field: 'clientName',
+      headerName: 'Client',
+      width: 150 ,
+    },
     {
       field: 'address',
       headerName: 'Address',
@@ -100,7 +101,7 @@ const jobColumns: GridColDef[] = [
 
 const invoiceColumns: GridColDef[] = [
     { 
-        field: 'client',
+        field: 'clientName',
         headerName: 'Client',
         width: 150 },
     {

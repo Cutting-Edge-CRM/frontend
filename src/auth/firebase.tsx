@@ -149,7 +149,6 @@ onAuthStateChanged(auth, (user) => {
     auth.tenantId = user.tenantId;
     currentUser = user;
     console.log(currentUser);
-    // ...
   } else {
     console.log('not logged in');
     // User is signed out

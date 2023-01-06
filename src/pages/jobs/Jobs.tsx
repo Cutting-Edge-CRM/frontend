@@ -1,23 +1,33 @@
-import { Box } from '@mui/material';
-import React from 'react';
+import { Box, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { listJobs } from '../../api/job.api';
 import Table from '../../components/Table'
 import { jobColumns } from '../../util/columns';
 
-  const rows = [
-    { id: 1, client: "Name" , address: 'Snow', price: 'Jon', status: 35 },
-    { id: 2, client: "Name" , address: 'Lannister', price: 'Cersei', status: 42 },
-    { id: 3, client: "Name" , address: 'Lannister', price: 'Jaime', status: 45 },
-    { id: 4, client: "Name" , address: 'Stark', price: 'Arya', status: 16 },
-    { id: 5, client: "Name" , address: 'Targaryen', price: 'Daenerys', status: null },
-    { id: 6, client: "Name" , address: 'Melisandre', price: null, status: 150 },
-    { id: 7, client: "Name" , address: 'Clifford', price: 'Ferrara', status: 44 },
-    { id: 8, client: "Name" , address: 'Frances', price: 'Rossini', status: 36 },
-    { id: 9, client: "Name" , address: 'Roxie', price: 'Harvey', status: 65 },
-  ];
-  
-
 function Jobs() {
+  const [rows, setRows] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    listJobs()
+    .then((result) => {
+      console.log(result);
+      setIsLoaded(true);
+      setRows(result)
+    }, (err) => {
+      setIsLoaded(true);
+      setError(err.message)
+    })
+  }, [])
+
+  if (error) {
+    return (<Typography>{error}</Typography>);
+  }
+  if (!isLoaded) {
+    return (<Typography>Loading...</Typography>);
+  }
+  
     return (
         
         <Box>
