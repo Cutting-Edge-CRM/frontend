@@ -1,6 +1,6 @@
 import { auth, currentUser } from "../auth/firebase";
 
-async function listJobs(client?: string) {
+async function listProperties(client?: string) {
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -12,7 +12,7 @@ async function listJobs(client?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL('http://localhost:3000/jobs/list-jobs');
+        let url = new URL('http://localhost:3000/properties/list-properties');
         if (client) url.searchParams.set('client', client);
         return fetch(url, requestOptions)
         .then(res => {
@@ -20,16 +20,16 @@ async function listJobs(client?: string) {
                 return res.json();
             }
             res.json().then(err => {
-                console.error(`Error listing jobs: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                console.error(`Error listing properties: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
             })
-            throw new Error(`Error listing jobs`);
+            throw new Error(`Error listing properties`);
         })
     } catch (err) {
         console.error(err);
     }
 }
 
-async function getJob(id?: string) {
+async function getProperty(id: string) {
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -41,16 +41,16 @@ async function getJob(id?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL(`http://localhost:3000/jobs/get-job/${id}`);
+        let url = new URL(`http://localhost:3000/properties/get-property/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
                 return res.json();
             }
             res.json().then(err => {
-                console.error(`Error getting job: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                console.error(`Error getting property: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
             })
-            throw new Error(`Error getting job`);
+            throw new Error(`Error getting property`);
         })
     } catch (err) {
         console.error(err);
@@ -58,7 +58,8 @@ async function getJob(id?: string) {
 }
 
 
+
 export {
-    listJobs,
-    getJob
+    listProperties,
+    getProperty
   };
