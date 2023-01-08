@@ -2,13 +2,11 @@ import { AddCircleOutlineOutlined, CalendarMonthOutlined, CreateOutlined, Delete
 import { Card, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from '@mui/material';
 import React from 'react';
 import EditVisit from './EditVisit';
-import NewVisit from './NewVisit';
 
 const visits = [{id: 1, title: "Appointment", address: "2202 7th St E", date: "Nov 28 - Dec 3", assigned: ["Parker", "Kim"]}, {id: 2, title: "Appointment", address: "2202 7th St E", date: "Nov 28 - Dec 3", assigned: ["Parker", "Kim"]}]
 
 
 function Visits() {
-    const [newOpen, setNewOpen] = React.useState(false);
     const [editOpen, setEditOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState("");
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -22,12 +20,6 @@ function Visits() {
     };
 
     const handleNewOpen = () => {
-        setNewOpen(true);
-    };
-  
-    const handleNewClose = (value: string) => {
-      setNewOpen(false);
-      setSelectedValue(value);
     };
 
     const handleEditOpen = () => {
@@ -47,11 +39,6 @@ function Visits() {
                 <IconButton onClick={handleNewOpen}>
                     <AddCircleOutlineOutlined />
                 </IconButton>
-                <NewVisit
-                    selectedValue={selectedValue}
-                    open={newOpen}
-                    onClose={handleNewClose}
-                />
             </Stack>
             <List>
                 {

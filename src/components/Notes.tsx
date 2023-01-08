@@ -2,13 +2,11 @@ import { AddCircleOutlineOutlined, CreateOutlined, DeleteOutline, MoreVert } fro
 import { Card, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from '@mui/material';
 import React from 'react';
 import EditNote from './EditNote';
-import NewNote from './NewNote';
 
 const notes = [{id: 1, title: "Appointment", content: "Lorem ipsum ergo", date: "Nov 28 - Dec 3"}, {id: 2, title: "Appointment", address: "Lorem ipsum ergo", date: "Nov 28 - Dec 3"}]
 
 
 function Notes() {
-    const [newOpen, setNewOpen] = React.useState(false);
     const [editOpen, setEditOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState("");
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -22,12 +20,6 @@ function Notes() {
     };
 
     const handleNewOpen = () => {
-        setNewOpen(true);
-    };
-  
-    const handleNewClose = (value: string) => {
-      setNewOpen(false);
-      setSelectedValue(value);
     };
 
     const handleEditOpen = () => {
@@ -47,11 +39,6 @@ function Notes() {
                 <IconButton onClick={handleNewOpen}>
                     <AddCircleOutlineOutlined />
                 </IconButton>
-                <NewNote
-                    selectedValue={selectedValue}
-                    open={newOpen}
-                    onClose={handleNewClose}
-                />
             </Stack>
             <List>
                 {

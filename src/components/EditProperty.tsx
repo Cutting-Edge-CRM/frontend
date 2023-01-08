@@ -37,34 +37,38 @@ export default function EditProperty(props: any) {
                 defaultValue={props.property.address2 ? props.property.address2 : undefined}
                 onChange={handleChange}
                 />
-                <TextField
-                id="city" 
-                label="City"
-                autoComplete='address-level2'
-                defaultValue={props.property.city ? props.property.city : undefined}
-                onChange={handleChange}
-                />
-                <TextField
-                id="state" 
-                label="State/Province"
-                autoComplete='address-level1'
-                defaultValue={props.property.state ? props.property.state : undefined}
-                onChange={handleChange}
-                />
-                <TextField
-                id="zip" 
-                label="Postal"
-                autoComplete='postal-code'
-                defaultValue={props.property.zip ? props.property.zip : undefined}
-                onChange={handleChange}
-                />
-                <TextField
-                id="country" 
-                label="Country"
-                autoComplete='country-name'
-                defaultValue={props.property.country ? props.property.country : undefined}
-                onChange={handleChange}
-                />
+                <Stack direction='row'>
+                  <TextField
+                  id="city" 
+                  label="City"
+                  autoComplete='address-level2'
+                  defaultValue={props.property.city ? props.property.city : undefined}
+                  onChange={handleChange}
+                  />
+                  <TextField
+                  id="state" 
+                  label="State/Province"
+                  autoComplete='address-level1'
+                  defaultValue={props.property.state ? props.property.state : undefined}
+                  onChange={handleChange}
+                  />
+                </Stack>
+                <Stack direction='row'>
+                  <TextField
+                  id="zip" 
+                  label="Postal"
+                  autoComplete='postal-code'
+                  defaultValue={props.property.zip ? props.property.zip : undefined}
+                  onChange={handleChange}
+                  />
+                  <TextField
+                  id="country" 
+                  label="Country"
+                  autoComplete='country-name'
+                  defaultValue={props.property.country ? props.property.country : undefined}
+                  onChange={handleChange}
+                  />
+                </Stack>
             </Stack>
           </AddressAutofill>
           </form>
