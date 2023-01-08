@@ -3,54 +3,47 @@ import { Box, Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, Dial
 import { DatePicker } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
 import * as React from 'react';
-
-const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-  ];
-
-export interface EditVisitProps {
-    open: boolean;
-    selectedValue: string;
-    onClose: (value: string) => void;
-  }
+import { useState } from 'react';
   
-export default function EditVisit(props: EditVisitProps) {
-    const { onClose, selectedValue, open } = props;
-    const [personName, setPersonName] = React.useState<string[]>([]);
-    const [startDate, setStartDate] = React.useState<Dayjs | null>(null);
-    const [endDate, setEndDate] = React.useState<Dayjs | null>(null);
-
-    const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-      const {
-        target: { value },
-      } = event;
-      setPersonName(
-        // On autofill we get a stringified value.
-        typeof value === 'string' ? value.split(',') : value,
-      );
+export default function EditVisit(props: any) {
+    const [startDate, setStartDate] = useState<Dayjs | null>(null);
+    const [endDate, setEndDate] = useState<Dayjs | null>(null);
+    
+    const handleCancel = () => {
+      props.onClose();
     };
-  
-    const handleClose = () => {
-      onClose(selectedValue);
+
+    const handleSave = () => {
+      if (props.type === 'edit') props.update();
+      if (props.type === 'new') props.create();
+    };
+
+    const handleChange = (event: any) => {
+      props.setVisit({ ...props.visit, [event.target.id]: event.target.value});
+    };
+
+    const handStartChange = (date: any) => {
+      props.setVisit({ ...props.visit, start: date});
+    }
+
+    const handEndChange = (date: any) => {
+      props.setVisit({ ...props.visit, end: date});
+    }
+
+    const handleChangePerson = (event: SelectChangeEvent<any>) => {
+      props.setVisit({ ...props.visit, users: event.target.value});
     };
 
     return (
-      <Dialog onClose={handleClose} open={open}>
-        <DialogTitle>Edit Visit</DialogTitle>
+      <Dialog onClose={handleCancel} open={props.open}>
+        <DialogTitle>{props.type === 'edit' ? "Edit Visit" : "Create New Visit"}</DialogTitle>
         <DialogContent>
             <Stack spacing={2}>
                 <TextField
-                id="title" 
+                id="name" 
                 label="Title"
+                defaultValue={props.visit.name ? props.visit.name : undefined}
+                onChange={handleChange}
                 InputProps={{
                     startAdornment: (
                     <InputAdornment position="start">
@@ -64,39 +57,35 @@ export default function EditVisit(props: EditVisitProps) {
                 labelId="assigned-label"
                 id="assigned"
                 multiple
-                value={personName}
-                onChange={handleChange}
+                value={props.visit.users}
+                onChange={handleChangePerson}
                 input={<OutlinedInput label="Assign team members" />}
                 renderValue={(selected) => (
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
+                      {selected.map((value: any) => (
+                        <Chip key={value.id} label={value.name} />
                       ))}
                     </Box>
                   )}
                 >
-                {names.map((name) => (
-                    <MenuItem key={name} value={name}>
-                    <Checkbox checked={personName.indexOf(name) > -1} />
-                    <ListItemText primary={name} />
+                {props.users.map((user: any) => (
+                    <MenuItem key={user.id} value={user}>
+                    <Checkbox checked={props.visit.users?.map((p: any) => p.id).indexOf(user.id) > -1} />
+                    <ListItemText primary={user.name} />
                     </MenuItem>
                 ))}
                 </Select>
                 <Stack direction="row">
                     <DatePicker
                         label="Start Date"
-                        value={startDate}
-                        onChange={(newValue) => {
-                        setStartDate(newValue);
-                        }}
+                        value={props.visit.start}
+                        onChange={handStartChange}
                         renderInput={(params) => <TextField {...params} />}
                     />
                     <DatePicker
                         label="End Date"
-                        value={endDate}
-                        onChange={(newValue) => {
-                        setEndDate(newValue);
-                        }}
+                        value={props.visit.end}
+                        onChange={handEndChange}
                         renderInput={(params) => <TextField {...params} />}
                     />
                 </Stack>
@@ -106,8 +95,8 @@ export default function EditVisit(props: EditVisitProps) {
             </Stack>
         </DialogContent>
         <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleClose}>Save Changes</Button>
+            <Button onClick={handleCancel}>Cancel</Button>
+            <Button onClick={handleSave}>Save Changes</Button>
         </DialogActions>
       </Dialog>
     );

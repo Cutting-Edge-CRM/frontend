@@ -21,7 +21,7 @@ function Client() {
             <Grid xs={4}>
                 <Stack spacing={2}>
                     <Contact client={id}/>
-                    <Visits/>
+                    <Visits client={id}/>
                     <Notes />
                 </Stack>
             </Grid>

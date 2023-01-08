@@ -1,36 +1,83 @@
 import { AddCircleOutlineOutlined, CalendarMonthOutlined, CreateOutlined, DeleteOutline, MoreVert } from '@mui/icons-material';
 import { Card, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { listUsers } from '../api/user.api';
+import { listVisits } from '../api/visit.api';
 import EditVisit from './EditVisit';
 
-const visits = [{id: 1, title: "Appointment", address: "2202 7th St E", date: "Nov 28 - Dec 3", assigned: ["Parker", "Kim"]}, {id: 2, title: "Appointment", address: "2202 7th St E", date: "Nov 28 - Dec 3", assigned: ["Parker", "Kim"]}]
 
-
-function Visits() {
-    const [editOpen, setEditOpen] = React.useState(false);
-    const [selectedValue, setSelectedValue] = React.useState("");
+function Visits(props: any) {
+    const [rows, setRows] = useState([] as any);
+    const [open, setOpen] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [error, setError] = useState(null);
+    const [visit, setVisit] = useState({} as any);
+    const [type, setType] = useState('');
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const isOpen = Boolean(anchorEl);
+    const [users, setUsers] = useState([] as any[]);
   
-    const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-      setAnchorEl(event.currentTarget);
+    const openMenu = (event: React.MouseEvent<HTMLButtonElement>, visit: any) => {
+        setVisit(visit);
+        setAnchorEl(event.currentTarget);
+        setVisit({ ...visit, users: users.filter((user) => visit.users.some((obj: any) => obj.id === user.id))})
     };
     const closeMenu = () => {
       setAnchorEl(null);
     };
 
     const handleNewOpen = () => {
+        setVisit({users: []});
+        setType('new');
+        setOpen(true);
     };
 
     const handleEditOpen = () => {
-        // set state to pass into modal
-        setEditOpen(true);
+        setType('edit');
+        setOpen(true);
     };
-  
-    const handleEditClose = (value: string) => {
-      setEditOpen(false);
-      setSelectedValue(value);
+
+    const handleClose = (value: string) => {
+        setOpen(false);
     };
+
+    const handleUpdate = (value: string) => {
+        setOpen(false);
+        // save value
+    };
+
+    const handleCreate = (value: string) => {
+        setOpen(false);
+        // save value
+    };
+
+    useEffect(() => {
+        listUsers()
+        .then((result: any) => {
+          setIsLoaded(true);
+          setUsers(result);
+        }, (err) => {
+          setIsLoaded(true);
+          setError(err.message)
+        })
+      }, [])
+
+    useEffect(() => {
+        listVisits(props.client)
+        .then((result) => {
+          setRows(result);
+          console.log(result);
+        }, (err) => {
+        })
+      }, [props])
+
+    if (error) {
+    return (<Typography>{error}</Typography>);
+    }
+    if (!isLoaded) {
+    return (<Typography>Loading...</Typography>);
+    }
+
 
     return (
         <Card>
@@ -42,7 +89,7 @@ function Visits() {
             </Stack>
             <List>
                 {
-                    visits.map(visit => (
+                    rows.map((visit: any) => (
                         <ListItem key={visit.id}>
                                 <Grid container spacing={2}>
                                     <Grid item={true} xs={2}>
@@ -50,15 +97,15 @@ function Visits() {
                                     </Grid>
                                     <Grid item={true} xs={8}>
                                         <Stack>
-                                            <Typography>{visit.title}</Typography>
+                                            <Typography>{visit.name}</Typography>
                                             <Typography>{visit.address}</Typography>
                                             <Typography>{visit.date}</Typography>
-                                            <Typography>{visit.assigned}</Typography>
+                                            <Typography>{visit.users.map((user: any) => user.name).join(", ")}</Typography>
                                         </Stack>
                                     </Grid>
                                     <Grid item={true} xs={2}>
                                         <IconButton
-                                        onClick={openMenu}
+                                        onClick={(e) => openMenu(e, visit)}
                                         >
                                             <MoreVert />
                                         </IconButton>
@@ -69,17 +116,17 @@ function Visits() {
                                         onClose={closeMenu}
                                         >
                                         <MenuList>
-                                            <MenuItem onClick={() => {handleEditOpen()}}>
-                                            <ListItemIcon>
-                                                <CreateOutlined />
-                                            </ListItemIcon>
-                                            <ListItemText>Edit Visit</ListItemText>
+                                            <MenuItem onClick={handleEditOpen}>
+                                                <ListItemIcon>
+                                                    <CreateOutlined />
+                                                </ListItemIcon>
+                                                <ListItemText>Edit Visit</ListItemText>
                                             </MenuItem>
                                             <MenuItem>
-                                            <ListItemIcon>
-                                                <DeleteOutline />
-                                            </ListItemIcon>
-                                            <ListItemText>Delete Visit</ListItemText>
+                                                <ListItemIcon>
+                                                    <DeleteOutline />
+                                                </ListItemIcon>
+                                                <ListItemText>Delete Visit</ListItemText>
                                             </MenuItem>
                                         </MenuList>
                                         </Menu>
@@ -90,9 +137,14 @@ function Visits() {
                 }
             </List>
             <EditVisit
-            selectedValue={selectedValue}
-            open={editOpen}
-            onClose={handleEditClose}
+            visit={visit}
+            setVisit={setVisit}
+            open={open}
+            onClose={handleClose}
+            update={handleUpdate}
+            create={handleCreate}
+            type={type}
+            users={users}
             />
         </Card>
     )

@@ -45,7 +45,7 @@ function Job() {
             </Grid>
             <Grid xs={4}>
                 <Stack spacing={2}>
-                    <Contact/>
+                    <Contact client={job?.client}/>
                     <Visits/>
                     <Notes />
                 </Stack>

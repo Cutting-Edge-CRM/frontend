@@ -44,7 +44,7 @@ function Quote() {
             </Grid>
             <Grid xs={4}>
                 <Stack spacing={2}>
-                    <Contact/>
+                    <Contact client={quote?.client}/>
                     <Notes />
                 </Stack>
             </Grid>
