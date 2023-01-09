@@ -52,7 +52,6 @@ function Notes(props: any) {
         listNotes(props.client)
         .then((result) => {
           setRows(result);
-          console.log(result);
           setIsLoaded(true);
         }, (err) => {
             setIsLoaded(true);

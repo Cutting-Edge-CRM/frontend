@@ -1,8 +1,12 @@
 import { AddressAutofill } from '@mapbox/search-js-react';
 import { AddCircleOutlineOutlined, EmailOutlined, PersonOutline, PhoneOutlined } from '@mui/icons-material';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, Stack, Step, StepLabel, Stepper, TextField } from '@mui/material';
+import mapboxgl from 'mapbox-gl';
 import * as React from 'react';
 import { useState } from 'react';
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiY3V0dGluZ2VkZ2Vjcm0iLCJhIjoiY2xjaHk1cWZrMmYzcDN3cDQ5bGRzYTY1bCJ9.0B4ntLJoCZzxQ0SUxqaQxg';
+
   
 export default function NewClient(props: any) {
     const [contact, setContact] = useState({phone: " ", email: " "} as any);
@@ -138,7 +142,7 @@ export default function NewClient(props: any) {
                 </Stack>
                 ) : (
                     <form>
-                    <AddressAutofill accessToken={props.token}>
+                    <AddressAutofill accessToken={mapboxgl.accessToken}>
                       <Stack spacing={2}>
                           <TextField
                           id="address" 

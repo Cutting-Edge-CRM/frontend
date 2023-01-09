@@ -6,6 +6,7 @@ import { ImportExport, FileDownloadOutlined, FileUploadOutlined, AddCircleOutlin
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import NewClient from './NewClient';
+import SelectClient from './SelectClient';
 
 
 export default function Table(props: any) {
@@ -115,6 +116,12 @@ export default function Table(props: any) {
       onClose={handleClose}
       update={handleUpdate}
         />
-    </Box>
+        <SelectClient
+        open={ props.type === 'Quotes' && newOpen}
+        onClose={handleClose}
+        update={handleUpdate}
+        type={props.type}
+        />
+      </Box>
   );
 }
