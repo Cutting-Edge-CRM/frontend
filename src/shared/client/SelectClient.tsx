@@ -4,9 +4,9 @@ import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarQuickFilter } fr
 import mapboxgl from 'mapbox-gl';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { listClients } from '../api/client.api';
-import { listProperties } from '../api/property.api';
-import EditProperty from './EditProperty';
+import { listClients } from '../../api/client.api';
+import { listProperties } from '../../api/property.api';
+import EditProperty from '../property/EditProperty';
 import NewClient from './NewClient';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3V0dGluZ2VkZ2Vjcm0iLCJhIjoiY2xjaHk1cWZrMmYzcDN3cDQ5bGRzYTY1bCJ9.0B4ntLJoCZzxQ0SUxqaQxg';
@@ -120,6 +120,79 @@ export default function SelectClient(props: any) {
         })
       }, [client])
 
+      function SelectStepper(props: any) {
+        return (<><Stepper activeStep={activeStep}>
+          <Step>
+            <StepLabel>Select Client</StepLabel>
+          </Step>
+          <Step>
+            <StepLabel>Select Property</StepLabel>
+          </Step>
+        </Stepper><React.Fragment>
+            {activeStep === 0 ? (
+              <Box sx={{ height: 400, width: '100%' }}>
+                {!clientIsLoaded && <Typography>Loading</Typography>}
+                {clientIsLoaded &&
+                  <DataGrid
+                    rows={clientRows}
+                    columns={clientColumns}
+                    pageSize={10}
+                    rowsPerPageOptions={[10, 20, 50]}
+                    components={{ Toolbar: ClientToolbar }}
+                    componentsProps={{
+                      toolbar: {
+                        showQuickFilter: true,
+                        quickFilterProps: { debounceMs: 500 },
+                      }, ...props
+                    }}
+                    onRowClick={handleClientRowClick} />}
+              </Box>
+            ) : (
+              <Box sx={{ height: 400, width: '100%' }}>
+                {!propertyIsLoaded && <Typography>Loading</Typography>}
+                {propertyIsLoaded &&
+                  <DataGrid
+                    rows={propertyRows}
+                    columns={propertyColumns}
+                    pageSize={10}
+                    rowsPerPageOptions={[10, 20, 50]}
+                    components={{ Toolbar: PropertyToolbar }}
+                    componentsProps={{
+                      toolbar: {
+                        showQuickFilter: true,
+                        quickFilterProps: { debounceMs: 500 },
+                      }, ...props
+                    }}
+                    onRowClick={handlePropertyRowClick} />}
+
+              </Box>
+            )}
+            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+              <Button
+                color="inherit"
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                sx={{ mr: 1 }}
+              >
+                Back
+              </Button>
+              <Box sx={{ flex: '1 1 auto' }} />
+              {activeStep === 1 ? (
+                <Button
+                  onClick={handleSave}>
+                  Create
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleNext}
+                  disabled={false}>
+                  Next
+                </Button>
+              )}
+            </Box>
+          </React.Fragment></>);
+      }
+
       function ClientToolbar(props: any) {
         return (
           <GridToolbarContainer>
@@ -140,86 +213,29 @@ export default function SelectClient(props: any) {
 
     return (
       <Dialog onClose={handleCancel} open={props.open}>
-        <DialogTitle>Select client for {props.type === 'Quotes' ? 'Quote' : props.type === 'Jobs' ? 'Job' : 'Invoice'}</DialogTitle>
+        <DialogTitle>Select client for {props.type.slice(0,-1)}</DialogTitle>
         <DialogContent>
         <Box sx={{ width: '100%' }}>
-        <Stepper activeStep={activeStep}>
-            <Step>
-                <StepLabel>Select Client</StepLabel>
-            </Step>
-            <Step>
-                <StepLabel>Select Property</StepLabel>
-            </Step>
-        </Stepper>
-            <React.Fragment>
-                {activeStep === 0 ? (
-                <Box sx={{ height: 400, width: '100%' }}>
-                    {!clientIsLoaded && <Typography>Loading</Typography>}
-                    {clientIsLoaded && 
-                    <DataGrid
-                        rows={clientRows}
-                        columns={clientColumns}
-                        pageSize={10}
-                        rowsPerPageOptions={[10, 20, 50]}
-                        components={{ Toolbar: ClientToolbar }}
-                        componentsProps={{
-                        toolbar: {
-                            showQuickFilter: true,
-                            quickFilterProps: { debounceMs: 500 },
-                        }, ...props
-                        }}
-                        onRowClick={handleClientRowClick}
-                    />
-                    }
-                </Box>
-                ) : (
-                <Box sx={{ height: 400, width: '100%' }}>
-                    {!propertyIsLoaded && <Typography>Loading</Typography>}
-                    {propertyIsLoaded && 
-                    <DataGrid
-                        rows={propertyRows}
-                        columns={propertyColumns}
-                        pageSize={10}
-                        rowsPerPageOptions={[10, 20, 50]}
-                        components={{ Toolbar: PropertyToolbar }}
-                        componentsProps={{
-                        toolbar: {
-                            showQuickFilter: true,
-                            quickFilterProps: { debounceMs: 500 },
-                        }, ...props
-                        }}
-                        onRowClick={handlePropertyRowClick}
-                    />
-                    }
-                    
-                </Box>
-                )}
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-                >
-                Back
-                </Button>
-                <Box sx={{ flex: '1 1 auto' }} />
-                {activeStep === 1 ? (
-                <Button
-                onClick={handleSave}>
-                    Create
-                </Button>
-                ) : (
-                <Button
-                onClick={handleNext}
-                disabled={false}>
-                    Next
-                </Button>
-                )}
-            </Box>
-            </React.Fragment>
+          {(props.type === 'Quotes' || props.type === 'Jobs') && <SelectStepper props={props}/>}
+          {props.type === 'Invoices' &&
+          <Box sx={{ height: 400, width: '100%' }}>
+                {!clientIsLoaded && <Typography>Loading</Typography>}
+                {clientIsLoaded &&
+                  <DataGrid
+                    rows={clientRows}
+                    columns={clientColumns}
+                    pageSize={10}
+                    rowsPerPageOptions={[10, 20, 50]}
+                    components={{ Toolbar: ClientToolbar }}
+                    componentsProps={{
+                      toolbar: {
+                        showQuickFilter: true,
+                        quickFilterProps: { debounceMs: 500 },
+                      }, ...props
+                    }}
+                    onRowClick={handleClientRowClick} />}
+            </Box>}
         </Box>
-
         </DialogContent>
         <DialogActions>
             <Button onClick={handleCancel}>Cancel</Button>

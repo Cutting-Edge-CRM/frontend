@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Unstable_Grid2'
 import { Stack } from '@mui/system';
-import Contact from '../../components/Contact';
-import Notes from '../../components/Notes';
-import QuoteDetails from '../../components/QuoteDetails';
+import Contact from '../../shared/client/Contact';
+import Notes from '../../shared/note/Notes';
+import QuoteDetails from '../../shared/QuoteDetails';
 import { useParams } from 'react-router-dom';
-import Property from '../../components/Property';
+import Property from '../../shared/property/Property';
 import { getQuote } from '../../api/quote.api';
 import { Typography } from '@mui/material';
 

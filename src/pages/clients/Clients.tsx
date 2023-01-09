@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import Table from '../../components/Table';
-import ImportClients from '../../components/ImportClients';
+import Table from '../../shared/Table';
+import ImportClients from '../../shared/client/ImportClients';
 import { clientColumns } from '../../util/columns';
 import { listClients } from '../../api/client.api';
 

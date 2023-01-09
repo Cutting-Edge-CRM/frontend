@@ -5,8 +5,8 @@ import { Button, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, 
 import { ImportExport, FileDownloadOutlined, FileUploadOutlined, AddCircleOutlineOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import NewClient from './NewClient';
-import SelectClient from './SelectClient';
+import NewClient from './client/NewClient';
+import SelectClient from './client/SelectClient';
 
 
 export default function Table(props: any) {
@@ -117,7 +117,7 @@ export default function Table(props: any) {
       update={handleUpdate}
         />
         <SelectClient
-        open={ props.type === 'Quotes' && newOpen}
+        open={ (props.type === 'Quotes' || props.type === 'Jobs' || props.type === 'Invoices') && newOpen}
         onClose={handleClose}
         update={handleUpdate}
         type={props.type}

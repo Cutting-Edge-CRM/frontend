@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { listJobs } from '../../api/job.api';
-import Table from '../../components/Table'
+import Table from '../../shared/Table'
 import { jobColumns } from '../../util/columns';
 
 function Jobs() {

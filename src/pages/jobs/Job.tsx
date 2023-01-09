@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Unstable_Grid2'
 import { Stack } from '@mui/system';
-import Contact from '../../components/Contact';
-import Visits from '../../components/Visits';
-import Notes from '../../components/Notes';
-import JobDetails from '../../components/JobDetails';
+import Contact from '../../shared/client/Contact';
+import Visits from '../../shared/visit/Visits';
+import Notes from '../../shared/note/Notes';
+import JobDetails from '../../shared/JobDetails';
 import { getJob } from '../../api/job.api';
 import { useParams } from 'react-router-dom';
 import { Typography } from '@mui/material';
-import Property from '../../components/Property';
+import Property from '../../shared/property/Property';
 
 function Job() {
     const [isLoaded, setIsLoaded] = useState(false);

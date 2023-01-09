@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { listQuotes } from '../../api/quote.api';
-import Table from '../../components/Table'
+import Table from '../../shared/Table'
 import { quoteColumns } from '../../util/columns';
   
 

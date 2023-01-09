@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { listInvoices } from '../../api/invoice.api';
-import Table from '../../components/Table'
+import Table from '../../shared/Table'
 import { invoiceColumns } from '../../util/columns';
 
 function Invoices() {

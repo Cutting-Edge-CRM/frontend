@@ -1,7 +1,7 @@
 import { CreateOutlined } from '@mui/icons-material';
 import { Avatar, Card, IconButton, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { getClient } from '../api/client.api';
+import { getClient } from '../../api/client.api';
 import EditContact from './EditContact';
 
 

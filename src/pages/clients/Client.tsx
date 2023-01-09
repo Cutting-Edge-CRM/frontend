@@ -1,11 +1,11 @@
 import React from 'react';
-import TabbedTable from '../../components/TabbedTable';
-import Properties from '../../components/Properties';
+import TabbedTable from '../../shared/TabbedTable';
+import Properties from '../../shared/property/Properties';
 import Grid from '@mui/material/Unstable_Grid2'
 import { Stack } from '@mui/system';
-import Contact from '../../components/Contact';
-import Visits from '../../components/Visits';
-import Notes from '../../components/Notes';
+import Contact from '../../shared/client/Contact';
+import Visits from '../../shared/visit/Visits';
+import Notes from '../../shared/note/Notes';
 import { useParams } from 'react-router-dom';
 
 function Client() {

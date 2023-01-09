@@ -4,7 +4,7 @@ import { AddCircleOutlineOutlined, CreateOutlined, DeleteOutline, MoreVert } fro
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import mapboxgl from 'mapbox-gl';
 import EditProperty from './EditProperty';
-import { listProperties } from '../api/property.api';
+import { listProperties } from '../../api/property.api';
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3V0dGluZ2VkZ2Vjcm0iLCJhIjoiY2xjaHk1cWZrMmYzcDN3cDQ5bGRzYTY1bCJ9.0B4ntLJoCZzxQ0SUxqaQxg';

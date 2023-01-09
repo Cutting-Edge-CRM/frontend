@@ -1,33 +1,30 @@
-import { AddCircleOutlineOutlined, CalendarMonthOutlined, CreateOutlined, DeleteOutline, MoreVert } from '@mui/icons-material';
+import { AddCircleOutlineOutlined, CreateOutlined, DeleteOutline, MoreVert } from '@mui/icons-material';
 import { Card, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { listUsers } from '../api/user.api';
-import { listVisits } from '../api/visit.api';
-import EditVisit from './EditVisit';
+import { listNotes } from '../../api/note.api';
+import EditNote from './EditNote';
 
 
-function Visits(props: any) {
+function Notes(props: any) {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const isOpen = Boolean(anchorEl);
     const [rows, setRows] = useState([] as any);
     const [open, setOpen] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
-    const [visit, setVisit] = useState({} as any);
+    const [note, setNote] = useState({} as any);
     const [type, setType] = useState('');
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const isOpen = Boolean(anchorEl);
-    const [users, setUsers] = useState([] as any[]);
   
-    const openMenu = (event: React.MouseEvent<HTMLButtonElement>, visit: any) => {
-        setVisit(visit);
+    const openMenu = (event: React.MouseEvent<HTMLButtonElement>, note: any) => {
+        setNote(note);
         setAnchorEl(event.currentTarget);
-        setVisit({ ...visit, users: users.filter((user) => visit.users.some((obj: any) => obj.id === user.id))})
     };
     const closeMenu = () => {
       setAnchorEl(null);
     };
 
     const handleNewOpen = () => {
-        setVisit({users: []});
+        setNote({});
         setType('new');
         setOpen(true);
     };
@@ -52,21 +49,13 @@ function Visits(props: any) {
     };
 
     useEffect(() => {
-        listUsers()
-        .then((result: any) => {
-          setIsLoaded(true);
-          setUsers(result);
-        }, (err) => {
-          setIsLoaded(true);
-          setError(err.message)
-        })
-      }, [])
-
-    useEffect(() => {
-        listVisits(props.client)
+        listNotes(props.client)
         .then((result) => {
           setRows(result);
+          setIsLoaded(true);
         }, (err) => {
+            setIsLoaded(true);
+            setError(err.message);
         })
       }, [props])
 
@@ -77,55 +66,50 @@ function Visits(props: any) {
     return (<Typography>Loading...</Typography>);
     }
 
-
     return (
         <Card>
             <Stack direction="row">
-                <Typography>Visits</Typography>
+                <Typography>Notes</Typography>
                 <IconButton onClick={handleNewOpen}>
                     <AddCircleOutlineOutlined />
                 </IconButton>
             </Stack>
             <List>
                 {
-                    rows.map((visit: any) => (
-                        <ListItem key={visit.id}>
+                    rows.map((note: any) => (
+                        <ListItem key={note.id}>
                                 <Grid container spacing={2}>
-                                    <Grid item={true} xs={2}>
-                                        <CalendarMonthOutlined/>
-                                    </Grid>
-                                    <Grid item={true} xs={8}>
+                                    <Grid item={true} xs={10}>
                                         <Stack>
-                                            <Typography>{visit.name}</Typography>
-                                            <Typography>{visit.address}</Typography>
-                                            <Typography>{visit.date}</Typography>
-                                            <Typography>{visit.users.map((user: any) => user.name).join(", ")}</Typography>
+                                            <Typography>{note.title}</Typography>
+                                            <Typography>{note.content}</Typography>
+                                            <Typography>{note.date}</Typography>
                                         </Stack>
                                     </Grid>
                                     <Grid item={true} xs={2}>
                                         <IconButton
-                                        onClick={(e) => openMenu(e, visit)}
+                                        onClick={(e) => openMenu(e, note)}
                                         >
                                             <MoreVert />
                                         </IconButton>
                                         <Menu
-                                        id="visit-menu"
+                                        id="note-menu"
                                         anchorEl={anchorEl}
                                         open={isOpen}
                                         onClose={closeMenu}
                                         >
                                         <MenuList>
-                                            <MenuItem onClick={handleEditOpen}>
-                                                <ListItemIcon>
-                                                    <CreateOutlined />
-                                                </ListItemIcon>
-                                                <ListItemText>Edit Visit</ListItemText>
+                                            <MenuItem onClick={() => {handleEditOpen()}}>
+                                            <ListItemIcon>
+                                                <CreateOutlined />
+                                            </ListItemIcon>
+                                            <ListItemText>Edit Note</ListItemText>
                                             </MenuItem>
                                             <MenuItem>
-                                                <ListItemIcon>
-                                                    <DeleteOutline />
-                                                </ListItemIcon>
-                                                <ListItemText>Delete Visit</ListItemText>
+                                            <ListItemIcon>
+                                                <DeleteOutline />
+                                            </ListItemIcon>
+                                            <ListItemText>Delete Note</ListItemText>
                                             </MenuItem>
                                         </MenuList>
                                         </Menu>
@@ -135,18 +119,17 @@ function Visits(props: any) {
                     ))
                 }
             </List>
-            <EditVisit
-            visit={visit}
-            setVisit={setVisit}
+            <EditNote
+            note={note}
+            setNote={setNote}
             open={open}
             onClose={handleClose}
             update={handleUpdate}
             create={handleCreate}
             type={type}
-            users={users}
             />
         </Card>
     )
 }
 
-export default Visits;
+export default Notes;

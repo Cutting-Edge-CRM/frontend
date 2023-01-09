@@ -1,10 +1,10 @@
 import React from 'react';
-import Properties from '../../components/Properties';
+import Properties from '../../shared/property/Properties';
 import Grid from '@mui/material/Unstable_Grid2'
 import { Stack } from '@mui/system';
-import Contact from '../../components/Contact';
-import Notes from '../../components/Notes';
-import InvoiceDetails from '../../components/InvoiceDetails';
+import Contact from '../../shared/client/Contact';
+import Notes from '../../shared/note/Notes';
+import InvoiceDetails from '../../shared/InvoiceDetails';
 
 function Invoice() {
     return (
