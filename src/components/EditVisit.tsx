@@ -1,13 +1,9 @@
 import { PersonOutline } from '@mui/icons-material';
 import { Box, Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
-import { Dayjs } from 'dayjs';
 import * as React from 'react';
-import { useState } from 'react';
   
 export default function EditVisit(props: any) {
-    const [startDate, setStartDate] = useState<Dayjs | null>(null);
-    const [endDate, setEndDate] = useState<Dayjs | null>(null);
     
     const handleCancel = () => {
       props.onClose();

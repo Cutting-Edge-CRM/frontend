@@ -1,36 +1,71 @@
 import { AddCircleOutlineOutlined, CreateOutlined, DeleteOutline, MoreVert } from '@mui/icons-material';
 import { Card, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { listNotes } from '../api/note.api';
 import EditNote from './EditNote';
 
-const notes = [{id: 1, title: "Appointment", content: "Lorem ipsum ergo", date: "Nov 28 - Dec 3"}, {id: 2, title: "Appointment", address: "Lorem ipsum ergo", date: "Nov 28 - Dec 3"}]
 
-
-function Notes() {
-    const [editOpen, setEditOpen] = React.useState(false);
-    const [selectedValue, setSelectedValue] = React.useState("");
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+function Notes(props: any) {
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const isOpen = Boolean(anchorEl);
+    const [rows, setRows] = useState([] as any);
+    const [open, setOpen] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [error, setError] = useState(null);
+    const [note, setNote] = useState({} as any);
+    const [type, setType] = useState('');
   
-    const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-      setAnchorEl(event.currentTarget);
+    const openMenu = (event: React.MouseEvent<HTMLButtonElement>, note: any) => {
+        setNote(note);
+        setAnchorEl(event.currentTarget);
     };
     const closeMenu = () => {
       setAnchorEl(null);
     };
 
     const handleNewOpen = () => {
+        setNote({});
+        setType('new');
+        setOpen(true);
     };
 
     const handleEditOpen = () => {
-        // set state to pass into modal
-        setEditOpen(true);
+        setType('edit');
+        setOpen(true);
     };
-  
-    const handleEditClose = (value: string) => {
-      setEditOpen(false);
-      setSelectedValue(value);
+
+    const handleClose = (value: string) => {
+        setOpen(false);
     };
+
+    const handleUpdate = (value: string) => {
+        setOpen(false);
+        // save value
+    };
+
+    const handleCreate = (value: string) => {
+        setOpen(false);
+        // save value
+    };
+
+    useEffect(() => {
+        listNotes(props.client)
+        .then((result) => {
+          setRows(result);
+          console.log(result);
+          setIsLoaded(true);
+        }, (err) => {
+            setIsLoaded(true);
+            setError(err.message);
+        })
+      }, [props])
+
+    if (error) {
+    return (<Typography>{error}</Typography>);
+    }
+    if (!isLoaded) {
+    return (<Typography>Loading...</Typography>);
+    }
 
     return (
         <Card>
@@ -42,7 +77,7 @@ function Notes() {
             </Stack>
             <List>
                 {
-                    notes.map(note => (
+                    rows.map((note: any) => (
                         <ListItem key={note.id}>
                                 <Grid container spacing={2}>
                                     <Grid item={true} xs={10}>
@@ -54,12 +89,12 @@ function Notes() {
                                     </Grid>
                                     <Grid item={true} xs={2}>
                                         <IconButton
-                                        onClick={openMenu}
+                                        onClick={(e) => openMenu(e, note)}
                                         >
                                             <MoreVert />
                                         </IconButton>
                                         <Menu
-                                        id="visit-menu"
+                                        id="note-menu"
                                         anchorEl={anchorEl}
                                         open={isOpen}
                                         onClose={closeMenu}
@@ -86,9 +121,13 @@ function Notes() {
                 }
             </List>
             <EditNote
-            selectedValue={selectedValue}
-            open={editOpen}
-            onClose={handleEditClose}
+            note={note}
+            setNote={setNote}
+            open={open}
+            onClose={handleClose}
+            update={handleUpdate}
+            create={handleCreate}
+            type={type}
             />
         </Card>
     )

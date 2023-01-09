@@ -66,7 +66,6 @@ function Visits(props: any) {
         listVisits(props.client)
         .then((result) => {
           setRows(result);
-          console.log(result);
         }, (err) => {
         })
       }, [props])

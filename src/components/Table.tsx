@@ -4,10 +4,30 @@ import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-d
 import { Button, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Typography } from '@mui/material';
 import { ImportExport, FileDownloadOutlined, FileUploadOutlined, AddCircleOutlineOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import NewClient from './NewClient';
 
 
 export default function Table(props: any) {
   const navigate = useNavigate();
+  const [newOpen, setNewOpen] = useState(false);
+
+  const handleRowClick = (event: any) => {
+    navigate(`/${props.type}/${event.id}`)
+  }
+
+  const handleClose = (value: string) => {
+      setNewOpen(false);
+  };
+
+  const handleUpdate = (value: string) => {
+    setNewOpen(false);
+      // save value
+  };
+
+  const handleNewOpen = () => {
+    setNewOpen(true);
+  }
 
   function CustomToolbar() {
 
@@ -65,17 +85,12 @@ export default function Table(props: any) {
                   </MenuList>
                 </Menu></>
           }
-        <Button startIcon={<AddCircleOutlineOutlined />}>New {props.type.slice(0,-1)}</Button>
+        <Button onClick={handleNewOpen} startIcon={<AddCircleOutlineOutlined />}>New {props.type.slice(0,-1)}</Button>
         </>
         </Box>
       </GridToolbarContainer>
     );
   }
-
-  const handleRowClick = (event: any) => {
-    navigate(`/${props.type}/${event.id}`)
-  }
-
 
   return (
     <Box sx={{ height: 400, width: '100%' }}>
@@ -89,12 +104,17 @@ export default function Table(props: any) {
           toolbar: {
             showQuickFilter: true,
             quickFilterProps: { debounceMs: 500 },
-          },
+          }, ...props
         }}
         checkboxSelection
         disableSelectionOnClick
         onRowClick={handleRowClick}
       />
+        <NewClient
+      open={ props.type === 'Clients' && newOpen}
+      onClose={handleClose}
+      update={handleUpdate}
+        />
     </Box>
   );
 }

@@ -22,7 +22,7 @@ function Client() {
                 <Stack spacing={2}>
                     <Contact client={id}/>
                     <Visits client={id}/>
-                    <Notes />
+                    <Notes client={id}/>
                 </Stack>
             </Grid>
         </Grid>
