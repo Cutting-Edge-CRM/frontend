@@ -12,7 +12,7 @@ const geocodingClient = mbxGeocoding({accessToken: mapboxgl.accessToken});
   
 function Properties(props: any) {
     const [open, setOpen] = useState(false);
-    const [type, setType] = useState('');
+    const [modalType, setModalType] = useState('');
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const isOpen = Boolean(anchorEl);
     const [rows, setRows] = useState([]);
@@ -24,7 +24,8 @@ function Properties(props: any) {
     const [coords, setCoords] = useState([] as any);
     const [property, setProperty] = useState({});
 
-    const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const openMenu = (event: React.MouseEvent<HTMLButtonElement>, row: any) => {
+        setProperty(row);
         setAnchorEl(event.currentTarget);
     };
     const closeMenu = () => {
@@ -33,28 +34,27 @@ function Properties(props: any) {
 
     const handleNewOpen = () => {
         setProperty({});
-        setType('new');
+        setModalType('new');
         setOpen(true);
     };
 
-    const handleEditOpen = (row: any) => {
-        setProperty(row);
-        setType('edit');
+    const handleEditOpen = () => {
+        setModalType('edit');
         setOpen(true);
     };
 
-    const handleClose = (value: string) => {
+    const handleClose = () => {
         setOpen(false);
     };
 
-    const handleUpdate = (value: string) => {
+    const handleUpdate = () => {
         setOpen(false);
-        // save value
+        // show success
     };
 
-    const handleCreate = (value: string) => {
+    const handleCreate = (res: any) => {
+        // set selected property
         setOpen(false);
-        // save value
     };
 
     const handleRowClick = (event: any) => {
@@ -93,7 +93,7 @@ function Properties(props: any) {
                         return (
                             <>
                             <IconButton
-                                onClick={openMenu}
+                                onClick={(e) => openMenu(e, params.row)}
                             >
                                 <MoreVert />
                             </IconButton>
@@ -104,7 +104,7 @@ function Properties(props: any) {
                                 onClose={closeMenu}
                             >
                                 <MenuList>
-                                    <MenuItem onClick={() => { handleEditOpen(params.row); } }>
+                                    <MenuItem onClick={handleEditOpen}>
                                         <ListItemIcon>
                                             <CreateOutlined />
                                         </ListItemIcon>
@@ -157,7 +157,7 @@ function Properties(props: any) {
         setIsLoaded(true);
         setError(err.message)
       })
-    }, [props])
+    }, [props, open])
 
     function getCoords(address: any) {
         let query =  [address.address, address.address2, address.city, address.state, address.zip, address.country].join(" ");
@@ -213,8 +213,9 @@ function Properties(props: any) {
             onClose={handleClose}
             update={handleUpdate}
             create={handleCreate}
-            type={type}
+            modalType={modalType}
             token={mapboxgl.accessToken}
+            {...props}
             />
         </Card>
     )

@@ -1,16 +1,34 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from '@mui/material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from '@mui/material';
 import * as React from 'react';
 import { AddressAutofill } from '@mapbox/search-js-react';
+import { createProperty, updateProperty } from '../../api/property.api';
+import { useState } from 'react';
 
 export default function EditProperty(props: any) {
+  const [error, setError] = useState(null);
   
     const handleCancel = () => {
       props.onClose();
     };
-
     const handleSave = () => {
-      if (props.type === 'edit') props.update();
-      if (props.type === 'new') props.create();
+      if (props.modalType === 'edit') {
+        // save value
+        updateProperty({...props.property, client: props.client})
+        .then(res => {
+            props.update(res);
+        }, (err) => {
+          setError(err.message)
+        })
+      }
+      if (props.modalType === 'new') {
+          // save value
+          createProperty({...props.property, client: props.client})
+          .then(res => {
+              props.create(res);
+          }, (err) => {
+            setError(err.message)
+          })
+      }
     };
 
     const handleChange = (event: any) => {
@@ -19,7 +37,7 @@ export default function EditProperty(props: any) {
 
     return (
       <Dialog onClose={handleCancel} open={props.open}>
-        <DialogTitle>{props.type === 'edit' ? "Edit Property" : "Create New Property"}</DialogTitle>
+        <DialogTitle>{props.modalType === 'edit' ? "Edit Property" : "Create New Property"}</DialogTitle>
         <DialogContent>
           <form>
           <AddressAutofill accessToken={props.token}>
@@ -77,6 +95,7 @@ export default function EditProperty(props: any) {
             <Button onClick={handleCancel}>Cancel</Button>
             <Button onClick={handleSave}>Save Changes</Button>
         </DialogActions>
+        {error && <Alert severity="error">{error}</Alert>}
       </Dialog>
     );
   }
