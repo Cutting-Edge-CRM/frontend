@@ -1,90 +1,140 @@
 import { AddCircleOutlineOutlined, EmailOutlined, PersonOutline, PhoneOutlined } from '@mui/icons-material';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, Stack, TextField } from '@mui/material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, Stack, TextField } from '@mui/material';
 import * as React from 'react';
+import { useState } from 'react';
+import RegexParser from 'regex-parser';
+import { updateClient } from '../../api/client.api';
+
   
 export default function EditContact(props: any) {
 
+  const [contact, setContact] = useState({...props.contact});
+  const [error, setError] = useState(null);
+
     const handleCancel = () => {
-        props.onClose();
-      };
-  
-      const handleSave = () => {
-        if (props.type === 'edit') props.update();
-        if (props.type === 'new') props.create();
-      };
-  
-      const handleChange = (event: any) => {
-        props.setContact({ ...props.contact, [event.target.id]: event.target.value.trim()});
-      };
+      props.onClose();
+      setContact({...props.contact});
+    };
 
-      let phoneNumbers: any = []
-      let emailAddresses: any = []
-
-      const handleAddPhone = (event: any) => {
-        let number = Object.keys(props.contact).filter(k => k.startsWith('phone')).filter(k => !!props.contact[k]).length + 1;
-        let id = `phone${number}`;
-        let newContact = {...props.contact};
-        newContact[id] = " ";
-        props.setContact(newContact);
-      }
-
-      const handleAddEmail = (event: any) => {
-        let number = Object.keys(props.contact).filter(k => k.startsWith('email')).filter(k => !!props.contact[k]).length + 1;
-        let id = `email${number}`;
-        let newContact = {...props.contact};
-        newContact[id] = " ";
-        props.setContact(newContact);
-      }
-
-      phoneNumbers = Object.keys(props.contact).filter(k => k.startsWith('phone')).filter(k => !!props.contact[k]).map((_, index) => {
-
-        let number = '';
-        if (index > 0) number = `${index+1}`;
-        let id = `phone${number}`;
-
-        return (
-            <TextField 
-            id={id}
-            key={id}
-            label="Phone" 
-            type={"tel"}
-            defaultValue={props.contact[id] ? props.contact[id]  : undefined}
-            onChange={handleChange}
-            InputProps={{
-                startAdornment: (
-                <InputAdornment position="start">
-                    <PhoneOutlined />
-                </InputAdornment>
-                ),
-            }}
-            />
-        );
+    const handleSave = () => {
+      updateClient(buildClient())
+      .then(res => {
+        props.update();
+      }, (err) => {
+        setError(err.message)
       })
+    };
 
-      emailAddresses = Object.keys(props.contact).filter(k => k.startsWith('email')).filter(k => !!props.contact[k]).map((_, index) => {
+    const handleChange = (event: any) => {
+      setContact({ ...contact, [event.target.id]: event.target.value.trim()});
+    };
 
-        let number = '';
-        if (index > 0) number = `${index+1}`;
-        let id = `email${number}`;
+    const handleChangePhone = (event: any, index: number) => {
+      let values = [...props.phones];
+      values[index] = event.target.value;
+      props.setPhones(values);
+    }
 
-        return (
-            <TextField 
-            id={id}
-            key={id}
-            label="Email" 
-            type={"email"}
-            defaultValue={props.contact[id] ? props.contact[id]  : undefined}
-            onChange={handleChange}
-            InputProps={{
-                startAdornment: (
-                <InputAdornment position="start">
-                    <EmailOutlined />
-                </InputAdornment>
-                ),
-            }}
-            />
-        );
+    const handleRemovePhone = (event: any, index: number) => {
+      let values = [...props.phones];
+      props.setPhones(values.slice(undefined, index).concat(values.slice(index+1, undefined)));
+    }
+
+    const handleAddPhone = (event: any) => {
+      props.setPhones([...props.phones, ''])
+    }
+
+    const handleChangeEmail = (event: any, index: number) => {
+      let values = [...props.emails];
+      values[index] = event.target.value;
+      props.setEmails(values);
+    }
+
+    const handleRemoveEmail = (event: any, index: number) => {
+      let values = [...props.emails];
+      props.setEmails(values.slice(undefined, index).concat(values.slice(index+1, undefined)));
+    }
+
+    const handleAddEmail = (event: any) => {
+      props.setEmails([...props.emails, ''])
+    }
+
+    const validInput = () => {
+      let validContact = buildClient();
+      return (validContact.phone || validContact.email || validContact.name?.trim().length > 2);
+    }
+
+    const emailValid = (email: any) => {
+      // eslint-disable-next-line
+      let validEmail = RegexParser("/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.");
+      return validEmail.test(email);
+    }
+
+    const buildClient = () => {
+      let client = {} as any;
+      props.phones?.filter((p: any) => p.trim().length > 5).forEach((phone: any, index: any) => {
+        let key = 'phone';
+        if (index > 0) key = `phone${index+1}`
+        client[key] = phone;
       })
+      props.emails?.filter((e: any) => emailValid(e)).forEach((email: any, index: any) => {
+        let key = 'email';
+        if (index > 0) key = `email${index+1}`
+        client[key] = email;
+      })
+      return {...client, name: contact.name, id: contact.id, company: contact.company};
+    }
+
+    let phoneNumbers: any = []
+    let emailAddresses: any = []
+
+    phoneNumbers = props.phones?.map((number: any, index: any) => {
+      return (
+          <TextField
+          key={index}
+          label="Phone"
+          type={"tel"}
+          value={number}
+          onChange={(e) => handleChangePhone(e, index)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <PhoneOutlined />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <Button
+              onClick={(e) => handleRemovePhone(e,index)}
+              >Remove
+              </Button>
+            )
+          }} />
+      );
+    })
+
+    emailAddresses = props.emails?.map((email: any, index: any) => {
+      return (
+          <TextField
+          key={index}
+          label="Email"
+          type={"email"}
+          value={email}
+          onChange={(e) => handleChangeEmail(e, index)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <EmailOutlined />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <Button
+              onClick={(e) => handleRemoveEmail(e,index)}
+              >Remove
+              </Button>
+            )
+          }} />
+      );
+    })
 
     return (
       <Dialog onClose={handleCancel} open={props.open}>
@@ -94,7 +144,7 @@ export default function EditContact(props: any) {
                 <TextField
                 id="name" 
                 label="Name"
-                defaultValue={props.contact.name ? props.contact.name : undefined}
+                defaultValue={contact.name ? contact.name : undefined}
                 onChange={handleChange}
                 InputProps={{
                     startAdornment: (
@@ -112,8 +162,9 @@ export default function EditContact(props: any) {
         </DialogContent>
         <DialogActions>
             <Button onClick={handleCancel}>Cancel</Button>
-            <Button onClick={handleSave}>Save Changes</Button>
+            <Button disabled={!validInput()} onClick={handleSave}>Save Changes</Button>
         </DialogActions>
+        {error && <Alert severity="error">{error}</Alert>}
       </Dialog>
     );
   }

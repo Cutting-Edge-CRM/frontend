@@ -114,7 +114,6 @@ export default function Table(props: any) {
         <NewClient
       open={ props.type === 'Clients' && newOpen}
       onClose={handleClose}
-      update={handleUpdate}
         />
         <SelectClient
         open={ (props.type === 'Quotes' || props.type === 'Jobs' || props.type === 'Invoices') && newOpen}

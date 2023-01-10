@@ -57,9 +57,40 @@ async function getProperty(id: string) {
     }
 }
 
+async function createProperty(property: any) {
+    try {
+    var headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+        'tenantId': auth.tenantId as string,
+        'userId': auth.currentUser?.uid as string
+    }
+    var body = JSON.stringify(property);
+    const requestOptions: RequestInit = {
+        method: 'POST',
+        headers: headers,
+        body: body
+    };
+        let url = new URL(`http://localhost:3000/properties/create-property`);
+        return fetch(url, requestOptions)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            res.json().then(err => {
+                console.error(`Error creating property: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+            })
+            throw new Error(`Error creating property`);
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 
 
 export {
     listProperties,
-    getProperty
+    getProperty,
+    createProperty
   };

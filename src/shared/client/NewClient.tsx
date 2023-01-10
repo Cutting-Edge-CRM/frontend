@@ -1,25 +1,71 @@
 import { AddressAutofill } from '@mapbox/search-js-react';
 import { AddCircleOutlineOutlined, EmailOutlined, PersonOutline, PhoneOutlined } from '@mui/icons-material';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, Stack, Step, StepLabel, Stepper, TextField } from '@mui/material';
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, Stack, Step, StepLabel, Stepper, TextField } from '@mui/material';
 import mapboxgl from 'mapbox-gl';
 import * as React from 'react';
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import RegexParser from 'regex-parser';
+import { createClient } from '../../api/client.api';
+import { createProperty } from '../../api/property.api';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3V0dGluZ2VkZ2Vjcm0iLCJhIjoiY2xjaHk1cWZrMmYzcDN3cDQ5bGRzYTY1bCJ9.0B4ntLJoCZzxQ0SUxqaQxg';
 
   
 export default function NewClient(props: any) {
-    const [contact, setContact] = useState({phone: " ", email: " "} as any);
+    const [contact, setContact] = useState({} as any);
     const [property, setProperty] = useState({} as any);
     const [activeStep, setActiveStep] = useState(0);
+    const [phones, setPhones] = useState([''] as string[]);
+    const [emails, setEmails] = useState([''] as string[]);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+
 
     const handleCancel = () => {
         props.onClose();
+        setContact({});
+        setProperty({});
+        setPhones(['']);
+        setEmails(['']);
       };
   
       const handleSave = () => {
-        props.create();
+        createClient(buildClient())
+        .then(res => {
+          if (propValid()) {
+            createProperty({client: res.id, ...property})
+            .then(propRes => {
+              navigate(`/clients/${res.id}`);
+            }, (propErr) => {
+              setError(propErr.message);
+            })
+          } else {
+            navigate(`/clients/${res.id}`);
+          }
+        }, (err) => {
+          setError(err.message);
+        })
       };
+
+      const propValid = () => {
+        return Object.keys(property).filter(k => !!property[k]?.trim()).length > 0;
+      }
+
+      const buildClient = () => {
+        let client = {} as any;
+        phones.filter(p => p.trim().length > 5).forEach((phone, index) => {
+          let key = 'phone';
+          if (index > 0) key = `phone${index+1}`
+          client[key] = phone;
+        })
+        emails.filter(e => emailValid(e)).forEach((email, index) => {
+          let key = 'email';
+          if (index > 0) key = `email${index+1}`
+          client[key] = email;
+        })
+        return {...client, ...contact};
+      }
   
       const handleChange = (event: any) => {
         setContact({ ...contact, [event.target.id]: event.target.value.trim()});
@@ -29,24 +75,38 @@ export default function NewClient(props: any) {
         setProperty({ ...property, [event.target.id]: event.target.value.trim()});
       };
 
-      let phoneNumbers: any = []
-      let emailAddresses: any = []
+      const handleChangePhone = (event: any, index: number) => {
+        let values = [...phones];
+        values[index] = event.target.value;
+        setPhones(values);
+      }
+
+      const handleRemovePhone = (event: any, index: number) => {
+        let values = [...phones];
+        setPhones(values.slice(undefined, index).concat(values.slice(index+1, undefined)));
+      }
 
       const handleAddPhone = (event: any) => {
-        let number = Object.keys(contact).filter(k => k.startsWith('phone')).filter(k => !!contact[k]).length + 1;
-        let id = `phone${number}`;
-        let newContact = {...contact};
-        newContact[id] = " ";
-        setContact(newContact);
+        setPhones([...phones, ''])
+      }
+
+      const handleChangeEmail = (event: any, index: number) => {
+        let values = [...emails];
+        values[index] = event.target.value;
+        setEmails(values);
+      }
+
+      const handleRemoveEmail = (event: any, index: number) => {
+        let values = [...emails];
+        setEmails(values.slice(undefined, index).concat(values.slice(index+1, undefined)));
       }
 
       const handleAddEmail = (event: any) => {
-        let number = Object.keys(contact).filter(k => k.startsWith('email')).filter(k => !!contact[k]).length + 1;
-        let id = `email${number}`;
-        let newContact = {...contact};
-        newContact[id] = " ";
-        setContact(newContact);
+        setEmails([...emails, ''])
       }
+
+      let phoneNumbers: any = []
+      let emailAddresses: any = []
 
       const handleNext = () => {  
         setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
@@ -56,53 +116,62 @@ export default function NewClient(props: any) {
         setActiveStep((prevActiveStep: number) => prevActiveStep - 1);
       };
 
-      phoneNumbers = Object.keys(contact).filter(k => k.startsWith('phone')).filter(k => !!contact[k]).map((_, index) => {
+      const validInput = () => {
+        let validContact = buildClient();
+        return (validContact.phone || validContact.email || validContact.name?.trim().length > 2);
+      }
 
-        let number = '';
-        if (index > 0) number = `${index+1}`;
-        let id = `phone${number}`;
+      const emailValid = (email: any) => {
+        // eslint-disable-next-line
+        let validEmail = RegexParser("/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.");
+        return validEmail.test(email);
+      }
 
+      phoneNumbers = phones.map((number, index) => {
         return (
-            <TextField 
-            id={id}
-            key={id}
-            label="Phone" 
+            <TextField
+            key={index}
+            label="Phone"
             type={"tel"}
-            defaultValue={contact[id] ? contact[id]  : undefined}
-            onChange={handleChange}
+            value={number}
+            onChange={(e) => handleChangePhone(e, index)}
             InputProps={{
-                startAdornment: (
+              startAdornment: (
                 <InputAdornment position="start">
-                    <PhoneOutlined />
+                  <PhoneOutlined />
                 </InputAdornment>
-                ),
-            }}
-            />
+              ),
+              endAdornment: (
+                <Button
+                onClick={(e) => handleRemovePhone(e,index)}
+                >Remove
+                </Button>
+              )
+            }} />
         );
       })
 
-      emailAddresses = Object.keys(contact).filter(k => k.startsWith('email')).filter(k => !!contact[k]).map((_, index) => {
-
-        let number = '';
-        if (index > 0) number = `${index+1}`;
-        let id = `email${number}`;
-
+      emailAddresses = emails.map((email, index) => {
         return (
-            <TextField 
-            id={id}
-            key={id}
-            label="Email" 
+            <TextField
+            key={index}
+            label="Email"
             type={"email"}
-            defaultValue={contact[id] ? contact[id]  : undefined}
-            onChange={handleChange}
+            value={email}
+            onChange={(e) => handleChangeEmail(e, index)}
             InputProps={{
-                startAdornment: (
+              startAdornment: (
                 <InputAdornment position="start">
-                    <EmailOutlined />
+                  <EmailOutlined />
                 </InputAdornment>
-                ),
-            }}
-            />
+              ),
+              endAdornment: (
+                <Button
+                onClick={(e) => handleRemoveEmail(e,index)}
+                >Remove
+                </Button>
+              )
+            }} />
         );
       })
 
@@ -193,7 +262,12 @@ export default function NewClient(props: any) {
                     </AddressAutofill>
                     </form>
                 )}
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            </React.Fragment>
+        </Box>
+
+        </DialogContent>
+        <DialogActions>
+        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                 <Button
                 color="inherit"
                 disabled={activeStep === 0}
@@ -205,25 +279,21 @@ export default function NewClient(props: any) {
                 <Box sx={{ flex: '1 1 auto' }} />
                 {activeStep === 1 ? (
                 <Button
+                disabled={!validInput}
                 onClick={handleSave}>
                     Create
                 </Button>
                 ) : (
                 <Button
                 onClick={handleNext}
-                disabled={false}>
+                disabled={!validInput()}
+                >
                     Next
                 </Button>
                 )}
             </Box>
-            </React.Fragment>
-        </Box>
-
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={handleCancel}>Cancel</Button>
-            <Button onClick={handleSave}>Save Changes</Button>
         </DialogActions>
+        {error && <Alert severity="error">{error}</Alert>}
       </Dialog>
     );
   }
