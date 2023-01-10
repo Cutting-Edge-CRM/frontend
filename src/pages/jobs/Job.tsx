@@ -19,7 +19,8 @@ function Job() {
     useEffect(() => {
         getJob(id)
         .then(res => {
-            setJob(res.job);
+            setJob(res);
+            console.log(res);
             setIsLoaded(true);
         }, (err) => {
             setError(err.message);
@@ -39,15 +40,15 @@ function Job() {
         <Grid container spacing={2}>
             <Grid xs={8}>
                 <Stack spacing={2}>
-                    <JobDetails/>
-                    <Property property={job.property} />
+                    <JobDetails job={job} setJob={setJob}/>
+                    <Property property={job.job.property} />
                 </Stack>
             </Grid>
             <Grid xs={4}>
                 <Stack spacing={2}>
-                    <Contact client={job?.client}/>
-                    <Visits/>
-                    <Notes />
+                    <Contact client={job?.job.client}/>
+                    <Visits client={job?.job.client}/>
+                    <Notes client={job?.job.client} />
                 </Stack>
             </Grid>
         </Grid>

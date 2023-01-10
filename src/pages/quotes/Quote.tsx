@@ -18,13 +18,14 @@ function Quote() {
     useEffect(() => {
         getQuote(id)
         .then(res => {
-            setQuote(res.quote);
+            setQuote(res);
             setIsLoaded(true);
         }, (err) => {
             setError(err.message);
             setIsLoaded(true);
         })
     }, [id])
+
 
     if (error) {
         return (<Typography>{error}</Typography>);
@@ -33,19 +34,18 @@ function Quote() {
         return (<Typography>Loading...</Typography>);
         }
 
-
     return (
         <Grid container spacing={2}>
             <Grid xs={8}>
                 <Stack spacing={2}>
-                    <QuoteDetails/>
-                    <Property property={quote?.property}/>
+                    <QuoteDetails quote={quote} setQuote={setQuote}/>
+                    <Property property={quote.quote?.property}/>
                 </Stack>
             </Grid>
             <Grid xs={4}>
                 <Stack spacing={2}>
-                    <Contact client={quote?.client}/>
-                    <Notes />
+                    <Contact client={quote.quote?.client}/>
+                    <Notes client={quote.quote?.client} />
                 </Stack>
             </Grid>
         </Grid>

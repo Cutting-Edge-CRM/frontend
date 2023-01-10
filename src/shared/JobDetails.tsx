@@ -3,6 +3,10 @@ import { Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, ListItem
 import React from 'react';
 import RichText from './RichText';
 
+function add(accumulator: number, a: number) {
+    return (+accumulator) + (+a);
+  }
+
 function JobItemSaved(props: any) {
     return (
         <>
@@ -10,7 +14,7 @@ function JobItemSaved(props: any) {
                 <Grid item={true} xs={4}>
                     <Stack>
                         <Typography>Service</Typography>
-                        <Typography>Bathroom</Typography>
+                        <Typography>{props.item.title}</Typography>
                     </Stack>
                 </Grid>
                 <Grid item={true} xs={4}>
@@ -18,27 +22,37 @@ function JobItemSaved(props: any) {
                 <Grid item={true} xs={4}>
                     <Stack>
                         <Typography>Total</Typography>
-                        <Typography>$329</Typography>
+                        <Typography>${props.item.price}</Typography>
                     </Stack>
                 </Grid>
             </Grid>
             <Stack>
                 <Typography>Description</Typography>
                 <Divider/>
-                <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Typography>
+                <Typography dangerouslySetInnerHTML={{__html: props.item.description}}></Typography>
             </Stack>
+            <Divider/>
         </>
     );
 }
 
 function JobItemEdit(props: any) {
 
+    const handleChange = (event: any) => {
+        let items = props.job.items;
+        items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
+        props.setJob({
+            job: props.job.job,
+            items: items
+        });
+      };
+
     return (
         <>
             <Grid container spacing={2}>
                 <Grid item={true} xs={4}>
                     <TextField
-                    id="service" 
+                    id="title" 
                     label="Service"
                     InputProps={{
                         startAdornment: (
@@ -47,6 +61,8 @@ function JobItemEdit(props: any) {
                         </InputAdornment>
                         ),
                     }}
+                    value={props.item.title}
+                    onChange={handleChange}
                     />
                 </Grid>
                 <Grid item={true} xs={4}>
@@ -56,6 +72,7 @@ function JobItemEdit(props: any) {
                         <TextField
                         id="price" 
                         label="Price"
+                        type='number'
                         InputProps={{
                             startAdornment: (
                             <InputAdornment position="start">
@@ -63,20 +80,23 @@ function JobItemEdit(props: any) {
                             </InputAdornment>
                             ),
                         }}
+                        value={props.item.price}
+                        onChange={handleChange}
                         />
                     </Stack>
                 </Grid>
             </Grid>
             <Stack>
                 <Typography>Description</Typography>
-                <RichText/>
+                <RichText type='job' content={props.item.description} {...props}/>
                 <Button startIcon={<DeleteOutline />}>Delete Item</Button>
             </Stack>
+            <Divider/>
         </>
     );
 }
 
-function JobDetails() {
+function JobDetails(props: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const isOpen = Boolean(anchorEl);
     const [editting, setEditting] = React.useState(false);
@@ -131,7 +151,7 @@ function JobDetails() {
                 </Stack>
                 <Stack>
                     <Typography>From</Typography>
-                    <Typography>Quote 3</Typography>
+                    <Typography>Job 3</Typography>
                 </Stack>
                 <Stack>
                     <Typography>Used for</Typography>
@@ -144,22 +164,22 @@ function JobDetails() {
             </Stack>
             {editting && 
                 <>
-                <JobItemEdit />
-                <JobItemEdit />
-                <JobItemEdit />
+                {props.job.items.map(((item: any, index: number) => (
+                    <JobItemEdit key={index} item={item} {...props}/>
+                )))}
                 </>
             }
             {!editting && 
                 <>
-                <JobItemSaved />
-                <JobItemSaved />
-                <JobItemSaved />
+                {props.job.items.map(((item: any, index: number) => (
+                    <JobItemSaved key={index} item={item} {...props}/>
+                )))}
                 </>
             }
             <Divider />
             <Stack direction="row">
                 <Typography>Subtotal</Typography>
-                <Typography>$329</Typography>
+                <Typography>${props.job.items.map((i: any) => i.price).reduce(add, 0)}</Typography>
             </Stack>
         </Card>
     )

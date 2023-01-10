@@ -1,7 +1,11 @@
 import { CreateOutlined, DeleteOutline, MoreVert, PersonOutline } from '@mui/icons-material';
-import { Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, TextField, Typography } from '@mui/material';
+import { Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Typography } from '@mui/material';
 import React from 'react';
 import RichText from './RichText';
+
+function add(accumulator: number, a: number) {
+    return (+accumulator) + (+a);
+  }
 
 function InvoiceItemSaved(props: any) {
     return (
@@ -10,7 +14,7 @@ function InvoiceItemSaved(props: any) {
                 <Grid item={true} xs={4}>
                     <Stack>
                         <Typography>Service</Typography>
-                        <Typography>Bathroom</Typography>
+                        <Typography>{props.item.title}</Typography>
                     </Stack>
                 </Grid>
                 <Grid item={true} xs={4}>
@@ -18,27 +22,37 @@ function InvoiceItemSaved(props: any) {
                 <Grid item={true} xs={4}>
                     <Stack>
                         <Typography>Total</Typography>
-                        <Typography>$329</Typography>
+                        <Typography>${props.item.price}</Typography>
                     </Stack>
                 </Grid>
             </Grid>
             <Stack>
                 <Typography>Description</Typography>
                 <Divider/>
-                <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Typography>
+                <Typography dangerouslySetInnerHTML={{__html: props.item.description}}></Typography>
             </Stack>
+            <Divider/>
         </>
     );
 }
 
 function InvoiceItemEdit(props: any) {
 
+    const handleChange = (event: any) => {
+        let items = props.invoice.items;
+        items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
+        props.setInvoice({
+            invoice: props.invoice.invoice,
+            items: items
+        });
+      };
+
     return (
         <>
             <Grid container spacing={2}>
                 <Grid item={true} xs={4}>
                     <TextField
-                    id="service" 
+                    id="title" 
                     label="Service"
                     InputProps={{
                         startAdornment: (
@@ -47,6 +61,8 @@ function InvoiceItemEdit(props: any) {
                         </InputAdornment>
                         ),
                     }}
+                    value={props.item.title}
+                    onChange={handleChange}
                     />
                 </Grid>
                 <Grid item={true} xs={4}>
@@ -56,6 +72,7 @@ function InvoiceItemEdit(props: any) {
                         <TextField
                         id="price" 
                         label="Price"
+                        type='number'
                         InputProps={{
                             startAdornment: (
                             <InputAdornment position="start">
@@ -63,20 +80,23 @@ function InvoiceItemEdit(props: any) {
                             </InputAdornment>
                             ),
                         }}
+                        value={props.item.price}
+                        onChange={handleChange}
                         />
                     </Stack>
                 </Grid>
             </Grid>
             <Stack>
                 <Typography>Description</Typography>
-                <RichText/>
+                <RichText type='invoice' content={props.item.description} {...props}/>
                 <Button startIcon={<DeleteOutline />}>Delete Item</Button>
             </Stack>
+            <Divider/>
         </>
     );
 }
 
-function InvoiceDetails() {
+function InvoiceDetails(props: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const isOpen = Boolean(anchorEl);
     const [editting, setEditting] = React.useState(false);
@@ -130,45 +150,36 @@ function InvoiceDetails() {
                     <Typography>11/27/2022</Typography>
                 </Stack>
                 <Stack>
-                    <Typography>Opened by client</Typography>
-                    <Typography>11/27/2022</Typography>
+                    <Typography>From</Typography>
+                    <Typography>Invoice 3</Typography>
                 </Stack>
                 <Stack>
                     <Typography>Used for</Typography>
-                    <Typography>Job 2</Typography>
+                    <Typography>Invoice 2</Typography>
                 </Stack>
                 <Stack>
                     <Typography>Status</Typography>
-                    <Chip label="Booked"/>
+                    <Chip label="Upcoming"/>
                 </Stack>
             </Stack>
             {editting && 
                 <>
-                <InvoiceItemEdit />
-                <InvoiceItemEdit />
-                <InvoiceItemEdit />
+                {props.invoice.items.map(((item: any, index: number) => (
+                    <InvoiceItemEdit key={index} item={item} {...props}/>
+                )))}
                 </>
             }
             {!editting && 
                 <>
-                <InvoiceItemSaved />
-                <InvoiceItemSaved />
-                <InvoiceItemSaved />
+                {props.invoice.items.map(((item: any, index: number) => (
+                    <InvoiceItemSaved key={index} item={item} {...props}/>
+                )))}
                 </>
             }
             <Divider />
             <Stack direction="row">
                 <Typography>Subtotal</Typography>
-                <Typography>$329</Typography>
-            </Stack><Stack direction="row">
-                <Typography>Deposit</Typography>
-                {editting ? <TextField id="deposit" label="$ or %"/> : <Typography>$50</Typography>}
-            </Stack><Stack direction="row">
-                <Typography>Taxes</Typography>
-                {editting ? <Select placeholder='Select tax'/> : <Typography>$35</Typography>}
-            </Stack><Divider /><Stack direction="row">
-                <Typography>Total</Typography>
-                <Typography>$314</Typography>
+                <Typography>${props.invoice.items.map((i: any) => i.price).reduce(add, 0)}</Typography>
             </Stack>
         </Card>
     )

@@ -1,65 +1,49 @@
-import { AttachFile, FormatAlignCenter, FormatAlignLeft, FormatAlignRight, FormatBold, FormatIndentDecrease, FormatIndentIncrease, FormatItalic, FormatUnderlined, Superscript } from '@mui/icons-material';
-import { Divider, IconButton, Select, Stack } from '@mui/material';
 import React from 'react';
-import {Editor, EditorState} from 'draft-js';
-  
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
 export default function RichText(props: any) {
-    const [editorState, setEditorState] = React.useState(
-        EditorState.createEmpty()
+
+    const handleChangeQuote = (content: any) => {
+        let options = props.quote.options;
+        options.find((op: any) => op === props.option).items.find((it: any) => it === props.item).description = content;
+        props.setQuote({
+            quote: props.quote.quote,
+            options: options
+        });
+      };
+
+    const handleChangeJob = (content: any) => {
+        let items = props.job.items;
+        items.find((it: any) => it === props.item).description = content;
+        props.setJob({
+            job: props.job.job,
+            items: items
+        });
+      };
+
+    const handleChangeInvoice = (content: any) => {
+        let items = props.invoice.items;
+        items.find((it: any) => it === props.item).description = content;
+        props.setInvoice({
+            invoice: props.invoice.invoice,
+            items: items
+        });
+      };
+
+    if (props.type === 'job') {
+      return (
+        <ReactQuill theme="snow" value={props.content} onChange={handleChangeJob} />
       );
-     
-      const editor = React.useRef(null);
-     
-      function focusEditor() {
-        // editor.current.focus();
-      }
-     
-      React.useEffect(() => {
-        focusEditor()
-      }, []);
+    }
+
+    if (props.type === 'invoice') {
+      return (
+        <ReactQuill theme="snow" value={props.content} onChange={handleChangeInvoice} />
+      );
+    }
 
     return (
-        <><Stack direction="row">
-        <IconButton>
-            <FormatBold />
-        </IconButton>
-        <IconButton>
-            <FormatItalic />
-        </IconButton>
-        <IconButton>
-            <FormatUnderlined />
-        </IconButton>
-        <Divider orientation="vertical" flexItem />
-        <Select></Select>
-        <Divider orientation="vertical" flexItem />
-        <IconButton>
-            <Superscript />
-        </IconButton>
-        <Divider orientation="vertical" flexItem />
-        <IconButton>
-            <FormatIndentDecrease />
-        </IconButton>
-        <IconButton>
-            <FormatIndentIncrease />
-        </IconButton>
-        <Divider orientation="vertical" flexItem />
-        <IconButton>
-            <FormatAlignLeft />
-        </IconButton>
-        <IconButton>
-            <FormatAlignCenter />
-        </IconButton>
-        <IconButton>
-            <FormatAlignRight />
-        </IconButton>
-        <Divider orientation="vertical" flexItem />
-        <IconButton>
-            <AttachFile />
-        </IconButton>
-        </Stack>
-        <Editor
-                ref={editor}
-                editorState={editorState}
-                onChange={editorState => setEditorState(editorState)} /></>
+        <ReactQuill theme="snow" value={props.content} onChange={handleChangeQuote} />
     );
   }

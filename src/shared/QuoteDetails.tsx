@@ -3,6 +3,10 @@ import { Box, Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, Lis
 import React from 'react';
 import RichText from './RichText';
 
+function add(accumulator: any, a: any) {
+    return (+accumulator) + (+a);
+  }
+
 function QuoteItemSaved(props: any) {
     return (
         <>
@@ -10,39 +14,58 @@ function QuoteItemSaved(props: any) {
                 <Grid item={true} xs={4}>
                     <Stack>
                         <Typography>Service</Typography>
-                        <Typography>Bathroom</Typography>
+                        <Typography>{props.item.title}</Typography>
                     </Stack>
                 </Grid>
                 <Grid item={true} xs={4}>
                     <Stack>
                         <Typography>Add-on</Typography>
-                        <Switch></Switch>
+                        <Switch disabled checked={props.item.addon === 1}></Switch>
                     </Stack>
                 </Grid>
                 <Grid item={true} xs={4}>
                     <Stack>
                         <Typography>Total</Typography>
-                        <Typography>$329</Typography>
+                        <Typography>${props.item.price}</Typography>
                     </Stack>
                 </Grid>
             </Grid>
             <Stack>
                 <Typography>Description</Typography>
                 <Divider/>
-                <Typography>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Typography>
+                <Typography dangerouslySetInnerHTML={{__html: props.item.description}}></Typography>
             </Stack>
+            <Divider/>
         </>
     );
 }
 
 function QuoteItemEdit(props: any) {
 
+    const handleChange = (event: any) => {
+        let options = props.quote.options;
+        options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
+        props.setQuote({
+            quote: props.quote.quote,
+            options: options
+        });
+      };
+
+    const handleCheck = (event: any) => {
+        let options = props.quote.options;
+        options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)[event.target.id] = event.target.checked ? 1 : 0;
+        props.setQuote({
+            quote: props.quote.quote,
+            options: options
+        });
+      };
+
     return (
         <>
             <Grid container spacing={2}>
                 <Grid item={true} xs={4}>
                     <TextField
-                    id="service" 
+                    id="title" 
                     label="Service"
                     InputProps={{
                         startAdornment: (
@@ -51,12 +74,14 @@ function QuoteItemEdit(props: any) {
                         </InputAdornment>
                         ),
                     }}
+                    value={props.item.title}
+                    onChange={handleChange}
                     />
                 </Grid>
                 <Grid item={true} xs={4}>
                     <Stack>
                         <Typography>Add-on</Typography>
-                        <Switch></Switch>
+                        <Switch id='addon' checked={props.item.addon === 1} onChange={handleCheck}></Switch>
                     </Stack>
                 </Grid>
                 <Grid item={true} xs={4}>
@@ -71,59 +96,98 @@ function QuoteItemEdit(props: any) {
                             </InputAdornment>
                             ),
                         }}
+                        value={props.item.price}
+                        onChange={handleChange}
                         />
                     </Stack>
                 </Grid>
             </Grid>
             <Stack>
                 <Typography>Description</Typography>
-                <RichText/>
+                <RichText content={props.item.description} {...props}/>
                 <Button startIcon={<DeleteOutline />}>Delete Item</Button>
             </Stack>
+            <Divider/>
         </>
     );
 }
 
 function TabPanel(props: any) {
-    const { children, value, index, editting, ...other } = props;
+
+    const handleChangeDeposit = (event: any) => {
+        let options = props.quote.options;
+        options.find((op: any) => op === props.option)[event.target.id] = event.target.value;
+        props.setQuote({
+            quote: props.quote.quote,
+            options: options
+        });
+      };
+
+      const handleChangePercent = (event: any) => {
+        let options = props.quote.options;
+        options.find((op: any) => op === props.option).depositPercent = event.target.value;
+        props.setQuote({
+            quote: props.quote.quote,
+            options: options
+        });
+      };
 
     return (
         <Box
         role="tabpanel"
-        hidden={value !== index}
-        id={`option-${index}`}
-        aria-labelledby={`options-${index}`}
-        {...other}
+        hidden={props.value !== props.index}
+        id={`option-${props.index}`}
+        aria-labelledby={`options-${props.index}`}
         >
-        {value === index && (
+        {props.value === props.index && (
             <>
             {props.editting && 
                 <>
-                <QuoteItemEdit />
-                <QuoteItemEdit />
-                <QuoteItemEdit />
+                {props.option.items.map(((item: any, index: number) => (
+                    <QuoteItemEdit key={index} item={item} {...props}/>
+                )))}
                 </>
             }
             {!props.editting && 
                 <>
-                <QuoteItemSaved />
-                <QuoteItemSaved />
-                <QuoteItemSaved />
+                {props.option.items.map(((item: any, index: number) => (
+                    <QuoteItemSaved key={index} item={item} {...props}/>
+                )))}
                 </>
             }
             <Divider />
             <Stack direction="row">
                 <Typography>Subtotal</Typography>
-                <Typography>$329</Typography>
-            </Stack><Stack direction="row">
+                <Typography>${props.option.items.map((i: any) => i.price).reduce(add, 0)}</Typography>
+            </Stack>
+            <Stack direction="row">
                 <Typography>Deposit</Typography>
-                {editting ? <TextField id="deposit" label="$ or %"/> : <Typography>$50</Typography>}
+                {props.editting ? 
+                    <><TextField 
+                        id="deposit"
+                        label="Deposit"
+                        value={props.option.deposit}
+                        onChange={handleChangeDeposit}
+                        />
+                    <Select
+                        labelId="deposit-percent-select-label"
+                        id="depositPercent"
+                        value={props.option.depositPercent ? 1 : 0}
+                        label="$/%"
+                        onChange={handleChangePercent}
+                    >
+                        <MenuItem value={1}>%</MenuItem>
+                        <MenuItem value={0}>$</MenuItem>
+                    </Select></>
+                :
+                    <Typography>{props.option.depositPercent ? '' : '$'}{props.option.deposit}{props.option.depositPercent ? '%' : ''}</Typography>
+                }
             </Stack><Stack direction="row">
                 <Typography>Taxes</Typography>
-                {editting ? <Select placeholder='Select tax'/> : <Typography>$35</Typography>}
+                {/* {props.editting ? <Select placeholder='Select tax'/> : <Typography>$35</Typography>} */}
             </Stack><Divider /><Stack direction="row">
                 <Typography>Total</Typography>
-                <Typography>$314</Typography>
+                <Typography>${props.option.items.map((i: any) => i.price).reduce(add, 0)}</Typography>
             </Stack>
             </>
         )}
@@ -131,7 +195,7 @@ function TabPanel(props: any) {
     );
 }
 
-function QuoteDetails() {
+function QuoteDetails(props: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const isOpen = Boolean(anchorEl);
     const [value, setValue] = React.useState(0);
@@ -151,7 +215,6 @@ function QuoteDetails() {
     const handleEditting = () => {
         setEditting(!editting);
     }
-
     return (
         <Card>
             <Stack direction="row">
@@ -173,13 +236,13 @@ function QuoteDetails() {
                                 <ListItemIcon>
                                     <CreateOutlined />
                                 </ListItemIcon>
-                                <ListItemText>Edit Property</ListItemText>
+                                <ListItemText>Send Quote</ListItemText>
                             </MenuItem>
                             <MenuItem>
                                 <ListItemIcon>
                                     <DeleteOutline />
                                 </ListItemIcon>
-                                <ListItemText>Delete Property</ListItemText>
+                                <ListItemText>Mark quote as sent</ListItemText>
                             </MenuItem>
                         </MenuList>
                     </Menu>
@@ -187,7 +250,7 @@ function QuoteDetails() {
             <Stack direction="row">
                 <Stack>
                     <Typography>Created</Typography>
-                    <Typography>11/27/2022</Typography>
+                    <Typography>{props.quote.quote.created}</Typography>
                 </Stack>
                 <Stack>
                     <Typography>Opened by client</Typography>
@@ -199,19 +262,19 @@ function QuoteDetails() {
                 </Stack>
                 <Stack>
                     <Typography>Status</Typography>
-                    <Chip label="Booked"/>
+                    <Chip label={props.quote.quote.status}/>
                 </Stack>
             </Stack>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs value={value} onChange={handleChange} aria-label="options">
-                <Tab label="Option 1" id="1" />
-                <Tab label="Option 2" id="2" />
-                <Tab label="Option 3" id="3" />
+                {props.quote.options?.map((_: any, index: number) => (
+                    <Tab key={index} label={`Option ${index + 1}`} id={`${index + 1}`} />
+                ))}
             </Tabs>
             </Box>
-            <TabPanel value={value} index={0} editting={editting}/>
-            <TabPanel value={value} index={1} editting={editting}/>
-            <TabPanel value={value} index={2} editting={editting}/>
+            {props.quote.options?.map((option: any, index: number) => (
+                    <TabPanel option={option} key={index} value={value} index={index} editting={editting} {...props}/>
+                ))}
         </Card>
     )
 }
