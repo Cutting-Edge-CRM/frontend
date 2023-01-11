@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { listUsers } from '../../api/user.api';
 import { listVisits } from '../../api/visit.api';
 import EditVisit from './EditVisit';
+import dayjs from 'dayjs';
 
 
 function Visits(props: any) {
@@ -68,7 +69,7 @@ function Visits(props: any) {
           setRows(result);
         }, (err) => {
         })
-      }, [props])
+      }, [props, open])
 
     if (error) {
     return (<Typography>{error}</Typography>);
@@ -76,8 +77,6 @@ function Visits(props: any) {
     if (!isLoaded) {
     return (<Typography>Loading...</Typography>);
     }
-
-
     return (
         <Card>
             <Stack direction="row">
@@ -98,7 +97,11 @@ function Visits(props: any) {
                                         <Stack>
                                             <Typography>{visit.name}</Typography>
                                             <Typography>{visit.address}</Typography>
-                                            <Typography>{visit.date}</Typography>
+                                            {dayjs(visit.start).diff(dayjs(visit.end), 'day') < 1 && dayjs(visit.start).diff(dayjs(visit.end), 'day') > -1 ? 
+                                            <Typography>{dayjs(visit.start).format('MMM D')}  {dayjs(visit.start).format('h:mma')} - {dayjs(visit.end).format('h:mma')}</Typography>
+                                            :
+                                            <Typography>{dayjs(visit.start).format('MMM D')} - {dayjs(visit.end).format('MMM D')}</Typography>
+                                            }
                                             <Typography>{visit.users.map((user: any) => user.name).join(", ")}</Typography>
                                         </Stack>
                                     </Grid>
@@ -144,6 +147,7 @@ function Visits(props: any) {
             create={handleCreate}
             type={type}
             users={users}
+            client={props.client}
             />
         </Card>
     )

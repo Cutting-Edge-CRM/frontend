@@ -1,17 +1,36 @@
 import { PersonOutline } from '@mui/icons-material';
-import { Box, Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField } from '@mui/material';
+import { Alert, Box, Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import * as React from 'react';
+import { useState } from 'react';
+import { createVisit, updateVisit } from '../../api/visit.api';
   
 export default function EditVisit(props: any) {
+  const [error, setError] = useState(null);
     
     const handleCancel = () => {
       props.onClose();
     };
 
     const handleSave = () => {
-      if (props.type === 'edit') props.update();
-      if (props.type === 'new') props.create();
+      if (props.type === 'edit') {
+        // save value
+        updateVisit({...props.visit, client: props.client})
+        .then(res => {
+            props.update(res);
+        }, (err) => {
+          setError(err.message)
+        })
+      }
+      if (props.type === 'new') {
+          // save value
+          createVisit({...props.visit, client: props.client})
+          .then(res => {
+              props.create(res);
+          }, (err) => {
+            setError(err.message)
+          })
+      }
     };
 
     const handleChange = (event: any) => {
@@ -94,6 +113,7 @@ export default function EditVisit(props: any) {
             <Button onClick={handleCancel}>Cancel</Button>
             <Button onClick={handleSave}>Save Changes</Button>
         </DialogActions>
+        {error && <Alert severity="error">{error}</Alert>}
       </Dialog>
     );
   }
