@@ -137,7 +137,6 @@ function TabPanel(props: any) {
         role="tabpanel"
         hidden={props.value !== props.index}
         id={`option-${props.index}`}
-        aria-labelledby={`options-${props.index}`}
         >
         {props.value === props.index && (
             <>
@@ -266,7 +265,7 @@ function QuoteDetails(props: any) {
                 </Stack>
             </Stack>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={value} onChange={handleChange} aria-label="options">
+            <Tabs value={value} onChange={handleChange}>
                 {props.quote.options?.map((_: any, index: number) => (
                     <Tab key={index} label={`Option ${index + 1}`} id={`${index + 1}`} />
                 ))}

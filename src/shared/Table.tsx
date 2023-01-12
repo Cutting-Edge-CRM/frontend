@@ -60,9 +60,6 @@ export default function Table(props: any) {
         { props.type === 'Clients' &&
               <><Button
                 startIcon={<ImportExport />}
-                aria-controls={open ? 'basic-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
                 onClick={openMenu}
               >
                 Import/Export
@@ -71,9 +68,6 @@ export default function Table(props: any) {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={closeMenu}
-                MenuListProps={{
-                  'aria-labelledby': 'basic-button',
-                }}
               >
                   <MenuList>
                     <MenuItem onClick={props.onImportClick}>

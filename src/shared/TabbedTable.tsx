@@ -20,7 +20,6 @@ function TabPanel(props: TabPanelProps) {
         role="tabpanel"
         hidden={value !== index}
         id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
         {...other}
         >
         {value === index && (
@@ -81,7 +80,7 @@ function TabbedTable(props: any) {
             <Typography>Overview</Typography>
             <Divider/>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+            <Tabs value={value} onChange={handleChange}>
                 <Tab label="Quotes" id="quotes" />
                 <Tab label="Jobs" id="jobs" />
                 <Tab label="Invoices" id="invoices" />
