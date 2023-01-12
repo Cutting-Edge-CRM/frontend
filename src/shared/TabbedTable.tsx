@@ -90,17 +90,17 @@ function TabbedTable(props: any) {
             <TabPanel value={value} index={0}>
                 {quotesError && <Typography>{quotesError}</Typography>}
                 {!quotesAreLoaded && <Typography>Loading...</Typography>}
-                {quotesAreLoaded && !quotesError && <Table rows={quoteRows} columns={quoteColumns} type="Quotes" title={null}></Table>}
+                {quotesAreLoaded && !quotesError && <Table rows={quoteRows} columns={quoteColumns} type="Quotes" title={null} client={props.client}></Table>}
             </TabPanel>
             <TabPanel value={value} index={1}>
                 {jobsError && <Typography>{jobsError}</Typography>}
                 {!jobsAreLoaded && <Typography>Loading...</Typography>}
-                {jobsAreLoaded && !jobsError && <Table rows={jobRows} columns={jobColumns} type="Jobs" title={null}></Table>}
+                {jobsAreLoaded && !jobsError && <Table rows={jobRows} columns={jobColumns} type="Jobs" title={null} client={props.client} ></Table>}
             </TabPanel>
             <TabPanel value={value} index={2}>
                 {invoicesError && <Typography>{invoicesError}</Typography>}
                 {!invoicesAreLoaded && <Typography>Loading...</Typography>}
-                {invoicesAreLoaded && !invoicesError && <Table rows={invoiceRows} columns={invoiceColumns} type="Invoices" title={null}></Table>}
+                {invoicesAreLoaded && !invoicesError && <Table rows={invoiceRows} columns={invoiceColumns} type="Invoices" title={null}client={props.client} ></Table>}
             </TabPanel>
         </Card>
     )

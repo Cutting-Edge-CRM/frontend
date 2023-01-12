@@ -6,6 +6,7 @@ import mapboxgl from 'mapbox-gl';
 import EditProperty from './EditProperty';
 import { listProperties } from '../../api/property.api';
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
+import EmptyState from '../EmptyState';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3V0dGluZ2VkZ2Vjcm0iLCJhIjoiY2xjaHk1cWZrMmYzcDN3cDQ5bGRzYTY1bCJ9.0B4ntLJoCZzxQ0SUxqaQxg';
 const geocodingClient = mbxGeocoding({accessToken: mapboxgl.accessToken});
@@ -60,6 +61,10 @@ function Properties(props: any) {
     const handleRowClick = (event: any) => {
         getCoords(event.row)
       }
+
+    const getEmptyState = () => {
+        return (<EmptyState type='properties'/>);
+    }
 
 
     const columns: GridColDef[] = [
@@ -152,7 +157,7 @@ function Properties(props: any) {
       .then((result) => {
         setIsLoaded(true);
         setRows(result);
-        getCoords(result[0]);
+        if (result[0]) getCoords(result[0]);
       }, (err) => {
         setIsLoaded(true);
         setError(err.message)
@@ -181,7 +186,7 @@ function Properties(props: any) {
     
 
     return (
-        <Card sx={{ height: 650}}>
+        <Card>
             <Box>
                 <Typography>{props.type === 'client' ? 'Properties' : 'Property'}</Typography>
                 {props.type === 'client' && 
@@ -194,14 +199,16 @@ function Properties(props: any) {
                 {mapError && <Typography>{mapError}</Typography>}
                 {!mapError && <div style={{height: coords.length > 0 ? 290 : 0}} ref={mapContainer} className="map-container" />}
             </Box>
-            <Box sx={{ display: 'flex', height: '100%' }}>
+            <Box>
                 {error && <Typography>{error}</Typography>}
                 {!isLoaded && <Typography>Loading...</Typography>}
                 {!error && isLoaded && 
                 <DataGrid
+                autoHeight
                 rows={rows}
                 columns={columns}
                 onRowClick={handleRowClick}
+                components={{NoRowsOverlay: getEmptyState}}
                 />}
                 
             </Box>

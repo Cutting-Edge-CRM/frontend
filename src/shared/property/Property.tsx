@@ -95,7 +95,7 @@ function Property(props: any) {
     
 
     return (
-        <Card sx={{ height: 450}}>
+        <Card>
             <Box>
                 <Typography>Property</Typography>
             </Box>
@@ -103,11 +103,12 @@ function Property(props: any) {
                 {mapError && <Typography>{mapError}</Typography>}
                 {!mapError && <div style={{height: coords.length > 0 ? 290 : 0}} ref={mapContainer} className="map-container" />}
             </Box>
-            <Box sx={{ display: 'flex', height: '100%' }}>
+            <Box>
                 {error && <Typography>{error}</Typography>}
                 {!isLoaded && <Typography>Loading...</Typography>}
                 {!error && isLoaded && 
                 <DataGrid
+                autoHeight
                 rows={rows}
                 columns={columns}
                 />}

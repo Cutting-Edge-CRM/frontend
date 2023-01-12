@@ -118,6 +118,7 @@ function Notes(props: any) {
                         </ListItem>
                     ))
                 }
+                {rows.length === 0 && <Typography>This client doesn't have any notes yet, click the "+" icon to add one.</Typography>}
             </List>
             <EditNote
             note={note}

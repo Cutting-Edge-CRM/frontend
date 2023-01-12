@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import NewClient from './client/NewClient';
 import SelectClient from './client/SelectClient';
+import EmptyState from './EmptyState';
 
 
 export default function Table(props: any) {
@@ -28,6 +29,10 @@ export default function Table(props: any) {
 
   const handleNewOpen = () => {
     setNewOpen(true);
+  }
+
+  const getEmptyState = () => {
+    return (<EmptyState type={`${props.client ? 'client-': ''}${(props.type as string)?.toLowerCase()}`}/>);
   }
 
   function CustomToolbar() {
@@ -94,23 +99,24 @@ export default function Table(props: any) {
   }
 
   return (
-    <Box sx={{ height: 400, width: '100%' }}>
+    <Box>
       <DataGrid
-        rows={props.rows}
-        columns={props.columns}
-        pageSize={10}
-        rowsPerPageOptions={[10, 20, 50]}
-        components={{ Toolbar: CustomToolbar }}
-        componentsProps={{
-          toolbar: {
-            showQuickFilter: true,
-            quickFilterProps: { debounceMs: 500 },
-          }, ...props
-        }}
-        checkboxSelection
-        disableSelectionOnClick
-        onRowClick={handleRowClick}
-      />
+      autoHeight
+      rows={props.rows}
+      columns={props.columns}
+      pageSize={10}
+      rowsPerPageOptions={[10, 20, 50]}
+      components={{ Toolbar: CustomToolbar , NoRowsOverlay: getEmptyState}}
+      componentsProps={{
+        toolbar: {
+          showQuickFilter: true,
+          quickFilterProps: { debounceMs: 500 },
+        }, ...props
+      }}
+      checkboxSelection
+      disableSelectionOnClick
+      onRowClick={handleRowClick}
+    />
         <NewClient
       open={ props.type === 'Clients' && newOpen}
       onClose={handleClose}

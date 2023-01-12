@@ -6,6 +6,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { listClients } from '../../api/client.api';
 import { listProperties } from '../../api/property.api';
+import EmptyState from '../EmptyState';
 import EditProperty from '../property/EditProperty';
 import NewClient from './NewClient';
 
@@ -99,6 +100,14 @@ export default function SelectClient(props: any) {
         setNewPropertyOpen(true);
     }
 
+    const getClientEmptyState = () => {
+      return (<EmptyState type='clients'/>);
+    }
+
+    const getPropertiesEmptyState = () => {
+      return (<EmptyState type='properties'/>);
+    }
+
       useEffect(() => {
         listClients()
         .then((result) => {
@@ -130,15 +139,16 @@ export default function SelectClient(props: any) {
           </Step>
         </Stepper><React.Fragment>
             {activeStep === 0 ? (
-              <Box sx={{ height: 400, width: '100%' }}>
+              <Box>
                 {!clientIsLoaded && <Typography>Loading</Typography>}
                 {clientIsLoaded &&
                   <DataGrid
+                    autoHeight
                     rows={clientRows}
                     columns={clientColumns}
                     pageSize={10}
                     rowsPerPageOptions={[10, 20, 50]}
-                    components={{ Toolbar: ClientToolbar }}
+                    components={{ Toolbar: ClientToolbar, NoRowsOverlay: getClientEmptyState }}
                     componentsProps={{
                       toolbar: {
                         showQuickFilter: true,
@@ -148,15 +158,16 @@ export default function SelectClient(props: any) {
                     onRowClick={handleClientRowClick} />}
               </Box>
             ) : (
-              <Box sx={{ height: 400, width: '100%' }}>
+              <Box>
                 {!propertyIsLoaded && <Typography>Loading</Typography>}
                 {propertyIsLoaded &&
                   <DataGrid
+                  autoHeight
                     rows={propertyRows}
                     columns={propertyColumns}
                     pageSize={10}
                     rowsPerPageOptions={[10, 20, 50]}
-                    components={{ Toolbar: PropertyToolbar }}
+                    components={{ Toolbar: PropertyToolbar, NoRowsOverlay: getPropertiesEmptyState }}
                     componentsProps={{
                       toolbar: {
                         showQuickFilter: true,
