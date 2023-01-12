@@ -4,9 +4,12 @@ import { DatePicker } from '@mui/x-date-pickers';
 import * as React from 'react';
 import { useState } from 'react';
 import { createVisit, updateVisit } from '../../api/visit.api';
+import TimePicker from './TimePicker';
   
 export default function EditVisit(props: any) {
   const [error, setError] = useState(null);
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
     
     const handleCancel = () => {
       props.onClose();
@@ -48,6 +51,14 @@ export default function EditVisit(props: any) {
     const handleChangePerson = (event: SelectChangeEvent<any>) => {
       props.setVisit({ ...props.visit, users: event.target.value});
     };
+
+    const handleStartTimeChange = (time: string) => {
+      setStartTime(time);
+    }
+
+    const handleEndTimeChange = (time: string) => {
+      setEndTime(time);
+    }
 
     return (
       <Dialog onClose={handleCancel} open={props.open}>
@@ -102,6 +113,18 @@ export default function EditVisit(props: any) {
                         value={props.visit.end}
                         onChange={handEndChange}
                         renderInput={(params) => <TextField {...params} />}
+                    />
+                </Stack>
+                <Stack direction="row">
+                    <TimePicker
+                        label="Start Time"
+                        value={startTime}
+                        onChange={handleStartTimeChange}
+                    />
+                    <TimePicker
+                        label="End Time"
+                        value={endTime}
+                        onChange={handleEndTimeChange}
                     />
                 </Stack>
                 <Stack direction="row">

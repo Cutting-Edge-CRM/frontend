@@ -7,6 +7,7 @@ import EditProperty from './EditProperty';
 import { listProperties } from '../../api/property.api';
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 import EmptyState from '../EmptyState';
+import ConfirmDelete from '../ConfirmDelete';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY3V0dGluZ2VkZ2Vjcm0iLCJhIjoiY2xjaHk1cWZrMmYzcDN3cDQ5bGRzYTY1bCJ9.0B4ntLJoCZzxQ0SUxqaQxg';
 const geocodingClient = mbxGeocoding({accessToken: mapboxgl.accessToken});
@@ -23,7 +24,8 @@ function Properties(props: any) {
     const mapContainer = useRef<HTMLDivElement>(null);
     const map = useRef<mapboxgl.Map | null>(null);
     const [coords, setCoords] = useState([] as any);
-    const [property, setProperty] = useState({});
+    const [property, setProperty] = useState({} as any);
+    const [deleteOpen, setDeleteOpen] = useState(false);
 
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>, row: any) => {
         setProperty(row);
@@ -65,6 +67,15 @@ function Properties(props: any) {
     const getEmptyState = () => {
         return (<EmptyState type='properties'/>);
     }
+
+    const handleDeleteOpen = () => {
+        setDeleteOpen(true);
+    };
+
+    const handleDeleteClose = (value: string) => {
+        setDeleteOpen(false);
+        closeMenu();
+    };
 
 
     const columns: GridColDef[] = [
@@ -115,7 +126,7 @@ function Properties(props: any) {
                                         </ListItemIcon>
                                         <ListItemText>Edit Property</ListItemText>
                                     </MenuItem>
-                                    <MenuItem>
+                                    <MenuItem onClick={handleDeleteOpen}>
                                         <ListItemIcon>
                                             <DeleteOutline />
                                         </ListItemIcon>
@@ -162,7 +173,7 @@ function Properties(props: any) {
         setIsLoaded(true);
         setError(err.message)
       })
-    }, [props, open])
+    }, [props, open, deleteOpen])
 
     function getCoords(address: any) {
         let query =  [address.address, address.address2, address.city, address.state, address.zip, address.country].join(" ");
@@ -223,6 +234,12 @@ function Properties(props: any) {
             modalType={modalType}
             token={mapboxgl.accessToken}
             {...props}
+            />
+            <ConfirmDelete
+            open={deleteOpen}
+            onClose={handleDeleteClose}
+            type={'properties'}
+            deleteId={property.id}
             />
         </Card>
     )

@@ -5,6 +5,7 @@ import { listUsers } from '../../api/user.api';
 import { listVisits } from '../../api/visit.api';
 import EditVisit from './EditVisit';
 import dayjs from 'dayjs';
+import ConfirmDelete from '../ConfirmDelete';
 
 
 function Visits(props: any) {
@@ -17,6 +18,7 @@ function Visits(props: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const isOpen = Boolean(anchorEl);
     const [users, setUsers] = useState([] as any[]);
+    const [deleteOpen, setDeleteOpen] = useState(false);
   
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>, visit: any) => {
         setVisit(visit);
@@ -38,8 +40,17 @@ function Visits(props: any) {
         setOpen(true);
     };
 
+    const handleDeleteOpen = () => {
+        setDeleteOpen(true);
+    };
+
     const handleClose = (value: string) => {
         setOpen(false);
+    };
+
+    const handleDeleteClose = (value: string) => {
+        closeMenu();
+        setDeleteOpen(false);
     };
 
     const handleUpdate = (value: string) => {
@@ -69,7 +80,7 @@ function Visits(props: any) {
           setRows(result);
         }, (err) => {
         })
-      }, [props, open])
+      }, [props, open, deleteOpen])
 
     if (error) {
     return (<Typography>{error}</Typography>);
@@ -124,7 +135,7 @@ function Visits(props: any) {
                                                 </ListItemIcon>
                                                 <ListItemText>Edit Visit</ListItemText>
                                             </MenuItem>
-                                            <MenuItem>
+                                            <MenuItem onClick={handleDeleteOpen}>
                                                 <ListItemIcon>
                                                     <DeleteOutline />
                                                 </ListItemIcon>
@@ -149,6 +160,12 @@ function Visits(props: any) {
             type={type}
             users={users}
             client={props.client}
+            />
+            <ConfirmDelete
+            open={deleteOpen}
+            onClose={handleDeleteClose}
+            type={'visits'}
+            deleteId={visit.id}
             />
         </Card>
     )
