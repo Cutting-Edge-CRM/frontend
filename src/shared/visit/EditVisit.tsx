@@ -3,12 +3,14 @@ import { Alert, Box, Button, Checkbox, Chip, Dialog, DialogActions, DialogConten
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { listProperties } from '../../api/property.api';
 import { createVisit, updateVisit } from '../../api/visit.api';
 import TimePicker from './TimePicker';
   
 export default function EditVisit(props: any) {
   const [error, setError] = useState(null);
+  const [properties, setProperties] = useState([] as any[])
   
     
     const handleCancel = () => {
@@ -52,6 +54,10 @@ export default function EditVisit(props: any) {
       props.setVisit({ ...props.visit, users: event.target.value});
     };
 
+    const handleChangeProperty = (event: SelectChangeEvent<any>) => {
+      props.setVisit({ ...props.visit, property: event.target.value.id});
+    };
+
     const handleStartTimeChange = (time: string) => {
       props.setStartTime(time);
     }
@@ -71,6 +77,20 @@ export default function EditVisit(props: any) {
       
     }
 
+    useEffect(() => {
+      listProperties(props.client)
+      .then((result: any[]) => {
+        let none = {
+          id: null,
+          address: "None",
+        }
+        result.unshift(none);
+        setProperties(result);
+      }, (err) => {
+        setError(err.message)
+      })
+    }, [props.client])
+
     return (
       <Dialog onClose={handleCancel} open={props.open}>
         <DialogTitle>{props.type === 'edit' ? "Edit Visit" : "Create New Visit"}</DialogTitle>
@@ -89,7 +109,26 @@ export default function EditVisit(props: any) {
                     ),
                 }}
                 />
-                <InputLabel id="assigned-label">Tag</InputLabel>
+                <InputLabel id="property-label">Property</InputLabel>
+                <Select
+                labelId="property-label"
+                id="property"
+                value={properties.find(p => p.id === props.visit.property)}
+                onChange={handleChangeProperty}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.address}
+                  </Box>
+                )}
+                >
+                {properties.map((property: any) => (
+                    <MenuItem key={property.id} value={property}>
+                    <Checkbox checked={property.id === props.visit.property} />
+                    <ListItemText primary={property.address} />
+                    </MenuItem>
+                ))}
+                </Select>
+                <InputLabel id="assigned-label">Assigned</InputLabel>
                 <Select
                 labelId="assigned-label"
                 id="assigned"

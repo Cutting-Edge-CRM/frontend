@@ -107,7 +107,6 @@ export default function Table(props: any) {
           quickFilterProps: { debounceMs: 500 },
         }, ...props
       }}
-      checkboxSelection
       disableSelectionOnClick
       onRowClick={handleRowClick}
     />

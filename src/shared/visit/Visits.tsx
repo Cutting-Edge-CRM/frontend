@@ -34,7 +34,7 @@ function Visits(props: any) {
     };
 
     const handleNewOpen = () => {
-        setVisit({users: []});
+        setVisit({users: [], property: null});
         setType('new');
         setOpen(true);
     };
