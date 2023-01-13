@@ -24,7 +24,7 @@ function Notes(props: any) {
     };
 
     const handleNewOpen = () => {
-        setNote({});
+        setNote({client: props.client});
         setType('new');
         setOpen(true);
     };
@@ -35,6 +35,7 @@ function Notes(props: any) {
     };
 
     const handleClose = (value: string) => {
+        setNote({client: props.client});
         setOpen(false);
     };
 
