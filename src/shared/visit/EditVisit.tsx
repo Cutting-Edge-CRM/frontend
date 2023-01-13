@@ -1,6 +1,7 @@
 import { PersonOutline } from '@mui/icons-material';
 import { Alert, Box, Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 import * as React from 'react';
 import { useState } from 'react';
 import { createVisit, updateVisit } from '../../api/visit.api';
@@ -8,8 +9,7 @@ import TimePicker from './TimePicker';
   
 export default function EditVisit(props: any) {
   const [error, setError] = useState(null);
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  
     
     const handleCancel = () => {
       props.onClose();
@@ -18,7 +18,7 @@ export default function EditVisit(props: any) {
     const handleSave = () => {
       if (props.type === 'edit') {
         // save value
-        updateVisit({...props.visit, client: props.client})
+        updateVisit({...props.visit, client: props.client, start: convertToDate('start'), end: convertToDate('end')})
         .then(res => {
             props.update(res);
         }, (err) => {
@@ -27,7 +27,7 @@ export default function EditVisit(props: any) {
       }
       if (props.type === 'new') {
           // save value
-          createVisit({...props.visit, client: props.client})
+          createVisit({...props.visit, client: props.client, start: convertToDate('start'), end: convertToDate('end')})
           .then(res => {
               props.create(res);
           }, (err) => {
@@ -53,11 +53,22 @@ export default function EditVisit(props: any) {
     };
 
     const handleStartTimeChange = (time: string) => {
-      setStartTime(time);
+      props.setStartTime(time);
     }
 
     const handleEndTimeChange = (time: string) => {
-      setEndTime(time);
+      props.setEndTime(time);
+    }
+
+    const convertToDate = (type: string) => {
+      if (type === 'start') {
+        let [hours, minutes] = props.startTime.split(':');
+        return dayjs(props.visit.start).set('hour', +hours).set('minute', +minutes);
+      } else {
+        let [hours, minutes] = props.endTime.split(':');
+        return dayjs(props.visit.end).set('hour', +hours).set('minute', +minutes);
+      }
+      
     }
 
     return (
@@ -118,12 +129,12 @@ export default function EditVisit(props: any) {
                 <Stack direction="row">
                     <TimePicker
                         label="Start Time"
-                        value={startTime}
+                        value={props.startTime}
                         onChange={handleStartTimeChange}
                     />
                     <TimePicker
                         label="End Time"
-                        value={endTime}
+                        value={props.endTime}
                         onChange={handleEndTimeChange}
                     />
                 </Stack>

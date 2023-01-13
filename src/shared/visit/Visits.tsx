@@ -19,8 +19,12 @@ function Visits(props: any) {
     const isOpen = Boolean(anchorEl);
     const [users, setUsers] = useState([] as any[]);
     const [deleteOpen, setDeleteOpen] = useState(false);
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
   
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>, visit: any) => {
+        setStartTime(dayjs(visit.start).add(dayjs(visit.start).utcOffset(), 'minutes').format('H:mm'));
+        setEndTime(dayjs(visit.end).add(dayjs(visit.end).utcOffset(), 'minutes').format('H:mm'));
         setVisit(visit);
         setAnchorEl(event.currentTarget);
         setVisit({ ...visit, users: users.filter((user) => visit.users.some((obj: any) => obj.id === user.id))})
@@ -160,6 +164,10 @@ function Visits(props: any) {
             type={type}
             users={users}
             client={props.client}
+            startTime={startTime}
+            endTime={endTime}
+            setStartTime={setStartTime}
+            setEndTime={setEndTime}
             />
             <ConfirmDelete
             open={deleteOpen}
