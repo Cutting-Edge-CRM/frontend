@@ -34,6 +34,7 @@ export default function TimePicker(props: any) {
     const add12 = (time: string) => {
         if (time.includes(":")) {
             let sections = time.split(":");
+            if (sections[0] === '12') return time;
             return (+sections[0] + 12).toString() + ":" + sections[1];
         } else {
             if (time === '') return '';
@@ -44,6 +45,7 @@ export default function TimePicker(props: any) {
     const sub12 = (time: string) => {
         if (time.includes(":")) {
             let sections = time.split(":");
+            if (sections[0] === '12') return time;
             return (+sections[0] - 12).toString() + ":" + sections[1];
         } else {
             if (+time - 12 === 0) return '';
@@ -53,6 +55,11 @@ export default function TimePicker(props: any) {
 
     const handleChange = (e: any) => {
         if (AM) {
+            let sections = formatTime(e.target.value)?.split(":");
+            if (sections[0] === '12') {
+                props.onChange('0:' + sections[1]);
+                return;
+            }
             props.onChange(formatTime(e.target.value));
         } else {
             props.onChange(add12(formatTime(e.target.value)));
@@ -70,7 +77,16 @@ export default function TimePicker(props: any) {
     }
 
     const checkIfAM = (time: string) => {
-        return +time.split(':')[0] <= 12;
+        return +time.split(':')[0] < 12;
+    }
+
+    const fix12 = (time: string) => {
+        let sections = time.split(':')
+        if (sections[0] === '0') {
+            return '12:' + sections[1]
+        } else {
+            return time;
+        }
     }
 
     const valid = () => {
@@ -83,7 +99,7 @@ export default function TimePicker(props: any) {
         <TextField
             id={`${props.type}-time`}
             label={`${props.label}`}
-            value={ checkIfAM(props.value) ? props.value : sub12(props.value)}
+            value={ checkIfAM(props.value) ? fix12(props.value) : sub12(props.value)}
             onChange={handleChange}
             error={valid()}
             />

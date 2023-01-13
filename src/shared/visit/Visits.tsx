@@ -86,7 +86,8 @@ function Visits(props: any) {
         })
       }, [props, open, deleteOpen])
 
-    if (error) {
+
+      if (error) {
     return (<Typography>{error}</Typography>);
     }
     if (!isLoaded) {
