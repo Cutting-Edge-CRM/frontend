@@ -110,7 +110,7 @@ export default function NewClient(props: any) {
       };
 
       const validInput = () => {
-        return ((contact.contacts?.filter((con: any) => con.content?.length > 4).length > 0 || contact.name?.trim().length > 1))
+        return ((contact.contacts?.filter((con: any) => con.content?.length > 4).length > 0 || contact.first?.trim().length > 1 || contact.last?.trim().length > 1))
          && (contact.contacts?.filter((email: any) => email.type==='email')?.filter((email: any) => !emailValid(email.content) && email.content.trim().length > 0).length === 0);
       }
   
@@ -184,10 +184,11 @@ export default function NewClient(props: any) {
             <React.Fragment>
                 {activeStep === 0 ? (
                 <Stack spacing={2}>
-                    <TextField
-                    id="name" 
-                    label="Name"
-                    defaultValue={contact.name ? contact.name : undefined}
+                  <Stack direction={'row'}>
+                  <TextField
+                    id="first" 
+                    label="First name"
+                    defaultValue={contact.first ? contact.first : undefined}
                     onChange={handleChange}
                     InputProps={{
                         startAdornment: (
@@ -197,6 +198,20 @@ export default function NewClient(props: any) {
                         ),
                     }}
                     />
+                    <TextField
+                    id="last" 
+                    label="Last name"
+                    defaultValue={contact.last ? contact.last : undefined}
+                    onChange={handleChange}
+                    InputProps={{
+                        startAdornment: (
+                        <InputAdornment position="start">
+                            <PersonOutline />
+                        </InputAdornment>
+                        ),
+                    }}
+                    />
+                  </Stack>
                     {phoneNumbers}
                     <Button onClick={handleAddPhone} startIcon={<AddCircleOutlineOutlined />}>Add Phone Number</Button>
                     {emailAddresses}

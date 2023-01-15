@@ -44,8 +44,8 @@ function Contact(props: any) {
     return (
         <Card>
             <Stack direction="row">
-                <Avatar>{(contact?.name as string)?.split(" ")?.map(p => p[0])?.join('')?.toUpperCase()}</Avatar>
-                <Typography>{contact?.name}</Typography>
+                <Avatar>{contact?.first?.[0]}{contact?.last?.[0]}</Avatar>
+                <Typography>{contact?.first} {contact?.last}</Typography>
                 <IconButton onClick={handleEditOpen}>
                     <CreateOutlined />
                 </IconButton>

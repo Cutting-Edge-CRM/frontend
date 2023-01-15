@@ -69,7 +69,7 @@ export default function EditContact(props: any) {
     }
 
     const validInput = () => {
-      return ((props.contact.contacts.filter((con: any) => con.content?.length > 4).length > 0 || props.contact.name?.trim().length > 1))
+      return ((props.contact.contacts.filter((con: any) => con.content?.length > 4).length > 0 || props.contact.first?.trim().length > 1 || props.contact.last?.trim().length > 1))
        && (props.contact.contacts.filter((email: any) => email.type==='email').filter((email: any) => !emailValid(email.content) && email.content.trim().length > 0).length === 0);
     }
 
@@ -136,10 +136,11 @@ export default function EditContact(props: any) {
         <DialogTitle>Client Info</DialogTitle>
         <DialogContent>
             <Stack spacing={2}>
-                <TextField
-                id="name" 
-                label="Name"
-                defaultValue={props.contact?.name ? props.contact.name : undefined}
+              <Stack direction={'row'}>
+              <TextField
+                id="first" 
+                label="First name"
+                defaultValue={props.contact?.first ? props.contact.first : undefined}
                 onChange={handleChange}
                 InputProps={{
                     startAdornment: (
@@ -149,6 +150,20 @@ export default function EditContact(props: any) {
                     ),
                 }}
                 />
+                <TextField
+                id="last" 
+                label="Last name"
+                defaultValue={props.contact?.last ? props.contact.last : undefined}
+                onChange={handleChange}
+                InputProps={{
+                    startAdornment: (
+                    <InputAdornment position="start">
+                        <PersonOutline />
+                    </InputAdornment>
+                    ),
+                }}
+                />
+              </Stack>
                 {phoneNumbers}
                 <Button onClick={handleAddPhone} startIcon={<AddCircleOutlineOutlined />}>Add Phone Number</Button>
                 {emailAddresses}

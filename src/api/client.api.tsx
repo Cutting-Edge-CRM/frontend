@@ -144,10 +144,41 @@ async function listClients() {
     }
 }
 
+async function importClients(clients: any[]) {
+    try {
+    var headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+        'tenantId': auth.tenantId as string,
+        'userId': auth.currentUser?.uid as string
+    }
+    var body = JSON.stringify(clients);
+    const requestOptions: RequestInit = {
+        method: 'POST',
+        headers: headers,
+        body: body
+    };
+        let url = new URL(`http://localhost:3000/clients/import-clients`);
+        return fetch(url, requestOptions)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            res.json().then(err => {
+                console.error(`Error importing clients: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error importing clients: ${err.message}`);
+            })
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 export {
     listClients,
     getClient,
     createClient,
     updateClient,
-    deleteClient
+    deleteClient,
+    importClients
   };
