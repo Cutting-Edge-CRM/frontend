@@ -88,6 +88,34 @@ async function updateNote(note: any) {
     }
 }
 
+async function deleteNote(id: any) {
+    try {
+    var headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+        'tenantId': auth.tenantId as string,
+        'userId': auth.currentUser?.uid as string
+    }
+    const requestOptions: RequestInit = {
+        method: 'POST',
+        headers: headers,
+    };
+        let url = new URL(`http://localhost:3000/notes/delete-note/${id}`);
+        return fetch(url, requestOptions)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            res.json().then(err => {
+                console.error(`Error deleting note: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+            })
+            throw new Error(`Error deleting note`);
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 async function listNotes(client?: string) {
     try {
     var headers: HeadersInit = {
@@ -122,5 +150,6 @@ export {
     listNotes,
     getNote,
     createNote,
-    updateNote
+    updateNote,
+    deleteNote
   };

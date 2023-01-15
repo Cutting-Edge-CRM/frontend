@@ -7,17 +7,16 @@ import { updateClient } from '../../api/client.api';
 
   
 export default function EditContact(props: any) {
-
-  const [contact, setContact] = useState({...props.contact});
   const [error, setError] = useState(null);
 
     const handleCancel = () => {
       props.onClose();
-      setContact({...props.contact});
     };
 
     const handleSave = () => {
-      updateClient(buildClient())
+      let contacts = props.contact.contacts.filter((con: any) => con.content.length > 0)
+      props.setContact({...props.contact, contacts: contacts});
+      updateClient(props.contact)
       .then(res => {
         props.update();
       }, (err) => {
@@ -26,42 +25,52 @@ export default function EditContact(props: any) {
     };
 
     const handleChange = (event: any) => {
-      setContact({ ...contact, [event.target.id]: event.target.value.trim()});
+      props.setContact({ ...props.contact, [event.target.id]: event.target.value.trim()});
     };
 
     const handleChangePhone = (event: any, index: number) => {
-      let values = [...props.phones];
-      values[index] = event.target.value;
-      props.setPhones(values);
+      let contacts = props.contact?.contacts?.filter((c: any) => c.type === 'phone');
+      contacts[index].content = event.target.value;
+      contacts = contacts.concat(props.contact?.contacts?.filter((c: any) => c.type === 'email'));
+      props.setContact({...props.contact, contacts: contacts});
     }
 
     const handleRemovePhone = (event: any, index: number) => {
-      let values = [...props.phones];
-      props.setPhones(values.slice(undefined, index).concat(values.slice(index+1, undefined)));
+      let contacts = props.contact?.contacts?.filter((c: any) => c.type === 'phone');
+      contacts = contacts.slice(undefined, index).concat(contacts.slice(index+1, undefined));
+      contacts = contacts.concat(props.contact?.contacts?.filter((c: any) => c.type === 'email'));
+      props.setContact({...props.contact, contacts: contacts});
     }
 
     const handleAddPhone = (event: any) => {
-      props.setPhones([...props.phones, ''])
+      let contacts = props.contact.contacts;
+      contacts.push({type: 'phone', content: ''})
+      props.setContact({...props.contact, contacts: contacts});
     }
 
     const handleChangeEmail = (event: any, index: number) => {
-      let values = [...props.emails];
-      values[index] = event.target.value;
-      props.setEmails(values);
+      let contacts = props.contact?.contacts?.filter((c: any) => c.type === 'email');
+      contacts[index].content = event.target.value;
+      contacts = contacts.concat(props.contact?.contacts?.filter((c: any) => c.type === 'phone'));
+      props.setContact({...props.contact, contacts: contacts});
     }
 
     const handleRemoveEmail = (event: any, index: number) => {
-      let values = [...props.emails];
-      props.setEmails(values.slice(undefined, index).concat(values.slice(index+1, undefined)));
+      let contacts = props.contact?.contacts?.filter((c: any) => c.type === 'email');
+      contacts = contacts.slice(undefined, index).concat(contacts.slice(index+1, undefined));
+      contacts = contacts.concat(props.contact?.contacts?.filter((c: any) => c.type === 'phone'));
+      props.setContact({...props.contact, contacts: contacts});
     }
 
     const handleAddEmail = (event: any) => {
-      props.setEmails([...props.emails, ''])
+      let contacts = props.contact.contacts;
+      contacts.push({type: 'email', content: ''})
+      props.setContact({...props.contact, contacts: contacts});
     }
 
     const validInput = () => {
-      let validContact = buildClient();
-      return (validContact.phone || validContact.email || validContact.name?.trim().length > 2);
+      return ((props.contact.contacts.filter((con: any) => con.content?.length > 4).length > 0 || props.contact.name?.trim().length > 1))
+       && (props.contact.contacts.filter((email: any) => email.type==='email').filter((email: any) => !emailValid(email.content) && email.content.trim().length > 0).length === 0);
     }
 
     const emailValid = (email: any) => {
@@ -70,31 +79,16 @@ export default function EditContact(props: any) {
       return validEmail.test(email);
     }
 
-    const buildClient = () => {
-      let client = {} as any;
-      props.phones?.filter((p: any) => p.trim().length > 5).forEach((phone: any, index: any) => {
-        let key = 'phone';
-        if (index > 0) key = `phone${index+1}`
-        client[key] = phone;
-      })
-      props.emails?.filter((e: any) => emailValid(e)).forEach((email: any, index: any) => {
-        let key = 'email';
-        if (index > 0) key = `email${index+1}`
-        client[key] = email;
-      })
-      return {...client, name: contact.name, id: contact.id, company: contact.company};
-    }
-
     let phoneNumbers: any = []
     let emailAddresses: any = []
 
-    phoneNumbers = props.phones?.map((number: any, index: any) => {
+    phoneNumbers = props.contact?.contacts?.filter((c: any) => c.type === 'phone')?.map((phone: any, index: any) => {
       return (
           <TextField
           key={index}
           label="Phone"
           type={"tel"}
-          value={number}
+          value={phone.content}
           onChange={(e) => handleChangePhone(e, index)}
           InputProps={{
             startAdornment: (
@@ -112,13 +106,14 @@ export default function EditContact(props: any) {
       );
     })
 
-    emailAddresses = props.emails?.map((email: any, index: any) => {
+    emailAddresses = props.contact?.contacts?.filter((c: any) => c.type === 'email')?.map((email: any, index: any) => {
       return (
           <TextField
           key={index}
           label="Email"
           type={"email"}
-          value={email}
+          value={email.content}
+          error={!(emailValid(email.content) || email.content.length < 1)}
           onChange={(e) => handleChangeEmail(e, index)}
           InputProps={{
             startAdornment: (
@@ -144,7 +139,7 @@ export default function EditContact(props: any) {
                 <TextField
                 id="name" 
                 label="Name"
-                defaultValue={contact.name ? contact.name : undefined}
+                defaultValue={props.contact?.name ? props.contact.name : undefined}
                 onChange={handleChange}
                 InputProps={{
                     startAdornment: (

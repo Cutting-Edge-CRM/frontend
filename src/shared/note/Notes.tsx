@@ -1,7 +1,8 @@
 import { AddCircleOutlineOutlined, CreateOutlined, DeleteOutline, MoreVert } from '@mui/icons-material';
-import { Card, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from '@mui/material';
+import { Card, Grid, IconButton, ImageList, ImageListItem, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { listNotes } from '../../api/note.api';
+import ConfirmDelete from '../ConfirmDelete';
 import EditNote from './EditNote';
 
 
@@ -14,9 +15,14 @@ function Notes(props: any) {
     const [error, setError] = useState(null);
     const [note, setNote] = useState({} as any);
     const [type, setType] = useState('');
+    const [fileURLs, setFileURLs] = useState([] as {url: string, file: File}[]);
+    const [originalImages, setOriginalImages] = useState([]);
+    const [deleteOpen, setDeleteOpen] = useState(false);
   
-    const openMenu = (event: React.MouseEvent<HTMLButtonElement>, note: any) => {
+    const openMenu = (event: React.MouseEvent<HTMLButtonElement>, note: any, urls: any) => {
         setNote(note);
+        setFileURLs(urls);
+        setOriginalImages(urls);
         setAnchorEl(event.currentTarget);
     };
     const closeMenu = () => {
@@ -25,6 +31,7 @@ function Notes(props: any) {
 
     const handleNewOpen = () => {
         setNote({client: props.client});
+        setFileURLs([]);
         setType('new');
         setOpen(true);
     };
@@ -36,7 +43,9 @@ function Notes(props: any) {
 
     const handleClose = (value: string) => {
         setNote({client: props.client});
+        setFileURLs([]);
         setOpen(false);
+        closeMenu();
     };
 
     const handleUpdate = (value: string) => {
@@ -49,6 +58,15 @@ function Notes(props: any) {
         // save value
     };
 
+    const handleDeleteOpen = () => {
+        setDeleteOpen(true);
+    };
+
+    const handleDeleteClose = (value: string) => {
+        closeMenu();
+        setDeleteOpen(false);
+    };
+
     useEffect(() => {
         listNotes(props.client)
         .then((result) => {
@@ -58,7 +76,7 @@ function Notes(props: any) {
             setIsLoaded(true);
             setError(err.message);
         })
-      }, [props])
+      }, [props, open, deleteOpen])
 
     if (error) {
     return (<Typography>{error}</Typography>);
@@ -85,11 +103,19 @@ function Notes(props: any) {
                                             <Typography>{note.title}</Typography>
                                             <Typography>{note.content}</Typography>
                                             <Typography>{note.date}</Typography>
+                                                <ImageList cols={3}>
+                                                {note.images.map((image: any) => (
+                                                    <ImageListItem key={image.id}>
+                                                        {/* eslint-disable-next-line */}
+                                                        <img src={image.url}/>
+                                                    </ImageListItem>
+                                                    ))}
+                                                </ImageList>
                                         </Stack>
                                     </Grid>
                                     <Grid item={true} xs={2}>
                                         <IconButton
-                                        onClick={(e) => openMenu(e, note)}
+                                        onClick={(e) => openMenu(e, note, note.images)}
                                         >
                                             <MoreVert />
                                         </IconButton>
@@ -106,7 +132,7 @@ function Notes(props: any) {
                                             </ListItemIcon>
                                             <ListItemText>Edit Note</ListItemText>
                                             </MenuItem>
-                                            <MenuItem>
+                                            <MenuItem onClick={handleDeleteOpen}>
                                             <ListItemIcon>
                                                 <DeleteOutline />
                                             </ListItemIcon>
@@ -129,6 +155,16 @@ function Notes(props: any) {
             update={handleUpdate}
             create={handleCreate}
             type={type}
+            fileURLs={fileURLs}
+            setFileURLs={setFileURLs}
+            originalImages={originalImages}
+            setOriginalImages={setOriginalImages}
+            />
+            <ConfirmDelete
+            open={deleteOpen}
+            onClose={handleDeleteClose}
+            type={'notes'}
+            deleteId={note.id}
             />
         </Card>
     )

@@ -1,6 +1,7 @@
 import { Alert, Button, Dialog, DialogActions, DialogContent, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { deleteClient } from '../api/client.api';
+import { deleteNote } from '../api/note.api';
 import { deleteProperty } from '../api/property.api';
 import { deleteVisit } from '../api/visit.api';
 
@@ -36,7 +37,7 @@ export default function ConfirmDelete(props: any) {
                 response = deleteVisit(deleteable);
                 break;
             case 'notes':
-                response = deleteVisit(deleteable);
+                response = deleteNote(deleteable);
                 break;
             default:
                 break;
@@ -77,8 +78,8 @@ export default function ConfirmDelete(props: any) {
                 setBody(`Are you sure you want to delete this visit?`);
                 break;
             case 'notes':
-                setTitle('No Clients');
-                setBody(`You haven't created any clients yet, click "New Client" above to create one!`);
+                setTitle('Delete Note');
+                setBody(`Are you sure you want to delete this note?`);
                 break;
             default:
                 break;

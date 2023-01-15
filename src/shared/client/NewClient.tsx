@@ -13,25 +13,23 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiY3V0dGluZ2VkZ2Vjcm0iLCJhIjoiY2xjaHk1cWZrMmYzc
 
   
 export default function NewClient(props: any) {
-    const [contact, setContact] = useState({} as any);
+    const [contact, setContact] = useState({contacts: [{type: 'phone', content: ''}, {type: 'email', content: ''}]} as any);
     const [property, setProperty] = useState({} as any);
     const [activeStep, setActiveStep] = useState(0);
-    const [phones, setPhones] = useState([''] as string[]);
-    const [emails, setEmails] = useState([''] as string[]);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
 
     const handleCancel = () => {
         props.onClose();
-        setContact({});
+        setContact({contacts: [{type: 'phone', content: ''}, {type: 'email', content: ''}]});
         setProperty({});
-        setPhones(['']);
-        setEmails(['']);
       };
   
       const handleSave = () => {
-        createClient(buildClient())
+        let contacts = contact.contacts?.filter((con: any) => con.content.length > 0)
+        setContact({...contact, contacts: contacts});
+        createClient(contact)
         .then(res => {
           if (propValid()) {
             createProperty({client: res.id, ...property})
@@ -49,22 +47,7 @@ export default function NewClient(props: any) {
       };
 
       const propValid = () => {
-        return Object.keys(property).filter(k => !!property[k]?.trim()).length > 0;
-      }
-
-      const buildClient = () => {
-        let client = {} as any;
-        phones.filter(p => p.trim().length > 5).forEach((phone, index) => {
-          let key = 'phone';
-          if (index > 0) key = `phone${index+1}`
-          client[key] = phone;
-        })
-        emails.filter(e => emailValid(e)).forEach((email, index) => {
-          let key = 'email';
-          if (index > 0) key = `email${index+1}`
-          client[key] = email;
-        })
-        return {...client, ...contact};
+        return Object.keys(property)?.filter(k => !!property[k]?.trim()).length > 0;
       }
   
       const handleChange = (event: any) => {
@@ -76,33 +59,43 @@ export default function NewClient(props: any) {
       };
 
       const handleChangePhone = (event: any, index: number) => {
-        let values = [...phones];
-        values[index] = event.target.value;
-        setPhones(values);
+        let contacts = contact?.contacts?.filter((c: any) => c.type === 'phone');
+        contacts[index].content = event.target.value;
+        contacts = contacts.concat(contact?.contacts?.filter((c: any) => c.type === 'email'));
+        setContact({...contact, contacts: contacts});
       }
-
+  
       const handleRemovePhone = (event: any, index: number) => {
-        let values = [...phones];
-        setPhones(values.slice(undefined, index).concat(values.slice(index+1, undefined)));
+        let contacts = contact?.contacts?.filter((c: any) => c.type === 'phone');
+        contacts = contacts.slice(undefined, index).concat(contacts.slice(index+1, undefined));
+        contacts = contacts.concat(contact?.contacts?.filter((c: any) => c.type === 'email'));
+        setContact({...contact, contacts: contacts});
       }
-
+  
       const handleAddPhone = (event: any) => {
-        setPhones([...phones, ''])
+        let contacts = contact.contacts;
+        contacts.push({type: 'phone', content: ''})
+        setContact({...contact, contacts: contacts});
       }
-
+  
       const handleChangeEmail = (event: any, index: number) => {
-        let values = [...emails];
-        values[index] = event.target.value;
-        setEmails(values);
+        let contacts = contact?.contacts?.filter((c: any) => c.type === 'email');
+        contacts[index].content = event.target.value;
+        contacts = contacts.concat(contact?.contacts?.filter((c: any) => c.type === 'phone'));
+        setContact({...contact, contacts: contacts});
       }
-
+  
       const handleRemoveEmail = (event: any, index: number) => {
-        let values = [...emails];
-        setEmails(values.slice(undefined, index).concat(values.slice(index+1, undefined)));
+        let contacts = contact?.contacts?.filter((c: any) => c.type === 'email');
+        contacts = contacts.slice(undefined, index).concat(contacts.slice(index+1, undefined));
+        contacts = contacts.concat(contact?.contacts?.filter((c: any) => c.type === 'phone'));
+        setContact({...contact, contacts: contacts});
       }
-
+  
       const handleAddEmail = (event: any) => {
-        setEmails([...emails, ''])
+        let contacts = contact.contacts;
+        contacts.push({type: 'email', content: ''})
+        setContact({...contact, contacts: contacts});
       }
 
       let phoneNumbers: any = []
@@ -117,23 +110,23 @@ export default function NewClient(props: any) {
       };
 
       const validInput = () => {
-        let validContact = buildClient();
-        return (validContact.phone || validContact.email || validContact.name?.trim().length > 2);
+        return ((contact.contacts?.filter((con: any) => con.content?.length > 4).length > 0 || contact.name?.trim().length > 1))
+         && (contact.contacts?.filter((email: any) => email.type==='email')?.filter((email: any) => !emailValid(email.content) && email.content.trim().length > 0).length === 0);
       }
-
+  
       const emailValid = (email: any) => {
         // eslint-disable-next-line
         let validEmail = RegexParser("/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.");
         return validEmail.test(email);
       }
 
-      phoneNumbers = phones.map((number, index) => {
+      phoneNumbers = contact?.contacts?.filter((c: any) => c.type === 'phone')?.map((phone: any, index: any) => {
         return (
             <TextField
             key={index}
             label="Phone"
             type={"tel"}
-            value={number}
+            value={phone.content}
             onChange={(e) => handleChangePhone(e, index)}
             InputProps={{
               startAdornment: (
@@ -151,13 +144,13 @@ export default function NewClient(props: any) {
         );
       })
 
-      emailAddresses = emails.map((email, index) => {
+      emailAddresses = contact?.contacts?.filter((c: any) => c.type === 'email')?.map((email: any, index: any) => {
         return (
             <TextField
             key={index}
             label="Email"
             type={"email"}
-            value={email}
+            value={email.content}
             onChange={(e) => handleChangeEmail(e, index)}
             InputProps={{
               startAdornment: (

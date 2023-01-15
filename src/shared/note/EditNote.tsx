@@ -3,11 +3,10 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider
 import * as React from 'react';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { saveImages } from '../../api/images.api';
+import { saveImagesCloudinary, updateImagesInCloudinary } from '../../api/images.api';
 import { createNote, updateNote } from '../../api/note.api';
 
 export default function EditNote(props: any) {
-  const [fileURLs, setFileURLs] = useState([] as {url: string, file: File}[]);
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [savingNote, setSavingNote] = useState(false);
 
@@ -17,28 +16,27 @@ export default function EditNote(props: any) {
 
   const handleSave = () => {
       if (props.type === 'edit') {
-        updateNote(props.note)
+        setSavingNote(true);
+        updateImagesInCloudinary(props.fileURLs, props.originalImages)
         .then(res => {
-          setSavingNote(true);
-          saveImages(fileURLs, 'note', props.note.id)
+          updateNote({...props.note, images: res})
           .then(res => {
             setSavingNote(false);
             props.onClose();
-            console.log(res);
           }, err => {
             setSavingNote(false);
             console.log("error" + err.message);
           })
         }, err => {
-          setSavingNote(false);
-          console.log("error" + err.message);
+            setSavingNote(false);
+            console.log("error" + err.message);
         })
       }
       if (props.type === 'new') {
-        createNote(props.note)
+        setSavingNote(true);
+        saveImagesCloudinary(props.fileURLs)
         .then(res => {
-          setSavingNote(true);
-          saveImages(fileURLs, 'note', res.id)
+          createNote({...props.note, images: res})
           .then(res => {
             setSavingNote(false);
             props.onClose();
@@ -48,7 +46,7 @@ export default function EditNote(props: any) {
             console.log("error" + err.message);
           })
         }, err => {
-          setSavingNote(false);
+            setSavingNote(false);
             console.log("error" + err.message);
         })
       } 
@@ -65,11 +63,11 @@ export default function EditNote(props: any) {
       Promise.all(files.map(fileToDataURL))
       .then((fileArray) => {
         setLoadingFiles(false);
-        setFileURLs(fileURLs.concat(fileArray as {url: string, file: File}[]))
+        props.setFileURLs(props.fileURLs.concat(fileArray as {url: string, file: File}[]))
       })
     }
       readAsDataURL(acceptedFiles)
-    }, [fileURLs, setFileURLs])
+    }, [props])
 
   let {getRootProps, getInputProps, isDragActive, acceptedFiles} = useDropzone({
       accept: {
@@ -83,9 +81,9 @@ export default function EditNote(props: any) {
       onDrop})
 
   const handleDelete = (file: {url: string, file: File}) => {
-      acceptedFiles = acceptedFiles.slice(0, acceptedFiles.indexOf(file.file)).concat(acceptedFiles.slice(acceptedFiles.indexOf(file.file)+1, acceptedFiles.length));
-      let fileUrls = fileURLs.slice(0, fileURLs.indexOf(file)).concat(fileURLs.slice(fileURLs.indexOf(file)+1, fileURLs.length));
-      setFileURLs(fileUrls);
+      acceptedFiles = acceptedFiles.slice(0, acceptedFiles.indexOf(file?.file)).concat(acceptedFiles.slice(acceptedFiles.indexOf(file?.file)+1, acceptedFiles.length));
+      let fileUrls = props.fileURLs.slice(0, props.fileURLs.indexOf(file)).concat(props.fileURLs.slice(props.fileURLs.indexOf(file)+1, props.fileURLs.length));
+      props.setFileURLs(fileUrls);
   }
 
   const fileToDataURL = (file: File) => {
@@ -135,7 +133,7 @@ export default function EditNote(props: any) {
                   </Box>
                   {loadingFiles && <Typography>Uploading...</Typography>}
                       <ImageList cols={3} rowHeight={164}>
-                        {fileURLs.map((file) => (
+                        {props.fileURLs.map((file: any) => (
                           <Box key={file.url}>
                             <IconButton onClick={ () => handleDelete(file)}>
                               <Close/>
