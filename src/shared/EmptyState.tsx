@@ -40,6 +40,21 @@ export default function EmptyState(props: any) {
                 setTitle('No Invoices');
                 setBody(`This client doesn't have any invoices yet, click "New Invoice" above to create one!`);
                 break;
+            case 'quote-items':
+                setLogo(<PersonOutline/>);
+                setTitle('No Items');
+                setBody(`This quote doesn't have any items yet, edit the quote to create one!`);
+                break;
+            case 'job-items':
+                setLogo(<PersonOutline/>);
+                setTitle('No Items');
+                setBody(`This job doesn't have any items yet, click edit the job to create one!`);
+                break;
+            case 'invoice-items':
+                setLogo(<PersonOutline/>);
+                setTitle('No Items');
+                setBody(`This invoice doesn't have any items yet, edit the invoice to create one!`);
+                break;
             case 'properties':
                 setLogo(<PersonOutline/>);
                 setTitle('No Properties');

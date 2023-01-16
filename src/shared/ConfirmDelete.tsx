@@ -1,8 +1,10 @@
 import { Alert, Button, Dialog, DialogActions, DialogContent, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { deleteClient } from '../api/client.api';
+import { deleteJob } from '../api/job.api';
 import { deleteNote } from '../api/note.api';
 import { deleteProperty } from '../api/property.api';
+import { deleteQuote } from '../api/quote.api';
 import { deleteVisit } from '../api/visit.api';
 
 export default function ConfirmDelete(props: any) {
@@ -19,10 +21,10 @@ export default function ConfirmDelete(props: any) {
         let response = {} as Promise<any>;
         switch (props.type) {
             case 'quotes':
-                response = deleteVisit(deleteable);
+                response = deleteQuote(deleteable);
                 break;
             case 'jobs':
-                response = deleteVisit(deleteable);
+                response = deleteJob(deleteable);
                 break;
             case 'invoices':
                 response = deleteVisit(deleteable);
@@ -44,7 +46,7 @@ export default function ConfirmDelete(props: any) {
         }
         response
         .then(res => {
-            props.onClose();
+            props.onDelete();
         }, err => {
             setError(err.message);
         });
@@ -54,12 +56,12 @@ export default function ConfirmDelete(props: any) {
         setDeletable(props.deleteId)
         switch (props.type) {
             case 'quotes':
-                setTitle(`No Quotes`);
-                setBody(`You haven't created any quotes yet, click "New Quote" above to create one!`);
+                setTitle(`Delete Quote`);
+                setBody(`Are you sure you want to delete this quote? This is will delete any options and line items associated to this quote.`);
                 break;
             case 'jobs':
-                setTitle('No Jobs');
-                setBody(`You haven't created any jobs yet, click "New Job" above to create one!`);
+                setTitle('Delete Job');
+                setBody(`Are you sure you want to delete this job? This is will delete all line items associated to this job.`);
                 break;
             case 'invoices':
                 setTitle('No Invoices');

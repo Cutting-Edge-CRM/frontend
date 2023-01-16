@@ -20,7 +20,6 @@ function Job() {
         getJob(id)
         .then(res => {
             setJob(res);
-            console.log(res);
             setIsLoaded(true);
         }, (err) => {
             setError(err.message);

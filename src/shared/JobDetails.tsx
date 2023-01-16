@@ -1,6 +1,10 @@
-import { CreateOutlined, DeleteOutline, MoreVert, PersonOutline } from '@mui/icons-material';
+import { AddCircleOutlineOutlined, CreateOutlined, DeleteOutline, MoreVert, PersonOutline } from '@mui/icons-material';
 import { Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Typography } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { updateJob } from '../api/job.api';
+import ConfirmDelete from './ConfirmDelete';
+import EmptyState from './EmptyState';
 import RichText from './RichText';
 
 function add(accumulator: number, a: number) {
@@ -42,10 +46,21 @@ function JobItemEdit(props: any) {
         let items = props.job.items;
         items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
         props.setJob({
-            job: props.job.job,
+            ...props.job,
             items: items
         });
       };
+
+      const handleDeleteItem = () => {
+        let job = props.job;
+        let item = job.items.find((it: any) => it === props.item);
+        let itemIndex = job.items.indexOf(item);
+        let items = job.items.slice(undefined, itemIndex).concat(job.items.slice(itemIndex+1, undefined));
+        props.setJob({
+            ...props.job,
+            items: items
+        });
+    }
 
     return (
         <>
@@ -61,7 +76,8 @@ function JobItemEdit(props: any) {
                         </InputAdornment>
                         ),
                     }}
-                    value={props.item.title}
+                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                    value={props.item.title ? props.item.title : ''}
                     onChange={handleChange}
                     />
                 </Grid>
@@ -80,7 +96,7 @@ function JobItemEdit(props: any) {
                             </InputAdornment>
                             ),
                         }}
-                        value={props.item.price}
+                        value={props.item.price ? props.item.price : ''}
                         onChange={handleChange}
                         />
                     </Stack>
@@ -88,8 +104,8 @@ function JobItemEdit(props: any) {
             </Grid>
             <Stack>
                 <Typography>Description</Typography>
-                <RichText type='job' content={props.item.description} {...props}/>
-                <Button startIcon={<DeleteOutline />}>Delete Item</Button>
+                <RichText content={props.item.description ? props.item.description : ''} {...props}  type='job'/>
+                <Button onClick={handleDeleteItem} startIcon={<DeleteOutline />}>Delete Item</Button>
             </Stack>
             <Divider/>
         </>
@@ -100,6 +116,8 @@ function JobDetails(props: any) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const isOpen = Boolean(anchorEl);
     const [editting, setEditting] = React.useState(false);
+    const [deleteOpen, setDeleteOpen] = useState(false);
+    const navigate = useNavigate();
 
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -109,7 +127,35 @@ function JobDetails(props: any) {
     };
 
     const handleEditting = () => {
+        if (editting) {
+            updateJob(props.job)
+            .then(res => {
+            }, err => {
+            })
+        }
         setEditting(!editting);
+    }
+
+    const handleAddItem = () => {
+        let items = props.job.items;
+        items.push({price: 0});
+        props.setJob({
+            ...props.job,
+            items: items
+        });
+      }
+
+    const handleDeleteOpen = () => {
+        setDeleteOpen(true);
+    };
+
+    const handleDeleteClose = (value: string) => {
+        setDeleteOpen(false);
+        closeMenu();
+    };
+
+    const onDelete = () => {
+        navigate(`/jobs`);
     }
 
     return (
@@ -141,6 +187,12 @@ function JobDetails(props: any) {
                                 </ListItemIcon>
                                 <ListItemText>Delete Property</ListItemText>
                             </MenuItem>
+                            <MenuItem onClick={handleDeleteOpen}>
+                                <ListItemIcon>
+                                    <DeleteOutline />
+                                </ListItemIcon>
+                                <ListItemText>Delete job</ListItemText>
+                            </MenuItem>
                         </MenuList>
                     </Menu>
             </Stack>
@@ -167,6 +219,12 @@ function JobDetails(props: any) {
                 {props.job.items.map(((item: any, index: number) => (
                     <JobItemEdit key={index} item={item} {...props}/>
                 )))}
+                <Button onClick={handleAddItem}>
+                    <Stack>
+                        <AddCircleOutlineOutlined />
+                        <Typography>Add Item</Typography>
+                    </Stack>
+                </Button>
                 </>
             }
             {!editting && 
@@ -174,6 +232,7 @@ function JobDetails(props: any) {
                 {props.job.items.map(((item: any, index: number) => (
                     <JobItemSaved key={index} item={item} {...props}/>
                 )))}
+                {props.job?.items?.length === 0 && <EmptyState type='job-items'/>}
                 </>
             }
             <Divider />
@@ -181,6 +240,13 @@ function JobDetails(props: any) {
                 <Typography>Subtotal</Typography>
                 <Typography>${props.job.items.map((i: any) => i.price).reduce(add, 0)}</Typography>
             </Stack>
+            <ConfirmDelete
+            open={deleteOpen}
+            onClose={handleDeleteClose}
+            type={'jobs'}
+            deleteId={props.job.job.id}
+            onDelete={onDelete}
+            />
         </Card>
     )
 }

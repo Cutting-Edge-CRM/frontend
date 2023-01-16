@@ -1,7 +1,10 @@
 import { AddCircleOutlineOutlined, CreateOutlined, DeleteOutline, MoreVert, PersonOutline } from '@mui/icons-material';
 import { Box, Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, Switch, Tab, Tabs, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { updateQuote } from '../api/quote.api';
+import ConfirmDelete from './ConfirmDelete';
+import EmptyState from './EmptyState';
 import RichText from './RichText';
 
 function add(accumulator: any, a: any) {
@@ -109,7 +112,8 @@ function QuoteItemEdit(props: any) {
                             </InputAdornment>
                             ),
                         }}
-                        value={props.item.price}
+                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                        value={props.item.price ? props.item.price : ''}
                         onChange={handleChange}
                         />
                     </Stack>
@@ -117,7 +121,7 @@ function QuoteItemEdit(props: any) {
             </Grid>
             <Stack>
                 <Typography>Description</Typography>
-                <RichText content={props.item.description ? props.item.description : ''} {...props}/>
+                <RichText content={props.item.description ? props.item.description : ''} {...props} type='quote'/>
                 <Button onClick={handleDeleteItem} startIcon={<DeleteOutline />}>Delete Item</Button>
             </Stack>
             <Divider/>
@@ -148,7 +152,7 @@ function TabPanel(props: any) {
       const handleAddItem = () => {
         let options = props.quote.options;
         let items = props.option.items;
-        items.push({});
+        items.push({price: 0});
         options.find((op: any) => op === props.option).items = items;
         props.setQuote({
             quote: props.quote.quote,
@@ -182,6 +186,7 @@ function TabPanel(props: any) {
                 {props.option.items.map(((item: any, index: number) => (
                     <QuoteItemSaved key={index} item={item} {...props}/>
                 )))}
+                {props.job?.items?.length === 0 && <EmptyState type='quote-items'/>}
                 </>
             }
             <Divider />
@@ -229,6 +234,9 @@ function QuoteDetails(props: any) {
     const isOpen = Boolean(anchorEl);
     const [value, setValue] = useState(0);
     const [editting, setEditting] = useState(false);
+    const [deleteOpen, setDeleteOpen] = useState(false);
+    const navigate = useNavigate();
+
 
     const handleChange = (event: React.SyntheticEvent, newValue: any) => {
         if (newValue === 'add') {
@@ -256,6 +264,21 @@ function QuoteDetails(props: any) {
         }
         setEditting(!editting);
     }
+
+    const handleDeleteOpen = () => {
+        setDeleteOpen(true);
+    };
+
+    const handleDeleteClose = (value: string) => {
+        setDeleteOpen(false);
+        closeMenu();
+    };
+
+    const onDelete = () => {
+        navigate(`/quotes`);
+    }
+
+
     return (
         <Card>
             <Stack direction="row">
@@ -284,6 +307,12 @@ function QuoteDetails(props: any) {
                                     <DeleteOutline />
                                 </ListItemIcon>
                                 <ListItemText>Mark quote as sent</ListItemText>
+                            </MenuItem>
+                            <MenuItem onClick={handleDeleteOpen}>
+                                <ListItemIcon>
+                                    <DeleteOutline />
+                                </ListItemIcon>
+                                <ListItemText>Delete quote</ListItemText>
                             </MenuItem>
                         </MenuList>
                     </Menu>
@@ -317,6 +346,13 @@ function QuoteDetails(props: any) {
             {props.quote.options?.map((option: any, index: number) => (
                     <TabPanel option={option} key={index} value={value} index={index} editting={editting} {...props}/>
                 ))}
+            <ConfirmDelete
+            open={deleteOpen}
+            onClose={handleDeleteClose}
+            type={'quotes'}
+            deleteId={props.quote.quote.id}
+            onDelete={onDelete}
+            />
         </Card>
     )
 }

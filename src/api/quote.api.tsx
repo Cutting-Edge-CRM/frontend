@@ -88,6 +88,34 @@ async function updateQuote(quote: any) {
     }
 }
 
+async function deleteQuote(id: any) {
+    try {
+    var headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+        'tenantId': auth.tenantId as string,
+        'userId': auth.currentUser?.uid as string
+    }
+    const requestOptions: RequestInit = {
+        method: 'POST',
+        headers: headers,
+    };
+        let url = new URL(`http://localhost:3000/quotes/delete-quote/${id}`);
+        return fetch(url, requestOptions)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            res.json().then(err => {
+                console.error(`Error deleting quote: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error deleting quote: ${err.message}`);
+            })
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 async function listQuotes(client?: string) {
     try {
     var headers: HeadersInit = {
@@ -122,5 +150,6 @@ export {
     listQuotes,
     getQuote,
     updateQuote,
-    createQuote
+    createQuote,
+    deleteQuote
   };

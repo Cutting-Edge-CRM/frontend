@@ -6,6 +6,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { listClients } from '../../api/client.api';
+import { createJob, updateJob } from '../../api/job.api';
 import { listProperties } from '../../api/property.api';
 import { createQuote, updateQuote } from '../../api/quote.api';
 import EmptyState from '../EmptyState';
@@ -65,32 +66,61 @@ export default function SelectClient(props: any) {
     }
 
     const handlePropertyRowClick = (event: any) => {
-        setProperty(event.row);
-        let quote: any = {
-          client: client.id,
-          property: event.row.id,
-          status: 'draft',
-        };
-        createQuote(quote)
-        .then(res => {
-          let updatingQuote: any = {};
-          updatingQuote.quote = quote;
-          updatingQuote.quote.id = res.id;
-          updatingQuote.options = [{
-            quote: res.id,
-            deposit: 0,
-            depositPercent: 0,
-            tax: null,
-            items: [{quote: res.id, price: 0}]
-          }]
-          updateQuote(updatingQuote)
-          .then(_ => {
-            navigate(`/quotes/${res.id}`);
-          }, err => {
-
+      setProperty(event.row);
+      switch (props.type) {
+        case 'Jobs':
+          let job: any = {
+            client: client.id,
+            property: event.row.id,
+            status: 'unscheduled',
+          };
+          createJob(job)
+          .then(res => {
+            let updatingJob: any = {};
+            updatingJob.job = job;
+            updatingJob.job.id = res.id;
+            updatingJob.items = [{job: res.id, price: 0}]
+            updateJob(updatingJob)
+            .then(_ => {
+              navigate(`/jobs/${res.id}`);
+            }, err => {
+    
+            })
+          }, (err: any) => {
           })
-        }, err => {
-        })
+          
+          break;
+        case 'Quotes':
+          let quote: any = {
+            client: client.id,
+            property: property,
+            status: 'draft',
+          };
+          createQuote(quote)
+          .then(res => {
+            let updatingQuote: any = {};
+            updatingQuote.quote = quote;
+            updatingQuote.quote.id = res.id;
+            updatingQuote.options = [{
+              quote: res.id,
+              deposit: 0,
+              depositPercent: 0,
+              tax: null,
+              items: [{quote: res.id, price: 0}]
+            }]
+            updateQuote(updatingQuote)
+            .then(_ => {
+              navigate(`/quotes/${res.id}`);
+            }, err => {
+    
+            })
+          }, err => {
+          })
+          break;
+        default:
+          break;
+      }
+
     }
 
     const handleCloseNewClient = (value: string) => {

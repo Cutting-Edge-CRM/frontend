@@ -1,6 +1,6 @@
 import { auth, currentUser } from "../auth/firebase";
 
-async function listInvoices(client?: string) {
+async function createInvoice(invoice: any) {
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -8,26 +8,28 @@ async function listInvoices(client?: string) {
         'tenantId': auth.tenantId as string,
         'userId': auth.currentUser?.uid as string
     }
+    var body = JSON.stringify(invoice);
     const requestOptions: RequestInit = {
-        method: 'GET',
+        method: 'POST',
         headers: headers,
+        body: body
     };
-        let url = new URL('http://localhost:3000/invoices/list-invoices');
-        if (client) url.searchParams.set('client', client);
+        let url = new URL(`http://localhost:3000/invoices/create-invoice`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
                 return res.json();
             }
             res.json().then(err => {
-                console.error(`Error listing invoices: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                console.error(`Error creating invoice: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating invoice: ${err.message}`);
             })
-            throw new Error(`Error listing invoices`);
         })
     } catch (err) {
         console.error(err);
     }
 }
+
 
 async function getInvoice(id?: string) {
     try {
@@ -57,8 +59,98 @@ async function getInvoice(id?: string) {
     }
 }
 
+async function updateInvoice(invoice: any) {
+    try {
+    var headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+        'tenantId': auth.tenantId as string,
+        'userId': auth.currentUser?.uid as string
+    }
+    var body = JSON.stringify(invoice);
+    const requestOptions: RequestInit = {
+        method: 'POST',
+        headers: headers,
+        body: body
+    };
+        let url = new URL(`http://localhost:3000/invoices/update-invoice/${invoice.invoice.id}`);
+        return fetch(url, requestOptions)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            res.json().then(err => {
+                console.error(`Error updating invoice: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error updating invoice: ${err.message}`);
+            })
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function deleteInvoice(id: any) {
+    try {
+    var headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+        'tenantId': auth.tenantId as string,
+        'userId': auth.currentUser?.uid as string
+    }
+    const requestOptions: RequestInit = {
+        method: 'POST',
+        headers: headers,
+    };
+        let url = new URL(`http://localhost:3000/invoices/delete-invoice/${id}`);
+        return fetch(url, requestOptions)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            res.json().then(err => {
+                console.error(`Error deleting invoice: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error deleting invoice: ${err.message}`);
+            })
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function listInvoices(client?: string) {
+    try {
+    var headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+        'tenantId': auth.tenantId as string,
+        'userId': auth.currentUser?.uid as string
+    }
+    const requestOptions: RequestInit = {
+        method: 'GET',
+        headers: headers,
+    };
+        let url = new URL('http://localhost:3000/invoices/list-invoices');
+        if (client) url.searchParams.set('client', client);
+        return fetch(url, requestOptions)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            res.json().then(err => {
+                console.error(`Error listing invoices: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+            })
+            throw new Error(`Error listing invoices`);
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 
 export {
     listInvoices,
-    getInvoice
+    getInvoice,
+    updateInvoice,
+    createInvoice,
+    deleteInvoice
   };
