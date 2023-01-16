@@ -178,29 +178,6 @@ export default function SelectClient(props: any) {
 
               </Box>
             )}
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-              >
-                Back
-              </Button>
-              <Box sx={{ flex: '1 1 auto' }} />
-              {activeStep === 1 ? (
-                <Button
-                  onClick={handleSave}>
-                  Create
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleNext}
-                  disabled={false}>
-                  Next
-                </Button>
-              )}
-            </Box>
           </React.Fragment></>);
       }
 
@@ -249,8 +226,27 @@ export default function SelectClient(props: any) {
         </Box>
         </DialogContent>
         <DialogActions>
-            <Button onClick={handleCancel}>Cancel</Button>
-            <Button onClick={handleSave}>Save Changes</Button>
+          <Button
+            color="inherit"
+            disabled={activeStep === 0}
+            onClick={handleBack}
+            sx={{ mr: 1 }}
+          >
+            Back
+          </Button>
+          <Box sx={{ flex: '1 1 auto' }} />
+          {activeStep === 1 ? (
+            <Button
+              onClick={handleSave}>
+              Create
+            </Button>
+          ) : (
+            <Button
+              onClick={handleNext}
+              disabled={false}>
+              Next
+            </Button>
+          )}
         </DialogActions>
         <NewClient
             open={newClientOpen}
