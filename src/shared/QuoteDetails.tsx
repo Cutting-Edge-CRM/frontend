@@ -1,6 +1,7 @@
-import { CreateOutlined, DeleteOutline, MoreVert, PersonOutline } from '@mui/icons-material';
+import { AddCircleOutlineOutlined, CreateOutlined, DeleteOutline, MoreVert, PersonOutline } from '@mui/icons-material';
 import { Box, Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, Switch, Tab, Tabs, TextField, Typography } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
+import { updateQuote } from '../api/quote.api';
 import RichText from './RichText';
 
 function add(accumulator: any, a: any) {
@@ -60,6 +61,18 @@ function QuoteItemEdit(props: any) {
         });
       };
 
+    const handleDeleteItem = () => {
+        let options = props.quote.options;
+        let option = options.find((op: any) => op === props.option);
+        let item = option.items.find((it: any) => it === props.item);
+        let itemIndex = option.items.indexOf(item);
+        options.find((op: any) => op === props.option).items = option.items.slice(undefined, itemIndex).concat(option.items.slice(itemIndex+1, undefined));
+        props.setQuote({
+            quote: props.quote.quote,
+            options: options
+        });
+    }
+
     return (
         <>
             <Grid container spacing={2}>
@@ -74,7 +87,7 @@ function QuoteItemEdit(props: any) {
                         </InputAdornment>
                         ),
                     }}
-                    value={props.item.title}
+                    value={props.item.title ? props.item.title : ''}
                     onChange={handleChange}
                     />
                 </Grid>
@@ -104,8 +117,8 @@ function QuoteItemEdit(props: any) {
             </Grid>
             <Stack>
                 <Typography>Description</Typography>
-                <RichText content={props.item.description} {...props}/>
-                <Button startIcon={<DeleteOutline />}>Delete Item</Button>
+                <RichText content={props.item.description ? props.item.description : ''} {...props}/>
+                <Button onClick={handleDeleteItem} startIcon={<DeleteOutline />}>Delete Item</Button>
             </Stack>
             <Divider/>
         </>
@@ -132,6 +145,17 @@ function TabPanel(props: any) {
         });
       };
 
+      const handleAddItem = () => {
+        let options = props.quote.options;
+        let items = props.option.items;
+        items.push({});
+        options.find((op: any) => op === props.option).items = items;
+        props.setQuote({
+            quote: props.quote.quote,
+            options: options
+        });
+      }
+
     return (
         <Box
         role="tabpanel"
@@ -145,6 +169,12 @@ function TabPanel(props: any) {
                 {props.option.items.map(((item: any, index: number) => (
                     <QuoteItemEdit key={index} item={item} {...props}/>
                 )))}
+                <Button onClick={handleAddItem}>
+                    <Stack>
+                        <AddCircleOutlineOutlined />
+                        <Typography>Add Item</Typography>
+                    </Stack>
+                </Button>
                 </>
             }
             {!props.editting && 
@@ -195,13 +225,19 @@ function TabPanel(props: any) {
 }
 
 function QuoteDetails(props: any) {
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const isOpen = Boolean(anchorEl);
-    const [value, setValue] = React.useState(0);
-    const [editting, setEditting] = React.useState(false);
+    const [value, setValue] = useState(0);
+    const [editting, setEditting] = useState(false);
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-      setValue(newValue);
+    const handleChange = (event: React.SyntheticEvent, newValue: any) => {
+        if (newValue === 'add') {
+            let options = props.quote.options;
+            options.push({items: []});
+            setValue(props.quote.options.length-1);
+        } else {
+            setValue(newValue);
+        }
     };
 
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -212,6 +248,12 @@ function QuoteDetails(props: any) {
     };
 
     const handleEditting = () => {
+        if (editting) {
+            updateQuote(props.quote)
+            .then(res => {
+            }, err => {
+            })
+        }
         setEditting(!editting);
     }
     return (
@@ -269,6 +311,7 @@ function QuoteDetails(props: any) {
                 {props.quote.options?.map((_: any, index: number) => (
                     <Tab key={index} label={`Option ${index + 1}`} id={`${index + 1}`} />
                 ))}
+                {editting && <Tab label={`Add Option`} value='add'/>}
             </Tabs>
             </Box>
             {props.quote.options?.map((option: any, index: number) => (

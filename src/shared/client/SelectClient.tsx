@@ -4,8 +4,10 @@ import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarQuickFilter } fr
 import mapboxgl from 'mapbox-gl';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { listClients } from '../../api/client.api';
 import { listProperties } from '../../api/property.api';
+import { createQuote, updateQuote } from '../../api/quote.api';
 import EmptyState from '../EmptyState';
 import EditProperty from '../property/EditProperty';
 import NewClient from './NewClient';
@@ -46,22 +48,14 @@ export default function SelectClient(props: any) {
     const [propertyIsLoaded, setPropertyIsLoaded] = useState(false);
     const [newClientOpen, setNewClientOpen] = useState(false);
     const [newPropertyOpen, setNewPropertyOpen] = useState(false);
+    const navigate = useNavigate();
 
     const handleCancel = () => {
         props.onClose();
       };
-
-    const handleSave = () => {
-        props.create(client, property);
-      };
-
-    const handleNext = () => {  
-        setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
-      };
     
     const handleBack = () => {
         setPropertyRows([]);
-        setPropertyIsLoaded(false);
         setActiveStep((prevActiveStep: number) => prevActiveStep - 1);
       };
 
@@ -71,7 +65,32 @@ export default function SelectClient(props: any) {
     }
 
     const handlePropertyRowClick = (event: any) => {
-        setProperty(event.row)
+        setProperty(event.row);
+        let quote: any = {
+          client: client.id,
+          property: event.row.id,
+          status: 'draft',
+        };
+        createQuote(quote)
+        .then(res => {
+          let updatingQuote: any = {};
+          updatingQuote.quote = quote;
+          updatingQuote.quote.id = res.id;
+          updatingQuote.options = [{
+            quote: res.id,
+            deposit: 0,
+            depositPercent: 0,
+            tax: null,
+            items: [{quote: res.id, price: 0}]
+          }]
+          updateQuote(updatingQuote)
+          .then(_ => {
+            navigate(`/quotes/${res.id}`);
+          }, err => {
+
+          })
+        }, err => {
+        })
     }
 
     const handleCloseNewClient = (value: string) => {
@@ -116,9 +135,10 @@ export default function SelectClient(props: any) {
         }, (err) => {
             setClientIsLoaded(true);
         })
-      }, [])
+      }, [newClientOpen])
 
       useEffect(() => {
+        setPropertyIsLoaded(false);
         if (!client) return;
         listProperties(client.id)
         .then((result) => {
@@ -127,7 +147,7 @@ export default function SelectClient(props: any) {
         }, (err) => {
             setPropertyIsLoaded(true);
         })
-      }, [client])
+      }, [client, activeStep, newPropertyOpen])
 
       function SelectStepper(props: any) {
         return (<><Stepper activeStep={activeStep}>
@@ -235,18 +255,6 @@ export default function SelectClient(props: any) {
             Back
           </Button>
           <Box sx={{ flex: '1 1 auto' }} />
-          {activeStep === 1 ? (
-            <Button
-              onClick={handleSave}>
-              Create
-            </Button>
-          ) : (
-            <Button
-              onClick={handleNext}
-              disabled={false}>
-              Next
-            </Button>
-          )}
         </DialogActions>
         <NewClient
             open={newClientOpen}
