@@ -161,7 +161,7 @@ export default function SelectClient(props: any) {
         listClients()
         .then((result) => {
           setClientIsLoaded(true);
-          setClientRows(result)
+          setClientRows(result.rows)
         }, (err) => {
             setClientIsLoaded(true);
         })

@@ -47,7 +47,7 @@ function TabbedSummary(props: any) {
       listQuotes(props.client)
       .then((result) => {
         setQuotesAreLoaded(true);
-        setQuoteRows(result)
+        setQuoteRows(result?.rows)
       }, (err) => {
         setQuotesAreLoaded(true);
         setQuotesError(err.message)
@@ -55,7 +55,7 @@ function TabbedSummary(props: any) {
       listJobs(props.client)
       .then((result) => {
         setJobsAreLoaded(true);
-        setJobRows(result)
+        setJobRows(result?.rows)
       }, (err) => {
         setJobsAreLoaded(true);
         setJobsError(err.message)
@@ -63,7 +63,7 @@ function TabbedSummary(props: any) {
       listInvoices(props.client)
       .then((result) => {
         setInvoicesAreLoaded(true);
-        setInvoiceRows(result)
+        setInvoiceRows(result?.rows)
       }, (err) => {
         setInvoicesAreLoaded(true);
         setInvoicesError(err.message)

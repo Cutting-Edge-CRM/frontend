@@ -1,13 +1,12 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
-import { Button, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Typography } from '@mui/material';
-import { ImportExport, FileDownloadOutlined, FileUploadOutlined, AddCircleOutlineOutlined } from '@mui/icons-material';
+import { Button, Divider, Typography } from '@mui/material';
+import { AddCircleOutlineOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import NewClient from './client/NewClient';
-import SelectClient from './client/SelectClient';
 import EmptyState from './EmptyState';
+import SelectProperty from './SelectProperty';
 
 
 export default function Table(props: any) {
@@ -38,15 +37,6 @@ export default function Table(props: any) {
 
   function CustomToolbar() {
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-      setAnchorEl(event.currentTarget);
-    };
-    const closeMenu = () => {
-      setAnchorEl(null);
-    };
-
     return (
       <GridToolbarContainer>
         <Box>
@@ -58,34 +48,6 @@ export default function Table(props: any) {
         <Box>
           <>
           <GridToolbarQuickFilter />
-        { props.type === 'Clients' &&
-              <><Button
-                startIcon={<ImportExport />}
-                onClick={openMenu}
-              >
-                Import/Export
-              </Button><Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={closeMenu}
-              >
-                  <MenuList>
-                    <MenuItem onClick={props.onImportClick}>
-                      <ListItemIcon>
-                        <FileDownloadOutlined />
-                      </ListItemIcon>
-                      <ListItemText>Import</ListItemText>
-                    </MenuItem>
-                    <MenuItem>
-                      <ListItemIcon>
-                        <FileUploadOutlined />
-                      </ListItemIcon>
-                      <ListItemText>Export</ListItemText>
-                    </MenuItem>
-                  </MenuList>
-                </Menu></>
-          }
         <Button onClick={handleNewOpen} startIcon={<AddCircleOutlineOutlined />}>New {props.type.slice(0,-1)}</Button>
         </>
         </Box>
@@ -109,12 +71,9 @@ export default function Table(props: any) {
       disableSelectionOnClick
       onRowClick={handleRowClick}
     />
-        <NewClient
-      open={ props.type === 'Clients' && newOpen}
-      onClose={handleClose}
-        />
-        <SelectClient
-        open={ (props.type === 'Quotes' || props.type === 'Jobs' || props.type === 'Invoices') && newOpen}
+        <SelectProperty
+        client={props.client}
+        open={newOpen}
         onClose={handleClose}
         update={handleUpdate}
         type={props.type}
