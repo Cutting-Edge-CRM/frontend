@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TabbedTable from '../../shared/TabbedTable';
+import TabbedSummary from '../../shared/TabbedSummary';
 import Properties from '../../shared/property/Properties';
 import Grid from '@mui/material/Unstable_Grid2'
 import { Stack } from '@mui/system';
@@ -29,7 +29,7 @@ function Client() {
             <Grid xs={8}>
                 <Stack spacing={2}>
                     <Properties type="client" client={id}/>
-                    <TabbedTable client={id} />
+                    <TabbedSummary client={id} />
                     <Button onClick={handleDeleteOpen}>Delete Client</Button>
                 </Stack>
             </Grid>

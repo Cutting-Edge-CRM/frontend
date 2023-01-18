@@ -13,6 +13,7 @@ import EmptyState from './EmptyState';
 export default function Table(props: any) {
   const navigate = useNavigate();
   const [newOpen, setNewOpen] = useState(false);
+  
 
   const handleRowClick = (event: any) => {
     navigate(`/${props.type}/${event.id}`)
@@ -98,8 +99,14 @@ export default function Table(props: any) {
       autoHeight
       rows={props.rows}
       columns={props.columns}
-      pageSize={10}
+      pagination
+      page={props.page}
+      pageSize={props.pageSize}
       rowsPerPageOptions={[10, 20, 50]}
+      rowCount={props.rowCount}
+      onPageChange={(newPage) => props.setPage(newPage)}
+      onPageSizeChange={(newPageSize) => props.setPageSize(newPageSize)}
+      paginationMode="server"
       components={{ Toolbar: CustomToolbar , NoRowsOverlay: getEmptyState}}
       componentsProps={{
         toolbar: {

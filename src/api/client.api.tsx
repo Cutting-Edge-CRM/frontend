@@ -117,7 +117,7 @@ async function deleteClient(id: any) {
     }
 }
 
-async function listClients() {
+async function listClients( query?: string, page?: number, pageSize?: number) {
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -129,7 +129,11 @@ async function listClients() {
         method: 'GET',
         headers: headers,
     };
-        return fetch('http://localhost:3000/clients/list-clients', requestOptions)
+    let url = new URL(`http://localhost:3000/clients/list-clients`);
+    if (page) url.searchParams.set('page', `${page}`);
+    if (pageSize) url.searchParams.set('pageSize', `${pageSize}`);
+    if (query) url.searchParams.set('query', query);
+    return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
                 return res.json();

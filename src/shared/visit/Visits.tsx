@@ -81,7 +81,6 @@ function Visits(props: any) {
     useEffect(() => {
         listVisits(props.client)
         .then((result) => {
-            console.log(result);
           setRows(result);
         }, (err) => {
         })

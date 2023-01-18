@@ -1,108 +1,124 @@
-import { Box, Card, Divider, Tab, Tabs, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import Table from './Table';
-import { quoteColumns, jobColumns, invoiceColumns } from '../util/columns';
-import { listQuotes } from '../api/quote.api';
-import { listJobs } from '../api/job.api';
-import { listInvoices } from '../api/invoice.api';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
+import { Button, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Typography } from '@mui/material';
+import { ImportExport, FileDownloadOutlined, FileUploadOutlined, AddCircleOutlineOutlined } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import NewClient from './client/NewClient';
+import SelectClient from './client/SelectClient';
+import EmptyState from './EmptyState';
 
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: number;
-    value: number;
+
+export default function Table(props: any) {
+  const navigate = useNavigate();
+  const [newOpen, setNewOpen] = useState(false);
+  
+
+  const handleRowClick = (event: any) => {
+    navigate(`/${props.type}/${event.id}`)
   }
-  
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
 
-    return (
-        <Box
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        {...other}
-        >
-        {value === index && (
-            <Box>
-            {children}
-            </Box>
-        )}
-        </Box>
-    );
-}
+  const handleClose = (value: string) => {
+      setNewOpen(false);
+  };
 
-function TabbedTable(props: any) {
-    const [value, setValue] = useState(0);
-    const [quoteRows, setQuoteRows] = useState([]);
-    const [quotesAreLoaded, setQuotesAreLoaded] = useState(false);
-    const [quotesError, setQuotesError] = useState(null);
-    const [jobRows, setJobRows] = useState([]);
-    const [jobsAreLoaded, setJobsAreLoaded] = useState(false);
-    const [jobsError, setJobsError] = useState(null);
-    const [invoiceRows, setInvoiceRows] = useState([]);
-    const [invoicesAreLoaded, setInvoicesAreLoaded] = useState(false);
-    const [invoicesError, setInvoicesError] = useState(null);
-  
-    useEffect(() => {
-      listQuotes(props.client)
-      .then((result) => {
-        setQuotesAreLoaded(true);
-        setQuoteRows(result)
-      }, (err) => {
-        setQuotesAreLoaded(true);
-        setQuotesError(err.message)
-      })
-      listJobs(props.client)
-      .then((result) => {
-        setJobsAreLoaded(true);
-        setJobRows(result)
-      }, (err) => {
-        setJobsAreLoaded(true);
-        setJobsError(err.message)
-      })
-      listInvoices(props.client)
-      .then((result) => {
-        setInvoicesAreLoaded(true);
-        setInvoiceRows(result)
-      }, (err) => {
-        setInvoicesAreLoaded(true);
-        setInvoicesError(err.message)
-      })
-    }, [props.client])
-  
+  const handleUpdate = (value: string) => {
+    setNewOpen(false);
+      // save value
+  };
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-      setValue(newValue);
+  const handleNewOpen = () => {
+    setNewOpen(true);
+  }
+
+  const getEmptyState = () => {
+    return (<EmptyState type={`${props.client ? 'client-': ''}${(props.type as string)?.toLowerCase()}`}/>);
+  }
+
+  function CustomToolbar() {
+
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const closeMenu = () => {
+      setAnchorEl(null);
     };
 
     return (
-        <Card>
-            <Typography>Overview</Typography>
-            <Divider/>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={value} onChange={handleChange}>
-                <Tab label="Quotes" id="quotes" />
-                <Tab label="Jobs" id="jobs" />
-                <Tab label="Invoices" id="invoices" />
-            </Tabs>
-            </Box>
-            <TabPanel value={value} index={0}>
-                {quotesError && <Typography>{quotesError}</Typography>}
-                {!quotesAreLoaded && <Typography>Loading...</Typography>}
-                {quotesAreLoaded && !quotesError && <Table rows={quoteRows} columns={quoteColumns} type="Quotes" title={null} client={props.client}></Table>}
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                {jobsError && <Typography>{jobsError}</Typography>}
-                {!jobsAreLoaded && <Typography>Loading...</Typography>}
-                {jobsAreLoaded && !jobsError && <Table rows={jobRows} columns={jobColumns} type="Jobs" title={null} client={props.client} ></Table>}
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-                {invoicesError && <Typography>{invoicesError}</Typography>}
-                {!invoicesAreLoaded && <Typography>Loading...</Typography>}
-                {invoicesAreLoaded && !invoicesError && <Table rows={invoiceRows} columns={invoiceColumns} type="Invoices" title={null}client={props.client} ></Table>}
-            </TabPanel>
-        </Card>
-    )
-}
+      <GridToolbarContainer>
+        <Box>
+          <Typography>
+          {props.title}
+          </Typography>
+        </Box>
+        <Divider variant="middle" />
+        <Box>
+          <>
+          <GridToolbarQuickFilter />
+        { props.type === 'Clients' &&
+              <><Button
+                startIcon={<ImportExport />}
+                onClick={openMenu}
+              >
+                Import/Export
+              </Button><Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={closeMenu}
+              >
+                  <MenuList>
+                    <MenuItem onClick={props.onImportClick}>
+                      <ListItemIcon>
+                        <FileDownloadOutlined />
+                      </ListItemIcon>
+                      <ListItemText>Import</ListItemText>
+                    </MenuItem>
+                    <MenuItem>
+                      <ListItemIcon>
+                        <FileUploadOutlined />
+                      </ListItemIcon>
+                      <ListItemText>Export</ListItemText>
+                    </MenuItem>
+                  </MenuList>
+                </Menu></>
+          }
+        <Button onClick={handleNewOpen} startIcon={<AddCircleOutlineOutlined />}>New {props.type.slice(0,-1)}</Button>
+        </>
+        </Box>
+      </GridToolbarContainer>
+    );
+  }
 
-export default TabbedTable;
+  return (
+    <Box>
+      <DataGrid
+      autoHeight
+      rows={props.rows}
+      columns={props.columns}
+      components={{ Toolbar: CustomToolbar , NoRowsOverlay: getEmptyState}}
+      componentsProps={{
+        toolbar: {
+          showQuickFilter: true,
+          quickFilterProps: { debounceMs: 500 },
+        }, ...props
+      }}
+      disableSelectionOnClick
+      onRowClick={handleRowClick}
+    />
+        <NewClient
+      open={ props.type === 'Clients' && newOpen}
+      onClose={handleClose}
+        />
+        <SelectClient
+        open={ (props.type === 'Quotes' || props.type === 'Jobs' || props.type === 'Invoices') && newOpen}
+        onClose={handleClose}
+        update={handleUpdate}
+        type={props.type}
+        />
+      </Box>
+  );
+}

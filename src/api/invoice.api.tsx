@@ -117,7 +117,7 @@ async function deleteInvoice(id: any) {
     }
 }
 
-async function listInvoices(client?: string) {
+async function listInvoices(client?: string, query?: string, page?: number, pageSize?: number) {
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -129,9 +129,12 @@ async function listInvoices(client?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL('http://localhost:3000/invoices/list-invoices');
-        if (client) url.searchParams.set('client', client);
-        return fetch(url, requestOptions)
+    let url = new URL(`http://localhost:3000/invoices/list-invoices`);
+    if (page) url.searchParams.set('page', `${page}`);
+    if (client) url.searchParams.set('client', client);
+    if (pageSize) url.searchParams.set('pageSize', `${pageSize}`);
+    if (query) url.searchParams.set('query', query);
+    return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
                 return res.json();
