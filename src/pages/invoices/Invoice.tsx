@@ -20,7 +20,6 @@ function Invoice() {
         getInvoice(id)
         .then(res => {
             setInvoice(res);
-            console.log(res);
             setIsLoaded(true);
         }, (err) => {
             setError(err.message);

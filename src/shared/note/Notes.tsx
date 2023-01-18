@@ -78,6 +78,10 @@ function Notes(props: any) {
         })
       }, [props, open, deleteOpen])
 
+    const onDelete = () => {
+        return;
+    }
+
     if (error) {
     return (<Typography>{error}</Typography>);
     }
@@ -165,6 +169,7 @@ function Notes(props: any) {
             onClose={handleDeleteClose}
             type={'notes'}
             deleteId={note.id}
+            onDelete={onDelete}
             />
         </Card>
     )

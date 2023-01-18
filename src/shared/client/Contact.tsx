@@ -59,25 +59,25 @@ function Contact(props: any) {
                 />
             </Stack>
             <Stack spacing={2}>
-            {contact?.contacts?.filter((c: any) => c.type === 'phone').map((phone: any, index: number) => (
+            {contact?.contacts?.filter((c: any) => c.type === 'phone' && c.content !== '').map((phone: any, index: number) => (
                 <Stack direction="row" spacing={2} key={index}>
                     <Typography>Phone</Typography>
                     <Typography>{phone.content}</Typography>
                 </Stack>
                 ))}
-            {contact?.contacts?.filter((c: any) => c.type === 'phone').length === 0 && (
+            {contact?.contacts?.filter((c: any) => c.type === 'phone' && c.content !== '').length === 0 && (
                 <Stack direction="row" spacing={2}>
                     <Typography>Phone</Typography>
                     <Typography>No phone numbers</Typography>
                 </Stack>
                 )}
-            {contact?.contacts?.filter((c: any) => c.type === 'email').map((email: any, index: number) => (
+            {contact?.contacts?.filter((c: any) => c.type === 'email' && c.content !== '').map((email: any, index: number) => (
                 <Stack direction="row" spacing={2} key={index}>
                     <Typography>Email</Typography>
                     <Typography>{email.content}</Typography>
                 </Stack>
                 ))}
-            {contact?.contacts?.filter((c: any) => c.type === 'email').length === 0 && (
+            {contact?.contacts?.filter((c: any) => c.type === 'email' && c.content !== '').length === 0 && (
                 <Stack direction="row" spacing={2}>
                     <Typography>Email</Typography>
                     <Typography>No email addresses</Typography>

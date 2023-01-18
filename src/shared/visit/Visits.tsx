@@ -81,6 +81,7 @@ function Visits(props: any) {
     useEffect(() => {
         listVisits(props.client)
         .then((result) => {
+            console.log(result);
           setRows(result);
         }, (err) => {
         })
@@ -118,7 +119,7 @@ function Visits(props: any) {
                                             :
                                             <Typography>{dayjs(visit.start).format('MMM D')} - {dayjs(visit.end).format('MMM D')}</Typography>
                                             }
-                                            <Typography>{visit.users.map((user: any) => user.name).join(", ")}</Typography>
+                                            <Typography>{visit.users.map((user: any) => user.name ? user.name : user.email).join(", ")}</Typography>
                                         </Stack>
                                     </Grid>
                                     <Grid item={true} xs={2}>

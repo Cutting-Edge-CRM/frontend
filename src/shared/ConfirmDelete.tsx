@@ -47,6 +47,7 @@ export default function ConfirmDelete(props: any) {
         response
         .then(res => {
             props.onDelete();
+            props.onClose();
         }, err => {
             setError(err.message);
         });

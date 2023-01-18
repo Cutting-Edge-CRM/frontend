@@ -68,11 +68,21 @@ export default function EditVisit(props: any) {
 
     const convertToDate = (type: string) => {
       if (type === 'start') {
+        let startDate = dayjs(props.visit.start);
         let [hours, minutes] = props.startTime.split(':');
-        return dayjs(props.visit.start).set('hour', +hours).set('minute', +minutes);
+        if (hours && minutes) {
+          return startDate.set('hour', +hours).set('minute', +minutes);
+        } else {
+          return startDate;
+        }
       } else {
+        let endDate = dayjs(props.visit.end);
         let [hours, minutes] = props.endTime.split(':');
-        return dayjs(props.visit.end).set('hour', +hours).set('minute', +minutes);
+        if (hours && minutes) {
+          return endDate.set('hour', +hours).set('minute', +minutes);
+        } else {
+          return endDate;
+        }
       }
       
     }
@@ -139,7 +149,7 @@ export default function EditVisit(props: any) {
                 renderValue={(selected) => (
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                       {selected.map((value: any) => (
-                        <Chip key={value.id} label={value.name} />
+                        <Chip key={value.id} label={value.name ? value.name : value.email} />
                       ))}
                     </Box>
                   )}
@@ -147,7 +157,7 @@ export default function EditVisit(props: any) {
                 {props.users.map((user: any) => (
                     <MenuItem key={user.id} value={user}>
                     <Checkbox checked={props.visit.users?.map((p: any) => p.id).indexOf(user.id) > -1} />
-                    <ListItemText primary={user.name} />
+                    <ListItemText primary={user.name ? user.name : user.email} />
                     </MenuItem>
                 ))}
                 </Select>

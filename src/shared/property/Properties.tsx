@@ -194,6 +194,9 @@ function Properties(props: any) {
         });
     }
 
+    const onDelete = () => {
+        return;
+    }
     
 
     return (
@@ -240,6 +243,7 @@ function Properties(props: any) {
             onClose={handleDeleteClose}
             type={'properties'}
             deleteId={property.id}
+            onDelete={onDelete}
             />
         </Card>
     )

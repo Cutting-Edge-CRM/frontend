@@ -93,7 +93,7 @@ export default function SelectClient(props: any) {
         case 'Quotes':
           let quote: any = {
             client: client.id,
-            property: property,
+            property: event.row.id,
             status: 'draft',
           };
           createQuote(quote)
