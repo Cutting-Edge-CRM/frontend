@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { updateJob } from '../api/job.api';
 import ConfirmDelete from './ConfirmDelete';
+import Duplicate from './Duplicate';
 import EmptyState from './EmptyState';
 import RichText from './RichText';
 
@@ -118,6 +119,8 @@ function JobDetails(props: any) {
     const [editting, setEditting] = React.useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const navigate = useNavigate();
+    const [duplicateOpen, setDuplicateOpen] = useState(false);
+
 
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -158,6 +161,15 @@ function JobDetails(props: any) {
         navigate(`/jobs`);
     }
 
+    const handleDuplicateJob = () => {
+        setDuplicateOpen(true);
+    }
+
+    const handleClose = (value: string) => {
+        setDuplicateOpen(false);
+        setAnchorEl(null);
+    };
+
     return (
         <Card>
             <Stack direction="row">
@@ -186,6 +198,12 @@ function JobDetails(props: any) {
                                     <DeleteOutline />
                                 </ListItemIcon>
                                 <ListItemText>Delete Property</ListItemText>
+                            </MenuItem>
+                            <MenuItem onClick={handleDuplicateJob}>
+                                <ListItemIcon>
+                                    <DeleteOutline />
+                                </ListItemIcon>
+                                <ListItemText>Duplicate job</ListItemText>
                             </MenuItem>
                             <MenuItem onClick={handleDeleteOpen}>
                                 <ListItemIcon>
@@ -246,6 +264,12 @@ function JobDetails(props: any) {
             type={'jobs'}
             deleteId={props.job.job.id}
             onDelete={onDelete}
+            />
+            <Duplicate
+            open={duplicateOpen}
+            onClose={handleClose}
+            type={'Job'}
+            job={props.job}
             />
         </Card>
     )

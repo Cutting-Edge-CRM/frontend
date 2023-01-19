@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { updateQuote } from '../api/quote.api';
 import ConfirmDelete from './ConfirmDelete';
+import Duplicate from './Duplicate';
 import EmptyState from './EmptyState';
 import RichText from './RichText';
 
@@ -236,6 +237,7 @@ function QuoteDetails(props: any) {
     const [editting, setEditting] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const navigate = useNavigate();
+    const [duplicateOpen, setDuplicateOpen] = useState(false);
 
 
     const handleChange = (event: React.SyntheticEvent, newValue: any) => {
@@ -278,6 +280,15 @@ function QuoteDetails(props: any) {
         navigate(`/quotes`);
     }
 
+    const handleDuplicateQuote = () => {
+        setDuplicateOpen(true);
+    }
+
+    const handleClose = (value: string) => {
+        setDuplicateOpen(false);
+        setAnchorEl(null);
+    };
+
 
     return (
         <Card>
@@ -307,6 +318,12 @@ function QuoteDetails(props: any) {
                                     <DeleteOutline />
                                 </ListItemIcon>
                                 <ListItemText>Mark quote as sent</ListItemText>
+                            </MenuItem>
+                            <MenuItem onClick={handleDuplicateQuote}>
+                                <ListItemIcon>
+                                    <DeleteOutline />
+                                </ListItemIcon>
+                                <ListItemText>Duplicate quote</ListItemText>
                             </MenuItem>
                             <MenuItem onClick={handleDeleteOpen}>
                                 <ListItemIcon>
@@ -352,6 +369,12 @@ function QuoteDetails(props: any) {
             type={'quotes'}
             deleteId={props.quote.quote.id}
             onDelete={onDelete}
+            />
+            <Duplicate
+            open={duplicateOpen}
+            onClose={handleClose}
+            type={'Quote'}
+            quote={props.quote}
             />
         </Card>
     )

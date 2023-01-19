@@ -23,11 +23,6 @@ export default function Table(props: any) {
       setNewOpen(false);
   };
 
-  const handleUpdate = (value: string) => {
-    setNewOpen(false);
-      // save value
-  };
-
   const handleNewOpen = () => {
     setNewOpen(true);
   }
@@ -124,7 +119,6 @@ export default function Table(props: any) {
         <SelectClient
         open={ (props.type === 'Quotes' || props.type === 'Jobs' || props.type === 'Invoices') && newOpen}
         onClose={handleClose}
-        update={handleUpdate}
         type={props.type}
         />
       </Box>
