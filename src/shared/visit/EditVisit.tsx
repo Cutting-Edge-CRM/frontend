@@ -1,5 +1,5 @@
 import { PersonOutline } from '@mui/icons-material';
-import { Alert, Box, Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField } from '@mui/material';
+import { Alert, Box, Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, InputAdornment, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import * as React from 'react';
@@ -39,7 +39,7 @@ export default function EditVisit(props: any) {
     };
 
     const handleChange = (event: any) => {
-      props.setVisit({ ...props.visit, [event.target.id]: event.target.value});
+      props.setVisit({ ...props.visit, [event.target.id]: event.target.checked});
     };
 
     const handStartChange = (date: any) => {
@@ -175,13 +175,23 @@ export default function EditVisit(props: any) {
                         renderInput={(params) => <TextField {...params} />}
                     />
                 </Stack>
+                <FormControlLabel control={
+                  <Checkbox 
+                  id='anytime'
+                  checked={+props.visit.anytime === (1 || true)}
+                  onChange={handleChange}
+                  />
+                } label="Anytime" />
+                
                 <Stack direction="row">
                     <TimePicker
+                        disabled={+props.visit.anytime === (1 || true)}
                         label="Start Time"
                         value={props.startTime}
                         onChange={handleStartTimeChange}
                     />
                     <TimePicker
+                        disabled={+props.visit.anytime === (1 || true)}
                         label="End Time"
                         value={props.endTime}
                         onChange={handleEndTimeChange}

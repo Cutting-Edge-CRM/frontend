@@ -34,7 +34,7 @@ function Visits(props: any) {
     };
 
     const handleNewOpen = () => {
-        setVisit({users: [], property: null});
+        setVisit({users: [], property: null, anytime: true});
         setType('new');
         setOpen(true);
     };
@@ -66,6 +66,10 @@ function Visits(props: any) {
         setOpen(false);
         // save value
     };
+
+    const onDelete = () => {
+        return;
+    }
 
     useEffect(() => {
         listUsers()
@@ -113,8 +117,11 @@ function Visits(props: any) {
                                         <Stack>
                                             <Typography>{visit.name}</Typography>
                                             <Typography>{visit.address}</Typography>
-                                            {dayjs(visit.start).diff(dayjs(visit.end), 'day') < 1 && dayjs(visit.start).diff(dayjs(visit.end), 'day') > -1 ? 
-                                            <Typography>{dayjs(visit.start).format('MMM D')}  {dayjs(visit.start).format('h:mma')} - {dayjs(visit.end).format('h:mma')}</Typography>
+                                            {dayjs(visit.start).diff(dayjs(visit.end), 'day') < 1 && dayjs(visit.start).diff(dayjs(visit.end), 'day') > -1 ?
+                                            (visit.anytime === (1 || true) ? 
+                                                <Typography>{dayjs(visit.start).format('MMM D')}</Typography>
+                                                : 
+                                                <Typography>{dayjs(visit.start).format('MMM D')}  {dayjs(visit.start).format('h:mma')} - {dayjs(visit.end).format('h:mma')}</Typography>)
                                             :
                                             <Typography>{dayjs(visit.start).format('MMM D')} - {dayjs(visit.end).format('MMM D')}</Typography>
                                             }
@@ -175,6 +182,7 @@ function Visits(props: any) {
             onClose={handleDeleteClose}
             type={'visits'}
             deleteId={visit.id}
+            onDelete={onDelete}
             />
         </Card>
     )

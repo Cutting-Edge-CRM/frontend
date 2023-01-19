@@ -97,6 +97,7 @@ export default function TimePicker(props: any) {
     return (
         <>
         <TextField
+            disabled={props.disabled}
             id={`${props.type}-time`}
             label={`${props.label}`}
             value={ checkIfAM(props.value) ? fix12(props.value) : sub12(props.value)}
@@ -104,6 +105,7 @@ export default function TimePicker(props: any) {
             error={valid()}
             />
         <Select 
+            disabled={props.disabled}
             value={AM ? 'am' : 'pm'}
             onChange={handleChangeAM}
         >
