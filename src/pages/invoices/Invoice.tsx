@@ -8,7 +8,6 @@ import InvoiceDetails from '../../shared/InvoiceDetails';
 import { getInvoice } from '../../api/invoice.api';
 import { useParams } from 'react-router-dom';
 import { Typography } from '@mui/material';
-import Property from '../../shared/property/Property';
 
 function Invoice() {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -40,7 +39,6 @@ function Invoice() {
             <Grid xs={8}>
                 <Stack spacing={2}>
                     <InvoiceDetails invoice={invoice} setInvoice={setInvoice}/>
-                    <Property property={invoice.invoice.property} />
                 </Stack>
             </Grid>
             <Grid xs={4}>

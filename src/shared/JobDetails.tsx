@@ -1,7 +1,8 @@
-import { AddCircleOutlineOutlined, ArchiveOutlined, AttachMoneyOutlined, Check, ContentCopyOutlined, DeleteOutline, MoreVert, PersonOutline } from '@mui/icons-material';
-import { Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Typography } from '@mui/material';
+import { AddCircleOutlineOutlined, AttachMoneyOutlined, Check, ContentCopyOutlined, DeleteOutline, MoreVert, PersonOutline } from '@mui/icons-material';
+import { Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, Link, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createInvoice, updateInvoice } from '../api/invoice.api';
 import { updateJob } from '../api/job.api';
 import ConfirmDelete from './ConfirmDelete';
 import Duplicate from './Duplicate';
@@ -170,6 +171,43 @@ function JobDetails(props: any) {
         setAnchorEl(null);
     };
 
+    const markJobAs = (status: string) => {
+        closeMenu();
+        props.job.job.status = status;
+        updateJob(props.job)
+        .then(res => {
+        }, err => {
+        })
+    }
+
+    const handleGenerateInvoice = () => {
+        let invoice: any = {
+            client: props.job.job.client,
+            property: props.job.job.property,
+            status: 'Draft',
+            job: props.job.job.id
+          };
+        createInvoice(invoice)
+        .then(res => {
+            let updatingInvoice: any = {};
+            updatingInvoice.invoice = invoice;
+            updatingInvoice.invoice.id = res.id;
+            updatingInvoice.items = props.job.items;
+            updateInvoice(updatingInvoice)
+            .then(_ => {
+                props.job.job.invoice = res.id;
+                updateJob(props.job)
+                .then(res => {
+                }, err => {
+                })
+                navigate(`/invoices/${res.id}`);
+            }, err => {
+
+            })
+        }, (err: any) => {
+        })
+    }
+
     return (
         <Card>
             <Stack direction="row">
@@ -187,13 +225,15 @@ function JobDetails(props: any) {
                         onClose={closeMenu}
                     >
                         <MenuList>
-                            <MenuItem>
+                            {props.job.job.status !== ('Complete' || 'Archived') && 
+                            <MenuItem onClick={() => markJobAs('Complete')}>
                                 <ListItemIcon>
                                     <Check />
                                 </ListItemIcon>
                                 <ListItemText>Mark as Complete</ListItemText>
                             </MenuItem>
-                            <MenuItem>
+                            }
+                            <MenuItem onClick={handleGenerateInvoice}>
                                 <ListItemIcon>
                                     <AttachMoneyOutlined />
                                 </ListItemIcon>
@@ -221,15 +261,15 @@ function JobDetails(props: any) {
                 </Stack>
                 <Stack>
                     <Typography>From</Typography>
-                    <Typography>Job 3</Typography>
+                    {props.job.job.quote ? <Link href={`/quotes/${props.job.job.quote}`}>Quote</Link> : <Typography>-</Typography>}
                 </Stack>
                 <Stack>
                     <Typography>Used for</Typography>
-                    <Typography>Invoice 2</Typography>
+                    {props.job.job.invoice ? <Link href={`/invoices/${props.job.job.invoice}`}>Invoice</Link> : <Typography>-</Typography>}
                 </Stack>
                 <Stack>
                     <Typography>Status</Typography>
-                    <Chip label="Upcoming"/>
+                    <Chip label={props.job.job.status}/>
                 </Stack>
             </Stack>
             {editting && 

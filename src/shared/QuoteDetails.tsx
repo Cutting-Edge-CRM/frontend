@@ -1,7 +1,8 @@
-import { AddCircleOutlineOutlined, ArchiveOutlined, AttachMoney, Check, ContentCopyOutlined, DeleteOutline, FileDownloadOutlined, FormatPaintOutlined, MoreVert, Pending, PersonOutline, SendOutlined, ThumbDownAltOutlined } from '@mui/icons-material';
-import { Box, Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, Switch, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { AddCircleOutlineOutlined, ArchiveOutlined, AttachMoney, Check, ContentCopyOutlined, DeleteOutline, FileDownloadOutlined, FormatPaintOutlined, MarkEmailReadOutlined, MoreVert, PersonOutline, SendOutlined, ThumbDownAltOutlined } from '@mui/icons-material';
+import { Box, Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, Link, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, Switch, Tab, Tabs, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createJob, updateJob } from '../api/job.api';
 import { updateQuote } from '../api/quote.api';
 import ConfirmDelete from './ConfirmDelete';
 import Duplicate from './Duplicate';
@@ -23,10 +24,12 @@ function QuoteItemSaved(props: any) {
                     </Stack>
                 </Grid>
                 <Grid item={true} xs={4}>
+                    {props.upsell && 
                     <Stack>
-                        <Typography>Add-on</Typography>
-                        <Switch disabled checked={props.item.addon === 1}></Switch>
+                        <Typography>Recommended</Typography>
+                        <Switch disabled checked={props.item.selected === 1}></Switch>
                     </Stack>
+                    }
                 </Grid>
                 <Grid item={true} xs={4}>
                     <Stack>
@@ -96,10 +99,12 @@ function QuoteItemEdit(props: any) {
                     />
                 </Grid>
                 <Grid item={true} xs={4}>
+                    {props.upsell && 
                     <Stack>
-                        <Typography>Add-on</Typography>
-                        <Switch id='addon' checked={props.item.addon === 1} onChange={handleCheck}></Switch>
+                        <Typography>Recommended</Typography>
+                        <Switch id='selected' checked={props.item.selected === 1} onChange={handleCheck}></Switch>
                     </Stack>
+                    }
                 </Grid>
                 <Grid item={true} xs={4}>
                     <Stack>
@@ -161,6 +166,17 @@ function TabPanel(props: any) {
         });
       }
 
+    const handleAddUpsell = () => {
+        let options = props.quote.options;
+        let items = props.option.items;
+        items.push({price: 0, addon: 1});
+        options.find((op: any) => op === props.option).items = items;
+        props.setQuote({
+            quote: props.quote.quote,
+            options: options
+        });
+      }
+
     return (
         <Box
         role="tabpanel"
@@ -172,20 +188,28 @@ function TabPanel(props: any) {
             {props.editting && 
                 <>
                 {props.option.items.map(((item: any, index: number) => (
-                    <QuoteItemEdit key={index} item={item} {...props}/>
+                    <QuoteItemEdit key={index} item={item} upsell={item.addon === 1} {...props}/>
                 )))}
-                <Button onClick={handleAddItem}>
-                    <Stack>
-                        <AddCircleOutlineOutlined />
-                        <Typography>Add Item</Typography>
-                    </Stack>
-                </Button>
+                <Stack direction={'row'}>
+                    <Button onClick={handleAddItem}>
+                        <Stack>
+                            <AddCircleOutlineOutlined />
+                            <Typography>Add Item</Typography>
+                        </Stack>
+                    </Button>
+                    <Button onClick={handleAddUpsell}>
+                        <Stack>
+                            <AddCircleOutlineOutlined />
+                            <Typography>Add Upsell</Typography>
+                        </Stack>
+                    </Button>
+                </Stack>
                 </>
             }
             {!props.editting && 
                 <>
                 {props.option.items.map(((item: any, index: number) => (
-                    <QuoteItemSaved key={index} item={item} {...props}/>
+                    <QuoteItemSaved key={index} item={item} upsell={item.addon === 1} {...props}/>
                 )))}
                 {props.job?.items?.length === 0 && <EmptyState type='quote-items'/>}
                 </>
@@ -289,6 +313,48 @@ function QuoteDetails(props: any) {
         setAnchorEl(null);
     };
 
+    const markQuoteAs = (status: string) => {
+        closeMenu();
+        props.quote.quote.status = status;
+        updateQuote(props.quote)
+        .then(res => {
+        }, err => {
+        })
+    }
+    
+    const handleConvertToJob = () => {
+        let job: any = {
+            client: props.quote.quote.client,
+            property: props.quote.quote.property,
+            status: 'Active',
+            quote: props.quote.quote.id
+          };
+        createJob(job)
+        .then(res => {
+            let updatingJob: any = {};
+            updatingJob.job = job;
+            updatingJob.job.id = res.id;
+            let items: any[] = [];
+            props.quote.options.forEach((op: any) => {
+                items = items.concat(op.items.filter((it: any) => (it.addon !== 1) || (it.addon === 1 && it.selected === 1)));
+            });
+            updatingJob.items = items;
+            updateJob(updatingJob)
+            .then(_ => {
+                props.quote.quote.status = 'Converted';
+                props.quote.quote.job = res.id;
+                updateQuote(props.quote)
+                .then(res => {
+                }, err => {
+                })
+                navigate(`/jobs/${res.id}`);
+            }, err => {
+
+            })
+        }, (err: any) => {
+        })
+    }
+
 
     return (
         <Card>
@@ -307,36 +373,44 @@ function QuoteDetails(props: any) {
                         onClose={closeMenu}
                     >
                         <MenuList>
-                            <MenuItem>
+                            {props.quote.quote.status !== ('Converted' || 'Pending') &&
+                            <MenuItem onClick={() => markQuoteAs('Pending')}>
                                 <ListItemIcon>
-                                    <Pending />
+                                    <MarkEmailReadOutlined />
                                 </ListItemIcon>
                                 <ListItemText>Mark as Pending</ListItemText>
                             </MenuItem>
-                            <MenuItem>
+                            }
+                            {props.quote.quote.status !== ('Converted' || 'Approved') && 
+                            <MenuItem onClick={() => markQuoteAs('Approved')}>
                                 <ListItemIcon>
                                     <Check />
                                 </ListItemIcon>
                                 <ListItemText>Mark as Approved</ListItemText>
                             </MenuItem>
-                            <MenuItem>
+                            }
+                            {props.quote.quote.status !== ('Converted' || 'Rejected') && 
+                            <MenuItem onClick={() => markQuoteAs('Rejected')}>
                                 <ListItemIcon>
                                     <ThumbDownAltOutlined />
                                 </ListItemIcon>
                                 <ListItemText>Mark as Rejected</ListItemText>
                             </MenuItem>
+                            }
                             <MenuItem>
                                 <ListItemIcon>
                                     <AttachMoney />
                                 </ListItemIcon>
                                 <ListItemText>Collect Deposit</ListItemText>
                             </MenuItem>
-                            <MenuItem>
+                            {props.quote.quote.status === 'Approved' &&
+                            <MenuItem onClick={handleConvertToJob}>
                                 <ListItemIcon>
                                     <FormatPaintOutlined />
                                 </ListItemIcon>
                                 <ListItemText>Convert to Job</ListItemText>
                             </MenuItem>
+                            }
                             <MenuItem onClick={handleDuplicateQuote}>
                                 <ListItemIcon>
                                     <ContentCopyOutlined />
@@ -355,12 +429,14 @@ function QuoteDetails(props: any) {
                                 </ListItemIcon>
                                 <ListItemText>Download PDF</ListItemText>
                             </MenuItem>
-                            <MenuItem>
+                            {props.quote.quote.status !== ('Converted' || 'Archived') && 
+                            <MenuItem onClick={() => markQuoteAs('Archived')}>
                                 <ListItemIcon>
                                     <ArchiveOutlined />
                                 </ListItemIcon>
                                 <ListItemText>Archive</ListItemText>
                             </MenuItem>
+                            }
                             <MenuItem onClick={handleDeleteOpen}>
                                 <ListItemIcon>
                                     <DeleteOutline />
@@ -381,7 +457,7 @@ function QuoteDetails(props: any) {
                 </Stack>
                 <Stack>
                     <Typography>From</Typography>
-                    <Typography>Job 2</Typography>
+                    {props.quote.quote.job ? <Link href={`/jobs/${props.quote.quote.job}`}>Job</Link> : <Typography>-</Typography>}
                 </Stack>
                 <Stack>
                     <Typography>Status</Typography>

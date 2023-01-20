@@ -1,5 +1,5 @@
-import { AddCircleOutlineOutlined, AttachMoney, DeleteOutline, FileDownloadOutlined, MoneyOffOutlined, MoreVert, Pending, PersonOutline, SendOutlined } from '@mui/icons-material';
-import { Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Typography } from '@mui/material';
+import { AddCircleOutlineOutlined, AttachMoney, DeleteOutline, FileDownloadOutlined, MarkEmailReadOutlined, MoneyOffOutlined, MoreVert, PersonOutline, SendOutlined } from '@mui/icons-material';
+import { Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, Link, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { updateInvoice } from '../api/invoice.api';
@@ -158,6 +158,15 @@ function InvoiceDetails(props: any) {
         navigate(`/invoices`);
     }
 
+    const markInvoiceAs = (status: string) => {
+        closeMenu();
+        props.invoice.invoice.status = status;
+        updateInvoice(props.invoice)
+        .then(res => {
+        }, err => {
+        })
+    }
+
     return (
         <Card>
             <Stack direction="row">
@@ -176,12 +185,12 @@ function InvoiceDetails(props: any) {
                     >
                         <MenuList>
                             <MenuItem>
-                                <ListItemIcon>
-                                    <Pending />
+                                <ListItemIcon onClick={() => markInvoiceAs('Awaiting Payment')}>
+                                    <MarkEmailReadOutlined />
                                 </ListItemIcon>
-                                <ListItemText>Mark as Pending</ListItemText>
+                                <ListItemText>Mark as Sent</ListItemText>
                             </MenuItem>
-                            <MenuItem>
+                            <MenuItem onClick={() => markInvoiceAs('Bad Debt')}>
                                 <ListItemIcon>
                                     <MoneyOffOutlined />
                                 </ListItemIcon>
@@ -220,12 +229,12 @@ function InvoiceDetails(props: any) {
                     <Typography>11/27/2022</Typography>
                 </Stack>
                 <Stack>
-                    <Typography>From</Typography>
-                    <Typography>Invoice 3</Typography>
+                    <Typography>Opened</Typography>
+                    <Typography>11/27/2022</Typography>
                 </Stack>
                 <Stack>
-                    <Typography>Used for</Typography>
-                    <Typography>Invoice 2</Typography>
+                    <Typography>From</Typography>
+                    {props.invoice.invoice.job ? <Link href={`/jobs/${props.invoice.invoice.job}`}>Job</Link> : <Typography>-</Typography>}
                 </Stack>
                 <Stack>
                     <Typography>Status</Typography>
