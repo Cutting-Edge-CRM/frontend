@@ -1,4 +1,4 @@
-import { AddCircleOutlineOutlined, CreateOutlined, DeleteOutline, MoreVert, PersonOutline } from '@mui/icons-material';
+import { AddCircleOutlineOutlined, AttachMoney, DeleteOutline, FileDownloadOutlined, MoneyOffOutlined, MoreVert, Pending, PersonOutline, SendOutlined } from '@mui/icons-material';
 import { Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -177,21 +177,39 @@ function InvoiceDetails(props: any) {
                         <MenuList>
                             <MenuItem>
                                 <ListItemIcon>
-                                    <CreateOutlined />
+                                    <Pending />
                                 </ListItemIcon>
-                                <ListItemText>Edit Property</ListItemText>
+                                <ListItemText>Mark as Pending</ListItemText>
                             </MenuItem>
                             <MenuItem>
                                 <ListItemIcon>
-                                    <DeleteOutline />
+                                    <MoneyOffOutlined />
                                 </ListItemIcon>
-                                <ListItemText>Delete Property</ListItemText>
+                                <ListItemText>Mark as Bad Debt</ListItemText>
+                            </MenuItem>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <AttachMoney />
+                                </ListItemIcon>
+                                <ListItemText>Collect Payment</ListItemText>
+                            </MenuItem>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <SendOutlined />
+                                </ListItemIcon>
+                                <ListItemText>Send</ListItemText>
+                            </MenuItem>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <FileDownloadOutlined />
+                                </ListItemIcon>
+                                <ListItemText>Download PDF</ListItemText>
                             </MenuItem>
                             <MenuItem onClick={handleDeleteOpen}>
                                 <ListItemIcon>
                                     <DeleteOutline />
                                 </ListItemIcon>
-                                <ListItemText>Delete invoice</ListItemText>
+                                <ListItemText>Delete quote</ListItemText>
                             </MenuItem>
                         </MenuList>
                     </Menu>

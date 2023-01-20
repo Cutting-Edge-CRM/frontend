@@ -1,4 +1,4 @@
-import { AddCircleOutlineOutlined, CreateOutlined, DeleteOutline, MoreVert, PersonOutline } from '@mui/icons-material';
+import { AddCircleOutlineOutlined, ArchiveOutlined, AttachMoney, Check, ContentCopyOutlined, DeleteOutline, FileDownloadOutlined, FormatPaintOutlined, MoreVert, Pending, PersonOutline, SendOutlined, ThumbDownAltOutlined } from '@mui/icons-material';
 import { Box, Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, Switch, Tab, Tabs, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -309,21 +309,57 @@ function QuoteDetails(props: any) {
                         <MenuList>
                             <MenuItem>
                                 <ListItemIcon>
-                                    <CreateOutlined />
+                                    <Pending />
                                 </ListItemIcon>
-                                <ListItemText>Send Quote</ListItemText>
+                                <ListItemText>Mark as Pending</ListItemText>
                             </MenuItem>
                             <MenuItem>
                                 <ListItemIcon>
-                                    <DeleteOutline />
+                                    <Check />
                                 </ListItemIcon>
-                                <ListItemText>Mark quote as sent</ListItemText>
+                                <ListItemText>Mark as Approved</ListItemText>
+                            </MenuItem>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <ThumbDownAltOutlined />
+                                </ListItemIcon>
+                                <ListItemText>Mark as Rejected</ListItemText>
+                            </MenuItem>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <AttachMoney />
+                                </ListItemIcon>
+                                <ListItemText>Collect Deposit</ListItemText>
+                            </MenuItem>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <FormatPaintOutlined />
+                                </ListItemIcon>
+                                <ListItemText>Convert to Job</ListItemText>
                             </MenuItem>
                             <MenuItem onClick={handleDuplicateQuote}>
                                 <ListItemIcon>
-                                    <DeleteOutline />
+                                    <ContentCopyOutlined />
                                 </ListItemIcon>
-                                <ListItemText>Duplicate quote</ListItemText>
+                                <ListItemText>Duplicate</ListItemText>
+                            </MenuItem>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <SendOutlined />
+                                </ListItemIcon>
+                                <ListItemText>Send</ListItemText>
+                            </MenuItem>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <FileDownloadOutlined />
+                                </ListItemIcon>
+                                <ListItemText>Download PDF</ListItemText>
+                            </MenuItem>
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <ArchiveOutlined />
+                                </ListItemIcon>
+                                <ListItemText>Archive</ListItemText>
                             </MenuItem>
                             <MenuItem onClick={handleDeleteOpen}>
                                 <ListItemIcon>

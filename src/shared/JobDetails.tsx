@@ -1,4 +1,4 @@
-import { AddCircleOutlineOutlined, CreateOutlined, DeleteOutline, MoreVert, PersonOutline } from '@mui/icons-material';
+import { AddCircleOutlineOutlined, ArchiveOutlined, AttachMoneyOutlined, Check, ContentCopyOutlined, DeleteOutline, MoreVert, PersonOutline } from '@mui/icons-material';
 import { Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -189,27 +189,27 @@ function JobDetails(props: any) {
                         <MenuList>
                             <MenuItem>
                                 <ListItemIcon>
-                                    <CreateOutlined />
+                                    <Check />
                                 </ListItemIcon>
-                                <ListItemText>Edit Property</ListItemText>
+                                <ListItemText>Mark as Complete</ListItemText>
                             </MenuItem>
                             <MenuItem>
                                 <ListItemIcon>
-                                    <DeleteOutline />
+                                    <AttachMoneyOutlined />
                                 </ListItemIcon>
-                                <ListItemText>Delete Property</ListItemText>
+                                <ListItemText>Generate Invoice</ListItemText>
                             </MenuItem>
                             <MenuItem onClick={handleDuplicateJob}>
                                 <ListItemIcon>
-                                    <DeleteOutline />
+                                    <ContentCopyOutlined />
                                 </ListItemIcon>
-                                <ListItemText>Duplicate job</ListItemText>
+                                <ListItemText>Duplicate</ListItemText>
                             </MenuItem>
                             <MenuItem onClick={handleDeleteOpen}>
                                 <ListItemIcon>
                                     <DeleteOutline />
                                 </ListItemIcon>
-                                <ListItemText>Delete job</ListItemText>
+                                <ListItemText>Delete Job</ListItemText>
                             </MenuItem>
                         </MenuList>
                     </Menu>
