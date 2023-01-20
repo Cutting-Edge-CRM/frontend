@@ -16,6 +16,7 @@ export default function EditContact(props: any) {
     const handleSave = () => {
       let contacts = props.contact.contacts.filter((con: any) => con.content.length > 0)
       props.setContact({...props.contact, contacts: contacts});
+      console.log(props.contact);
       updateClient(props.contact)
       .then(res => {
         props.update();

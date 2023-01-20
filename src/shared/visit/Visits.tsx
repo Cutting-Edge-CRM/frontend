@@ -21,6 +21,7 @@ function Visits(props: any) {
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
+    const offset = dayjs().utcOffset();
   
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>, visit: any) => {
         setStartTime(dayjs(visit.start).add(dayjs(visit.start).utcOffset(), 'minutes').format('H:mm'));
@@ -90,7 +91,6 @@ function Visits(props: any) {
         })
       }, [props, open, deleteOpen])
 
-
       if (error) {
     return (<Typography>{error}</Typography>);
     }
@@ -119,11 +119,11 @@ function Visits(props: any) {
                                             <Typography>{visit.address}</Typography>
                                             {dayjs(visit.start).diff(dayjs(visit.end), 'day') < 1 && dayjs(visit.start).diff(dayjs(visit.end), 'day') > -1 ?
                                             (visit.anytime === (1 || true) ? 
-                                                <Typography>{dayjs(visit.start).format('MMM D')}</Typography>
+                                                <Typography>{dayjs(visit.start).add(offset, 'minutes').format('MMM D')}</Typography>
                                                 : 
-                                                <Typography>{dayjs(visit.start).format('MMM D')}  {dayjs(visit.start).format('h:mma')} - {dayjs(visit.end).format('h:mma')}</Typography>)
+                                                <Typography>{dayjs(visit.start).add(offset, 'minutes').format('MMM D')}  {dayjs(visit.start).add(offset, 'minutes').format('h:mma')} - {dayjs(visit.end).add(offset, 'minutes').format('h:mma')}</Typography>)
                                             :
-                                            <Typography>{dayjs(visit.start).format('MMM D')} - {dayjs(visit.end).format('MMM D')}</Typography>
+                                            <Typography>{dayjs(visit.start).add(offset, 'minutes').format('MMM D')} - {dayjs(visit.end).add(offset, 'minutes').format('MMM D')}</Typography>
                                             }
                                             <Typography>{visit.users.map((user: any) => user.name ? user.name : user.email).join(", ")}</Typography>
                                         </Stack>
