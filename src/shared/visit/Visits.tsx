@@ -24,8 +24,8 @@ function Visits(props: any) {
     const offset = dayjs().utcOffset();
   
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>, visit: any) => {
-        setStartTime(dayjs(visit.start).add(dayjs(visit.start).utcOffset(), 'minutes').format('H:mm'));
-        setEndTime(dayjs(visit.end).add(dayjs(visit.end).utcOffset(), 'minutes').format('H:mm'));
+        setStartTime(visit.start?.split(' ')[1]);
+        setEndTime(visit.end?.split(' ')[1]);
         setVisit(visit);
         setAnchorEl(event.currentTarget);
         setVisit({ ...visit, users: users.filter((user) => visit.users.some((obj: any) => obj.id === user.id))})
@@ -86,6 +86,13 @@ function Visits(props: any) {
     useEffect(() => {
         listVisits(props.client)
         .then((result) => {
+            result = result.map((re: any) => {
+                return {
+                    ...re,
+                    start: dayjs(re.start).format('YYYY-MM-DD HH:mm'),
+                    end: dayjs(re.end).format('YYYY-MM-DD HH:mm')
+                }
+            })
           setRows(result);
         }, (err) => {
         })
@@ -117,13 +124,20 @@ function Visits(props: any) {
                                         <Stack>
                                             <Typography>{visit.name}</Typography>
                                             <Typography>{visit.address}</Typography>
-                                            {dayjs(visit.start).diff(dayjs(visit.end), 'day') < 1 && dayjs(visit.start).diff(dayjs(visit.end), 'day') > -1 ?
+                                            
+                                            {dayjs(visit.start).diff(dayjs(visit.end), 'hours') < 24 && dayjs(visit.start).diff(dayjs(visit.end), 'hours') > -24 ?
+
+                                            // if start and end within 1 day of eachother
                                             (visit.anytime === (1 || true) ? 
-                                                <Typography>{dayjs(visit.start).add(offset, 'minutes').format('MMM D')}</Typography>
+                                                // if anytime: Jan 13
+                                                <Typography>{dayjs(visit.start).format('MMM D')} - Anytime</Typography>
                                                 : 
-                                                <Typography>{dayjs(visit.start).add(offset, 'minutes').format('MMM D')}  {dayjs(visit.start).add(offset, 'minutes').format('h:mma')} - {dayjs(visit.end).add(offset, 'minutes').format('h:mma')}</Typography>)
+                                                // if not anytime: Jan 13 4:30pm - 6:00pm
+                                                <Typography>{dayjs(visit.start).format('MMM D')}  {dayjs(visit.start).format('h:mma')} - {dayjs(visit.end).format('h:mma')}</Typography>)
+                                            
+                                            // if start and end not within 1 day of eachother: Jan 13 - Jan 16
                                             :
-                                            <Typography>{dayjs(visit.start).add(offset, 'minutes').format('MMM D')} - {dayjs(visit.end).add(offset, 'minutes').format('MMM D')}</Typography>
+                                            <Typography>{dayjs(visit.start).format('MMM D')} - {dayjs(visit.end).format('MMM D')}</Typography>
                                             }
                                             <Typography>{visit.users.map((user: any) => user.name ? user.name : user.email).join(", ")}</Typography>
                                         </Stack>

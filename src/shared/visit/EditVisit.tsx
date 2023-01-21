@@ -12,7 +12,6 @@ export default function EditVisit(props: any) {
   const [error, setError] = useState(null);
   const [properties, setProperties] = useState([] as any[])
   
-    
     const handleCancel = () => {
       props.onClose();
     };
@@ -39,6 +38,10 @@ export default function EditVisit(props: any) {
     };
 
     const handleChange = (event: any) => {
+      props.setVisit({ ...props.visit, [event.target.id]: event.target.value});
+    };
+
+    const handleAnytime = (event: any) => {
       props.setVisit({ ...props.visit, [event.target.id]: event.target.checked});
     };
 
@@ -71,17 +74,17 @@ export default function EditVisit(props: any) {
         let startDate = dayjs(props.visit.start);
         let [hours, minutes] = props.startTime.split(':');
         if (hours && minutes) {
-          return startDate.set('hour', +hours).set('minute', +minutes);
+          return startDate.set('hour', +hours).set('minute', +minutes).toISOString();
         } else {
-          return startDate;
+          return startDate.toISOString();
         }
       } else {
         let endDate = dayjs(props.visit.end);
         let [hours, minutes] = props.endTime.split(':');
         if (hours && minutes) {
-          return endDate.set('hour', +hours).set('minute', +minutes);
+          return endDate.set('hour', +hours).set('minute', +minutes).toISOString();
         } else {
-          return endDate;
+          return endDate.toISOString();
         }
       }
       
@@ -179,7 +182,7 @@ export default function EditVisit(props: any) {
                   <Checkbox 
                   id='anytime'
                   checked={+props.visit.anytime === (1 || true)}
-                  onChange={handleChange}
+                  onChange={handleAnytime}
                   />
                 } label="Anytime" />
                 
