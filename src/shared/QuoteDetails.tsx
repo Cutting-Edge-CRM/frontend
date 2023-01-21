@@ -1,5 +1,5 @@
 import { AddCircleOutlineOutlined, ArchiveOutlined, AttachMoney, Check, ContentCopyOutlined, DeleteOutline, FileDownloadOutlined, FormatPaintOutlined, MarkEmailReadOutlined, MoreVert, PersonOutline, SendOutlined, ThumbDownAltOutlined } from '@mui/icons-material';
-import { Box, Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, Link, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, Switch, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, Checkbox, Chip, Divider, Grid, IconButton, InputAdornment, Link, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, Switch, Tab, Tabs, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createJob, updateJob } from '../api/job.api';
@@ -155,6 +155,15 @@ function TabPanel(props: any) {
         });
       };
 
+      const handleChangeTax = (event: any) => {
+        let options = props.quote.options;
+        options.find((op: any) => op === props.option).tax = event.target.value.id;
+        props.setQuote({
+            quote: props.quote.quote,
+            options: options
+        });
+      };
+
       const handleAddItem = () => {
         let options = props.quote.options;
         let items = props.option.items;
@@ -243,10 +252,30 @@ function TabPanel(props: any) {
                 }
             </Stack><Stack direction="row">
                 <Typography>Taxes</Typography>
-                {/* {props.editting ? <Select placeholder='Select tax'/> : <Typography>$35</Typography>} */}
+                {props.editting ? 
+                <Select
+                labelId="tax-label"
+                id="tax"
+                value={props.taxes.find((t: any) => t.id === props.option.tax)}
+                onChange={handleChangeTax}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.title}
+                  </Box>
+                )}
+                >
+                {props.taxes.map((tax: any) => (
+                    <MenuItem key={tax.id} value={tax}>
+                    <Checkbox checked={tax.id === props.option.tax} />
+                    <ListItemText primary={tax.title} />
+                    </MenuItem>
+                ))}
+                </Select>
+                :
+                <Typography>{(+props.taxes.find((t: any) => t.id === props.option.tax)?.tax)*(props.option.items.map((i: any) => i.price).reduce(add, 0))}</Typography>}
             </Stack><Divider /><Stack direction="row">
                 <Typography>Total</Typography>
-                <Typography>${props.option.items.map((i: any) => i.price).reduce(add, 0)}</Typography>
+                <Typography>${(+props.taxes.find((t: any) => t.id === props.option.tax)?.tax)*(props.option.items.map((i: any) => i.price).reduce(add, 0)) + (props.option.items.map((i: any) => i.price).reduce(add, 0))}</Typography>
             </Stack>
             </>
         )}

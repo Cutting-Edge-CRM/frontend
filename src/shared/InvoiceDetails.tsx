@@ -1,5 +1,5 @@
 import { AddCircleOutlineOutlined, AttachMoney, DeleteOutline, FileDownloadOutlined, MarkEmailReadOutlined, MoneyOffOutlined, MoreVert, PersonOutline, SendOutlined } from '@mui/icons-material';
-import { Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, Link, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, Checkbox, Chip, Divider, Grid, IconButton, InputAdornment, Link, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { updateInvoice } from '../api/invoice.api';
@@ -167,6 +167,15 @@ function InvoiceDetails(props: any) {
         })
     }
 
+    const handleChangeTax = (event: any) => {
+        let invoice = props.invoice.invoice;
+        invoice.tax = event.target.value.id;
+        props.setInvoice({
+            ...props.invoice,
+            invoice: invoice
+        });
+      };
+
     return (
         <Card>
             <Stack direction="row">
@@ -266,6 +275,30 @@ function InvoiceDetails(props: any) {
             <Stack direction="row">
                 <Typography>Subtotal</Typography>
                 <Typography>${props.invoice.items.map((i: any) => i.price).reduce(add, 0)}</Typography>
+            </Stack>
+            <Stack direction="row">
+                <Typography>Taxes</Typography>
+                {editting ? 
+                <Select
+                labelId="tax-label"
+                id="tax"
+                value={props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)}
+                onChange={handleChangeTax}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.title}
+                  </Box>
+                )}
+                >
+                {props.taxes.map((tax: any) => (
+                    <MenuItem key={tax.id} value={tax}>
+                    <Checkbox checked={tax.id === props.invoice.invoice.tax} />
+                    <ListItemText primary={tax.title} />
+                    </MenuItem>
+                ))}
+                </Select>
+                :
+                <Typography>{(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax)*(props.invoice.items.map((i: any) => i.price).reduce(add, 0))}</Typography>}
             </Stack>
             <ConfirmDelete
             open={deleteOpen}

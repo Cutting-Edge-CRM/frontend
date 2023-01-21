@@ -8,12 +8,14 @@ import InvoiceDetails from '../../shared/InvoiceDetails';
 import { getInvoice } from '../../api/invoice.api';
 import { useParams } from 'react-router-dom';
 import { Typography } from '@mui/material';
+import { listTaxes } from '../../api/tax.api';
 
 function Invoice() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
     const [invoice, setInvoice] = useState({} as any);
     let { id } = useParams();
+    const [taxes, setTaxes] = useState([] as any);
 
     useEffect(() => {
         getInvoice(id)
@@ -23,6 +25,21 @@ function Invoice() {
         }, (err) => {
             setError(err.message);
             setIsLoaded(true);
+        })
+    }, [id])
+
+    useEffect(() => {
+        listTaxes()
+        .then(res => {
+            let none = {
+                id: null,
+                title: "No Tax",
+                tax: 0
+              }
+              res.unshift(none);
+            setTaxes(res);
+        }, (err) => {
+            setError(err.message);
         })
     }, [id])
 
@@ -38,7 +55,7 @@ function Invoice() {
         <Grid container spacing={2}>
             <Grid xs={8}>
                 <Stack spacing={2}>
-                    <InvoiceDetails invoice={invoice} setInvoice={setInvoice}/>
+                    <InvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes}/>
                 </Stack>
             </Grid>
             <Grid xs={4}>

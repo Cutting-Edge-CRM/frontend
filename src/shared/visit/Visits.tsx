@@ -21,7 +21,6 @@ function Visits(props: any) {
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
-    const offset = dayjs().utcOffset();
   
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>, visit: any) => {
         setStartTime(visit.start?.split(' ')[1]);
