@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import Table from '../../shared/Table';
 import ImportClients from '../../shared/client/ImportClients';
 import { clientColumns } from '../../util/columns';
-import { listClients } from '../../api/client.api';
+import { exportClients, listClients } from '../../api/client.api';
+
 
 function Clients() {
   const [open, setOpen] = useState(false);
@@ -23,6 +24,28 @@ function Clients() {
     setOpen(false);
     setSelectedValue(value);
   };
+
+  const buildCSV = (obj: any) => {
+    const array = [Object.keys(obj[0])].concat(obj)
+
+    return array.map(it => {
+      return Object.values(it).toString()
+    }).join('\n')
+  }
+
+  const handleExportClients = () => {
+    exportClients()
+    .then((result) => { 
+      const blob = new Blob([buildCSV(result)], { type: 'text/csv;charset=utf-8,' })
+      const objUrl = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.setAttribute('href', objUrl)
+      link.setAttribute('download', 'Clients.csv')
+      link.click();
+    }, err => {
+
+    })
+  }
 
   useEffect(() => {
     listClients(undefined, page, pageSize)
@@ -55,6 +78,7 @@ function Clients() {
           pageSize={pageSize}
           setPageSize={setPageSize}
           rowCount={rowCount}
+          handleExportClients={handleExportClients}
           ></Table>
           <ImportClients
             selectedValue={selectedValue}

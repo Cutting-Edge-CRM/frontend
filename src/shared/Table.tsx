@@ -72,7 +72,7 @@ export default function Table(props: any) {
                       </ListItemIcon>
                       <ListItemText>Import</ListItemText>
                     </MenuItem>
-                    <MenuItem>
+                    <MenuItem onClick={props.handleExportClients}>
                       <ListItemIcon>
                         <FileUploadOutlined />
                       </ListItemIcon>
