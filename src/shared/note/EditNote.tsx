@@ -23,6 +23,7 @@ export default function EditNote(props: any) {
           .then(res => {
             setSavingNote(false);
             props.onClose();
+            props.success('Successfully updated note');
           }, err => {
             setSavingNote(false);
             console.log("error" + err.message);
@@ -40,7 +41,7 @@ export default function EditNote(props: any) {
           .then(res => {
             setSavingNote(false);
             props.onClose();
-            console.log(res);
+            props.success('Successfully created new note');
           }, err => {
             setSavingNote(false);
             console.log("error" + err.message);

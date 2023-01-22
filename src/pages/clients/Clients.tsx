@@ -6,7 +6,7 @@ import { clientColumns } from '../../util/columns';
 import { exportClients, listClients } from '../../api/client.api';
 
 
-function Clients() {
+function Clients(props: any) {
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
   const [rows, setRows] = useState([]);
@@ -79,11 +79,13 @@ function Clients() {
           setPageSize={setPageSize}
           rowCount={rowCount}
           handleExportClients={handleExportClients}
+          success={props.success}
           ></Table>
           <ImportClients
             selectedValue={selectedValue}
             open={open}
             onClose={handleClose}
+            success={props.success}
           />
         </Box>
     )

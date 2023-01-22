@@ -10,7 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@mui/material';
 import ConfirmDelete from '../../shared/ConfirmDelete';
 
-function Client() {
+function Client(props: any) {
     let { id } = useParams();
     const [deleteOpen, setDeleteOpen] = useState(false);
     const navigate = useNavigate();
@@ -19,32 +19,38 @@ function Client() {
         setDeleteOpen(true);
     };
 
+    const handleDelete = () => {
+        setDeleteOpen(false);
+        navigate("/clients");
+    }
+
     const handleDeleteClose = (value: string) => {
         setDeleteOpen(false);
-        navigate("/clients")
     };
 
     return (
         <Grid container spacing={2}>
             <Grid xs={8}>
                 <Stack spacing={2}>
-                    <Properties type="client" client={id}/>
-                    <TabbedSummary client={id} />
+                    <Properties type="client" client={id} success={props.success}/>
+                    <TabbedSummary client={id} success={props.success}/>
                     <Button onClick={handleDeleteOpen}>Delete Client</Button>
                 </Stack>
             </Grid>
             <Grid xs={4}>
                 <Stack spacing={2}>
-                    <Contact client={id}/>
-                    <Visits client={id}/>
-                    <Notes client={id}/>
+                    <Contact client={id} success={props.success}/>
+                    <Visits client={id} success={props.success}/>
+                    <Notes client={id} success={props.success}/>
                 </Stack>
             </Grid>
             <ConfirmDelete
             open={deleteOpen}
             onClose={handleDeleteClose}
+            onDelete={handleDelete}
             type={'clients'}
             deleteId={id}
+            success={props.success}
             />
         </Grid>
     )

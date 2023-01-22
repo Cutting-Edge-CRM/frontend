@@ -52,7 +52,6 @@ function Properties(props: any) {
 
     const handleUpdate = () => {
         setOpen(false);
-        // show success
     };
 
     const handleCreate = (res: any) => {
@@ -236,6 +235,7 @@ function Properties(props: any) {
             create={handleCreate}
             modalType={modalType}
             token={mapboxgl.accessToken}
+            success={props.success}
             {...props}
             />
             <ConfirmDelete
@@ -244,6 +244,7 @@ function Properties(props: any) {
             type={'properties'}
             deleteId={property.id}
             onDelete={onDelete}
+            success={props.success}
             />
         </Card>
     )

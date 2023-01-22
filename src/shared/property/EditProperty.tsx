@@ -16,6 +16,7 @@ export default function EditProperty(props: any) {
         updateProperty({...props.property, client: props.client})
         .then(res => {
             props.update(res);
+            props.success('Successfully updated property');
         }, (err) => {
           setError(err.message)
         })
@@ -25,6 +26,7 @@ export default function EditProperty(props: any) {
           createProperty({...props.property, client: props.client})
           .then(res => {
               props.create(res);
+              props.success('Successfully created property');
           }, (err) => {
             setError(err.message)
           })

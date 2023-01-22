@@ -56,6 +56,7 @@ function Contact(props: any) {
                     onClose={handleClose}
                     update={handleUpdate}
                     type={'edit'}
+                    success={props.success}
                 />
             </Stack>
             <Stack spacing={2}>

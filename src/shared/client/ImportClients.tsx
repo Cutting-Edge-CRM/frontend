@@ -5,13 +5,7 @@ import { useDropzone } from 'react-dropzone';
 import { East, Description, Close } from '@mui/icons-material';
 import { importClients } from '../../api/client.api';
 
-export interface ImportClientsProps {
-    open: boolean;
-    selectedValue: string;
-    onClose: (value: string) => void;
-  }
-
-export default function ImportClients(props: ImportClientsProps) {
+export default function ImportClients(props: any) {
     const [activeStep, setActiveStep] = useState(0);
     const { onClose, selectedValue, open } = props;
     const [array, setArray] = useState([] as any[]);
@@ -163,6 +157,7 @@ export default function ImportClients(props: ImportClientsProps) {
         .then(res => {
             setLoading(false);
             onClose(selectedValue);
+            props.success('Imported clients successfully');
         }, err => {
             setLoading(false);
             setError(err.message);

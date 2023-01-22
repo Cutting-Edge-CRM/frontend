@@ -22,6 +22,7 @@ export default function EditVisit(props: any) {
         updateVisit({...props.visit, client: props.client, start: convertToDate('start'), end: convertToDate('end')})
         .then(res => {
             props.update(res);
+            props.success('Successfully updated visit');
         }, (err) => {
           setError(err.message)
         })
@@ -31,6 +32,7 @@ export default function EditVisit(props: any) {
           createVisit({...props.visit, client: props.client, start: convertToDate('start'), end: convertToDate('end')})
           .then(res => {
               props.create(res);
+              props.success('Successfully created new visit');
           }, (err) => {
             setError(err.message)
           })

@@ -18,6 +18,7 @@ export default function PaymentModal(props: any) {
             .then(res => {
                 console.log(res);
                 props.onClose();
+                props.success('Successfully recorded payment');
             }, err => {
 
             })
@@ -26,6 +27,7 @@ export default function PaymentModal(props: any) {
             updatePayment(props.payment)
             .then(res => {
                 props.onClose();
+                props.success('Successfully updated payment record');
             }, err => {
 
             })
@@ -40,6 +42,7 @@ export default function PaymentModal(props: any) {
         deletePayment(props.payment.id)
         .then(res => {
             props.onClose();
+            props.success('Successfully deleted payment record');
         }, err => {
 
         })

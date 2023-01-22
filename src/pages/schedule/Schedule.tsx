@@ -4,7 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import { Card, Divider, Grid, Stack, Typography } from '@mui/material'
 import { ButtonTextCompoundInput, FormatterInput, ToolbarInput } from '@fullcalendar/core'
 
-export default function Schedule() {
+export default function Schedule(props: any) {
 
     const events = [
         {

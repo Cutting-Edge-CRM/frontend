@@ -20,6 +20,7 @@ export default function EditContact(props: any) {
       updateClient(props.contact)
       .then(res => {
         props.update();
+        props.success('Successfully updated client');
       }, (err) => {
         setError(err.message)
       })

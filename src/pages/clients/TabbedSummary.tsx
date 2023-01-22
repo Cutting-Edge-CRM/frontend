@@ -89,17 +89,17 @@ function TabbedSummary(props: any) {
             <TabPanel value={value} index={0}>
                 {quotesError && <Typography>{quotesError}</Typography>}
                 {!quotesAreLoaded && <Typography>Loading...</Typography>}
-                {quotesAreLoaded && !quotesError && <TabbedTable rows={quoteRows} columns={quoteColumns} type="Quotes" title={null} client={props.client}></TabbedTable>}
+                {quotesAreLoaded && !quotesError && <TabbedTable rows={quoteRows} columns={quoteColumns} type="Quotes" title={null} client={props.client} success={props.success}></TabbedTable>}
             </TabPanel>
             <TabPanel value={value} index={1}>
                 {jobsError && <Typography>{jobsError}</Typography>}
                 {!jobsAreLoaded && <Typography>Loading...</Typography>}
-                {jobsAreLoaded && !jobsError && <TabbedTable rows={jobRows} columns={jobColumns} type="Jobs" title={null} client={props.client} ></TabbedTable>}
+                {jobsAreLoaded && !jobsError && <TabbedTable rows={jobRows} columns={jobColumns} type="Jobs" title={null} client={props.client} success={props.success}></TabbedTable>}
             </TabPanel>
             <TabPanel value={value} index={2}>
                 {invoicesError && <Typography>{invoicesError}</Typography>}
                 {!invoicesAreLoaded && <Typography>Loading...</Typography>}
-                {invoicesAreLoaded && !invoicesError && <TabbedTable rows={invoiceRows} columns={invoiceColumns} type="Invoices" title={null}client={props.client} ></TabbedTable>}
+                {invoicesAreLoaded && !invoicesError && <TabbedTable rows={invoiceRows} columns={invoiceColumns} type="Invoices" title={null}client={props.client} success={props.success}></TabbedTable>}
             </TabPanel>
         </Card>
     )

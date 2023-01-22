@@ -4,7 +4,7 @@ import { listJobs } from '../../api/job.api';
 import Table from '../../shared/Table'
 import { jobColumns } from '../../util/columns';
 
-function Jobs() {
+function Jobs(props: any) {
   const [rows, setRows] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
@@ -44,6 +44,7 @@ function Jobs() {
           pageSize={pageSize}
           setPageSize={setPageSize}
           rowCount={rowCount}
+          success={props.success}
           ></Table>
       </Box>
     )

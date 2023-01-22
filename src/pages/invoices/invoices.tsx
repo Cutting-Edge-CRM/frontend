@@ -4,7 +4,7 @@ import { listInvoices } from '../../api/invoice.api';
 import Table from '../../shared/Table'
 import { invoiceColumns } from '../../util/columns';
 
-function Invoices() {
+function Invoices(props: any) {
   const [rows, setRows] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
@@ -43,6 +43,7 @@ function Invoices() {
           pageSize={pageSize}
           setPageSize={setPageSize}
           rowCount={rowCount}
+          success={props.success}
           ></Table>
       </Box>
     )

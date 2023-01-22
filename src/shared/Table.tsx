@@ -115,11 +115,13 @@ export default function Table(props: any) {
         <NewClient
       open={ props.type === 'Clients' && newOpen}
       onClose={handleClose}
+      success={props.success}
         />
         <SelectClient
         open={ (props.type === 'Quotes' || props.type === 'Jobs' || props.type === 'Invoices') && newOpen}
         onClose={handleClose}
         type={props.type}
+        success={props.success}
         />
       </Box>
   );

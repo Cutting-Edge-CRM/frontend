@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -12,8 +12,8 @@ import { AttachMoney, FormatPaintOutlined, PeopleOutlineOutlined, CalendarMonthO
 import MenuIcon from '@mui/icons-material/Menu'
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Avatar, ListItemButton, Menu, MenuItem } from '@mui/material';
-import { Logout, Settings } from '@mui/icons-material';
+import { Alert, Avatar, ListItemButton, Menu, MenuItem, Snackbar } from '@mui/material';
+import { Logout } from '@mui/icons-material';
 import Dashboard from '../dashboard/Dashboard';
 import { Link, Route, Routes } from 'react-router-dom';
 import Clients from '../clients/Clients';
@@ -26,6 +26,7 @@ import Quote from '../quotes/Quote';
 import Job from '../jobs/Job';
 import Invoice from '../invoices/Invoice';
 import Schedule from '../schedule/Schedule';
+import Settings from '../settings/Settings';
 
 const drawerWidth = 240;
 const topTabs = [{display: 'Dashboard', icon: <TrendingUpOutlined/>}, {display: 'Schedule', icon: <CalendarMonthOutlined/>}, {display: 'Clients', icon: <PeopleOutlineOutlined/>}, {display: 'Quotes', icon: <SellOutlined/>}, {display: 'Jobs', icon: <FormatPaintOutlined/>}, {display: 'Invoices', icon: <AttachMoney/>}];
@@ -35,6 +36,10 @@ function Shell() {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [mobileOpen, setMobileOpen] = useState(false);
+
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -43,10 +48,23 @@ function Shell() {
     setAnchorEl(null);
   };
 
-  const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+
+  const success = (message: string) => {
+    setSuccessMessage(message);
+    setSuccessOpen(true);
+  };
+
+  const handleSuccessClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSuccessOpen(false);
   };
 
   const drawer = (
@@ -215,20 +233,24 @@ function Shell() {
 
       {/* body */}
       <Routes>
-            <Route path="/dashboard" element={<Dashboard />}/>
-            <Route path="/schedule" element={<Schedule />}/>
-            <Route path="/clients" element={<Clients />}/>
-            <Route path="/clients/:id" element={<Client />}/>
-            <Route path="/quotes" element={<Quotes />}/>
-            <Route path="/quotes/:id" element={<Quote />}/>
-            <Route path="/jobs" element={<Jobs />}/>
-            <Route path="/jobs/:id" element={<Job />}/>
-            <Route path="/invoices" element={<Invoices />}/>
-            <Route path="/invoices/:id" element={<Invoice />}/>
-            <Route path="/settings" element={<Settings />}/>
-            <Route path="/" element={<Dashboard />}/>
+            <Route path="/dashboard" element={<Dashboard success={success}/>}/>
+            <Route path="/schedule" element={<Schedule success={success}/>}/>
+            <Route path="/clients" element={<Clients success={success}/>}/>
+            <Route path="/clients/:id" element={<Client success={success}/>}/>
+            <Route path="/quotes" element={<Quotes success={success}/>}/>
+            <Route path="/quotes/:id" element={<Quote success={success}/>}/>
+            <Route path="/jobs" element={<Jobs success={success}/>}/>
+            <Route path="/jobs/:id" element={<Job success={success}/>}/>
+            <Route path="/invoices" element={<Invoices success={success}/>}/>
+            <Route path="/invoices/:id" element={<Invoice success={success}/>}/>
+            <Route path="/settings" element={<Settings success={success}/>}/>
+            <Route path="/" element={<Dashboard success={success}/>}/>
         </Routes>
-
+        <Snackbar open={successOpen} autoHideDuration={4000} onClose={handleSuccessClose}>
+            <Alert onClose={handleSuccessClose} severity="success" sx={{ width: '100%' }}>
+              {successMessage}
+            </Alert>
+        </Snackbar>
     </Box>
     </Box>
   );

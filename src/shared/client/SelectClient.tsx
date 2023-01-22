@@ -83,6 +83,7 @@ export default function SelectClient(props: any) {
             updateJob(updatingJob)
             .then(_ => {
               navigate(`/jobs/${res.id}`);
+              props.success('Successfully created new job');
             }, err => {
     
             })
@@ -111,6 +112,7 @@ export default function SelectClient(props: any) {
             updateQuote(updatingQuote)
             .then(_ => {
               navigate(`/quotes/${res.id}`);
+              props.success('Successfully created new quote');
             }, err => {
     
             })

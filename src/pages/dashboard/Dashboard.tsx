@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { logout, inviteNewUser, auth, currentUser } from '../../auth/firebase';
 
 
-function Dashboard() {
+function Dashboard(props: any) {
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");

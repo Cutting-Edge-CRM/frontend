@@ -337,6 +337,7 @@ function QuoteDetails(props: any) {
         if (editting) {
             updateQuote(props.quote)
             .then(res => {
+                props.success('Successfully updated quote');
             }, err => {
             })
         }
@@ -434,6 +435,7 @@ function QuoteDetails(props: any) {
                 }, err => {
                 })
                 navigate(`/jobs/${res.id}`);
+                props.success('Successfully converted quote to job');
             }, err => {
 
             })
@@ -578,18 +580,21 @@ function QuoteDetails(props: any) {
             type={'quotes'}
             deleteId={props.quote.quote.id}
             onDelete={onDelete}
+            success={props.success}
             />
             <Duplicate
             open={duplicateOpen}
             onClose={handleDuplicateClose}
             type={'Quote'}
             quote={props.quote}
+            success={props.success}
             />
             <SendModal
             open={sendOpen}
             onClose={handleSendClose}
             type={'Quote'}
             quote={props.quote}
+            success={props.success}
             />
             <PaymentModal
             payment={payment}
@@ -598,6 +603,7 @@ function QuoteDetails(props: any) {
             onClose={handlePaymentClose}
             paymentType={'Deposit'}
             type={type}
+            success={props.success}
             />
         </Card>
     )

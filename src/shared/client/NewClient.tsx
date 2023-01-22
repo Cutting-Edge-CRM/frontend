@@ -35,11 +35,13 @@ export default function NewClient(props: any) {
             createProperty({client: res.id, ...property})
             .then(propRes => {
               navigate(`/clients/${res.id}`);
+              props.success('Client created successfully');
             }, (propErr) => {
               setError(propErr.message);
             })
           } else {
             navigate(`/clients/${res.id}`);
+            props.success('Client created successfully');
           }
         }, (err) => {
           setError(err.message);

@@ -137,6 +137,7 @@ function InvoiceDetails(props: any) {
         if (editting) {
             updateInvoice(props.invoice)
             .then(res => {
+                props.success('Successfully updated invoice');
             }, err => {
             })
         }
@@ -358,12 +359,14 @@ function InvoiceDetails(props: any) {
             type={'invoices'}
             deleteId={props.invoice.invoice.id}
             onDelete={onDelete}
+            success={props.success}
             />
             <SendModal
             open={sendOpen}
             onClose={handleSendClose}
             type={'Invoice'}
             quote={props.invoice}
+            success={props.success}
             />
             <PaymentModal
             payment={payment}
@@ -372,6 +375,7 @@ function InvoiceDetails(props: any) {
             onClose={handlePaymentClose}
             paymentType={'Payment'}
             type={type}
+            success={props.success}
             />
         </Card>
     )

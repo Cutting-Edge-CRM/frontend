@@ -189,6 +189,7 @@ function Visits(props: any) {
             endTime={endTime}
             setStartTime={setStartTime}
             setEndTime={setEndTime}
+            success={props.success}
             />
             <ConfirmDelete
             open={deleteOpen}
@@ -196,6 +197,7 @@ function Visits(props: any) {
             type={'visits'}
             deleteId={visit.id}
             onDelete={onDelete}
+            success={props.success}
             />
         </Card>
     )

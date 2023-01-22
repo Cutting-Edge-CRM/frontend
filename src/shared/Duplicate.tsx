@@ -84,6 +84,7 @@ export default function SelectClient(props: any) {
             .then(_ => {
                 props.onClose();
                 navigate(`/jobs/${res.id}`);
+                props.success('Successfully duplicated job');
             }, err => {
     
             })
@@ -107,6 +108,7 @@ export default function SelectClient(props: any) {
             .then(_ => {
                 props.onClose();
                 navigate(`/quotes/${res.id}`);
+                props.success('Successfully duplicated quote');
             }, err => {
     
             })
@@ -268,6 +270,7 @@ export default function SelectClient(props: any) {
             open={newClientOpen}
             onClose={handleCloseNewClient}
             update={handleSaveNewClient}
+            success={props.success}
         />
         <EditProperty
             setProperty={setProperty}
@@ -277,6 +280,7 @@ export default function SelectClient(props: any) {
             create={handleSaveNewProperty}
             type={'new'}
             token={mapboxgl.accessToken}
+            success={props.success}
         />
       </Dialog>
     );

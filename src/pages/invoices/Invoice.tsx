@@ -10,7 +10,7 @@ import { Typography } from '@mui/material';
 import { listTaxes } from '../../api/tax.api';
 import { listPayments } from '../../api/payment.api';
 
-function Invoice() {
+function Invoice(props: any) {
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
     const [invoice, setInvoice] = useState({} as any);
@@ -66,13 +66,13 @@ function Invoice() {
         <Grid container spacing={2}>
             <Grid xs={8}>
                 <Stack spacing={2}>
-                    <InvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes} payments={payments}/>
+                    <InvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes} payments={payments} success={props.success}/>
                 </Stack>
             </Grid>
             <Grid xs={4}>
                 <Stack spacing={2}>
-                    <Contact client={invoice?.invoice.client}/>
-                    <Notes client={invoice?.invoice.client} />
+                    <Contact client={invoice?.invoice.client} success={props.success}/>
+                    <Notes client={invoice?.invoice.client} success={props.success}/>
                 </Stack>
             </Grid>
         </Grid>

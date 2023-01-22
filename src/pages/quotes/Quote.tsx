@@ -11,7 +11,7 @@ import { Typography } from '@mui/material';
 import { listTaxes } from '../../api/tax.api';
 import { listPayments } from '../../api/payment.api';
 
-function Quote() {
+function Quote(props: any) {
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
     const [quote, setQuote] = useState({} as any);
@@ -66,14 +66,14 @@ function Quote() {
         <Grid container spacing={2}>
             <Grid xs={8}>
                 <Stack spacing={2}>
-                    <QuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments}/>
-                    <Property property={quote.quote?.property}/>
+                    <QuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success}/>
+                    <Property property={quote.quote?.property} success={props.success}/>
                 </Stack>
             </Grid>
             <Grid xs={4}>
                 <Stack spacing={2}>
-                    <Contact client={quote.quote?.client}/>
-                    <Notes client={quote.quote?.client} />
+                    <Contact client={quote.quote?.client} success={props.success}/>
+                    <Notes client={quote.quote?.client} success={props.success}/>
                 </Stack>
             </Grid>
         </Grid>

@@ -55,6 +55,7 @@ export default function SelectProperty(props: any) {
             updateJob(updatingJob)
             .then(_ => {
               navigate(`/jobs/${res.id}`);
+              props.success('Successfully created new job');
             }, err => {
     
             })
@@ -83,6 +84,7 @@ export default function SelectProperty(props: any) {
             updateQuote(updatingQuote)
             .then(_ => {
               navigate(`/quotes/${res.id}`);
+              props.success('Successfully created new quote');
             }, err => {
     
             })
@@ -175,6 +177,7 @@ export default function SelectProperty(props: any) {
             create={handleSaveNewProperty}
             type={'new'}
             token={mapboxgl.accessToken}
+            success={props.success}
         />
       </Dialog>
     );

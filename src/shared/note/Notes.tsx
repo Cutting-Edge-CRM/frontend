@@ -163,6 +163,7 @@ function Notes(props: any) {
             setFileURLs={setFileURLs}
             originalImages={originalImages}
             setOriginalImages={setOriginalImages}
+            success={props.success}
             />
             <ConfirmDelete
             open={deleteOpen}
@@ -170,6 +171,7 @@ function Notes(props: any) {
             type={'notes'}
             deleteId={note.id}
             onDelete={onDelete}
+            success={props.success}
             />
         </Card>
     )

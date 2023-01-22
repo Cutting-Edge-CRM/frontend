@@ -77,6 +77,7 @@ export default function Table(props: any) {
         onClose={handleClose}
         update={handleUpdate}
         type={props.type}
+        success={props.success}
         />
       </Box>
   );

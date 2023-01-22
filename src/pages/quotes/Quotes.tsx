@@ -5,7 +5,7 @@ import Table from '../../shared/Table'
 import { quoteColumns } from '../../util/columns';
   
 
-function Quotes() {
+function Quotes(props: any) {
   const [rows, setRows] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
@@ -45,6 +45,7 @@ function Quotes() {
           pageSize={pageSize}
           setPageSize={setPageSize}
           rowCount={rowCount}
+          success={props.success}
           ></Table>
       </Box>
     )

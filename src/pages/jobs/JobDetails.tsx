@@ -134,6 +134,7 @@ function JobDetails(props: any) {
         if (editting) {
             updateJob(props.job)
             .then(res => {
+                props.success('Successfully updated job');
             }, err => {
             })
         }
@@ -202,6 +203,7 @@ function JobDetails(props: any) {
                 }, err => {
                 })
                 navigate(`/invoices/${res.id}`);
+                props.success('Successfully generated invoice');
             }, err => {
 
             })
@@ -305,12 +307,14 @@ function JobDetails(props: any) {
             type={'jobs'}
             deleteId={props.job.job.id}
             onDelete={onDelete}
+            success={props.success}
             />
             <Duplicate
             open={duplicateOpen}
             onClose={handleClose}
             type={'Job'}
             job={props.job}
+            success={props.success}
             />
         </Card>
     )
