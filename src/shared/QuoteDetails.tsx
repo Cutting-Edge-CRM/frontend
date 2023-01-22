@@ -8,6 +8,7 @@ import ConfirmDelete from './ConfirmDelete';
 import Duplicate from './Duplicate';
 import EmptyState from './EmptyState';
 import RichText from './RichText';
+import SendModal from './SendModal';
 
 function add(accumulator: any, a: any) {
     return (+accumulator) + (+a);
@@ -291,6 +292,7 @@ function QuoteDetails(props: any) {
     const [deleteOpen, setDeleteOpen] = useState(false);
     const navigate = useNavigate();
     const [duplicateOpen, setDuplicateOpen] = useState(false);
+    const [sendOpen, setSendOpen] = useState(false);
 
 
     const handleChange = (event: React.SyntheticEvent, newValue: any) => {
@@ -337,8 +339,17 @@ function QuoteDetails(props: any) {
         setDuplicateOpen(true);
     }
 
-    const handleClose = (value: string) => {
+    const handleSend = () => {
+        setSendOpen(true);
+    }
+
+    const handleDuplicateClose = (value: string) => {
         setDuplicateOpen(false);
+        setAnchorEl(null);
+    };
+    
+    const handleSendClose = (value: string) => {
+        setSendOpen(false);
         setAnchorEl(null);
     };
 
@@ -446,7 +457,7 @@ function QuoteDetails(props: any) {
                                 </ListItemIcon>
                                 <ListItemText>Duplicate</ListItemText>
                             </MenuItem>
-                            <MenuItem>
+                            <MenuItem onClick={handleSend}>
                                 <ListItemIcon>
                                     <SendOutlined />
                                 </ListItemIcon>
@@ -513,7 +524,13 @@ function QuoteDetails(props: any) {
             />
             <Duplicate
             open={duplicateOpen}
-            onClose={handleClose}
+            onClose={handleDuplicateClose}
+            type={'Quote'}
+            quote={props.quote}
+            />
+            <SendModal
+            open={sendOpen}
+            onClose={handleSendClose}
             type={'Quote'}
             quote={props.quote}
             />

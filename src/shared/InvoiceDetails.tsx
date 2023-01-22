@@ -6,6 +6,7 @@ import { updateInvoice } from '../api/invoice.api';
 import ConfirmDelete from './ConfirmDelete';
 import EmptyState from './EmptyState';
 import RichText from './RichText';
+import SendModal from './SendModal';
 
 function add(accumulator: number, a: number) {
     return (+accumulator) + (+a);
@@ -118,6 +119,7 @@ function InvoiceDetails(props: any) {
     const [editting, setEditting] = React.useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const navigate = useNavigate();
+    const [sendOpen, setSendOpen] = useState(false);
 
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -152,6 +154,15 @@ function InvoiceDetails(props: any) {
     const handleDeleteClose = (value: string) => {
         setDeleteOpen(false);
         closeMenu();
+    };
+
+    const handleSend = () => {
+        setSendOpen(true);
+    }
+    
+    const handleSendClose = (value: string) => {
+        setSendOpen(false);
+        setAnchorEl(null);
     };
 
     const onDelete = () => {
@@ -211,7 +222,7 @@ function InvoiceDetails(props: any) {
                                 </ListItemIcon>
                                 <ListItemText>Collect Payment</ListItemText>
                             </MenuItem>
-                            <MenuItem>
+                            <MenuItem onClick={handleSend}>
                                 <ListItemIcon>
                                     <SendOutlined />
                                 </ListItemIcon>
@@ -306,6 +317,12 @@ function InvoiceDetails(props: any) {
             type={'invoices'}
             deleteId={props.invoice.invoice.id}
             onDelete={onDelete}
+            />
+            <SendModal
+            open={sendOpen}
+            onClose={handleSendClose}
+            type={'Invoice'}
+            quote={props.invoice}
             />
         </Card>
     )
