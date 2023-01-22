@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Unstable_Grid2'
 import { Stack } from '@mui/system';
 import Contact from '../../shared/client/Contact';
-import Visits from '../../shared/visit/Visits';
 import Notes from '../../shared/note/Notes';
 import InvoiceDetails from '../../shared/InvoiceDetails';
 import { getInvoice } from '../../api/invoice.api';
@@ -61,7 +60,6 @@ function Invoice() {
             <Grid xs={4}>
                 <Stack spacing={2}>
                     <Contact client={invoice?.invoice.client}/>
-                    <Visits client={invoice?.invoice.client}/>
                     <Notes client={invoice?.invoice.client} />
                 </Stack>
             </Grid>

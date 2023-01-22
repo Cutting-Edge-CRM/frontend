@@ -1,12 +1,14 @@
 import { AddCircleOutlineOutlined, ArchiveOutlined, AttachMoney, Check, ContentCopyOutlined, DeleteOutline, FileDownloadOutlined, FormatPaintOutlined, MarkEmailReadOutlined, MoreVert, PersonOutline, SendOutlined, ThumbDownAltOutlined } from '@mui/icons-material';
-import { Box, Button, Card, Checkbox, Chip, Divider, Grid, IconButton, InputAdornment, Link, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, Switch, Tab, Tabs, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import { Box, Button, Card, Checkbox, Chip, Divider, Grid, IconButton, InputAdornment, Link, List, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, Switch, Tab, Tabs, TextField, Typography } from '@mui/material';
+import dayjs from 'dayjs';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createJob, updateJob } from '../api/job.api';
 import { updateQuote } from '../api/quote.api';
 import ConfirmDelete from './ConfirmDelete';
 import Duplicate from './Duplicate';
 import EmptyState from './EmptyState';
+import PaymentModal from './PaymentModal';
 import RichText from './RichText';
 import SendModal from './SendModal';
 
@@ -138,6 +140,11 @@ function QuoteItemEdit(props: any) {
 
 function TabPanel(props: any) {
 
+    const [depositAmount, setDepositAmount] = useState(0);
+    const [taxAmount, setTaxAmount] = useState(0);
+    const [subTotalAmount, setSubtotalAmount] = useState(0);
+    const [totalAmount, setTotalAmount] = useState(0);
+
     const handleChangeDeposit = (event: any) => {
         let options = props.quote.options;
         options.find((op: any) => op === props.option)[event.target.id] = event.target.value;
@@ -163,7 +170,15 @@ function TabPanel(props: any) {
             quote: props.quote.quote,
             options: options
         });
+        
       };
+
+      useEffect(() => {
+        setSubtotalAmount(props.option.items.map((i: any) => i.price).reduce(add, 0));
+        setTaxAmount((+props.taxes.find((t: any) => t.id === props.option.tax)?.tax)*(props.option.items.map((i: any) => i.price).reduce(add, 0)));
+        setTotalAmount(props.option.items.map((i: any) => i.price).reduce(add, 0) + (+props.taxes.find((t: any) => t.id === props.option.tax)?.tax)*(props.option.items.map((i: any) => i.price).reduce(add, 0)))
+        setDepositAmount(props.option.depositPercent ? (+props.option.deposit/100)*(props.option.items.map((i: any) => i.price).reduce(add, 0) + (+props.taxes.find((t: any) => t.id === props.option.tax)?.tax)*(props.option.items.map((i: any) => i.price).reduce(add, 0))) : props.option.deposit);
+      }, [props])
 
       const handleAddItem = () => {
         let options = props.quote.options;
@@ -227,31 +242,9 @@ function TabPanel(props: any) {
             <Divider />
             <Stack direction="row">
                 <Typography>Subtotal</Typography>
-                <Typography>${props.option.items.map((i: any) => i.price).reduce(add, 0)}</Typography>
+                <Typography>${subTotalAmount}</Typography>
             </Stack>
             <Stack direction="row">
-                <Typography>Deposit</Typography>
-                {props.editting ? 
-                    <><TextField 
-                        id="deposit"
-                        label="Deposit"
-                        value={props.option.deposit}
-                        onChange={handleChangeDeposit}
-                        />
-                    <Select
-                        labelId="deposit-percent-select-label"
-                        id="depositPercent"
-                        value={props.option.depositPercent ? 1 : 0}
-                        label="$/%"
-                        onChange={handleChangePercent}
-                    >
-                        <MenuItem value={1}>%</MenuItem>
-                        <MenuItem value={0}>$</MenuItem>
-                    </Select></>
-                :
-                    <Typography>{props.option.depositPercent ? '' : '$'}{props.option.deposit}{props.option.depositPercent ? '%' : ''}</Typography>
-                }
-            </Stack><Stack direction="row">
                 <Typography>Taxes</Typography>
                 {props.editting ? 
                 <Select
@@ -273,10 +266,35 @@ function TabPanel(props: any) {
                 ))}
                 </Select>
                 :
-                <Typography>{(+props.taxes.find((t: any) => t.id === props.option.tax)?.tax)*(props.option.items.map((i: any) => i.price).reduce(add, 0))}</Typography>}
-            </Stack><Divider /><Stack direction="row">
+                <Typography>{taxAmount}</Typography>}
+            </Stack>
+            <Divider />
+            <Stack direction="row">
                 <Typography>Total</Typography>
-                <Typography>${(+props.taxes.find((t: any) => t.id === props.option.tax)?.tax)*(props.option.items.map((i: any) => i.price).reduce(add, 0)) + (props.option.items.map((i: any) => i.price).reduce(add, 0))}</Typography>
+                <Typography>${totalAmount}</Typography>
+            </Stack>
+            <Stack direction="row">
+                <Typography>Deposit</Typography>
+                {props.editting ? 
+                    <><TextField 
+                        id="deposit"
+                        label="Deposit"
+                        value={props.option.deposit}
+                        onChange={handleChangeDeposit}
+                        />
+                    <Select
+                        labelId="deposit-percent-select-label"
+                        id="depositPercent"
+                        value={props.option.depositPercent ? 1 : 0}
+                        label="$/%"
+                        onChange={handleChangePercent}
+                    >
+                        <MenuItem value={1}>%</MenuItem>
+                        <MenuItem value={0}>$</MenuItem>
+                    </Select></>
+                :
+                    <Typography>${depositAmount}</Typography>
+                }
             </Stack>
             </>
         )}
@@ -293,6 +311,9 @@ function QuoteDetails(props: any) {
     const navigate = useNavigate();
     const [duplicateOpen, setDuplicateOpen] = useState(false);
     const [sendOpen, setSendOpen] = useState(false);
+    const [payment, setPayment] = useState({} as any);
+    const [paymentOpen, setPaymentOpen] = useState(false);
+    const [type, setType] = useState('');
 
 
     const handleChange = (event: React.SyntheticEvent, newValue: any) => {
@@ -352,6 +373,31 @@ function QuoteDetails(props: any) {
         setSendOpen(false);
         setAnchorEl(null);
     };
+
+    const handlePaymentClose = () => {
+        setPaymentOpen(false);
+        setAnchorEl(null);
+    }
+
+    const handleNewDeposit = () => {
+        setType('new');
+        setPayment({
+            client: props.quote.quote.client,
+            type: 'deposit',
+            typeId: props.quote.quote.id,
+            details: `Deposit for quote #${props.quote.quote.id}`,
+            transDate: dayjs(),
+            method: 'Cheque',
+            amount: (props.quote.options[value].depositPercent ? (+props.quote.options[value].deposit/100)*(props.quote.options[value].items.map((i: any) => i.price).reduce(add, 0) + (+props.taxes.find((t: any) => t.id === props.quote.options[value].tax)?.tax)*(props.quote.options[value].items.map((i: any) => i.price).reduce(add, 0))) : props.quote.options[value].deposit)
+        })
+        setPaymentOpen(true);
+    }
+
+    const handleEditDeposit = (event: any, currPayment: any) => {
+        setType('edit');
+        setPayment(currPayment);
+        setPaymentOpen(true);
+    }
 
     const markQuoteAs = (status: string) => {
         closeMenu();
@@ -437,7 +483,7 @@ function QuoteDetails(props: any) {
                                 <ListItemText>Mark as Rejected</ListItemText>
                             </MenuItem>
                             }
-                            <MenuItem>
+                            <MenuItem onClick={handleNewDeposit}>
                                 <ListItemIcon>
                                     <AttachMoney />
                                 </ListItemIcon>
@@ -515,6 +561,17 @@ function QuoteDetails(props: any) {
             {props.quote.options?.map((option: any, index: number) => (
                     <TabPanel option={option} key={index} value={value} index={index} editting={editting} {...props}/>
                 ))}
+            <Divider/>
+            <List>
+                {props.payments.map((payment: any) => (
+                    <ListItemButton key={payment.id} id={payment.id} onClick={(e) => handleEditDeposit(e, payment)}>
+                    <Stack direction={'row'}>
+                        <Typography>Deposit collected {dayjs(payment.transDate).format('MMM D')}</Typography>
+                        <Typography>${payment.amount}</Typography>
+                    </Stack>
+                    </ListItemButton>
+                ))}
+            </List>
             <ConfirmDelete
             open={deleteOpen}
             onClose={handleDeleteClose}
@@ -533,6 +590,14 @@ function QuoteDetails(props: any) {
             onClose={handleSendClose}
             type={'Quote'}
             quote={props.quote}
+            />
+            <PaymentModal
+            payment={payment}
+            setPayment={setPayment}
+            open={paymentOpen}
+            onClose={handlePaymentClose}
+            paymentType={'Deposit'}
+            type={type}
             />
         </Card>
     )

@@ -9,6 +9,7 @@ import Property from '../../shared/property/Property';
 import { getQuote } from '../../api/quote.api';
 import { Typography } from '@mui/material';
 import { listTaxes } from '../../api/tax.api';
+import { listPayments } from '../../api/payment.api';
 
 function Quote() {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -16,6 +17,7 @@ function Quote() {
     const [quote, setQuote] = useState({} as any);
     let { id } = useParams();
     const [taxes, setTaxes] = useState([] as any);
+    const [payments, setPayments] = useState([] as any);
 
     useEffect(() => {
         getQuote(id)
@@ -43,6 +45,15 @@ function Quote() {
         })
     }, [id])
 
+    useEffect(() => {
+        listPayments(quote.quote?.client)
+        .then(res => {
+            setPayments(res);
+        }, (err) => {
+            setError(err.message);
+        })
+    }, [quote])
+
 
     if (error) {
         return (<Typography>{error}</Typography>);
@@ -55,7 +66,7 @@ function Quote() {
         <Grid container spacing={2}>
             <Grid xs={8}>
                 <Stack spacing={2}>
-                    <QuoteDetails quote={quote} setQuote={setQuote} taxes={taxes}/>
+                    <QuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments}/>
                     <Property property={quote.quote?.property}/>
                 </Stack>
             </Grid>

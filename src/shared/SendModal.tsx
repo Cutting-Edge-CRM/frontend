@@ -1,4 +1,5 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { Stack } from '@mui/system';
 import React, { useState } from 'react';
 import RichText from './RichText';
 
@@ -26,6 +27,19 @@ export default function SendModal(props: any) {
             </Tabs>
             {value === 0 && 
             <Box>
+                <Stack>
+                <TextField
+                id="to" 
+                // value={props.item.title ? props.item.title : ''}
+                // onChange={handleChange}
+                InputProps={{
+                    startAdornment: (
+                    <InputAdornment position="start">
+                        <Typography>To</Typography>
+                    </InputAdornment>
+                    ),
+                }}
+                />
                 <TextField
                 id="subject" 
                 label="Email Subject"
@@ -34,12 +48,27 @@ export default function SendModal(props: any) {
                 />
                 <Typography>Email Body</Typography>
                 <RichText/>
+                </Stack>
             </Box>
             }
             {value === 1 && 
             <Box>
+                <Stack>
+                <TextField
+                id="to" 
+                // value={props.item.title ? props.item.title : ''}
+                // onChange={handleChange}
+                InputProps={{
+                    startAdornment: (
+                    <InputAdornment position="start">
+                        <Typography>To</Typography>
+                    </InputAdornment>
+                    ),
+                }}
+                />
                 <Typography>Text Message</Typography>
                 <RichText/>
+                </Stack>
             </Box>
             }
         </DialogContent>
