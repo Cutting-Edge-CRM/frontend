@@ -1,10 +1,12 @@
 import { AddCircleOutlineOutlined, AttachMoney, DeleteOutline, FileDownloadOutlined, MarkEmailReadOutlined, MoneyOffOutlined, MoreVert, PersonOutline, SendOutlined } from '@mui/icons-material';
-import { Box, Button, Card, Checkbox, Chip, Divider, Grid, IconButton, InputAdornment, Link, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, Checkbox, Chip, Divider, Grid, IconButton, InputAdornment, Link, List, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, TextField, Typography } from '@mui/material';
+import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { updateInvoice } from '../api/invoice.api';
 import ConfirmDelete from './ConfirmDelete';
 import EmptyState from './EmptyState';
+import PaymentModal from './PaymentModal';
 import RichText from './RichText';
 import SendModal from './SendModal';
 
@@ -120,6 +122,9 @@ function InvoiceDetails(props: any) {
     const [deleteOpen, setDeleteOpen] = useState(false);
     const navigate = useNavigate();
     const [sendOpen, setSendOpen] = useState(false);
+    const [payment, setPayment] = useState({} as any);
+    const [paymentOpen, setPaymentOpen] = useState(false);
+    const [type, setType] = useState('');
 
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -169,6 +174,31 @@ function InvoiceDetails(props: any) {
         navigate(`/invoices`);
     }
 
+    const handlePaymentClose = () => {
+        setPaymentOpen(false);
+        setAnchorEl(null);
+    }
+
+    const handleNewPayment = () => {
+        setType('new');
+        setPayment({
+            client: props.invoice.invoice.client,
+            type: 'payment',
+            typeId: props.invoice.invoice.id,
+            details: `Payment for invoice #${props.invoice.invoice.id}`,
+            transDate: dayjs(),
+            method: 'Cheque',
+            amount: (props.invoice.invoice.depositPercent ? (+props.invoice.invoice.deposit/100)*(props.invoice.invoice.items.map((i: any) => i.price).reduce(add, 0) + (+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax)*(props.invoice.invoice.items.map((i: any) => i.price).reduce(add, 0))) : props.invoice.invoice.deposit)
+        })
+        setPaymentOpen(true);
+    }
+
+    const handleEditPayment = (event: any, currPayment: any) => {
+        setType('edit');
+        setPayment(currPayment);
+        setPaymentOpen(true);
+    }
+
     const markInvoiceAs = (status: string) => {
         closeMenu();
         props.invoice.invoice.status = status;
@@ -216,7 +246,7 @@ function InvoiceDetails(props: any) {
                                 </ListItemIcon>
                                 <ListItemText>Mark as Bad Debt</ListItemText>
                             </MenuItem>
-                            <MenuItem>
+                            <MenuItem onClick={handleNewPayment}>
                                 <ListItemIcon>
                                     <AttachMoney />
                                 </ListItemIcon>
@@ -311,6 +341,17 @@ function InvoiceDetails(props: any) {
                 :
                 <Typography>{(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax)*(props.invoice.items.map((i: any) => i.price).reduce(add, 0))}</Typography>}
             </Stack>
+            <Divider/>
+            <List>
+                {props.payments.map((payment: any) => (
+                    <ListItemButton key={payment.id} id={payment.id} onClick={(e) => handleEditPayment(e, payment)}>
+                    <Stack direction={'row'}>
+                        <Typography>Deposit collected {dayjs(payment.transDate).format('MMM D')}</Typography>
+                        <Typography>${payment.amount}</Typography>
+                    </Stack>
+                    </ListItemButton>
+                ))}
+            </List>
             <ConfirmDelete
             open={deleteOpen}
             onClose={handleDeleteClose}
@@ -323,6 +364,14 @@ function InvoiceDetails(props: any) {
             onClose={handleSendClose}
             type={'Invoice'}
             quote={props.invoice}
+            />
+            <PaymentModal
+            payment={payment}
+            setPayment={setPayment}
+            open={paymentOpen}
+            onClose={handlePaymentClose}
+            paymentType={'Payment'}
+            type={type}
             />
         </Card>
     )

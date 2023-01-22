@@ -8,6 +8,7 @@ import { getInvoice } from '../../api/invoice.api';
 import { useParams } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import { listTaxes } from '../../api/tax.api';
+import { listPayments } from '../../api/payment.api';
 
 function Invoice() {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -15,6 +16,8 @@ function Invoice() {
     const [invoice, setInvoice] = useState({} as any);
     let { id } = useParams();
     const [taxes, setTaxes] = useState([] as any);
+    const [payments, setPayments] = useState([] as any);
+
 
     useEffect(() => {
         getInvoice(id)
@@ -42,6 +45,15 @@ function Invoice() {
         })
     }, [id])
 
+    useEffect(() => {
+        listPayments(invoice.invoice?.client)
+        .then(res => {
+            setPayments(res.filter((p: any) => p.typeId === invoice.invoice?.id || p.typeId === invoice.invoice?.quote));
+        }, (err) => {
+            setError(err.message);
+        })
+    }, [invoice])
+
 
     if (error) {
         return (<Typography>{error}</Typography>);
@@ -54,7 +66,7 @@ function Invoice() {
         <Grid container spacing={2}>
             <Grid xs={8}>
                 <Stack spacing={2}>
-                    <InvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes}/>
+                    <InvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes} payments={payments}/>
                 </Stack>
             </Grid>
             <Grid xs={4}>

@@ -3,7 +3,7 @@ import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitl
 import { Stack } from '@mui/system';
 import { DatePicker } from '@mui/x-date-pickers';
 import React from 'react';
-import { createPayment, updatePayment } from '../api/payment.api';
+import { createPayment, deletePayment, updatePayment } from '../api/payment.api';
 
 export default function PaymentModal(props: any) {
     const paymentMethods = ['Cash', 'Bank Transfer', 'Cheque', 'Credit Card', 'Money Order', 'Other'];
@@ -36,6 +36,15 @@ export default function PaymentModal(props: any) {
 
     };
 
+    const handleDelete = () => {
+        deletePayment(props.payment.id)
+        .then(res => {
+            props.onClose();
+        }, err => {
+
+        })
+    }
+
     const handleChange = (event: any) => {
         props.setPayment({ ...props.payment, [event.target.id]: event.target.value.trim()});
       };
@@ -51,7 +60,7 @@ export default function PaymentModal(props: any) {
     
     return (
     <Dialog onClose={handleCancel} open={props.open}>
-        <DialogTitle>Send {props.paymentType}</DialogTitle>
+        <DialogTitle>Collect {props.paymentType}</DialogTitle>
         <DialogContent>
         <Stack>
             <InputLabel id="method-label">Property</InputLabel>
@@ -104,6 +113,7 @@ export default function PaymentModal(props: any) {
         </DialogContent>
         <DialogActions>
             <Button onClick={handleCancel}>Cancel</Button>
+            {props.type === 'edit' && <Button onClick={handleDelete}>Delete</Button>}
             <Button onClick={handleSaveAndReciept}>Save & Email Receipt</Button>
             <Button onClick={handleSave}>Save</Button>
         </DialogActions>

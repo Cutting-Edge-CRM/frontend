@@ -48,7 +48,7 @@ function Quote() {
     useEffect(() => {
         listPayments(quote.quote?.client)
         .then(res => {
-            setPayments(res);
+            setPayments(res.filter((p: any) => p.type === 'deposit' && p.typeId === quote.quote?.id));
         }, (err) => {
             setError(err.message);
         })
