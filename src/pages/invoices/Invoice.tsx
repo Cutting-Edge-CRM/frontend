@@ -3,7 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { Stack } from '@mui/system';
 import Contact from '../../shared/client/Contact';
 import Notes from '../../shared/note/Notes';
-import InvoiceDetails from '../../shared/InvoiceDetails';
+import InvoiceDetails from './InvoiceDetails';
 import { getInvoice } from '../../api/invoice.api';
 import { useParams } from 'react-router-dom';
 import { Typography } from '@mui/material';

@@ -5,8 +5,8 @@ import { Button, Divider, Typography } from '@mui/material';
 import { AddCircleOutlineOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import EmptyState from './EmptyState';
-import SelectProperty from './SelectProperty';
+import EmptyState from '../../shared/EmptyState';
+import SelectProperty from '../../shared/SelectProperty';
 
 
 export default function Table(props: any) {

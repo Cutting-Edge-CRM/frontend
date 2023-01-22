@@ -4,7 +4,7 @@ import { Stack } from '@mui/system';
 import Contact from '../../shared/client/Contact';
 import Visits from '../../shared/visit/Visits';
 import Notes from '../../shared/note/Notes';
-import JobDetails from '../../shared/JobDetails';
+import JobDetails from './JobDetails';
 import { getJob } from '../../api/job.api';
 import { useParams } from 'react-router-dom';
 import { Typography } from '@mui/material';

@@ -2,12 +2,12 @@ import { AddCircleOutlineOutlined, AttachMoneyOutlined, Check, ContentCopyOutlin
 import { Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, Link, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createInvoice, updateInvoice } from '../api/invoice.api';
-import { updateJob } from '../api/job.api';
-import ConfirmDelete from './ConfirmDelete';
-import Duplicate from './Duplicate';
-import EmptyState from './EmptyState';
-import RichText from './RichText';
+import { createInvoice, updateInvoice } from '../../api/invoice.api';
+import { updateJob } from '../../api/job.api';
+import ConfirmDelete from '../../shared/ConfirmDelete';
+import Duplicate from '../../shared/Duplicate';
+import EmptyState from '../../shared/EmptyState';
+import RichText from '../../shared/RichText';
 
 function add(accumulator: number, a: number) {
     return (+accumulator) + (+a);
@@ -185,7 +185,8 @@ function JobDetails(props: any) {
             client: props.job.job.client,
             property: props.job.job.property,
             status: 'Draft',
-            job: props.job.job.id
+            job: props.job.job.id,
+            quote: props.job.job.quote
           };
         createInvoice(invoice)
         .then(res => {

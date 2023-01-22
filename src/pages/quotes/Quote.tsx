@@ -3,7 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { Stack } from '@mui/system';
 import Contact from '../../shared/client/Contact';
 import Notes from '../../shared/note/Notes';
-import QuoteDetails from '../../shared/QuoteDetails';
+import QuoteDetails from './QuoteDetails';
 import { useParams } from 'react-router-dom';
 import Property from '../../shared/property/Property';
 import { getQuote } from '../../api/quote.api';

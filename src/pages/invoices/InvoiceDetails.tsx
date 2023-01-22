@@ -3,12 +3,12 @@ import { Box, Button, Card, Checkbox, Chip, Divider, Grid, IconButton, InputAdor
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { updateInvoice } from '../api/invoice.api';
-import ConfirmDelete from './ConfirmDelete';
-import EmptyState from './EmptyState';
-import PaymentModal from './PaymentModal';
-import RichText from './RichText';
-import SendModal from './SendModal';
+import { updateInvoice } from '../../api/invoice.api';
+import ConfirmDelete from '../../shared/ConfirmDelete';
+import EmptyState from '../../shared/EmptyState';
+import PaymentModal from '../../shared/PaymentModal';
+import RichText from '../../shared/RichText';
+import SendModal from '../../shared/SendModal';
 
 function add(accumulator: number, a: number) {
     return (+accumulator) + (+a);

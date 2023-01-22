@@ -1,9 +1,9 @@
 import { Box, Card, Divider, Tab, Tabs, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { quoteColumns, jobColumns, invoiceColumns } from '../util/columns';
-import { listQuotes } from '../api/quote.api';
-import { listJobs } from '../api/job.api';
-import { listInvoices } from '../api/invoice.api';
+import { quoteColumns, jobColumns, invoiceColumns } from '../../util/columns';
+import { listQuotes } from '../../api/quote.api';
+import { listJobs } from '../../api/job.api';
+import { listInvoices } from '../../api/invoice.api';
 import TabbedTable from './TabbedTable';
 
 interface TabPanelProps {

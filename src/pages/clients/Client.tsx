@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TabbedSummary from '../../shared/TabbedSummary';
+import TabbedSummary from './TabbedSummary';
 import Properties from '../../shared/property/Properties';
 import Grid from '@mui/material/Unstable_Grid2'
 import { Stack } from '@mui/system';

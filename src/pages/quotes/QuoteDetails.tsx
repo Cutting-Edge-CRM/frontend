@@ -3,14 +3,14 @@ import { Box, Button, Card, Checkbox, Chip, Divider, Grid, IconButton, InputAdor
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createJob, updateJob } from '../api/job.api';
-import { updateQuote } from '../api/quote.api';
-import ConfirmDelete from './ConfirmDelete';
-import Duplicate from './Duplicate';
-import EmptyState from './EmptyState';
-import PaymentModal from './PaymentModal';
-import RichText from './RichText';
-import SendModal from './SendModal';
+import { createJob, updateJob } from '../../api/job.api';
+import { updateQuote } from '../../api/quote.api';
+import ConfirmDelete from '../../shared/ConfirmDelete';
+import Duplicate from '../../shared/Duplicate';
+import EmptyState from '../../shared/EmptyState';
+import PaymentModal from '../../shared/PaymentModal';
+import RichText from '../../shared/RichText';
+import SendModal from '../../shared/SendModal';
 
 function add(accumulator: any, a: any) {
     return (+accumulator) + (+a);
