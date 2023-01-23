@@ -32,12 +32,12 @@ function Notes(props: any) {
     const handleNewOpen = () => {
         setNote({client: props.client});
         setFileURLs([]);
-        setType('new');
+        setType('New');
         setOpen(true);
     };
 
     const handleEditOpen = () => {
-        setType('edit');
+        setType('Edit');
         setOpen(true);
     };
 

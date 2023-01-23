@@ -15,6 +15,8 @@ function Job(props: any) {
     const [error, setError] = useState(null);
     const [job, setJob] = useState({} as any);
     let { id } = useParams();
+    const [reload, setReload] = useState(false);
+
 
     useEffect(() => {
         getJob(id)
@@ -25,7 +27,7 @@ function Job(props: any) {
             setError(err.message);
             setIsLoaded(true);
         })
-    }, [id])
+    }, [id, reload])
 
 
     if (error) {
@@ -39,7 +41,7 @@ function Job(props: any) {
         <Grid container spacing={2}>
             <Grid xs={8}>
                 <Stack spacing={2}>
-                    <JobDetails job={job} setJob={setJob} success={props.success}/>
+                    <JobDetails job={job} setJob={setJob} success={props.success} setReload={setReload} reload={reload}/>
                     <Property property={job.job.property} success={props.success}/>
                 </Stack>
             </Grid>

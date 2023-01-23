@@ -17,7 +17,7 @@ function Invoice(props: any) {
     let { id } = useParams();
     const [taxes, setTaxes] = useState([] as any);
     const [payments, setPayments] = useState([] as any);
-
+    const [reload, setReload] = useState(false);
 
     useEffect(() => {
         getInvoice(id)
@@ -28,7 +28,7 @@ function Invoice(props: any) {
             setError(err.message);
             setIsLoaded(true);
         })
-    }, [id])
+    }, [id, reload])
 
     useEffect(() => {
         listTaxes()
@@ -66,7 +66,7 @@ function Invoice(props: any) {
         <Grid container spacing={2}>
             <Grid xs={8}>
                 <Stack spacing={2}>
-                    <InvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes} payments={payments} success={props.success}/>
+                    <InvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload}/>
                 </Stack>
             </Grid>
             <Grid xs={4}>

@@ -50,6 +50,7 @@ function Visits(props: any) {
 
     const handleClose = (value: string) => {
         setOpen(false);
+        setAnchorEl(null);
     };
 
     const handleDeleteClose = (value: string) => {
@@ -59,12 +60,11 @@ function Visits(props: any) {
 
     const handleUpdate = (value: string) => {
         setOpen(false);
-        // save value
+        setAnchorEl(null);
     };
 
     const handleCreate = (value: string) => {
         setOpen(false);
-        // save value
     };
 
     const onDelete = () => {

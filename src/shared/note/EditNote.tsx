@@ -16,7 +16,7 @@ export default function EditNote(props: any) {
     };
 
   const handleSave = () => {
-      if (props.type === 'edit') {
+      if (props.type === 'Edit') {
         setLoading(true);
         updateImagesInCloudinary(props.fileURLs, props.originalImages)
         .then(res => {
@@ -36,7 +36,7 @@ export default function EditNote(props: any) {
             console.log("error" + err.message);
         })
       }
-      if (props.type === 'new') {
+      if (props.type === 'New') {
         setLoading(true);
         saveImagesCloudinary(props.fileURLs)
         .then(res => {
@@ -101,11 +101,15 @@ export default function EditNote(props: any) {
       reader.readAsDataURL(file)
     })
   }  
+
+  const noteIsValid = () => {
+    return props.fileURLs.length > 0 || props.note.title?.trim()?.length > 0 || props.note.content?.trim()?.length > 0;
+  }
   
 
     return (
       <Dialog onClose={handleCancel} open={props.open}>
-        <DialogTitle>Edit Note</DialogTitle>
+        <DialogTitle>{props.type} Note</DialogTitle>
         <DialogContent>
         {loading && <LinearProgress />}
             <Stack spacing={2}>
@@ -138,7 +142,7 @@ export default function EditNote(props: any) {
                       </>)
                   }
                   </Box>
-                  {loadingFiles && <Typography>Uploading...</Typography>}
+                  {loadingFiles && <LinearProgress />}
                       <ImageList cols={3} rowHeight={164}>
                         {props.fileURLs.map((file: any) => (
                           <Box key={file.url}>
@@ -157,7 +161,10 @@ export default function EditNote(props: any) {
         </DialogContent>
         <DialogActions>
             <Button onClick={handleCancel}>Cancel</Button>
-            <Button onClick={handleSave}>Save Changes</Button>
+            <Button
+            disabled={!noteIsValid()}
+            onClick={handleSave}
+            >Save Changes</Button>
         </DialogActions>
         {error && <Alert severity="error">{error}</Alert>}
       </Dialog>

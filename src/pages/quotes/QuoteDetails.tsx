@@ -90,6 +90,7 @@ function QuoteItemEdit(props: any) {
                     <TextField
                     id="title" 
                     label="Service"
+                    error={!props.item.title?.trim()?.length}
                     InputProps={{
                         startAdornment: (
                         <InputAdornment position="start">
@@ -114,6 +115,7 @@ function QuoteItemEdit(props: any) {
                         <TextField
                         id="price" 
                         label="Price"
+                        type='number'
                         InputProps={{
                             startAdornment: (
                             <InputAdornment position="start">
@@ -350,6 +352,11 @@ function QuoteDetails(props: any) {
         setEditting(!editting);
     }
 
+    const handleCancel = () => {
+        setEditting(false);
+        props.setReload(!props.reload);
+    }
+
     const handleDeleteOpen = () => {
         setDeleteOpen(true);
     };
@@ -455,7 +462,11 @@ function QuoteDetails(props: any) {
             {loading && <LinearProgress />}
             <Stack direction="row">
                 <Typography>Quote Details</Typography>
-                <Button onClick={handleEditting}>{editting ? 'Save Changes' : 'Edit Quote'}</Button>
+                {editting ? 
+                <><Button onClick={handleCancel}>Cancel</Button><Button onClick={handleEditting}>Save Changes</Button></>
+                :
+                <Button onClick={handleEditting}>Edit Quote</Button>
+                }
                 <IconButton
                     onClick={openMenu}
                     >

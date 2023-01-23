@@ -1,5 +1,5 @@
-import { AddCircleOutlineOutlined, EmailOutlined, PersonOutline, PhoneOutlined } from '@mui/icons-material';
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, LinearProgress, Stack, TextField } from '@mui/material';
+import { AddCircleOutlineOutlined, DeleteOutline, EmailOutlined, PersonOutline, PhoneOutlined } from '@mui/icons-material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, LinearProgress, Stack, TextField } from '@mui/material';
 import * as React from 'react';
 import { useState } from 'react';
 import RegexParser from 'regex-parser';
@@ -103,10 +103,9 @@ export default function EditContact(props: any) {
               </InputAdornment>
             ),
             endAdornment: (
-              <Button
-              onClick={(e) => handleRemovePhone(e,index)}
-              >Remove
-              </Button>
+              <IconButton onClick={(e) => handleRemovePhone(e,index)}>
+                <DeleteOutline/>
+              </IconButton>
             )
           }} />
       );
@@ -128,10 +127,9 @@ export default function EditContact(props: any) {
               </InputAdornment>
             ),
             endAdornment: (
-              <Button
-              onClick={(e) => handleRemoveEmail(e,index)}
-              >Remove
-              </Button>
+              <IconButton onClick={(e) => handleRemoveEmail(e,index)}>
+                <DeleteOutline/>
+              </IconButton>
             )
           }} />
       );

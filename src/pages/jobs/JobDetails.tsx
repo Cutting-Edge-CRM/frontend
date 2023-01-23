@@ -71,6 +71,7 @@ function JobItemEdit(props: any) {
                     <TextField
                     id="title" 
                     label="Service"
+                    error={!props.item.title?.trim()?.length}
                     InputProps={{
                         startAdornment: (
                         <InputAdornment position="start">
@@ -145,6 +146,11 @@ function JobDetails(props: any) {
             })
         }
         setEditting(!editting);
+    }
+
+    const handleCancel = () => {
+        setEditting(false);
+        props.setReload(!props.reload);
     }
 
     const handleAddItem = () => {
@@ -222,7 +228,11 @@ function JobDetails(props: any) {
             {loading && <LinearProgress />}
             <Stack direction="row">
                 <Typography>Job Details</Typography>
-                <Button onClick={handleEditting}>{editting ? 'Save Changes' : 'Edit Job'}</Button>
+                {editting ? 
+                <><Button onClick={handleCancel}>Cancel</Button><Button onClick={handleEditting}>Save Changes</Button></>
+                :
+                <Button onClick={handleEditting}>Edit Job</Button>
+                }
                 <IconButton
                     onClick={openMenu}
                     >

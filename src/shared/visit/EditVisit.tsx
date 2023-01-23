@@ -1,5 +1,5 @@
 import { PersonOutline } from '@mui/icons-material';
-import { Alert, Box, Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, InputAdornment, InputLabel, LinearProgress, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField } from '@mui/material';
+import { Alert, Box, Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, InputAdornment, InputLabel, LinearProgress, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import * as React from 'react';
@@ -120,6 +120,7 @@ export default function EditVisit(props: any) {
             <Stack spacing={2}>
                 <TextField
                 id="name" 
+                placeholder="eg. Pressure wash fence, Pickup cheque, Interior - 32 hours"
                 label="Title"
                 defaultValue={props.visit.name ? props.visit.name : undefined}
                 onChange={handleChange}
@@ -158,11 +159,13 @@ export default function EditVisit(props: any) {
                 value={props.visit.users}
                 onChange={handleChangePerson}
                 input={<OutlinedInput label="Assign team members" />}
+                displayEmpty={true}
                 renderValue={(selected) => (
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                       {selected.map((value: any) => (
                         <Chip key={value.id} label={value.name ? value.name : value.email} />
                       ))}
+                      {selected.length === 0 && <Typography>No users are currently assigned</Typography>}
                     </Box>
                   )}
                 >

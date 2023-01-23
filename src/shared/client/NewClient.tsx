@@ -1,6 +1,6 @@
 import { AddressAutofill } from '@mapbox/search-js-react';
-import { AddCircleOutlineOutlined, EmailOutlined, PersonOutline, PhoneOutlined } from '@mui/icons-material';
-import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, LinearProgress, Stack, Step, StepLabel, Stepper, TextField } from '@mui/material';
+import { AddCircleOutlineOutlined, DeleteOutline, EmailOutlined, PersonOutline, PhoneOutlined } from '@mui/icons-material';
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, LinearProgress, Stack, Step, StepLabel, Stepper, TextField } from '@mui/material';
 import mapboxgl from 'mapbox-gl';
 import * as React from 'react';
 import { useState } from 'react';
@@ -134,6 +134,7 @@ export default function NewClient(props: any) {
             label="Phone"
             type={"tel"}
             value={phone.content}
+            error={!(phone.content.length > 4 || phone.content.length < 1)}
             onChange={(e) => handleChangePhone(e, index)}
             InputProps={{
               startAdornment: (
@@ -142,11 +143,10 @@ export default function NewClient(props: any) {
                 </InputAdornment>
               ),
               endAdornment: (
-                <Button
-                onClick={(e) => handleRemovePhone(e,index)}
-                >Remove
-                </Button>
-              )
+                <IconButton onClick={(e) => handleRemovePhone(e,index)}>
+                  <DeleteOutline/>
+                </IconButton>
+              ),
             }} />
         );
       })
@@ -159,6 +159,7 @@ export default function NewClient(props: any) {
             type={"email"}
             value={email.content}
             onChange={(e) => handleChangeEmail(e, index)}
+            error={!(emailValid(email.content) || email.content.length < 1)}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -166,10 +167,9 @@ export default function NewClient(props: any) {
                 </InputAdornment>
               ),
               endAdornment: (
-                <Button
-                onClick={(e) => handleRemoveEmail(e,index)}
-                >Remove
-                </Button>
+                <IconButton onClick={(e) => handleRemoveEmail(e,index)}>
+                  <DeleteOutline/>
+                </IconButton>
               )
             }} />
         );

@@ -72,6 +72,7 @@ function InvoiceItemEdit(props: any) {
                     <TextField
                     id="title" 
                     label="Service"
+                    error={!props.item.title?.trim()?.length}
                     InputProps={{
                         startAdornment: (
                         <InputAdornment position="start">
@@ -148,6 +149,11 @@ function InvoiceDetails(props: any) {
             })
         }
         setEditting(!editting);
+    }
+
+    const handleCancel = () => {
+        setEditting(false);
+        props.setReload(!props.reload);
     }
 
     const handleAddItem = () => {
@@ -229,7 +235,11 @@ function InvoiceDetails(props: any) {
             {loading && <LinearProgress />}
             <Stack direction="row">
                 <Typography>Invoice Details</Typography>
-                <Button onClick={handleEditting}>{editting ? 'Save Changes' : 'Edit Invoice'}</Button>
+                {editting ? 
+                <><Button onClick={handleCancel}>Cancel</Button><Button onClick={handleEditting}>Save Changes</Button></>
+                :
+                <Button onClick={handleEditting}>Edit Invoice</Button>
+                }
                 <IconButton
                     onClick={openMenu}
                     >

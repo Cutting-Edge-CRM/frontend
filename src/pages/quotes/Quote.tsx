@@ -18,6 +18,7 @@ function Quote(props: any) {
     let { id } = useParams();
     const [taxes, setTaxes] = useState([] as any);
     const [payments, setPayments] = useState([] as any);
+    const [reload, setReload] = useState(false);
 
     useEffect(() => {
         getQuote(id)
@@ -28,7 +29,7 @@ function Quote(props: any) {
             setError(err.message);
             setIsLoaded(true);
         })
-    }, [id])
+    }, [id, reload])
 
     useEffect(() => {
         listTaxes()
@@ -66,7 +67,7 @@ function Quote(props: any) {
         <Grid container spacing={2}>
             <Grid xs={8}>
                 <Stack spacing={2}>
-                    <QuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success}/>
+                    <QuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload}/>
                     <Property property={quote.quote?.property} success={props.success}/>
                 </Stack>
             </Grid>
