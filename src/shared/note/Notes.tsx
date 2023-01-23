@@ -1,5 +1,5 @@
 import { AddCircleOutlineOutlined, CreateOutlined, DeleteOutline, MoreVert } from '@mui/icons-material';
-import { Card, Grid, IconButton, ImageList, ImageListItem, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from '@mui/material';
+import { Alert, Card, CircularProgress, Grid, IconButton, ImageList, ImageListItem, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { listNotes } from '../../api/note.api';
 import ConfirmDelete from '../ConfirmDelete';
@@ -11,7 +11,7 @@ function Notes(props: any) {
     const isOpen = Boolean(anchorEl);
     const [rows, setRows] = useState([] as any);
     const [open, setOpen] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [note, setNote] = useState({} as any);
     const [type, setType] = useState('');
@@ -71,22 +71,15 @@ function Notes(props: any) {
         listNotes(props.client)
         .then((result) => {
           setRows(result);
-          setIsLoaded(true);
+          setLoading(false);
         }, (err) => {
-            setIsLoaded(true);
+            setLoading(false);
             setError(err.message);
         })
       }, [props, open, deleteOpen])
 
     const onDelete = () => {
         return;
-    }
-
-    if (error) {
-    return (<Typography>{error}</Typography>);
-    }
-    if (!isLoaded) {
-    return (<Typography>Loading...</Typography>);
     }
 
     return (
@@ -97,6 +90,9 @@ function Notes(props: any) {
                     <AddCircleOutlineOutlined />
                 </IconButton>
             </Stack>
+            {loading && (<CircularProgress />)}
+            {error && (<Alert severity="error">{error}</Alert>)}
+            {!loading && !error &&
             <List>
                 {
                     rows.map((note: any) => (
@@ -150,7 +146,7 @@ function Notes(props: any) {
                     ))
                 }
                 {rows.length === 0 && <Typography>This client doesn't have any notes yet, click the "+" icon to add one.</Typography>}
-            </List>
+            </List>}
             <EditNote
             note={note}
             setNote={setNote}

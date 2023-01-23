@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Card, Typography } from '@mui/material';
+import { Alert, Box, Card, CircularProgress, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import mapboxgl from 'mapbox-gl';
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
@@ -104,8 +104,8 @@ function Property(props: any) {
                 {!mapError && <div style={{height: coords.length > 0 ? 290 : 0}} ref={mapContainer} className="map-container" />}
             </Box>
             <Box>
-                {error && <Typography>{error}</Typography>}
-                {!isLoaded && <Typography>Loading...</Typography>}
+                {error && <Alert severity="error">{error}</Alert>}
+                {!isLoaded && <CircularProgress />}
                 {!error && isLoaded && 
                 <DataGrid
                 autoHeight

@@ -1,5 +1,5 @@
 import { CreateOutlined } from '@mui/icons-material';
-import { Avatar, Card, IconButton, Stack, Typography } from '@mui/material';
+import { Alert, Avatar, Card, CircularProgress, IconButton, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { getClient } from '../../api/client.api';
 import EditContact from './EditContact';
@@ -35,10 +35,10 @@ function Contact(props: any) {
       }, [props, open])
 
     if (error) {
-    return (<Typography>{error}</Typography>);
+    return (<Alert severity="error">{error}</Alert>);
     }
     if (!isLoaded) {
-    return (<Typography>Loading...</Typography>);
+    return (<CircularProgress />);
     }
 
     return (

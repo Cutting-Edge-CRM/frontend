@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { listQuotes } from '../../api/quote.api';
 import Table from '../../shared/Table'
@@ -7,30 +7,23 @@ import { quoteColumns } from '../../util/columns';
 
 function Quotes(props: any) {
   const [rows, setRows] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState(null);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [rowCount, setRowCount] = useState(10);
+  const [rowCount, setRowCount] = useState(0);
+  const [quotesAreLoading, setQuotesAreLoading] = useState(true);
+  const [errorListingQuotes, setErrorListingQuotes] = useState(null);
 
   useEffect(() => {
     listQuotes(undefined, undefined, page, pageSize)
     .then((result) => {
-      setIsLoaded(true);
+      setQuotesAreLoading(false);
       setRows(result?.rows);
       setRowCount(result?.rowCount?.[0]?.rowCount);
     }, (err) => {
-      setIsLoaded(true);
-      setError(err.message)
+      setQuotesAreLoading(false);
+      setErrorListingQuotes(err.message)
     })
   }, [page, pageSize])
-
-  if (error) {
-    return (<Typography>{error}</Typography>);
-  }
-  if (!isLoaded) {
-    return (<Typography>Loading...</Typography>);
-  }
 
     return (
         
@@ -46,6 +39,8 @@ function Quotes(props: any) {
           setPageSize={setPageSize}
           rowCount={rowCount}
           success={props.success}
+          errorListing={errorListingQuotes}
+          listLoading={quotesAreLoading}
           ></Table>
       </Box>
     )

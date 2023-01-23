@@ -7,7 +7,7 @@ import QuoteDetails from './QuoteDetails';
 import { useParams } from 'react-router-dom';
 import Property from '../../shared/property/Property';
 import { getQuote } from '../../api/quote.api';
-import { Typography } from '@mui/material';
+import { Alert, CircularProgress } from '@mui/material';
 import { listTaxes } from '../../api/tax.api';
 import { listPayments } from '../../api/payment.api';
 
@@ -56,10 +56,10 @@ function Quote(props: any) {
 
 
     if (error) {
-        return (<Typography>{error}</Typography>);
+        return (<Alert severity="error">{error}</Alert>);
         }
     if (!isLoaded) {
-        return (<Typography>Loading...</Typography>);
+        return (<CircularProgress />);
         }
 
     return (

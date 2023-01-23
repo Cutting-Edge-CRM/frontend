@@ -1,5 +1,5 @@
 import { AddCircleOutlineOutlined } from '@mui/icons-material';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper } from '@mui/material';
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import mapboxgl from 'mapbox-gl';
 import * as React from 'react';
@@ -188,7 +188,7 @@ export default function SelectClient(props: any) {
         </Stepper><React.Fragment>
             {activeStep === 0 ? (
               <Box>
-                {!clientIsLoaded && <Typography>Loading</Typography>}
+                {!clientIsLoaded && <CircularProgress />}
                 {clientIsLoaded &&
                   <DataGrid
                     autoHeight
@@ -207,7 +207,7 @@ export default function SelectClient(props: any) {
               </Box>
             ) : (
               <Box>
-                {!propertyIsLoaded && <Typography>Loading</Typography>}
+                {!propertyIsLoaded && <CircularProgress />}
                 {propertyIsLoaded &&
                   <DataGrid
                   autoHeight

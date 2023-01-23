@@ -34,38 +34,38 @@ function TabPanel(props: TabPanelProps) {
 function TabbedSummary(props: any) {
     const [value, setValue] = useState(0);
     const [quoteRows, setQuoteRows] = useState([]);
-    const [quotesAreLoaded, setQuotesAreLoaded] = useState(false);
+    const [quotesAreLoading, setQuotesAreLoading] = useState(true);
     const [quotesError, setQuotesError] = useState(null);
     const [jobRows, setJobRows] = useState([]);
-    const [jobsAreLoaded, setJobsAreLoaded] = useState(false);
+    const [jobsAreLoading, setJobsAreLoading] = useState(true);
     const [jobsError, setJobsError] = useState(null);
     const [invoiceRows, setInvoiceRows] = useState([]);
-    const [invoicesAreLoaded, setInvoicesAreLoaded] = useState(false);
+    const [invoicesAreLoading, setInvoicesAreLoading] = useState(true);
     const [invoicesError, setInvoicesError] = useState(null);
   
     useEffect(() => {
       listQuotes(props.client)
       .then((result) => {
-        setQuotesAreLoaded(true);
+        setQuotesAreLoading(false);
         setQuoteRows(result?.rows)
       }, (err) => {
-        setQuotesAreLoaded(true);
+        setQuotesAreLoading(false);
         setQuotesError(err.message)
       })
       listJobs(props.client)
       .then((result) => {
-        setJobsAreLoaded(true);
+        setJobsAreLoading(false);
         setJobRows(result?.rows)
       }, (err) => {
-        setJobsAreLoaded(true);
+        setJobsAreLoading(false);
         setJobsError(err.message)
       })
       listInvoices(props.client)
       .then((result) => {
-        setInvoicesAreLoaded(true);
+        setInvoicesAreLoading(false);
         setInvoiceRows(result?.rows)
       }, (err) => {
-        setInvoicesAreLoaded(true);
+        setInvoicesAreLoading(false);
         setInvoicesError(err.message)
       })
     }, [props.client])
@@ -87,19 +87,13 @@ function TabbedSummary(props: any) {
             </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-                {quotesError && <Typography>{quotesError}</Typography>}
-                {!quotesAreLoaded && <Typography>Loading...</Typography>}
-                {quotesAreLoaded && !quotesError && <TabbedTable rows={quoteRows} columns={quoteColumns} type="Quotes" title={null} client={props.client} success={props.success}></TabbedTable>}
+              <TabbedTable rows={quoteRows} columns={quoteColumns} type="Quotes" title={null} client={props.client} success={props.success} errorListing={quotesError} loadingList={quotesAreLoading}></TabbedTable>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                {jobsError && <Typography>{jobsError}</Typography>}
-                {!jobsAreLoaded && <Typography>Loading...</Typography>}
-                {jobsAreLoaded && !jobsError && <TabbedTable rows={jobRows} columns={jobColumns} type="Jobs" title={null} client={props.client} success={props.success}></TabbedTable>}
+                <TabbedTable rows={jobRows} columns={jobColumns} type="Jobs" title={null} client={props.client} success={props.success} errorListing={jobsError} loadingList={jobsAreLoading}></TabbedTable>
             </TabPanel>
             <TabPanel value={value} index={2}>
-                {invoicesError && <Typography>{invoicesError}</Typography>}
-                {!invoicesAreLoaded && <Typography>Loading...</Typography>}
-                {invoicesAreLoaded && !invoicesError && <TabbedTable rows={invoiceRows} columns={invoiceColumns} type="Invoices" title={null}client={props.client} success={props.success}></TabbedTable>}
+                <TabbedTable rows={invoiceRows} columns={invoiceColumns} type="Invoices" title={null}client={props.client} success={props.success} errorListing={invoicesError} loadingList={invoicesAreLoading}></TabbedTable>
             </TabPanel>
         </Card>
     )

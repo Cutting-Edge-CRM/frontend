@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { listInvoices } from '../../api/invoice.api';
 import Table from '../../shared/Table'
@@ -6,30 +6,24 @@ import { invoiceColumns } from '../../util/columns';
 
 function Invoices(props: any) {
   const [rows, setRows] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState(null);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [rowCount, setRowCount] = useState(10);
+  const [rowCount, setRowCount] = useState(0);
+  const [invoicesAreLoading, setInvoicesAreLoading] = useState(true);
+  const [errorListingInvoices, setErrorListingInvoices] = useState(null);
 
   useEffect(() => {
     listInvoices(undefined, undefined, page, pageSize)
     .then((result) => {
-      setIsLoaded(true);
+      setInvoicesAreLoading(false);
       setRows(result?.rows);
       setRowCount(result?.rowCount?.[0]?.rowCount);
     }, (err) => {
-      setIsLoaded(true);
-      setError(err.message)
+      setInvoicesAreLoading(false);
+      setErrorListingInvoices(err.message)
     })
   }, [page, pageSize])
 
-  if (error) {
-    return (<Typography>{error}</Typography>);
-  }
-  if (!isLoaded) {
-    return (<Typography>Loading...</Typography>);
-  }
     return (
         
         <Box>
@@ -44,6 +38,8 @@ function Invoices(props: any) {
           setPageSize={setPageSize}
           rowCount={rowCount}
           success={props.success}
+          errorListing={errorListingInvoices}
+          listLoading={invoicesAreLoading}
           ></Table>
       </Box>
     )

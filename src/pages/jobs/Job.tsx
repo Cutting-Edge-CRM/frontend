@@ -7,7 +7,7 @@ import Notes from '../../shared/note/Notes';
 import JobDetails from './JobDetails';
 import { getJob } from '../../api/job.api';
 import { useParams } from 'react-router-dom';
-import { Typography } from '@mui/material';
+import { Alert, CircularProgress } from '@mui/material';
 import Property from '../../shared/property/Property';
 
 function Job(props: any) {
@@ -29,10 +29,10 @@ function Job(props: any) {
 
 
     if (error) {
-        return (<Typography>{error}</Typography>);
+        return (<Alert severity="error">{error}</Alert>);
         }
     if (!isLoaded) {
-        return (<Typography>Loading...</Typography>);
+        return (<CircularProgress />);
         }
     
     return (

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Button, Card, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Typography } from '@mui/material';
+import { Alert, Box, Button, Card, CircularProgress, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Typography } from '@mui/material';
 import { AddCircleOutlineOutlined, CreateOutlined, DeleteOutline, MoreVert } from '@mui/icons-material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import mapboxgl from 'mapbox-gl';
@@ -18,7 +18,7 @@ function Properties(props: any) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const isOpen = Boolean(anchorEl);
     const [rows, setRows] = useState([]);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [mapError, setMapError] = useState(null);
     const mapContainer = useRef<HTMLDivElement>(null);
@@ -60,12 +60,23 @@ function Properties(props: any) {
     };
 
     const handleRowClick = (event: any) => {
-        getCoords(event.row)
+        setMapError(null);
+        getCoords(event.row);
       }
 
     const getEmptyState = () => {
         return (<EmptyState type='properties'/>);
     }
+
+    const getErrorState = () => {
+        return (
+        <Alert severity="error">{error}</Alert>
+        );
+      }
+    
+      const getLoadingState = () => {
+        return (<CircularProgress />);
+      }
 
     const handleDeleteOpen = () => {
         setDeleteOpen(true);
@@ -142,7 +153,7 @@ function Properties(props: any) {
     useEffect(() => {
         const marker = new mapboxgl.Marker();
         try {
-            if (coords.length > 0) {
+            if (coords.length > 0 && !mapError) {
                 if (!map.current) {
                     map.current = new mapboxgl.Map({
                         container: mapContainer.current as HTMLDivElement,
@@ -158,18 +169,18 @@ function Properties(props: any) {
             }
         } catch (err: any) {
             console.error(err);
-            setMapError(err.message);
+            setMapError(err.message);            
         }
-    }, [coords]);
+    }, [coords, mapError]);
   
     useEffect(() => {
       listProperties(props.client)
       .then((result) => {
-        setIsLoaded(true);
+        setLoading(false);
         setRows(result);
         if (result[0]) getCoords(result[0]);
       }, (err) => {
-        setIsLoaded(true);
+        setLoading(false);
         setError(err.message)
       })
     }, [props, open, deleteOpen])
@@ -189,7 +200,13 @@ function Properties(props: any) {
                 return;
             }
         const feature = response.body.features[0];
-        setCoords(feature.center);
+        if (feature.relevance > 0.7) {
+            setCoords(feature.center);
+        } else {
+            setMapError('Not found' as any);
+            map.current = null;
+        }
+        
         });
     }
 
@@ -209,21 +226,21 @@ function Properties(props: any) {
                 }
             </Box>
             <Box>
-                {mapError && <Typography>{mapError}</Typography>}
+                {mapError && 
+                <Typography>Map not available for this property</Typography>
+                }
                 {!mapError && <div style={{height: coords.length > 0 ? 290 : 0}} ref={mapContainer} className="map-container" />}
             </Box>
             <Box>
-                {error && <Typography>{error}</Typography>}
-                {!isLoaded && <Typography>Loading...</Typography>}
-                {!error && isLoaded && 
                 <DataGrid
+                error={error}
+                loading={loading}
                 autoHeight
                 rows={rows}
                 columns={columns}
                 onRowClick={handleRowClick}
-                components={{NoRowsOverlay: getEmptyState}}
-                />}
-                
+                components={{NoRowsOverlay: getEmptyState, ErrorOverlay: getErrorState, LoadingOverlay: getLoadingState}}
+                />
             </Box>
             
             <EditProperty

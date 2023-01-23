@@ -1,5 +1,5 @@
 import { AddCircleOutlineOutlined } from '@mui/icons-material';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import mapboxgl from 'mapbox-gl';
 import * as React from 'react';
@@ -141,7 +141,7 @@ export default function SelectProperty(props: any) {
         <DialogTitle>Select property for {props.type.slice(0,-1)}</DialogTitle>
         <DialogContent>
         <Box sx={{ width: '100%' }}>
-          {!propertyIsLoaded && <Typography>Loading</Typography>}
+          {!propertyIsLoaded && <CircularProgress />}
           {propertyIsLoaded &&
             <DataGrid
             autoHeight

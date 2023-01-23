@@ -6,7 +6,7 @@ import Notes from '../../shared/note/Notes';
 import InvoiceDetails from './InvoiceDetails';
 import { getInvoice } from '../../api/invoice.api';
 import { useParams } from 'react-router-dom';
-import { Typography } from '@mui/material';
+import { Alert, CircularProgress } from '@mui/material';
 import { listTaxes } from '../../api/tax.api';
 import { listPayments } from '../../api/payment.api';
 
@@ -56,10 +56,10 @@ function Invoice(props: any) {
 
 
     if (error) {
-        return (<Typography>{error}</Typography>);
+        return (<Alert severity="error">{error}</Alert>);
         }
     if (!isLoaded) {
-        return (<Typography>Loading...</Typography>);
+        return (<CircularProgress />);
         }
     
     return (

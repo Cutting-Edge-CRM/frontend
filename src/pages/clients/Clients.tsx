@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Table from '../../shared/Table';
 import ImportClients from '../../shared/client/ImportClients';
@@ -10,11 +10,11 @@ function Clients(props: any) {
   const [open, setOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
   const [rows, setRows] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState(null);
+  const [clientsAreLoading, setClientsAreLoading] = useState(true);
+  const [errorListingClients, setErrorListingClients] = useState(null);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [rowCount, setRowCount] = useState(10);
+  const [rowCount, setRowCount] = useState(0);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -50,21 +50,15 @@ function Clients(props: any) {
   useEffect(() => {
     listClients(undefined, page, pageSize)
     .then((result) => {
-      setIsLoaded(true);
+      setClientsAreLoading(false);
       setRows(result?.rows);
       setRowCount(result?.rowCount?.[0]?.rowCount);
     }, (err) => {
-      setIsLoaded(true);
-      setError(err.message)
+      setClientsAreLoading(false);
+      setErrorListingClients(err.message);
     })
   }, [page, pageSize]);
 
-  if (error) {
-    return (<Typography>{error}</Typography>);
-  }
-  if (!isLoaded) {
-    return (<Typography>Loading...</Typography>);
-  }
     return (
         <Box>
           <Table 
@@ -80,6 +74,8 @@ function Clients(props: any) {
           rowCount={rowCount}
           handleExportClients={handleExportClients}
           success={props.success}
+          errorListing={errorListingClients}
+          listLoading={clientsAreLoading}
           ></Table>
           <ImportClients
             selectedValue={selectedValue}

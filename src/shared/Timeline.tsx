@@ -1,4 +1,4 @@
-import { Card, List, ListItem, Typography } from '@mui/material';
+import { Alert, Card, CircularProgress, List, ListItem, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 
@@ -39,10 +39,10 @@ function Timeline(props: any) {
     })
   
     if (error) {
-    return (<Typography>{error}</Typography>);
+    return (<Alert severity="error">{error}</Alert>);
     }
     if (!isLoaded) {
-    return (<Typography>Loading...</Typography>);
+    return (<CircularProgress />);
     }
 
     return (

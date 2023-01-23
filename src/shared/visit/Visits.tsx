@@ -1,5 +1,5 @@
 import { AddCircleOutlineOutlined, CalendarMonthOutlined, CreateOutlined, DeleteOutline, MoreVert } from '@mui/icons-material';
-import { Card, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from '@mui/material';
+import { Alert, Card, CircularProgress, Grid, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { listUsers } from '../../api/user.api';
 import { listVisits } from '../../api/visit.api';
@@ -11,7 +11,7 @@ import ConfirmDelete from '../ConfirmDelete';
 function Visits(props: any) {
     const [rows, setRows] = useState([] as any);
     const [open, setOpen] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [visit, setVisit] = useState({} as any);
     const [type, setType] = useState('');
@@ -74,10 +74,8 @@ function Visits(props: any) {
     useEffect(() => {
         listUsers()
         .then((result: any) => {
-          setIsLoaded(true);
           setUsers(result);
         }, (err) => {
-          setIsLoaded(true);
           setError(err.message)
         })
       }, [])
@@ -85,6 +83,7 @@ function Visits(props: any) {
     useEffect(() => {
         listVisits(props.client)
         .then((result) => {
+            setLoading(false);
             result = result.map((re: any) => {
                 return {
                     ...re,
@@ -94,15 +93,11 @@ function Visits(props: any) {
             })
           setRows(result);
         }, (err) => {
+            setLoading(false);
+            setError(err.message)
         })
       }, [props, open, deleteOpen])
 
-      if (error) {
-    return (<Typography>{error}</Typography>);
-    }
-    if (!isLoaded) {
-    return (<Typography>Loading...</Typography>);
-    }
     return (
         <Card>
             <Stack direction="row">
@@ -111,7 +106,10 @@ function Visits(props: any) {
                     <AddCircleOutlineOutlined />
                 </IconButton>
             </Stack>
-            <List>
+            {loading && (<CircularProgress />)}
+            {error && (<Alert severity="error">{error}</Alert>)}
+            {!loading && !error &&
+                <List>
                 {
                     rows.map((visit: any) => (
                         <ListItem key={visit.id}>
@@ -174,7 +172,7 @@ function Visits(props: any) {
                     ))
                 }
                 {rows.length === 0 && <Typography>This client doesn't have any visits yet, click the "+" icon to add one.</Typography>}
-            </List>
+            </List>}
             <EditVisit
             visit={visit}
             setVisit={setVisit}

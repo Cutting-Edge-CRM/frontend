@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
-import { Button, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Typography } from '@mui/material';
+import { Button, CircularProgress, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Typography } from '@mui/material';
 import { ImportExport, FileDownloadOutlined, FileUploadOutlined, AddCircleOutlineOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -29,6 +29,16 @@ export default function Table(props: any) {
 
   const getEmptyState = () => {
     return (<EmptyState type={`${props.client ? 'client-': ''}${(props.type as string)?.toLowerCase()}`}/>);
+  }
+
+  const getErrorState = () => {
+    return (
+    <><CustomToolbar /><Typography>{props.errorListing}</Typography></>
+    );
+  }
+
+  const getLoadingState = () => {
+    return (<CircularProgress />);
   }
 
   function CustomToolbar() {
@@ -91,6 +101,8 @@ export default function Table(props: any) {
   return (
     <Box>
       <DataGrid
+      error={props.errorListing}
+      loading={props.listLoading}
       autoHeight
       rows={props.rows}
       columns={props.columns}
@@ -102,7 +114,7 @@ export default function Table(props: any) {
       onPageChange={(newPage) => props.setPage(newPage)}
       onPageSizeChange={(newPageSize) => props.setPageSize(newPageSize)}
       paginationMode="server"
-      components={{ Toolbar: CustomToolbar , NoRowsOverlay: getEmptyState}}
+      components={{ Toolbar: CustomToolbar , NoRowsOverlay: getEmptyState, ErrorOverlay: getErrorState, LoadingOverlay: getLoadingState}}
       componentsProps={{
         toolbar: {
           showQuickFilter: true,

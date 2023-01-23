@@ -1,5 +1,5 @@
 import { AddCircleOutlineOutlined } from '@mui/icons-material';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import mapboxgl from 'mapbox-gl';
 import * as React from 'react';
@@ -45,8 +45,10 @@ export default function SelectClient(props: any) {
     const [activeStep, setActiveStep] = useState(0);
     const [clientRows, setClientRows] = useState([]);
     const [propertyRows, setPropertyRows] = useState([]);
-    const [clientIsLoaded, setClientIsLoaded] = useState(false);
-    const [propertyIsLoaded, setPropertyIsLoaded] = useState(false);
+    const [clientsAreLoading, setClientsAreLoading] = useState(false);
+    const [errorListingClients, setErrorListingClients] = useState(null);
+    const [propertiesAreLoading, setPropertiesAreLoading] = useState(true);
+    const [errorListingProperties, setErrorListingProperties] = useState(null);
     const [newClientOpen, setNewClientOpen] = useState(false);
     const [newPropertyOpen, setNewPropertyOpen] = useState(false);
     const navigate = useNavigate();
@@ -159,25 +161,43 @@ export default function SelectClient(props: any) {
       return (<EmptyState type='properties'/>);
     }
 
+    const getClientErrorState = () => {
+      return (
+      <><ClientToolbar /><Typography>{errorListingClients}</Typography></>
+      );
+    }
+
+    const getPropertyErrorState = () => {
+      return (
+      <><PropertyToolbar /><Typography>{errorListingProperties}</Typography></>
+      );
+    }
+  
+    const getLoadingState = () => {
+      return (<CircularProgress />);
+    }
+
       useEffect(() => {
         listClients()
         .then((result) => {
-          setClientIsLoaded(true);
+          setClientsAreLoading(false);
           setClientRows(result.rows)
         }, (err) => {
-            setClientIsLoaded(true);
+          setErrorListingClients(err.message);
+          setClientsAreLoading(false);
         })
       }, [newClientOpen])
 
       useEffect(() => {
-        setPropertyIsLoaded(false);
+        setPropertiesAreLoading(true);
         if (!client) return;
         listProperties(client.id)
         .then((result) => {
           setPropertyRows(result)
-          setPropertyIsLoaded(true);
+          setPropertiesAreLoading(false);
         }, (err) => {
-            setPropertyIsLoaded(true);
+          setErrorListingProperties(err.message);
+          setPropertiesAreLoading(false);
         })
       }, [client, activeStep, newPropertyOpen])
 
@@ -192,41 +212,41 @@ export default function SelectClient(props: any) {
         </Stepper><React.Fragment>
             {activeStep === 0 ? (
               <Box>
-                {!clientIsLoaded && <Typography>Loading</Typography>}
-                {clientIsLoaded &&
                   <DataGrid
                     autoHeight
                     rows={clientRows}
                     columns={clientColumns}
                     pageSize={10}
                     rowsPerPageOptions={[10, 20, 50]}
-                    components={{ Toolbar: ClientToolbar, NoRowsOverlay: getClientEmptyState }}
+                    loading={clientsAreLoading}
+                    error={errorListingClients}
+                    components={{ Toolbar: ClientToolbar, NoRowsOverlay: getClientEmptyState, ErrorOverlay: getClientErrorState, LoadingOverlay: getLoadingState }}
                     componentsProps={{
                       toolbar: {
                         showQuickFilter: true,
                         quickFilterProps: { debounceMs: 500 },
                       }, ...props
                     }}
-                    onRowClick={handleClientRowClick} />}
+                    onRowClick={handleClientRowClick} />
               </Box>
             ) : (
               <Box>
-                {!propertyIsLoaded && <Typography>Loading</Typography>}
-                {propertyIsLoaded &&
                   <DataGrid
-                  autoHeight
+                    autoHeight
                     rows={propertyRows}
                     columns={propertyColumns}
                     pageSize={10}
                     rowsPerPageOptions={[10, 20, 50]}
-                    components={{ Toolbar: PropertyToolbar, NoRowsOverlay: getPropertiesEmptyState }}
+                    loading={propertiesAreLoading}
+                    error={errorListingProperties}
+                    components={{ Toolbar: PropertyToolbar, NoRowsOverlay: getPropertiesEmptyState, ErrorOverlay: getPropertyErrorState, LoadingOverlay: getLoadingState }}
                     componentsProps={{
                       toolbar: {
                         showQuickFilter: true,
                         quickFilterProps: { debounceMs: 500 },
                       }, ...props
                     }}
-                    onRowClick={handlePropertyRowClick} />}
+                    onRowClick={handlePropertyRowClick} />
 
               </Box>
             )}
@@ -259,21 +279,21 @@ export default function SelectClient(props: any) {
           {(props.type === 'Quotes' || props.type === 'Jobs') && <SelectStepper props={props}/>}
           {props.type === 'Invoices' &&
           <Box sx={{ height: 400, width: '100%' }}>
-                {!clientIsLoaded && <Typography>Loading</Typography>}
-                {clientIsLoaded &&
                   <DataGrid
                     rows={clientRows}
                     columns={clientColumns}
                     pageSize={10}
                     rowsPerPageOptions={[10, 20, 50]}
-                    components={{ Toolbar: ClientToolbar }}
+                    components={{ Toolbar: ClientToolbar, NoRowsOverlay: getClientEmptyState, ErrorOverlay: getClientErrorState, LoadingOverlay: getLoadingState }}
+                    loading={clientsAreLoading}
+                    error={errorListingClients}
                     componentsProps={{
                       toolbar: {
                         showQuickFilter: true,
                         quickFilterProps: { debounceMs: 500 },
                       }, ...props
                     }}
-                    onRowClick={handleClientRowClick} />}
+                    onRowClick={handleClientRowClick} />
             </Box>}
         </Box>
         </DialogContent>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
-import { Button, Divider, Typography } from '@mui/material';
+import { Button, CircularProgress, Divider, Typography } from '@mui/material';
 import { AddCircleOutlineOutlined } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -35,6 +35,16 @@ export default function Table(props: any) {
     return (<EmptyState type={`${props.client ? 'client-': ''}${(props.type as string)?.toLowerCase()}`}/>);
   }
 
+  const getErrorState = () => {
+    return (
+    <><CustomToolbar /><Typography>{props.errorListing}</Typography></>
+    );
+  }
+
+  const getLoadingState = () => {
+    return (<CircularProgress />);
+  }
+
   function CustomToolbar() {
 
     return (
@@ -58,10 +68,12 @@ export default function Table(props: any) {
   return (
     <Box>
       <DataGrid
+      error={props.errorListing}
+      loading={props.loadingList}
       autoHeight
       rows={props.rows}
       columns={props.columns}
-      components={{ Toolbar: CustomToolbar , NoRowsOverlay: getEmptyState}}
+      components={{ Toolbar: CustomToolbar , NoRowsOverlay: getEmptyState, ErrorOverlay: getErrorState, LoadingOverlay: getLoadingState}}
       componentsProps={{
         toolbar: {
           showQuickFilter: true,
