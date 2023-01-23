@@ -23,6 +23,7 @@ function Invoices(props: any) {
       setErrorListingInvoices(err.message)
     })
   }, [page, pageSize])
+  
 
     return (
         
