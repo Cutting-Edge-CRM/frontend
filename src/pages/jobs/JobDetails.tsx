@@ -1,5 +1,5 @@
 import { AddCircleOutlineOutlined, AttachMoneyOutlined, Check, ContentCopyOutlined, DeleteOutline, MoreVert, PersonOutline } from '@mui/icons-material';
-import { Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, Link, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Button, Card, Chip, Divider, Grid, IconButton, InputAdornment, LinearProgress, Link, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createInvoice, updateInvoice } from '../../api/invoice.api';
@@ -121,6 +121,8 @@ function JobDetails(props: any) {
     const [deleteOpen, setDeleteOpen] = useState(false);
     const navigate = useNavigate();
     const [duplicateOpen, setDuplicateOpen] = useState(false);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
 
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -132,10 +134,14 @@ function JobDetails(props: any) {
 
     const handleEditting = () => {
         if (editting) {
+            setLoading(true);
             updateJob(props.job)
             .then(res => {
+                setLoading(false);
                 props.success('Successfully updated job');
             }, err => {
+                setLoading(false);
+                setError(err.message);
             })
         }
         setEditting(!editting);
@@ -213,6 +219,7 @@ function JobDetails(props: any) {
 
     return (
         <Card>
+            {loading && <LinearProgress />}
             <Stack direction="row">
                 <Typography>Job Details</Typography>
                 <Button onClick={handleEditting}>{editting ? 'Save Changes' : 'Edit Job'}</Button>
@@ -301,6 +308,7 @@ function JobDetails(props: any) {
                 <Typography>Subtotal</Typography>
                 <Typography>${props.job.items.map((i: any) => i.price).reduce(add, 0)}</Typography>
             </Stack>
+            {error && <Alert severity="error">{error}</Alert>}
             <ConfirmDelete
             open={deleteOpen}
             onClose={handleDeleteClose}

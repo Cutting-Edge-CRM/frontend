@@ -1,5 +1,5 @@
 import { AddCircleOutlineOutlined } from '@mui/icons-material';
-import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper, Typography } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress, Step, StepLabel, Stepper, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import mapboxgl from 'mapbox-gl';
 import * as React from 'react';
@@ -52,6 +52,8 @@ export default function SelectClient(props: any) {
     const [newClientOpen, setNewClientOpen] = useState(false);
     const [newPropertyOpen, setNewPropertyOpen] = useState(false);
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const handleCancel = () => {
         props.onClose();
@@ -68,6 +70,7 @@ export default function SelectClient(props: any) {
     }
 
     const handlePropertyRowClick = (event: any) => {
+      setLoading(true);
       setProperty(event.row);
       switch (props.type) {
         case 'Jobs':
@@ -84,12 +87,16 @@ export default function SelectClient(props: any) {
             updatingJob.items = [{job: res.id, price: 0}]
             updateJob(updatingJob)
             .then(_ => {
+              setLoading(false);
               navigate(`/jobs/${res.id}`);
               props.success('Successfully created new job');
             }, err => {
-    
+              setLoading(false);
+              setError(err.message);
             })
           }, (err: any) => {
+            setLoading(false);
+            setError(err.message);
           })
           
           break;
@@ -113,12 +120,16 @@ export default function SelectClient(props: any) {
             }]
             updateQuote(updatingQuote)
             .then(_ => {
+              setLoading(false);
               navigate(`/quotes/${res.id}`);
               props.success('Successfully created new quote');
             }, err => {
-    
+              setLoading(false);
+              setError(err.message);
             })
           }, err => {
+            setLoading(false);
+            setError(err.message);
           })
           break;
         default:
@@ -275,6 +286,7 @@ export default function SelectClient(props: any) {
       <Dialog onClose={handleCancel} open={props.open}>
         <DialogTitle>Select client for {props.type.slice(0,-1)}</DialogTitle>
         <DialogContent>
+        {loading && <LinearProgress />}
         <Box sx={{ width: '100%' }}>
           {(props.type === 'Quotes' || props.type === 'Jobs') && <SelectStepper props={props}/>}
           {props.type === 'Invoices' &&
@@ -307,6 +319,7 @@ export default function SelectClient(props: any) {
             Back
           </Button>
           <Box sx={{ flex: '1 1 auto' }} />
+          {error && <Alert severity="error">{error}</Alert>}
         </DialogActions>
         <NewClient
             open={newClientOpen}

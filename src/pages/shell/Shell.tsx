@@ -246,7 +246,7 @@ function Shell() {
             <Route path="/settings" element={<Settings success={success}/>}/>
             <Route path="/" element={<Dashboard success={success}/>}/>
         </Routes>
-        <Snackbar open={successOpen} autoHideDuration={4000} onClose={handleSuccessClose}>
+        <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} open={successOpen} autoHideDuration={4000} onClose={handleSuccessClose}>
             <Alert onClose={handleSuccessClose} severity="success" sx={{ width: '100%' }}>
               {successMessage}
             </Alert>

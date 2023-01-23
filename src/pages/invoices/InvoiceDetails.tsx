@@ -1,5 +1,5 @@
 import { AddCircleOutlineOutlined, AttachMoney, DeleteOutline, FileDownloadOutlined, MarkEmailReadOutlined, MoneyOffOutlined, MoreVert, PersonOutline, SendOutlined } from '@mui/icons-material';
-import { Box, Button, Card, Checkbox, Chip, Divider, Grid, IconButton, InputAdornment, Link, List, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Card, Checkbox, Chip, Divider, Grid, IconButton, InputAdornment, LinearProgress, Link, List, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, TextField, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -125,6 +125,8 @@ function InvoiceDetails(props: any) {
     const [payment, setPayment] = useState({} as any);
     const [paymentOpen, setPaymentOpen] = useState(false);
     const [type, setType] = useState('');
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -135,10 +137,14 @@ function InvoiceDetails(props: any) {
 
     const handleEditting = () => {
         if (editting) {
+            setLoading(true);
             updateInvoice(props.invoice)
             .then(res => {
+                setLoading(false);
                 props.success('Successfully updated invoice');
             }, err => {
+                setLoading(false);
+                setError(err.message);
             })
         }
         setEditting(!editting);
@@ -220,6 +226,7 @@ function InvoiceDetails(props: any) {
 
     return (
         <Card>
+            {loading && <LinearProgress />}
             <Stack direction="row">
                 <Typography>Invoice Details</Typography>
                 <Button onClick={handleEditting}>{editting ? 'Save Changes' : 'Edit Invoice'}</Button>
@@ -353,6 +360,7 @@ function InvoiceDetails(props: any) {
                     </ListItemButton>
                 ))}
             </List>
+            {error && <Alert severity="error">{error}</Alert>}
             <ConfirmDelete
             open={deleteOpen}
             onClose={handleDeleteClose}

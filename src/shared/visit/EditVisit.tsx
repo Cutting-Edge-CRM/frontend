@@ -1,5 +1,5 @@
 import { PersonOutline } from '@mui/icons-material';
-import { Alert, Box, Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, InputAdornment, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField } from '@mui/material';
+import { Alert, Box, Button, Checkbox, Chip, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, InputAdornment, InputLabel, LinearProgress, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import * as React from 'react';
@@ -10,6 +10,7 @@ import TimePicker from './TimePicker';
   
 export default function EditVisit(props: any) {
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [properties, setProperties] = useState([] as any[])
   
     const handleCancel = () => {
@@ -17,23 +18,28 @@ export default function EditVisit(props: any) {
     };
 
     const handleSave = () => {
+      setLoading(true);
       if (props.type === 'edit') {
         // save value
         updateVisit({...props.visit, client: props.client, start: convertToDate('start'), end: convertToDate('end')})
         .then(res => {
+            setLoading(false);
             props.update(res);
             props.success('Successfully updated visit');
         }, (err) => {
-          setError(err.message)
+          setLoading(false);
+          setError(err.message);
         })
       }
       if (props.type === 'new') {
           // save value
           createVisit({...props.visit, client: props.client, start: convertToDate('start'), end: convertToDate('end')})
           .then(res => {
+              setLoading(false);
               props.create(res);
               props.success('Successfully created new visit');
           }, (err) => {
+            setLoading(false);
             setError(err.message)
           })
       }
@@ -110,6 +116,7 @@ export default function EditVisit(props: any) {
       <Dialog onClose={handleCancel} open={props.open}>
         <DialogTitle>{props.type === 'edit' ? "Edit Visit" : "Create New Visit"}</DialogTitle>
         <DialogContent>
+          {loading && <LinearProgress />}
             <Stack spacing={2}>
                 <TextField
                 id="name" 

@@ -1,5 +1,5 @@
 import { AddCircleOutlineOutlined, ArchiveOutlined, AttachMoney, Check, ContentCopyOutlined, DeleteOutline, FileDownloadOutlined, FormatPaintOutlined, MarkEmailReadOutlined, MoreVert, PersonOutline, SendOutlined, ThumbDownAltOutlined } from '@mui/icons-material';
-import { Box, Button, Card, Checkbox, Chip, Divider, Grid, IconButton, InputAdornment, Link, List, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, Switch, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Card, Checkbox, Chip, Divider, Grid, IconButton, InputAdornment, LinearProgress, Link, List, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Select, Stack, Switch, Tab, Tabs, TextField, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -314,6 +314,8 @@ function QuoteDetails(props: any) {
     const [payment, setPayment] = useState({} as any);
     const [paymentOpen, setPaymentOpen] = useState(false);
     const [type, setType] = useState('');
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
 
     const handleChange = (event: React.SyntheticEvent, newValue: any) => {
@@ -335,10 +337,14 @@ function QuoteDetails(props: any) {
 
     const handleEditting = () => {
         if (editting) {
+            setLoading(true);
             updateQuote(props.quote)
             .then(res => {
+                setLoading(false);
                 props.success('Successfully updated quote');
             }, err => {
+                setLoading(false);
+                setError(err.message);
             })
         }
         setEditting(!editting);
@@ -446,6 +452,7 @@ function QuoteDetails(props: any) {
 
     return (
         <Card>
+            {loading && <LinearProgress />}
             <Stack direction="row">
                 <Typography>Quote Details</Typography>
                 <Button onClick={handleEditting}>{editting ? 'Save Changes' : 'Edit Quote'}</Button>
@@ -574,6 +581,7 @@ function QuoteDetails(props: any) {
                     </ListItemButton>
                 ))}
             </List>
+            {error && <Alert severity="error">{error}</Alert>}
             <ConfirmDelete
             open={deleteOpen}
             onClose={handleDeleteClose}

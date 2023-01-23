@@ -1,4 +1,4 @@
-import { Alert, Button, Dialog, DialogActions, DialogContent, Typography } from '@mui/material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, LinearProgress, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { deleteClient } from '../api/client.api';
 import { deleteJob } from '../api/job.api';
@@ -10,14 +10,16 @@ import { deleteVisit } from '../api/visit.api';
 export default function ConfirmDelete(props: any) {
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
-    const [error, setError] = useState(null);
     const [deleteable, setDeletable] = useState('');
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const handleCancel = () => {
         props.onClose();
       };
   
     const handleDelete = () => {
+        setLoading(true);
         let response = {} as Promise<any>;
         switch (props.type) {
             case 'quotes':
@@ -46,10 +48,12 @@ export default function ConfirmDelete(props: any) {
         }
         response
         .then(res => {
+            setLoading(false);
             props.onDelete();
             props.onClose();
             props.success(`Successfully deleted ${props.type}`);
         }, err => {
+            setLoading(false);
             setError(err.message);
         });
       };
@@ -93,6 +97,7 @@ export default function ConfirmDelete(props: any) {
     return (
     <Dialog onClose={handleCancel} open={props.open}>
         <DialogContent>
+            {loading && <LinearProgress />}
             <Typography>{title}</Typography>
             <Typography>{body}</Typography>
         </DialogContent>

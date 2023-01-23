@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Dialog, DialogContent, DialogTitle, Divider, InputLabel, List, ListItem, MenuItem, Select, SelectChangeEvent, Step, StepLabel, Stepper, Typography } from '@mui/material';
+import { Alert, Box, Button, Dialog, DialogContent, DialogTitle, Divider, InputLabel, LinearProgress, List, ListItem, MenuItem, Select, SelectChangeEvent, Step, StepLabel, Stepper, Typography } from '@mui/material';
 import * as React from 'react';
 import { useCallback, useState, useReducer } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -217,6 +217,7 @@ export default function ImportClients(props: any) {
       <Dialog onClose={handleClose} open={open}>
         <DialogTitle>Set backup account</DialogTitle>
         <DialogContent>
+        {loading && <LinearProgress />}
         <Box sx={{ width: '100%' }}>
       <Stepper activeStep={activeStep}>
         <Step>
@@ -301,7 +302,6 @@ export default function ImportClients(props: any) {
         </React.Fragment>
     </Box>
         </DialogContent>
-        {loading && <Typography>Importing...</Typography>}
         {error && <Alert severity="error">{error}</Alert>}
       </Dialog>
     );

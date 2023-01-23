@@ -1,5 +1,5 @@
 import { AddCircleOutlineOutlined } from '@mui/icons-material';
-import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress, Step, StepLabel, Stepper } from '@mui/material';
 import { DataGrid, GridColDef, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import mapboxgl from 'mapbox-gl';
 import * as React from 'react';
@@ -50,6 +50,8 @@ export default function SelectClient(props: any) {
     const [newClientOpen, setNewClientOpen] = useState(false);
     const [newPropertyOpen, setNewPropertyOpen] = useState(false);
     const navigate = useNavigate();
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const handleCancel = () => {
         props.onClose();
@@ -66,6 +68,7 @@ export default function SelectClient(props: any) {
     }
 
     const handlePropertyRowClick = (event: any) => {
+      setLoading(true);
       setProperty(event.row);
       switch (props.type) {
         case 'Job':
@@ -82,13 +85,17 @@ export default function SelectClient(props: any) {
             updatingJob.items = props.job.items;
             updateJob(updatingJob)
             .then(_ => {
+                setLoading(false);
                 props.onClose();
                 navigate(`/jobs/${res.id}`);
                 props.success('Successfully duplicated job');
             }, err => {
-    
+              setError(err.message);
+              setLoading(false);
             })
           }, (err: any) => {
+            setLoading(false);
+            setError(err.message);
           })
           
           break;
@@ -106,13 +113,17 @@ export default function SelectClient(props: any) {
             updatingQuote.options = props.quote.options;
             updateQuote(updatingQuote)
             .then(_ => {
+                setLoading(false);
                 props.onClose();
                 navigate(`/quotes/${res.id}`);
                 props.success('Successfully duplicated quote');
             }, err => {
-    
+              setLoading(false);
+              setError(err.message);
             })
           }, err => {
+            setLoading(false);
+            setError(err.message);
           })
           break;
         default:
@@ -251,6 +262,7 @@ export default function SelectClient(props: any) {
       <Dialog onClose={handleCancel} open={props.open}>
         <DialogTitle>Select client for {props.type}</DialogTitle>
         <DialogContent>
+        {loading && <LinearProgress />}
         <Box sx={{ width: '100%' }}>
           {(props.type === 'Quote' || props.type === 'Job') && <SelectStepper props={props}/>}
         </Box>
@@ -265,6 +277,7 @@ export default function SelectClient(props: any) {
             Back
           </Button>
           <Box sx={{ flex: '1 1 auto' }} />
+          {error && <Alert severity="error">{error}</Alert>}
         </DialogActions>
         <NewClient
             open={newClientOpen}

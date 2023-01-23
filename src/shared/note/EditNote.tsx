@@ -1,5 +1,5 @@
 import { AddAPhotoOutlined, Close } from '@mui/icons-material';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, ImageList, ImageListItem, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, ImageList, ImageListItem, LinearProgress, Stack, TextField, Typography } from '@mui/material';
 import * as React from 'react';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -8,7 +8,8 @@ import { createNote, updateNote } from '../../api/note.api';
 
 export default function EditNote(props: any) {
   const [loadingFiles, setLoadingFiles] = useState(false);
-  const [savingNote, setSavingNote] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleCancel = () => {
       props.onClose();
@@ -16,38 +17,42 @@ export default function EditNote(props: any) {
 
   const handleSave = () => {
       if (props.type === 'edit') {
-        setSavingNote(true);
+        setLoading(true);
         updateImagesInCloudinary(props.fileURLs, props.originalImages)
         .then(res => {
           updateNote({...props.note, images: res})
           .then(res => {
-            setSavingNote(false);
+            setLoading(false);
             props.onClose();
             props.success('Successfully updated note');
           }, err => {
-            setSavingNote(false);
+            setLoading(false);
+            setError(err.message);
             console.log("error" + err.message);
           })
         }, err => {
-            setSavingNote(false);
+            setLoading(false);
+            setError(err.message);
             console.log("error" + err.message);
         })
       }
       if (props.type === 'new') {
-        setSavingNote(true);
+        setLoading(true);
         saveImagesCloudinary(props.fileURLs)
         .then(res => {
           createNote({...props.note, images: res})
           .then(res => {
-            setSavingNote(false);
+            setLoading(false);
             props.onClose();
             props.success('Successfully created new note');
           }, err => {
-            setSavingNote(false);
+            setError(err.message);
+            setLoading(false);
             console.log("error" + err.message);
           })
         }, err => {
-            setSavingNote(false);
+            setError(err.message);
+            setLoading(false);
             console.log("error" + err.message);
         })
       } 
@@ -102,6 +107,7 @@ export default function EditNote(props: any) {
       <Dialog onClose={handleCancel} open={props.open}>
         <DialogTitle>Edit Note</DialogTitle>
         <DialogContent>
+        {loading && <LinearProgress />}
             <Stack spacing={2}>
                 <TextField
                 id="title" 
@@ -153,7 +159,7 @@ export default function EditNote(props: any) {
             <Button onClick={handleCancel}>Cancel</Button>
             <Button onClick={handleSave}>Save Changes</Button>
         </DialogActions>
-        {savingNote && <Typography>Saving...</Typography>}
+        {error && <Alert severity="error">{error}</Alert>}
       </Dialog>
     );
   }

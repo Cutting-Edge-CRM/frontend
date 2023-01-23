@@ -1,6 +1,6 @@
 import { AddressAutofill } from '@mapbox/search-js-react';
 import { AddCircleOutlineOutlined, EmailOutlined, PersonOutline, PhoneOutlined } from '@mui/icons-material';
-import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, Stack, Step, StepLabel, Stepper, TextField } from '@mui/material';
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, LinearProgress, Stack, Step, StepLabel, Stepper, TextField } from '@mui/material';
 import mapboxgl from 'mapbox-gl';
 import * as React from 'react';
 import { useState } from 'react';
@@ -18,7 +18,7 @@ export default function NewClient(props: any) {
     const [activeStep, setActiveStep] = useState(0);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-
+    const [loading, setLoading] = useState(false);
 
     const handleCancel = () => {
         props.onClose();
@@ -27,6 +27,7 @@ export default function NewClient(props: any) {
       };
   
       const handleSave = () => {
+        setLoading(true);
         let contacts = contact.contacts?.filter((con: any) => con.content.length > 0)
         setContact({...contact, contacts: contacts});
         createClient(contact)
@@ -34,17 +35,21 @@ export default function NewClient(props: any) {
           if (propValid()) {
             createProperty({client: res.id, ...property})
             .then(propRes => {
+              setLoading(false);
               navigate(`/clients/${res.id}`);
               props.success('Client created successfully');
             }, (propErr) => {
+              setLoading(false);
               setError(propErr.message);
             })
           } else {
+            setLoading(false);
             navigate(`/clients/${res.id}`);
             props.success('Client created successfully');
           }
         }, (err) => {
           setError(err.message);
+          setLoading(false);
         })
       };
 
@@ -174,6 +179,7 @@ export default function NewClient(props: any) {
       <Dialog onClose={handleCancel} open={props.open}>
         <DialogTitle>Create new client</DialogTitle>
         <DialogContent>
+        {loading && <LinearProgress />}
         <Box sx={{ width: '100%' }}>
         <Stepper activeStep={activeStep}>
             <Step>

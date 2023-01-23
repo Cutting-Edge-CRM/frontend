@@ -1,4 +1,4 @@
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from '@mui/material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress, Stack, TextField } from '@mui/material';
 import * as React from 'react';
 import { AddressAutofill } from '@mapbox/search-js-react';
 import { createProperty, updateProperty } from '../../api/property.api';
@@ -6,18 +6,22 @@ import { useState } from 'react';
 
 export default function EditProperty(props: any) {
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   
     const handleCancel = () => {
       props.onClose();
     };
     const handleSave = () => {
+      setLoading(true);
       if (props.modalType === 'edit') {
         // save value
         updateProperty({...props.property, client: props.client})
         .then(res => {
+            setLoading(false);
             props.update(res);
             props.success('Successfully updated property');
         }, (err) => {
+          setLoading(false);
           setError(err.message)
         })
       }
@@ -25,10 +29,12 @@ export default function EditProperty(props: any) {
           // save value
           createProperty({...props.property, client: props.client})
           .then(res => {
+              setLoading(false);
               props.create(res);
               props.success('Successfully created property');
           }, (err) => {
-            setError(err.message)
+            setLoading(false);
+            setError(err.message);
           })
       }
     };
@@ -41,6 +47,7 @@ export default function EditProperty(props: any) {
       <Dialog onClose={handleCancel} open={props.open}>
         <DialogTitle>{props.modalType === 'edit' ? "Edit Property" : "Create New Property"}</DialogTitle>
         <DialogContent>
+        {loading && <LinearProgress />}
           <form>
           <AddressAutofill accessToken={props.token}>
             <Stack spacing={2}>

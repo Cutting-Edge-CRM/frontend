@@ -1,5 +1,5 @@
 import { AddCircleOutlineOutlined, EmailOutlined, PersonOutline, PhoneOutlined } from '@mui/icons-material';
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, Stack, TextField } from '@mui/material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, LinearProgress, Stack, TextField } from '@mui/material';
 import * as React from 'react';
 import { useState } from 'react';
 import RegexParser from 'regex-parser';
@@ -8,21 +8,25 @@ import { updateClient } from '../../api/client.api';
   
 export default function EditContact(props: any) {
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
     const handleCancel = () => {
       props.onClose();
     };
 
     const handleSave = () => {
+      setLoading(true);
       let contacts = props.contact.contacts.filter((con: any) => con.content.length > 0)
       props.setContact({...props.contact, contacts: contacts});
       console.log(props.contact);
       updateClient(props.contact)
       .then(res => {
+        setLoading(false);
         props.update();
         props.success('Successfully updated client');
       }, (err) => {
-        setError(err.message)
+        setLoading(false);
+        setError(err.message);
       })
     };
 
@@ -137,6 +141,7 @@ export default function EditContact(props: any) {
       <Dialog onClose={handleCancel} open={props.open}>
         <DialogTitle>Client Info</DialogTitle>
         <DialogContent>
+          {loading && <LinearProgress />}
             <Stack spacing={2}>
               <Stack direction={'row'}>
               <TextField
