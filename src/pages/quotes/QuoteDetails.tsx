@@ -323,7 +323,13 @@ function QuoteDetails(props: any) {
     const handleChange = (event: React.SyntheticEvent, newValue: any) => {
         if (newValue === 'add') {
             let options = props.quote.options;
-            options.push({items: []});
+            options.push(
+            {
+                deposit: 0,
+                depositPercent: 0,
+                tax: null,
+                items: [{ price: 0}]
+              });
             setValue(props.quote.options.length-1);
         } else {
             setValue(newValue);
@@ -418,6 +424,7 @@ function QuoteDetails(props: any) {
         props.quote.quote.status = status;
         updateQuote(props.quote)
         .then(res => {
+            props.success('Status updated successfully');
         }, err => {
         })
     }
@@ -562,7 +569,7 @@ function QuoteDetails(props: any) {
                     <Typography>11/27/2022</Typography>
                 </Stack>
                 <Stack>
-                    <Typography>From</Typography>
+                    <Typography>Used For</Typography>
                     {props.quote.quote.job ? <Link href={`/jobs/${props.quote.quote.job}`}>Job</Link> : <Typography>-</Typography>}
                 </Stack>
                 <Stack>

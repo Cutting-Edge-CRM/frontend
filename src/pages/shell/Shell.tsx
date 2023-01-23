@@ -8,7 +8,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { AttachMoney, FormatPaintOutlined, PeopleOutlineOutlined, CalendarMonthOutlined, TrendingUpOutlined, SellOutlined, AccessTimeOutlined, SummarizeOutlined, SettingsOutlined } from '@mui/icons-material';
+import { AttachMoney, FormatPaintOutlined, PeopleOutlineOutlined, CalendarMonthOutlined, TrendingUpOutlined, SellOutlined, AccessTimeOutlined, SummarizeOutlined, SettingsOutlined, Settings as SettingsIcon } from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu'
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -180,7 +180,7 @@ function Shell() {
         <Divider />
         <MenuItem>
           <ListItemIcon>
-            <Settings fontSize="small" />
+            <SettingsIcon fontSize="small" />
           </ListItemIcon>
           Settings
         </MenuItem>

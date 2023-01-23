@@ -217,6 +217,7 @@ function InvoiceDetails(props: any) {
         props.invoice.invoice.status = status;
         updateInvoice(props.invoice)
         .then(res => {
+            props.success('Status updated successfully');
         }, err => {
         })
     }
@@ -252,8 +253,8 @@ function InvoiceDetails(props: any) {
                         onClose={closeMenu}
                     >
                         <MenuList>
-                            <MenuItem>
-                                <ListItemIcon onClick={() => markInvoiceAs('Awaiting Payment')}>
+                            <MenuItem onClick={() => markInvoiceAs('Awaiting Payment')}>
+                                <ListItemIcon>
                                     <MarkEmailReadOutlined />
                                 </ListItemIcon>
                                 <ListItemText>Mark as Sent</ListItemText>
@@ -306,7 +307,7 @@ function InvoiceDetails(props: any) {
                 </Stack>
                 <Stack>
                     <Typography>Status</Typography>
-                    <Chip label="Upcoming"/>
+                    <Chip label={props.invoice.invoice.status}/>
                 </Stack>
             </Stack>
             {editting && 

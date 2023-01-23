@@ -47,7 +47,7 @@ export default function SelectProperty(props: any) {
           let job: any = {
             client: props.client,
             property: event.row.id,
-            status: 'unscheduled',
+            status: 'Active',
           };
           createJob(job)
           .then(res => {
@@ -74,7 +74,7 @@ export default function SelectProperty(props: any) {
           let quote: any = {
             client: props.client,
             property: event.row.id,
-            status: 'draft',
+            status: 'Draft',
           };
           createQuote(quote)
           .then(res => {

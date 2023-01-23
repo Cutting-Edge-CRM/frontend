@@ -16,7 +16,6 @@ export default function PaymentModal(props: any) {
         if (props.type === 'new') {
             createPayment(props.payment)
             .then(res => {
-                console.log(res);
                 props.onClose();
                 props.success('Successfully recorded payment');
             }, err => {

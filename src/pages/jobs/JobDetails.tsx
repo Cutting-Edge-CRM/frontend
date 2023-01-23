@@ -189,6 +189,7 @@ function JobDetails(props: any) {
         props.job.job.status = status;
         updateJob(props.job)
         .then(res => {
+            props.success('Status updated successfully');
         }, err => {
         })
     }
