@@ -14,7 +14,7 @@ async function createClient(client: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`http://localhost:3000/clients/create-client`);
+        let url = new URL(`https://sern-371617.uc.r.appspot.com/clients/create-client`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -42,7 +42,7 @@ async function getClient(id: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL(`http://localhost:3000/clients/get-client/${id}`);
+        let url = new URL(`https://sern-371617.uc.r.appspot.com/clients/get-client/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -73,7 +73,7 @@ async function updateClient(client: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`http://localhost:3000/clients/update-client/${client.id}`);
+        let url = new URL(`https://sern-371617.uc.r.appspot.com/clients/update-client/${client.id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -101,7 +101,7 @@ async function deleteClient(id: any) {
         method: 'POST',
         headers: headers,
     };
-        let url = new URL(`http://localhost:3000/clients/delete-client/${id}`);
+        let url = new URL(`https://sern-371617.uc.r.appspot.com/clients/delete-client/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -129,7 +129,7 @@ async function listClients( query?: string, page?: number, pageSize?: number) {
         method: 'GET',
         headers: headers,
     };
-    let url = new URL(`http://localhost:3000/clients/list-clients`);
+    let url = new URL(`https://sern-371617.uc.r.appspot.com/clients/list-clients`);
     if (page) url.searchParams.set('page', `${page}`);
     if (pageSize) url.searchParams.set('pageSize', `${pageSize}`);
     if (query) url.searchParams.set('query', query);
@@ -162,7 +162,7 @@ async function importClients(clients: any[]) {
         headers: headers,
         body: body
     };
-        let url = new URL(`http://localhost:3000/clients/import-clients`);
+        let url = new URL(`https://sern-371617.uc.r.appspot.com/clients/import-clients`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -190,7 +190,7 @@ async function exportClients() {
         method: 'GET',
         headers: headers,
     };
-    let url = new URL(`http://localhost:3000/clients/export-clients`);
+    let url = new URL(`https://sern-371617.uc.r.appspot.com/clients/export-clients`);
     return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {

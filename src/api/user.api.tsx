@@ -15,7 +15,7 @@ async function addUserToTenant(tenantId: string, email: string, uid: string) {
         headers: headers,
         body: body,
     };
-        let res = await fetch('http://localhost:3000/users/add-user-to-tenant', requestOptions);
+        let res = await fetch('https://sern-371617.uc.r.appspot.com/users/add-user-to-tenant', requestOptions);
         return await res.json();
     } catch (err) {
         console.error(err);
@@ -39,7 +39,7 @@ async function inviteUser(email: string, name: string, uid: string) {
         headers: headers,
         body: body,
     };
-        let res = await fetch('http://localhost:3000/users/invite-user', requestOptions);
+        let res = await fetch('https://sern-371617.uc.r.appspot.com/users/invite-user', requestOptions);
         return await res.json();
     } catch (err) {
         console.error(err);
@@ -58,7 +58,7 @@ async function listUsers() {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL('http://localhost:3000/users/list-users');
+        let url = new URL('https://sern-371617.uc.r.appspot.com/users/list-users');
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {

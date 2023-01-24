@@ -14,7 +14,7 @@ async function createQuote(quote: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`http://localhost:3000/quotes/create-quote`);
+        let url = new URL(`https://sern-371617.uc.r.appspot.com/quotes/create-quote`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -42,7 +42,7 @@ async function getQuote(id?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL(`http://localhost:3000/quotes/get-quote/${id}`);
+        let url = new URL(`https://sern-371617.uc.r.appspot.com/quotes/get-quote/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -72,7 +72,7 @@ async function updateQuote(quote: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`http://localhost:3000/quotes/update-quote/${quote.quote.id}`);
+        let url = new URL(`https://sern-371617.uc.r.appspot.com/quotes/update-quote/${quote.quote.id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -100,7 +100,7 @@ async function deleteQuote(id: any) {
         method: 'POST',
         headers: headers,
     };
-        let url = new URL(`http://localhost:3000/quotes/delete-quote/${id}`);
+        let url = new URL(`https://sern-371617.uc.r.appspot.com/quotes/delete-quote/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -129,7 +129,7 @@ async function listQuotes(client?: string, query?: string, page?: number, pageSi
         headers: headers,
     };
         
-    let url = new URL(`http://localhost:3000/quotes/list-quotes`);
+    let url = new URL(`https://sern-371617.uc.r.appspot.com/quotes/list-quotes`);
     if (page) url.searchParams.set('page', `${page}`);
     if (client) url.searchParams.set('client', client);
     if (pageSize) url.searchParams.set('pageSize', `${pageSize}`);
