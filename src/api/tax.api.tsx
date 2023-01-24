@@ -14,7 +14,7 @@ async function createTax(tax: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/taxes/create-tax`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/taxes/create-tax`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -43,7 +43,7 @@ async function getTax(id: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/taxes/get-tax/${id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/taxes/get-tax/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -73,7 +73,7 @@ async function updateTax(tax: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/taxes/update-tax/${tax.id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/taxes/update-tax/${tax.id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -101,7 +101,7 @@ async function deleteTax(id: any) {
         method: 'POST',
         headers: headers,
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/taxes/delete-tax/${id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/taxes/delete-tax/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -129,7 +129,7 @@ async function listTaxes(client?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL('https://sern-371617.uc.r.appspot.com/taxes/list-taxes');
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/taxes/list-taxes`);
         if (client) url.searchParams.set('client', client);
         return fetch(url, requestOptions)
         .then(res => {

@@ -14,7 +14,7 @@ async function createVisit(visit: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/visits/create-visit`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/visits/create-visit`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -42,7 +42,7 @@ async function getVisit(id?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/visits/get-visit/${id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/visits/get-visit/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -72,7 +72,7 @@ async function updateVisit(visit: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/visits/update-visit/${visit.id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/visits/update-visit/${visit.id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -99,7 +99,7 @@ async function deleteVisit(id: any) {
         method: 'POST',
         headers: headers,
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/visits/delete-visit/${id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/visits/delete-visit/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -128,7 +128,7 @@ async function listVisits(client?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL('https://sern-371617.uc.r.appspot.com/visits/list-visits');
+        let url = new URL('${process.env.REACT_APP_SERVER_URL}/visits/list-visits');
         if (client) url.searchParams.set('client', client);
         return fetch(url, requestOptions)
         .then(res => {

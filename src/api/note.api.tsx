@@ -14,7 +14,7 @@ async function createNote(note: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/notes/create-note`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/notes/create-note`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -42,7 +42,7 @@ async function getNote(id?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/notes/get-note/${id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/notes/get-note/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -72,7 +72,7 @@ async function updateNote(note: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/notes/update-note/${note.id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/notes/update-note/${note.id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -100,7 +100,7 @@ async function deleteNote(id: any) {
         method: 'POST',
         headers: headers,
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/notes/delete-note/${id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/notes/delete-note/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -128,7 +128,7 @@ async function listNotes(client?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL('https://sern-371617.uc.r.appspot.com/notes/list-notes');
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/notes/list-notes`);
         if (client) url.searchParams.set('client', client);
         return fetch(url, requestOptions)
         .then(res => {

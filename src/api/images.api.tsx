@@ -113,7 +113,7 @@ async function saveImageCloudinary(image: string) {
 //         headers: headers,
 //         body: body
 //     };
-//         let url = new URL(`https://sern-371617.uc.r.appspot.com/images/create-images`);
+//         let url = new URL(`${process.env.REACT_APP_SERVER_URL}/images/create-images`);
 //         return fetch(url, requestOptions)
 //         .then(res => {
 //             if (res.ok) {
