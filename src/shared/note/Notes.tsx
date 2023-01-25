@@ -1,176 +1,258 @@
-import { AddCircleOutlineOutlined, CreateOutlined, DeleteOutline, MoreVert } from '@mui/icons-material';
-import { Alert, Card, CircularProgress, Grid, IconButton, ImageList, ImageListItem, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from '@mui/material';
+import {
+  AddCircleOutlineOutlined,
+  CreateOutlined,
+  DeleteOutline,
+  MoreVert,
+} from '@mui/icons-material';
+import {
+  Alert,
+  Card,
+  CircularProgress,
+  Grid,
+  IconButton,
+  ImageList,
+  ImageListItem,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemProps,
+  ListItemText,
+  Menu,
+  MenuItem,
+  MenuList,
+  Stack,
+  styled,
+  Typography,
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { listNotes } from '../../api/note.api';
 import ConfirmDelete from '../ConfirmDelete';
 import EditNote from './EditNote';
 
-
 function Notes(props: any) {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const isOpen = Boolean(anchorEl);
-    const [rows, setRows] = useState([] as any);
-    const [open, setOpen] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [note, setNote] = useState({} as any);
-    const [type, setType] = useState('');
-    const [fileURLs, setFileURLs] = useState([] as {url: string, file: File}[]);
-    const [originalImages, setOriginalImages] = useState([]);
-    const [deleteOpen, setDeleteOpen] = useState(false);
-  
-    const openMenu = (event: React.MouseEvent<HTMLButtonElement>, note: any, urls: any) => {
-        setNote(note);
-        setFileURLs(urls);
-        setOriginalImages(urls);
-        setAnchorEl(event.currentTarget);
-    };
-    const closeMenu = () => {
-      setAnchorEl(null);
-    };
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const isOpen = Boolean(anchorEl);
+  const [rows, setRows] = useState([] as any);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [note, setNote] = useState({} as any);
+  const [type, setType] = useState('');
+  const [fileURLs, setFileURLs] = useState([] as { url: string; file: File }[]);
+  const [originalImages, setOriginalImages] = useState([]);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
-    const handleNewOpen = () => {
-        setNote({client: props.client});
-        setFileURLs([]);
-        setType('New');
-        setOpen(true);
-    };
+  const StyledNoteContainer = styled(ListItem)<ListItemProps>(({ theme }) => ({
+    backgroundColor: theme.palette.warning.light,
+    borderRadius: '10px',
+    marginTop: theme.spacing(2),
+    paddingRight: 0,
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+  }));
 
-    const handleEditOpen = () => {
-        setType('Edit');
-        setOpen(true);
-    };
+  const openMenu = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    note: any,
+    urls: any
+  ) => {
+    setNote(note);
+    setFileURLs(urls);
+    setOriginalImages(urls);
+    setAnchorEl(event.currentTarget);
+  };
+  const closeMenu = () => {
+    setAnchorEl(null);
+  };
 
-    const handleClose = (value: string) => {
-        setNote({client: props.client});
-        setFileURLs([]);
-        setOpen(false);
-        closeMenu();
-    };
+  const handleNewOpen = () => {
+    setNote({ client: props.client });
+    setFileURLs([]);
+    setType('New');
+    setOpen(true);
+  };
 
-    const handleUpdate = (value: string) => {
-        setOpen(false);
-        // save value
-    };
+  const handleEditOpen = () => {
+    setType('Edit');
+    setOpen(true);
+  };
 
-    const handleCreate = (value: string) => {
-        setOpen(false);
-        // save value
-    };
+  const handleClose = (value: string) => {
+    setNote({ client: props.client });
+    setFileURLs([]);
+    setOpen(false);
+    closeMenu();
+  };
 
-    const handleDeleteOpen = () => {
-        setDeleteOpen(true);
-    };
+  const handleUpdate = (value: string) => {
+    setOpen(false);
+    // save value
+  };
 
-    const handleDeleteClose = (value: string) => {
-        closeMenu();
-        setDeleteOpen(false);
-    };
+  const handleCreate = (value: string) => {
+    setOpen(false);
+    // save value
+  };
 
-    useEffect(() => {
-        listNotes(props.client)
-        .then((result) => {
-          setRows(result);
-          setLoading(false);
-        }, (err) => {
-            setLoading(false);
-            setError(err.message);
-        })
-      }, [props, open, deleteOpen])
+  const handleDeleteOpen = () => {
+    setDeleteOpen(true);
+  };
 
-    const onDelete = () => {
-        return;
-    }
+  const handleDeleteClose = (value: string) => {
+    closeMenu();
+    setDeleteOpen(false);
+  };
 
-    return (
-        <Card>
-            <Stack direction="row">
-                <Typography>Notes</Typography>
-                <IconButton onClick={handleNewOpen}>
-                    <AddCircleOutlineOutlined />
-                </IconButton>
-            </Stack>
-            {loading && (<CircularProgress />)}
-            {error && (<Alert severity="error">{error}</Alert>)}
-            {!loading && !error &&
-            <List>
-                {
-                    rows.map((note: any) => (
-                        <ListItem key={note.id}>
-                                <Grid container spacing={2}>
-                                    <Grid item={true} xs={10}>
-                                        <Stack>
-                                            <Typography>{note.title}</Typography>
-                                            <Typography>{note.content}</Typography>
-                                            <Typography>{note.date}</Typography>
-                                                <ImageList cols={3}>
-                                                {note.images.map((image: any) => (
-                                                    <ImageListItem key={image.id}>
-                                                        {/* eslint-disable-next-line */}
-                                                        <img src={image.url}/>
-                                                    </ImageListItem>
-                                                    ))}
-                                                </ImageList>
-                                        </Stack>
-                                    </Grid>
-                                    <Grid item={true} xs={2}>
-                                        <IconButton
-                                        onClick={(e) => openMenu(e, note, note.images)}
-                                        >
-                                            <MoreVert />
-                                        </IconButton>
-                                        <Menu
-                                        id="note-menu"
-                                        anchorEl={anchorEl}
-                                        open={isOpen}
-                                        onClose={closeMenu}
-                                        >
-                                        <MenuList>
-                                            <MenuItem onClick={() => {handleEditOpen()}}>
-                                            <ListItemIcon>
-                                                <CreateOutlined />
-                                            </ListItemIcon>
-                                            <ListItemText>Edit Note</ListItemText>
-                                            </MenuItem>
-                                            <MenuItem onClick={handleDeleteOpen}>
-                                            <ListItemIcon>
-                                                <DeleteOutline />
-                                            </ListItemIcon>
-                                            <ListItemText>Delete Note</ListItemText>
-                                            </MenuItem>
-                                        </MenuList>
-                                        </Menu>
-                                    </Grid>
-                                </Grid>
-                        </ListItem>
-                    ))
-                }
-                {rows.length === 0 && <Typography>This client doesn't have any notes yet, click the "+" icon to add one.</Typography>}
-            </List>}
-            <EditNote
-            note={note}
-            setNote={setNote}
-            open={open}
-            onClose={handleClose}
-            update={handleUpdate}
-            create={handleCreate}
-            type={type}
-            fileURLs={fileURLs}
-            setFileURLs={setFileURLs}
-            originalImages={originalImages}
-            setOriginalImages={setOriginalImages}
-            success={props.success}
-            />
-            <ConfirmDelete
-            open={deleteOpen}
-            onClose={handleDeleteClose}
-            type={'notes'}
-            deleteId={note.id}
-            onDelete={onDelete}
-            success={props.success}
-            />
-        </Card>
-    )
+  useEffect(() => {
+    listNotes(props.client).then(
+      (result) => {
+        setRows(result);
+        setLoading(false);
+      },
+      (err) => {
+        setLoading(false);
+        setError(err.message);
+      }
+    );
+  }, [props, open, deleteOpen]);
+
+  const onDelete = () => {
+    return;
+  };
+
+  return (
+    <Card sx={{ py: 2 }}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Typography fontWeight={600} fontSize={18}>
+          Notes
+        </Typography>
+        <IconButton onClick={handleNewOpen} color="info">
+          <AddCircleOutlineOutlined />
+        </IconButton>
+      </Stack>
+      {loading && <CircularProgress />}
+      {error && <Alert severity="error">{error}</Alert>}
+      {!loading && !error && (
+        <List>
+          {rows.map((note: any) => (
+            <StyledNoteContainer key={note.id}>
+              <Grid container spacing={2}>
+                <Grid item={true} xs={10}>
+                  <Stack>
+                    <Typography
+                      variant="body2"
+                      fontWeight={600}
+                      sx={{ opacity: 0.7, mt: 1 }}
+                    >
+                      {note.title}
+                    </Typography>
+                    {note.content && (
+                      <Typography
+                        variant="caption"
+                        sx={{ opacity: 0.7, mt: 1 }}
+                      >
+                        {note.content}
+                      </Typography>
+                    )}
+                    {note.date && (
+                      <Typography
+                        variant="caption"
+                        fontWeight={500}
+                        sx={{ opacity: 0.7, mt: 1 }}
+                      >
+                        {note.date}
+                      </Typography>
+                    )}
+                    <ImageList
+                      cols={note.images.length < 3 ? note.images.length : 3}
+                      sx={{ mt: 1.5 }}
+                    >
+                      {note.images.map((image: any) => (
+                        <ImageListItem key={image.id}>
+                          {/* eslint-disable-next-line */}
+                          <img
+                            src={image.url}
+                            style={{ borderRadius: '4px' }}
+                          />
+                        </ImageListItem>
+                      ))}
+                    </ImageList>
+                  </Stack>
+                </Grid>
+                <Grid
+                  item={true}
+                  xs={2}
+                  display="flex"
+                  alignItems="flex-start"
+                  justifyContent="flex-end"
+                >
+                  <IconButton
+                    onClick={(e) => openMenu(e, note, note.images)}
+                    color="primary"
+                  >
+                    <MoreVert />
+                  </IconButton>
+                  <Menu
+                    id="note-menu"
+                    anchorEl={anchorEl}
+                    open={isOpen}
+                    onClose={closeMenu}
+                  >
+                    <MenuList>
+                      <MenuItem
+                        onClick={() => {
+                          handleEditOpen();
+                        }}
+                      >
+                        <ListItemIcon>
+                          <CreateOutlined />
+                        </ListItemIcon>
+                        <ListItemText>Edit Note</ListItemText>
+                      </MenuItem>
+                      <MenuItem onClick={handleDeleteOpen}>
+                        <ListItemIcon>
+                          <DeleteOutline />
+                        </ListItemIcon>
+                        <ListItemText>Delete Note</ListItemText>
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                </Grid>
+              </Grid>
+            </StyledNoteContainer>
+          ))}
+          {rows.length === 0 && (
+            <Typography>
+              This client doesn't have any notes yet, click the "+" icon to add
+              one.
+            </Typography>
+          )}
+        </List>
+      )}
+      <EditNote
+        note={note}
+        setNote={setNote}
+        open={open}
+        onClose={handleClose}
+        update={handleUpdate}
+        create={handleCreate}
+        type={type}
+        fileURLs={fileURLs}
+        setFileURLs={setFileURLs}
+        originalImages={originalImages}
+        setOriginalImages={setOriginalImages}
+        success={props.success}
+      />
+      <ConfirmDelete
+        open={deleteOpen}
+        onClose={handleDeleteClose}
+        type={'notes'}
+        deleteId={note.id}
+        onDelete={onDelete}
+        success={props.success}
+      />
+    </Card>
+  );
 }
 
 export default Notes;

@@ -1,92 +1,137 @@
 import { CreateOutlined } from '@mui/icons-material';
-import { Alert, Avatar, Card, CircularProgress, IconButton, Stack, Typography } from '@mui/material';
+import {
+  Alert,
+  Avatar,
+  Card,
+  CircularProgress,
+  IconButton,
+  Stack,
+  styled,
+  Typography,
+  TypographyProps,
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { getClient } from '../../api/client.api';
 import EditContact from './EditContact';
 
+const StyledTypography = styled(Typography)<TypographyProps>(() => ({
+  minWidth: 74,
+}));
 
 function Contact(props: any) {
-    const [open, setOpen] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [error, setError] = useState(null);
-    const [contact, setContact] = useState({} as any);
+  const [open, setOpen] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState(null);
+  const [contact, setContact] = useState({} as any);
 
-    const handleEditOpen = () => {
-        setOpen(true);
-    };
+  const handleEditOpen = () => {
+    setOpen(true);
+  };
 
-    const handleClose = (value: string) => {
-        setOpen(false);
-    };
+  const handleClose = (value: string) => {
+    setOpen(false);
+  };
 
-    const handleUpdate = (value: string) => {
-        setOpen(false);
-    };
+  const handleUpdate = (value: string) => {
+    setOpen(false);
+  };
 
-    useEffect(() => {
-        getClient(props.client)
-        .then((result) => {
-          setIsLoaded(true);
-          setContact(result);
-        }, (err) => {
-          setIsLoaded(true);
-          setError(err.message)
-        })
-      }, [props, open])
+  useEffect(() => {
+    getClient(props.client).then(
+      (result) => {
+        setIsLoaded(true);
+        setContact(result);
+      },
+      (err) => {
+        setIsLoaded(true);
+        setError(err.message);
+      }
+    );
+  }, [props, open]);
 
-    if (error) {
-    return (<Alert severity="error">{error}</Alert>);
-    }
-    if (!isLoaded) {
-    return (<CircularProgress />);
-    }
+  if (error) {
+    return <Alert severity="error">{error}</Alert>;
+  }
+  if (!isLoaded) {
+    return <CircularProgress />;
+  }
 
-    return (
-        <Card>
-            <Stack direction="row">
-                <Avatar>{contact?.first?.[0]}{contact?.last?.[0]}</Avatar>
-                <Typography>{contact?.first} {contact?.last}</Typography>
-                <IconButton onClick={handleEditOpen}>
-                    <CreateOutlined />
-                </IconButton>
-                <EditContact
-                    contact={contact}
-                    setContact={setContact}
-                    open={open}
-                    onClose={handleClose}
-                    update={handleUpdate}
-                    type={'edit'}
-                    success={props.success}
-                />
+  return (
+    <Card sx={{ py: 2 }}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        marginBottom={3}
+      >
+        <Avatar sx={{ width: 45, height: 45 }}>
+          {contact?.first?.[0]}
+          {contact?.last?.[0]}
+        </Avatar>
+        <Typography fontWeight={600} fontSize={18}>
+          {contact?.first} {contact?.last}
+        </Typography>
+        <IconButton onClick={handleEditOpen} color="info">
+          <CreateOutlined />
+        </IconButton>
+        <EditContact
+          contact={contact}
+          setContact={setContact}
+          open={open}
+          onClose={handleClose}
+          update={handleUpdate}
+          type={'edit'}
+          success={props.success}
+        />
+      </Stack>
+      <Stack spacing={4}>
+        <Stack spacing={2}>
+          {contact?.contacts
+            ?.filter((c: any) => c.type === 'phone' && c.content !== '')
+            .map((phone: any, index: number) => (
+              <Stack direction="row" spacing={2} key={index}>
+                <StyledTypography color="primary" variant="body2">
+                  Phone
+                </StyledTypography>
+                <Typography variant="body2">{phone.content}</Typography>
+              </Stack>
+            ))}
+          {contact?.contacts?.filter(
+            (c: any) => c.type === 'phone' && c.content !== ''
+          ).length === 0 && (
+            <Stack direction="row" spacing={2}>
+              <StyledTypography color="primary" variant="body2">
+                Phone
+              </StyledTypography>
+              <Typography variant="body2">No phone numbers</Typography>
             </Stack>
-            <Stack spacing={2}>
-            {contact?.contacts?.filter((c: any) => c.type === 'phone' && c.content !== '').map((phone: any, index: number) => (
-                <Stack direction="row" spacing={2} key={index}>
-                    <Typography>Phone</Typography>
-                    <Typography>{phone.content}</Typography>
-                </Stack>
-                ))}
-            {contact?.contacts?.filter((c: any) => c.type === 'phone' && c.content !== '').length === 0 && (
-                <Stack direction="row" spacing={2}>
-                    <Typography>Phone</Typography>
-                    <Typography>No phone numbers</Typography>
-                </Stack>
-                )}
-            {contact?.contacts?.filter((c: any) => c.type === 'email' && c.content !== '').map((email: any, index: number) => (
-                <Stack direction="row" spacing={2} key={index}>
-                    <Typography>Email</Typography>
-                    <Typography>{email.content}</Typography>
-                </Stack>
-                ))}
-            {contact?.contacts?.filter((c: any) => c.type === 'email' && c.content !== '').length === 0 && (
-                <Stack direction="row" spacing={2}>
-                    <Typography>Email</Typography>
-                    <Typography>No email addresses</Typography>
-                </Stack>
-                )}
+          )}
+        </Stack>
+        <Stack spacing={2}>
+          {contact?.contacts
+            ?.filter((c: any) => c.type === 'email' && c.content !== '')
+            .map((email: any, index: number) => (
+              <Stack direction="row" spacing={2} key={index}>
+                <StyledTypography color="primary" variant="body2">
+                  Email
+                </StyledTypography>
+                <Typography variant="body2">{email.content}</Typography>
+              </Stack>
+            ))}
+          {contact?.contacts?.filter(
+            (c: any) => c.type === 'email' && c.content !== ''
+          ).length === 0 && (
+            <Stack direction="row" spacing={2}>
+              <StyledTypography color="primary" variant="body2">
+                Email
+              </StyledTypography>
+              <Typography variant="body2">No email addresses</Typography>
             </Stack>
-        </Card>
-    )
+          )}
+        </Stack>
+      </Stack>
+    </Card>
+  );
 }
 
 export default Contact;
