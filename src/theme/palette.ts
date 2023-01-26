@@ -20,5 +20,11 @@ export const createPalette = (theme: Theme) => {
       ...theme.palette.warning,
       light: '#FFF5E1',
     },
+    neutral: {
+      main: '#5F666F',
+      light: '#B5B7C0',
+      dark: '#202020',
+      contrastText: '#fff',
+    },
   };
 };
