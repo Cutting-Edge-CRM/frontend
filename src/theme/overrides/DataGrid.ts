@@ -1,20 +1,20 @@
-import { Theme } from "@mui/material";
+import { Theme } from '@mui/material';
 
 export const DataGrid = (theme: Theme) => {
   return {
     MuiDataGrid: {
       styleOverrides: {
         root: {
-          border: "none",
+          border: 'none',
           fontWeight: 500,
-          "& .MuiDataGrid-columnSeparator": {
-            visibility: "hidden",
+          '& .MuiDataGrid-columnSeparator': {
+            visibility: 'hidden',
           },
-          "& .MuiDataGrid-columnHeader": {
+          '& .MuiDataGrid-columnHeader': {
             opacity: 0.5,
           },
-          "& .MuiDataGrid-footerContainer": {
-            minHeight: "70px",
+          '& .MuiDataGrid-footerContainer': {
+            minHeight: '70px',
           },
         },
       },

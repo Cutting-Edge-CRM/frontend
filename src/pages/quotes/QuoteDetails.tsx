@@ -379,7 +379,6 @@ function TabPanel(props: any) {
               )}
             </>
           )}
-          <Divider />
           <Stack alignItems="flex-end" mt={2.5} spacing={2}>
             <Grid container xs={4}>
               <Grid item xs={5}>
@@ -693,7 +692,7 @@ function QuoteDetails(props: any) {
           marginBottom={2}
         >
           <Typography variant="h6" fontWeight={600}>
-            Quote
+            {`Quote #${props.quote.quote.id}`}
           </Typography>
           <IconButton onClick={openMenu} color="primary">
             <MoreVert />
@@ -817,7 +816,7 @@ function QuoteDetails(props: any) {
             {props.quote.quote.job ? (
               <Link
                 color="primary"
-                sx={{ textAlign: 'center', fontSize: '14px' }}
+                sx={{ textAlign: 'center' }}
                 href={`/jobs/${props.quote.quote.job}`}
               >
                 Job
@@ -828,7 +827,7 @@ function QuoteDetails(props: any) {
               </Typography>
             )}
           </Stack>
-          <Stack spacing={2}>
+          <Stack spacing={1.5}>
             <Typography
               textAlign="center"
               variant="body2"
@@ -837,7 +836,7 @@ function QuoteDetails(props: any) {
             >
               Status
             </Typography>
-            <Chip label={props.quote.quote.status} />
+            <Chip label={props.quote.quote.status} color="warning" />
           </Stack>
         </Stack>
       </Card>
@@ -906,12 +905,18 @@ function QuoteDetails(props: any) {
                   id={payment.id}
                   onClick={(e) => handleEditDeposit(e, payment)}
                 >
-                  <Stack direction={'row'}>
-                    <Typography>
+                  <Stack direction={'row'} spacing={1.5}>
+                    <Typography variant="body1" color="neutral.main">
                       Deposit collected{' '}
                       {dayjs(payment.transDate).format('MMM D')}
                     </Typography>
-                    <Typography>${payment.amount}</Typography>
+                    <Typography
+                      variant="body1"
+                      fontWeight={600}
+                      color="neutral.main"
+                    >
+                      ${payment.amount}
+                    </Typography>
                   </Stack>
                 </ListItemButton>
               ))}

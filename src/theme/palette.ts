@@ -5,6 +5,7 @@ export const createPalette = (theme: Theme) => {
     ...theme.palette,
     primary: {
       ...theme.palette.primary,
+      light: '#CCF3FF',
       main: '#0C8BE7',
     },
     text: {
@@ -19,11 +20,23 @@ export const createPalette = (theme: Theme) => {
     warning: {
       ...theme.palette.warning,
       light: '#FFF5E1',
+      main: '#FFF3DC',
+      dark: '#FFB427',
+    },
+    success: {
+      ...theme.palette.success,
+      light: '#E0FFEF',
+      main: '#00AC4F',
+    },
+    error: {
+      ...theme.palette.error,
+      main: '#DA001A',
+      light: '#FFC1E5',
     },
     neutral: {
       main: '#5F666F',
       light: '#B5B7C0',
-      dark: '#202020',
+      dark: '#44444F',
       contrastText: '#fff',
     },
   };

@@ -112,7 +112,7 @@ function Property(props: any) {
   }
 
   return (
-    <Card>
+    <Card sx={{ pb: 2.5 }}>
       <CardHeader title="Property" />
       <Box>
         {mapError && <Typography>{mapError}</Typography>}

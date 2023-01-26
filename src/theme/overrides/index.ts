@@ -1,6 +1,7 @@
 import { Theme } from '@mui/material';
 import { Button } from './Button';
 import { Card } from './Card';
+import { Chip } from './Chip';
 import { DataGrid } from './DataGrid';
 import { IconButton } from './IconButton';
 import { Input } from './Input';
@@ -15,5 +16,6 @@ export const componentsOverrides = (theme: Theme) => {
     ...Tabs(theme),
     ...DataGrid(theme),
     ...IconButton(theme),
+    ...Chip(theme),
   };
 };
