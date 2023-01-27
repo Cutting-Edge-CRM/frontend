@@ -390,7 +390,7 @@ function JobDetails(props: any) {
               <Typography textAlign="center">-</Typography>
             )}
           </Stack>
-          <Stack spacing={1.5}>
+          <Stack spacing={1}>
             <Typography
               textAlign="center"
               variant="body2"

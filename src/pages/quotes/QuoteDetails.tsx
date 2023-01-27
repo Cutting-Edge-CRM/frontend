@@ -827,7 +827,7 @@ function QuoteDetails(props: any) {
               </Typography>
             )}
           </Stack>
-          <Stack spacing={1.5}>
+          <Stack spacing={1}>
             <Typography
               textAlign="center"
               variant="body2"
@@ -897,30 +897,34 @@ function QuoteDetails(props: any) {
         ))}
         {props.payments.length > 0 && (
           <>
-            <Divider />
-            <List>
-              {props.payments.map((payment: any) => (
-                <ListItemButton
-                  key={payment.id}
-                  id={payment.id}
-                  onClick={(e) => handleEditDeposit(e, payment)}
-                >
-                  <Stack direction={'row'} spacing={1.5}>
-                    <Typography variant="body1" color="neutral.main">
-                      Deposit collected{' '}
-                      {dayjs(payment.transDate).format('MMM D')}
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      fontWeight={600}
-                      color="neutral.main"
+            <Divider sx={{ my: 2 }} />
+            <Stack alignItems="flex-end">
+              <Grid container xs={6}>
+                <List>
+                  {props.payments.map((payment: any) => (
+                    <ListItemButton
+                      key={payment.id}
+                      id={payment.id}
+                      onClick={(e) => handleEditDeposit(e, payment)}
                     >
-                      ${payment.amount}
-                    </Typography>
-                  </Stack>
-                </ListItemButton>
-              ))}
-            </List>
+                      <Stack direction={'row'} spacing={3}>
+                        <Typography variant="body1" color="neutral.main">
+                          Deposit collected{' '}
+                          {dayjs(payment.transDate).format('MMM D')}
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          fontWeight={600}
+                          color="neutral.main"
+                        >
+                          ${payment.amount}
+                        </Typography>
+                      </Stack>
+                    </ListItemButton>
+                  ))}
+                </List>
+              </Grid>
+            </Stack>
           </>
         )}
         {error && <Alert severity="error">{error}</Alert>}
