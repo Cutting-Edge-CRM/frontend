@@ -15,13 +15,11 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemProps,
   ListItemText,
   Menu,
   MenuItem,
   MenuList,
   Stack,
-  styled,
   Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
@@ -41,15 +39,6 @@ function Notes(props: any) {
   const [fileURLs, setFileURLs] = useState([] as { url: string; file: File }[]);
   const [originalImages, setOriginalImages] = useState([]);
   const [deleteOpen, setDeleteOpen] = useState(false);
-
-  const StyledNoteContainer = styled(ListItem)<ListItemProps>(({ theme }) => ({
-    backgroundColor: theme.palette.warning.light,
-    borderRadius: '10px',
-    marginTop: theme.spacing(2),
-    paddingRight: 0,
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-  }));
 
   const openMenu = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -135,7 +124,17 @@ function Notes(props: any) {
       {!loading && !error && (
         <List>
           {rows.map((note: any) => (
-            <StyledNoteContainer key={note.id}>
+            <ListItem
+              sx={{
+                backgroundColor: 'warning.light',
+                borderRadius: '10px',
+                mt: 2,
+                paddingRight: 0,
+                pt: 2,
+                pb: 2,
+              }}
+              key={note.id}
+            >
               <Grid container spacing={2}>
                 <Grid item={true} xs={10}>
                   <Stack>
@@ -219,7 +218,7 @@ function Notes(props: any) {
                   </Menu>
                 </Grid>
               </Grid>
-            </StyledNoteContainer>
+            </ListItem>
           ))}
           {rows.length === 0 && (
             <Typography>
