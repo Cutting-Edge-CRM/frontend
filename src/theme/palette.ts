@@ -39,5 +39,11 @@ export const createPalette = (theme: Theme) => {
       dark: '#44444F',
       contrastText: '#fff',
     },
+    default: {
+      light: '#F3F5F8',
+      main: '#3D5F75',
+      dark: '#44444F',
+      contrastText: '#fff',
+    },
   };
 };

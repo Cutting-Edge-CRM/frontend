@@ -161,7 +161,6 @@ function JobItemEdit(props: any) {
         <Button
           onClick={handleDeleteItem}
           startIcon={<DeleteOutline />}
-          variant="contained"
           color="error"
           sx={{ alignSelf: 'flex-end' }}
         >
@@ -415,7 +414,7 @@ function JobDetails(props: any) {
           </Typography>
           {editting ? (
             <Stack direction="row" spacing={2}>
-              <Button onClick={handleCancel} variant="contained" color="error">
+              <Button onClick={handleCancel} variant="outlined">
                 Cancel
               </Button>
               <Button onClick={handleEditting} variant="contained">
