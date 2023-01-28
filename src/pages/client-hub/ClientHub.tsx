@@ -10,19 +10,19 @@ import { AttachMoney, SellOutlined } from '@mui/icons-material';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Alert, Avatar, ListItemButton, Snackbar } from '@mui/material';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes, useParams } from 'react-router-dom';
 import ClientHubQuotes from './ClientHubQuotes';
 import Login from '../utility/login/Login';
+import ClientHubQuote from './ClientHubQuote';
 
 const drawerWidth = 240;
 const topTabs = [{display: 'Quotes', icon: <SellOutlined/>}, {display: 'Invoices', icon: <AttachMoney/>}];
 
 function ClientHub() {
-
-
   const [successOpen, setSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [mobileOpen, setMobileOpen] = useState(false);
+  let { clientId } = useParams();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -54,7 +54,7 @@ function ClientHub() {
       <List>
         {topTabs.map((tab, index) => (
           <ListItem key={tab.display} disablePadding>
-            <Link to={topTabs[index].display}>
+            <Link to={`/client-hub/${clientId}/${topTabs[index].display}`}>
             <ListItemButton>
               <ListItemIcon>
                 {tab.icon}
@@ -109,9 +109,8 @@ function ClientHub() {
   
         {/* body */}
           <Routes>
-            <Route path="/:clientId" element={<ClientHubQuotes success={success} />} />
-            <Route path="/:clientId/quotes" element={<ClientHubQuotes success={success} />} />
-            <Route path="/:clientId/quotes/:quoteId" element={<ClientHubQuotes success={success} />} />
+            <Route path="/quotes" element={<ClientHubQuotes success={success} />} />
+            <Route path="/quotes/:quoteId" element={<ClientHubQuote success={success} />} />
             <Route path="*" element={<Login />} />
           </Routes>
           <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} open={successOpen} autoHideDuration={4000} onClose={handleSuccessClose}>
