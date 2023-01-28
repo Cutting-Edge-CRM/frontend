@@ -14,6 +14,7 @@ import Subscribe from './pages/demo/Subscribe';
 import Portal from './pages/demo/Portal';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import ClientHub from './pages/client-hub/ClientHub';
 
 function App() {
   
@@ -27,6 +28,7 @@ function App() {
               <Route path='/register' element={<Register />}></Route>
               <Route path='/forgot-password' element={<ForgotPassword />}></Route>
               <Route path='/set-password' element={<SetPassword />}></Route>
+              <Route path='/client-hub/*' element={<GuardedRoute><ClientHub /></GuardedRoute>}></Route>
               <Route path="*" element={<GuardedRoute><Shell /></GuardedRoute>} />
               <Route path="/subscribe" element={<GuardedRoute><Subscribe /></GuardedRoute>} />
               <Route path="/portal" element={<GuardedRoute><Portal /></GuardedRoute>} />

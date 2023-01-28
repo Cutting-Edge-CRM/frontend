@@ -128,7 +128,7 @@ async function listVisits(client?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL('${process.env.REACT_APP_SERVER_URL}/visits/list-visits');
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/visits/list-visits`);
         if (client) url.searchParams.set('client', client);
         return fetch(url, requestOptions)
         .then(res => {
