@@ -1,8 +1,27 @@
-import { SellOutlined } from '@mui/icons-material';
-import { Alert, Box, Card, Chip, CircularProgress, Grid, List, ListItem, ListItemButton, Stack, Typography } from '@mui/material';
+import { EventAvailableOutlined, LocationOnOutlined, PersonOutline } from '@mui/icons-material';
+import { Alert, Box, Card, Chip, CircularProgress, Divider, Grid, ListItemButton, Stack, Tab, Tabs, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { listQuotes } from '../../api/quote.api';
+
+function TabPanel(props: any) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <Box
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        {...other}
+        >
+        {value === index && (
+            <Box>
+            {children}
+            </Box>
+        )}
+        </Box>
+    );
+}
 
 
 function ClientHubQuotes(props: any) {
@@ -11,13 +30,13 @@ function ClientHubQuotes(props: any) {
     const [error, setError] = useState(null);
     let { clientId } = useParams();
     const navigate = useNavigate();
+    const [value, setValue] = useState(0);
 
     useEffect(() => {
         listQuotes(clientId)
         .then((result) => {
             setLoading(false);
             setRows(result.rows.filter((q: any) => q.status !== 'Draft'));
-            console.log(result.rows);
         }, (err) => {
             setLoading(false);
             setError(err.message)
@@ -28,39 +47,71 @@ function ClientHubQuotes(props: any) {
         navigate(`/client-hub/${clientId}/quotes/${quoteId}`);
     }
 
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+      };
+
     return (
         <Box>
-            <Stack direction="row">
-                <Typography>Quotes</Typography>
-            </Stack>
-            {loading && (<CircularProgress />)}
-            {error && (<Alert severity="error">{error}</Alert>)}
-            {!loading && !error &&
-                <List>
-                {
-                    rows?.map((quote: any) => (
-                        <ListItem key={quote.id}>
-                            <Card>
+            <>
+            <Card>
+            <Typography>Your Quotes</Typography>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs value={value} onChange={handleChange}>
+                <Tab label="Pending" id="pending" />
+                <Tab label="Approved" id="approved" />
+                <Tab label="Rejected" id="rejected" />
+                <Tab label="Archived" id="archived" />
+            </Tabs>
+            </Box>
+            </Card>
+            {(['Pending', 'Approved', 'Rejected', 'Archived']).map((status, index) => (
+                <TabPanel value={value} index={index} key={index}>
+                <Grid container spacing={2}>
+                {loading && (<CircularProgress />)}
+                {error && (<Alert severity="error">{error}</Alert>)}
+                {!loading && !error && rows?.filter((quote: any) => quote.status === status)?.map((quote: any) => (
+                    <Grid item xs={4} key={quote.id}>
+                        <Card>
                             <ListItemButton onClick={() => handleClick(quote.id)}>
-                                <Grid container spacing={2}>
-                                    <Grid item={true} xs={2}>
-                                        <SellOutlined/>
+                                <Stack width={'100%'}>
+                                    <Stack direction={'row'}>
+                                        <Typography>{`Quote #${quote.id}`}</Typography>
+                                        <Chip label={quote.status}></Chip>
+                                    </Stack>
+                                    <Divider/>
+                                    <Grid container>
+                                        <Grid item xs={2}><PersonOutline/></Grid>
+                                        <Grid item xs={10}><Typography>Client</Typography></Grid>
+                                        <Grid item xs={2}></Grid>
+                                        <Grid item xs={10}><Typography>{quote.client}</Typography></Grid>
                                     </Grid>
-                                    <Grid item={true} xs={6}>
-                                        <Typography>{quote.address}</Typography>
-                                        <Typography>{quote.price}</Typography>
+                                    <Grid container>
+                                        <Grid item xs={2}><LocationOnOutlined/></Grid>
+                                        <Grid item xs={10}><Typography>Address</Typography></Grid>
+                                        <Grid item xs={2}></Grid>
+                                        <Grid item xs={10}><Typography>{quote.address}</Typography></Grid>
                                     </Grid>
-                                    <Grid item={true} xs={4}>
-                                        <Chip label={quote.status}/>
+                                    <Grid container>
+                                        <Grid item xs={2}><EventAvailableOutlined/></Grid>
+                                        <Grid item xs={10}><Typography>Sent</Typography></Grid>
+                                        <Grid item xs={2}></Grid>
+                                        <Grid item xs={10}><Typography>11/23/2022</Typography></Grid>
                                     </Grid>
-                                </Grid>
+                                <Divider/>
+                                <Stack direction={'row'}>
+                                    <Typography>Total</Typography>
+                                    <Typography>{`$${quote.price}`}</Typography>
+                                </Stack>
+                                </Stack>
                                 </ListItemButton>
                             </Card>
-                        </ListItem>
-                    ))
-                }
-                {rows.length === 0 && <Typography>This client doesn't have any quotes yet.</Typography>}
-            </List>}
+                    </Grid>))}
+                </Grid>
+                {rows?.filter((quote: any) => quote.status === status)?.length === 0 && <Typography>{`No ${status} Quotes`}</Typography>}
+                </TabPanel>
+            ))}
+            </>
         </Box>
     )
 }

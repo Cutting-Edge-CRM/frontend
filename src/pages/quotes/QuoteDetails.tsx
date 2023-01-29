@@ -10,7 +10,7 @@ import Duplicate from '../../shared/Duplicate';
 import EmptyState from '../../shared/EmptyState';
 import PaymentModal from '../../shared/PaymentModal';
 import RichText from '../../shared/RichText';
-import SendModal from '../../shared/SendModal';
+import SendQuoteModal from '../../shared/SendQuoteModal';
 
 function add(accumulator: any, a: any) {
     return (+accumulator) + (+a);
@@ -615,12 +615,13 @@ function QuoteDetails(props: any) {
             quote={props.quote}
             success={props.success}
             />
-            <SendModal
+            <SendQuoteModal
             open={sendOpen}
             onClose={handleSendClose}
             type={'Quote'}
             quote={props.quote}
             success={props.success}
+            settings={props.settings}
             />
             <PaymentModal
             payment={payment}
