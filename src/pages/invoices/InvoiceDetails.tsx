@@ -581,7 +581,7 @@ function InvoiceDetails(props: any) {
           open={sendOpen}
           onClose={handleSendClose}
           type={'Invoice'}
-          quote={props.invoice}
+          invoice={props.invoice}
           success={props.success}
           settings={props.settings}
         />
