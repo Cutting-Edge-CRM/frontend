@@ -479,91 +479,120 @@ function InvoiceDetails(props: any) {
             )}
           </>
         )}
-        <Stack alignItems="flex-end" mt={2.5} spacing={2}>
-          <Grid container xs={4}>
-            <Grid item xs={5}>
-              <Typography variant="body2" color="primary" fontWeight={600}>
-                Subtotal
-              </Typography>
-            </Grid>
+        <Stack mt={2.5} spacing={2}>
+          <Grid container justifyContent="flex-end">
             <Grid item xs={4}>
-              <Typography variant="body2" fontWeight={600} color="neutral.main">
-                ${props.invoice.items.map((i: any) => i.price).reduce(add, 0)}
-              </Typography>
+              <Grid container>
+                <Grid item xs={5}>
+                  <Typography variant="body2" color="primary" fontWeight={600}>
+                    Subtotal
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography
+                    variant="body2"
+                    fontWeight={600}
+                    color="neutral.main"
+                  >
+                    $
+                    {props.invoice.items
+                      .map((i: any) => i.price)
+                      .reduce(add, 0)}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
-          <Grid container xs={4} alignItems="center">
-            <Grid item xs={5}>
-              <Typography>Taxes</Typography>
-            </Grid>
+          <Grid container justifyContent="flex-end">
             <Grid item xs={4}>
-              {editting ? (
-                <Select
-                  labelId="tax-label"
-                  id="tax"
-                  value={props.taxes.find(
-                    (t: any) => t.id === props.invoice.invoice.tax
+              <Grid container alignItems="center">
+                <Grid item xs={5}>
+                  <Typography
+                    variant="body2"
+                    color="neutral.light"
+                    fontWeight={500}
+                  >
+                    Taxes
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  {editting ? (
+                    <Select
+                      labelId="tax-label"
+                      id="tax"
+                      value={props.taxes.find(
+                        (t: any) => t.id === props.invoice.invoice.tax
+                      )}
+                      onChange={handleChangeTax}
+                      renderValue={(selected) => (
+                        <Box
+                          sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
+                        >
+                          {selected.title}
+                        </Box>
+                      )}
+                      size="small"
+                    >
+                      {props.taxes.map((tax: any) => (
+                        <MenuItem key={tax.id} value={tax}>
+                          <Checkbox
+                            checked={tax.id === props.invoice.invoice.tax}
+                          />
+                          <ListItemText primary={tax.title} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  ) : (
+                    <Typography
+                      variant="body2"
+                      fontWeight={600}
+                      color="neutral.main"
+                    >
+                      {+(
+                        props.taxes.find(
+                          (t: any) => t.id === props.invoice.invoice.tax
+                        )?.tax ?? 0
+                      ) *
+                        props.invoice.items
+                          .map((i: any) => i.price)
+                          .reduce(add, 0)}
+                    </Typography>
                   )}
-                  onChange={handleChangeTax}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.title}
-                    </Box>
-                  )}
-                  size="small"
-                >
-                  {props.taxes.map((tax: any) => (
-                    <MenuItem key={tax.id} value={tax}>
-                      <Checkbox
-                        checked={tax.id === props.invoice.invoice.tax}
-                      />
-                      <ListItemText primary={tax.title} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              ) : (
-                <Typography
-                  variant="body2"
-                  fontWeight={600}
-                  color="neutral.main"
-                >
-                  {+props.taxes.find(
-                    (t: any) => t.id === props.invoice.invoice.tax
-                  )?.tax *
-                    props.invoice.items.map((i: any) => i.price).reduce(add, 0)}
-                </Typography>
-              )}
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Stack>
         {props.payments.length > 0 && (
           <>
             <Divider sx={{ my: 2 }} />
-            <Stack alignItems="flex-end">
-              <Grid container xs={6}>
-                <List>
-                  {props.payments.map((payment: any) => (
-                    <ListItemButton
-                      key={payment.id}
-                      id={payment.id}
-                      onClick={(e) => handleEditPayment(e, payment)}
-                    >
-                      <Stack direction={'row'} spacing={5}>
-                        <Typography variant="body1" color="neutral.main">
-                          Deposit collected{' '}
-                          {dayjs(payment.transDate).format('MMM D')}
-                        </Typography>
-                        <Typography
-                          variant="body1"
-                          fontWeight={600}
-                          color="neutral.main"
-                        >
-                          ${payment.amount}
-                        </Typography>
-                      </Stack>
-                    </ListItemButton>
-                  ))}
-                </List>
+            <Stack>
+              <Grid container justifyContent="flex-end">
+                <Grid item xs={6}>
+                  <List>
+                    {props.payments.map((payment: any) => (
+                      <ListItemButton
+                        key={payment.id}
+                        id={payment.id}
+                        onClick={(e) => handleEditPayment(e, payment)}
+                      >
+                        <Stack direction={'row'} spacing={5}>
+                          <Typography variant="body1" color="neutral.main">
+                            Deposit collected{' '}
+                            {dayjs(payment.transDate).format('MMM D')}
+                          </Typography>
+                          <Typography
+                            variant="body1"
+                            fontWeight={600}
+                            color="neutral.main"
+                          >
+                            ${payment.amount}
+                          </Typography>
+                        </Stack>
+                      </ListItemButton>
+                    ))}
+                  </List>
+                </Grid>
               </Grid>
             </Stack>
           </>
