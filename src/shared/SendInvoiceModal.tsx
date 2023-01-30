@@ -121,17 +121,17 @@ export default function SendInvoiceModal(props: any) {
     }, [props])
     
     return (
-    <Dialog onClose={handleCancel} open={props.open}>
-        <DialogTitle>Send Invoice</DialogTitle>
+    <Dialog onClose={handleCancel} open={props.open} fullWidth maxWidth="sm">
+        <DialogTitle align="center">Send Invoice</DialogTitle>
         {loading && <LinearProgress />}
         <DialogContent>
-            <Tabs value={value} onChange={handleChangeTab}>
+            <Tabs value={value} onChange={handleChangeTab}  sx={{ mb: 2 }}>
                 <Tab label="Email" id="email" />
                 <Tab label="SMS" id="sms" />
             </Tabs>
             {value === 0 && 
             <Box>
-                <Stack>
+                <Stack spacing={2}>
                 <TextField
                 id="to" 
                 value={emailMessage.to}
@@ -163,7 +163,7 @@ export default function SendInvoiceModal(props: any) {
                 value={emailMessage.subject}
                 onChange={handleEmailChange}
                 />
-                <Typography>Email Body</Typography>
+                <Typography variant="body2" color="primary">Email Body</Typography>
                 <TextField
                 id='body'
                 value={emailMessage.body}
@@ -174,7 +174,7 @@ export default function SendInvoiceModal(props: any) {
             }
             {value === 1 && 
             <Box>
-                <Stack>
+                <Stack spacing={2}>
                 <TextField
                 id="to" 
                 value={smsMessage.to}
@@ -194,7 +194,7 @@ export default function SendInvoiceModal(props: any) {
                     ),
                 }}
                 />
-                <Typography>Text Message</Typography>
+                <Typography variant="body2" color="primary">Text Message</Typography>
                 <TextField
                 id='body'
                 value={smsMessage.body}
@@ -205,8 +205,8 @@ export default function SendInvoiceModal(props: any) {
             }
         </DialogContent>
         <DialogActions>
-            <Button onClick={handleCancel}>Cancel</Button>
-            <Button onClick={handleSend}>Send</Button>
+            <Button variant="outlined" onClick={handleCancel}>Cancel</Button>
+            <Button variant="contained" onClick={handleSend}>Send</Button>
         </DialogActions>
         {error && <Alert severity="error">{error}</Alert>}
       </Dialog>

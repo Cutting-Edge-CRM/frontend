@@ -1,140 +1,114 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter } from '@mui/x-data-grid';
-import { Button, CircularProgress, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Typography } from '@mui/material';
-import { ImportExport, FileDownloadOutlined, FileUploadOutlined, AddCircleOutlineOutlined } from '@mui/icons-material';
+import { DataGrid } from '@mui/x-data-grid';
+import { Card, CircularProgress, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import NewClient from './client/NewClient';
 import SelectClient from './client/SelectClient';
 import EmptyState from './EmptyState';
-
+import CustomToolbar from './CutomToolbar';
+import CustomPagination from './CustomPagination';
 
 export default function Table(props: any) {
   const navigate = useNavigate();
   const [newOpen, setNewOpen] = useState(false);
-  
 
   const handleRowClick = (event: any) => {
-    navigate(`/${props.type}/${event.id}`)
-  }
+    navigate(`/${props.type}/${event.id}`);
+  };
 
-  const handleClose = (value: string) => {
-      setNewOpen(false);
+  const handleClose = () => {
+    setNewOpen(false);
   };
 
   const handleNewOpen = () => {
     setNewOpen(true);
-  }
+  };
 
   const getEmptyState = () => {
-    return (<EmptyState type={`${props.client ? 'client-': ''}${(props.type as string)?.toLowerCase()}`}/>);
-  }
+    return (
+      <EmptyState
+        type={`${props.client ? 'client-' : ''}${(
+          props.type as string
+        )?.toLowerCase()}`}
+      />
+    );
+  };
 
   const getErrorState = () => {
     return (
-    <><CustomToolbar /><Typography>{props.errorListing}</Typography></>
+      <>
+        <CustomToolbar
+          handleNewOpen={handleNewOpen}
+          handleExportClients={props.handleExportClients}
+          title={props.title}
+          type={props.type}
+          onImportClick={props.onImportClick}
+        />
+        <Typography>{props.errorListing}</Typography>
+      </>
     );
-  }
+  };
 
   const getLoadingState = () => {
-    return (<CircularProgress />);
-  }
-
-  function CustomToolbar() {
-
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-      setAnchorEl(event.currentTarget);
-    };
-    const closeMenu = () => {
-      setAnchorEl(null);
-    };
-
-    return (
-      <GridToolbarContainer>
-        <Box>
-          <Typography>
-          {props.title}
-          </Typography>
-        </Box>
-        <Divider variant="middle" />
-        <Box>
-          <>
-          <GridToolbarQuickFilter />
-        { props.type === 'Clients' &&
-              <><Button
-                startIcon={<ImportExport />}
-                onClick={openMenu}
-              >
-                Import/Export
-              </Button><Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={closeMenu}
-              >
-                  <MenuList>
-                    <MenuItem onClick={props.onImportClick}>
-                      <ListItemIcon>
-                        <FileDownloadOutlined />
-                      </ListItemIcon>
-                      <ListItemText>Import</ListItemText>
-                    </MenuItem>
-                    <MenuItem onClick={props.handleExportClients}>
-                      <ListItemIcon>
-                        <FileUploadOutlined />
-                      </ListItemIcon>
-                      <ListItemText>Export</ListItemText>
-                    </MenuItem>
-                  </MenuList>
-                </Menu></>
-          }
-        <Button onClick={handleNewOpen} startIcon={<AddCircleOutlineOutlined />}>New {props.type.slice(0,-1)}</Button>
-        </>
-        </Box>
-      </GridToolbarContainer>
-    );
-  }
+    return <CircularProgress />;
+  };
 
   return (
-    <Box>
+    <Card>
       <DataGrid
-      error={props.errorListing}
-      loading={props.listLoading}
-      autoHeight
-      rows={props.rows}
-      columns={props.columns}
-      pagination
-      page={props.page}
-      pageSize={props.pageSize}
-      rowsPerPageOptions={[10, 20, 50]}
-      rowCount={props.rowCount}
-      onPageChange={(newPage) => props.setPage(newPage)}
-      onPageSizeChange={(newPageSize) => props.setPageSize(newPageSize)}
-      paginationMode="server"
-      components={{ Toolbar: CustomToolbar , NoRowsOverlay: getEmptyState, ErrorOverlay: getErrorState, LoadingOverlay: getLoadingState}}
-      componentsProps={{
-        toolbar: {
-          showQuickFilter: true,
-          quickFilterProps: { debounceMs: 500 },
-        }, ...props
-      }}
-      disableSelectionOnClick
-      onRowClick={handleRowClick}
-    />
-        <NewClient
-      open={ props.type === 'Clients' && newOpen}
-      onClose={handleClose}
-      success={props.success}
-        />
-        <SelectClient
-        open={ (props.type === 'Quotes' || props.type === 'Jobs' || props.type === 'Invoices') && newOpen}
+        checkboxSelection
+        error={props.errorListing}
+        loading={props.listLoading}
+        autoHeight
+        rows={props.rows}
+        columns={props.columns}
+        pagination
+        page={props.page}
+        pageSize={props.pageSize}
+        rowsPerPageOptions={[10, 20, 50]}
+        rowCount={props.rowCount}
+        onPageChange={(newPage) => props.setPage(newPage)}
+        onPageSizeChange={(newPageSize) => props.setPageSize(newPageSize)}
+        paginationMode="server"
+        components={{
+          Toolbar: CustomToolbar,
+          NoRowsOverlay: getEmptyState,
+          ErrorOverlay: getErrorState,
+          LoadingOverlay: getLoadingState,
+          Pagination: CustomPagination,
+        }}
+        componentsProps={{
+          toolbar: {
+            showQuickFilter: true,
+            quickFilterProps: { debounceMs: 500 },
+            handleNewOpen,
+            title: props.title,
+            type: props.type,
+            onImportClick: props.onImportClick,
+            handleExportClients: props.handleExportClients,
+          },
+          ...props,
+        }}
+        disableSelectionOnClick
+        onRowClick={handleRowClick}
+      />
+      <NewClient
+        open={props.type === 'Clients' && newOpen}
+        onClose={handleClose}
+        success={props.success}
+      />
+      <SelectClient
+        open={
+          (props.type === 'Quotes' ||
+            props.type === 'Jobs' ||
+            props.type === 'Invoices') &&
+          newOpen
+        }
         onClose={handleClose}
         type={props.type}
         success={props.success}
-        />
-      </Box>
+      />
+    </Card>
   );
 }
