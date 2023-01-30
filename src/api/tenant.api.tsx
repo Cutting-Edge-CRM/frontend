@@ -15,7 +15,7 @@ async function registerNewTenant(name: string, email: string) {
         body: body,
     };
     try {
-        let res = await fetch('https://sern-371617.uc.r.appspot.com/tenants/register-tenant', requestOptions);
+        let res = await fetch(`${process.env.REACT_APP_SERVER_URL}/tenants/register-tenant`, requestOptions);
         return await res.json();
     } catch (err) {
         console.error(err);
@@ -31,7 +31,7 @@ async function getTenantForUser(email: string) {
             method: 'GET',
             headers: headers,
         };
-        let res = await fetch(`https://sern-371617.uc.r.appspot.com/tenants/get-tenant-for-user/${email}`, requestOptions);
+        let res = await fetch(`${process.env.REACT_APP_SERVER_URL}/tenants/get-tenant-for-user/${email}`, requestOptions);
         let response = await res.json();
         if (res.ok) {
             return response;

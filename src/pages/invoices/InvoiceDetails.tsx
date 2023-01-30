@@ -42,7 +42,7 @@ import ConfirmDelete from '../../shared/ConfirmDelete';
 import EmptyState from '../../shared/EmptyState';
 import PaymentModal from '../../shared/PaymentModal';
 import RichText from '../../shared/RichText';
-import SendModal from '../../shared/SendModal';
+import SendInvoiceModal from '../../shared/SendInvoiceModal';
 
 function add(accumulator: number, a: number) {
   return +accumulator + +a;
@@ -577,12 +577,13 @@ function InvoiceDetails(props: any) {
           onDelete={onDelete}
           success={props.success}
         />
-        <SendModal
+        <SendInvoiceModal
           open={sendOpen}
           onClose={handleSendClose}
           type={'Invoice'}
           quote={props.invoice}
           success={props.success}
+          settings={props.settings}
         />
         <PaymentModal
           payment={payment}

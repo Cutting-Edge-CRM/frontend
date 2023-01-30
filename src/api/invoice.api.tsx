@@ -14,7 +14,7 @@ async function createInvoice(invoice: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/invoices/create-invoice`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/invoices/create-invoice`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -43,7 +43,7 @@ async function getInvoice(id?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/invoices/get-invoice/${id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/invoices/get-invoice/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -73,7 +73,7 @@ async function updateInvoice(invoice: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/invoices/update-invoice/${invoice.invoice.id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/invoices/update-invoice/${invoice.invoice.id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -101,7 +101,7 @@ async function deleteInvoice(id: any) {
         method: 'POST',
         headers: headers,
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/invoices/delete-invoice/${id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/invoices/delete-invoice/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -129,7 +129,7 @@ async function listInvoices(client?: string, query?: string, page?: number, page
         method: 'GET',
         headers: headers,
     };
-    let url = new URL(`https://sern-371617.uc.r.appspot.com/invoices/list-invoices`);
+    let url = new URL(`${process.env.REACT_APP_SERVER_URL}/invoices/list-invoices`);
     if (page) url.searchParams.set('page', `${page}`);
     if (client) url.searchParams.set('client', client);
     if (pageSize) url.searchParams.set('pageSize', `${pageSize}`);

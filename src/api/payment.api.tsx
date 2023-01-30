@@ -14,7 +14,7 @@ async function createPayment(payment: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/payments/create-payment`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/payments/create-payment`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -42,7 +42,7 @@ async function getPayment(id?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/payments/get-payment/${id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/payments/get-payment/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -72,7 +72,7 @@ async function updatePayment(payment: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/payments/update-payment/${payment.id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/payments/update-payment/${payment.id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -99,7 +99,7 @@ async function deletePayment(id: any) {
         method: 'POST',
         headers: headers,
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/payments/delete-payment/${id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/payments/delete-payment/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -128,7 +128,7 @@ async function listPayments(client?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL('https://sern-371617.uc.r.appspot.com/payments/list-payments');
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/payments/list-payments`);
         if (client) url.searchParams.set('client', client);
         return fetch(url, requestOptions)
         .then(res => {

@@ -66,7 +66,7 @@ function Invoice(props: any) {
         <Grid container spacing={2}>
             <Grid xs={8}>
                 <Stack spacing={2}>
-                    <InvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload}/>
+                    <InvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload} settings={props.settings}/>
                 </Stack>
             </Grid>
             <Grid xs={4}>

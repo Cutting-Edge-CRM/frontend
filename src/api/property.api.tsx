@@ -14,7 +14,7 @@ async function createProperty(property: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/properties/create-property`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/properties/create-property`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -43,7 +43,7 @@ async function getProperty(id: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/properties/get-property/${id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/properties/get-property/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -73,7 +73,7 @@ async function updateProperty(property: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/properties/update-property/${property.id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/properties/update-property/${property.id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -101,7 +101,7 @@ async function deleteProperty(id: any) {
         method: 'POST',
         headers: headers,
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/properties/delete-property/${id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/properties/delete-property/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -129,7 +129,7 @@ async function listProperties(client?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL('https://sern-371617.uc.r.appspot.com/properties/list-properties');
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/properties/list-properties`);
         if (client) url.searchParams.set('client', client);
         return fetch(url, requestOptions)
         .then(res => {

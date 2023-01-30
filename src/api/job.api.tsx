@@ -14,7 +14,7 @@ async function createJob(job: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/jobs/create-job`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/jobs/create-job`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -43,7 +43,7 @@ async function getJob(id?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/jobs/get-job/${id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/jobs/get-job/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -73,7 +73,7 @@ async function updateJob(job: any) {
         headers: headers,
         body: body
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/jobs/update-job/${job.job.id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/jobs/update-job/${job.job.id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -101,7 +101,7 @@ async function deleteJob(id: any) {
         method: 'POST',
         headers: headers,
     };
-        let url = new URL(`https://sern-371617.uc.r.appspot.com/jobs/delete-job/${id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/jobs/delete-job/${id}`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
@@ -129,7 +129,7 @@ async function listJobs(client?: string, query?: string, page?: number, pageSize
         method: 'GET',
         headers: headers,
     };
-    let url = new URL(`https://sern-371617.uc.r.appspot.com/jobs/list-jobs`);
+    let url = new URL(`${process.env.REACT_APP_SERVER_URL}/jobs/list-jobs`);
     if (page) url.searchParams.set('page', `${page}`);
     if (client) url.searchParams.set('client', client);
     if (pageSize) url.searchParams.set('pageSize', `${pageSize}`);
