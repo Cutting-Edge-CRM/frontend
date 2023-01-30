@@ -27,6 +27,8 @@ import Job from '../jobs/Job';
 import Invoice from '../invoices/Invoice';
 import Schedule from '../schedule/Schedule';
 import Settings from '../settings/Settings';
+import { useEffect } from "react";
+import { getSettings } from '../../api/settings.api';
 
 const drawerWidth = 240;
 const topTabs = [{display: 'Dashboard', icon: <TrendingUpOutlined/>}, {display: 'Schedule', icon: <CalendarMonthOutlined/>}, {display: 'Clients', icon: <PeopleOutlineOutlined/>}, {display: 'Quotes', icon: <SellOutlined/>}, {display: 'Jobs', icon: <FormatPaintOutlined/>}, {display: 'Invoices', icon: <AttachMoney/>}];
@@ -39,6 +41,7 @@ function Shell() {
   const [successOpen, setSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [settings, setSettings] = useState({} as any);
 
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -66,6 +69,15 @@ function Shell() {
 
     setSuccessOpen(false);
   };
+
+  useEffect(() => {
+      getSettings()
+      .then(res => {
+          setSettings(res)
+      }, err => {
+          console.error(err.message);
+      })
+  }, [])
 
   const drawer = (
     <div>
@@ -238,11 +250,11 @@ function Shell() {
             <Route path="/clients" element={<Clients success={success}/>}/>
             <Route path="/clients/:id" element={<Client success={success}/>}/>
             <Route path="/quotes" element={<Quotes success={success}/>}/>
-            <Route path="/quotes/:id" element={<Quote success={success}/>}/>
+            <Route path="/quotes/:id" element={<Quote success={success} settings={settings}/>}/>
             <Route path="/jobs" element={<Jobs success={success}/>}/>
             <Route path="/jobs/:id" element={<Job success={success}/>}/>
             <Route path="/invoices" element={<Invoices success={success}/>}/>
-            <Route path="/invoices/:id" element={<Invoice success={success}/>}/>
+            <Route path="/invoices/:id" element={<Invoice success={success} settings={settings}/>}/>
             <Route path="/settings" element={<Settings success={success}/>}/>
             <Route path="/" element={<Dashboard success={success}/>}/>
         </Routes>
