@@ -102,7 +102,7 @@ function Properties(props: any) {
   };
 
   const getLoadingState = () => {
-    return <CircularProgress />;
+    return <Box textAlign='center'><CircularProgress /></Box>;
   };
 
   const handleDeleteOpen = () => {

@@ -7,7 +7,7 @@ import Notes from '../../shared/note/Notes';
 import JobDetails from './JobDetails';
 import { getJob } from '../../api/job.api';
 import { useParams } from 'react-router-dom';
-import { Alert, CircularProgress } from '@mui/material';
+import { Alert, Box, CircularProgress } from '@mui/material';
 import Property from '../../shared/property/Property';
 
 function Job(props: any) {
@@ -34,7 +34,7 @@ function Job(props: any) {
         return (<Alert severity="error">{error}</Alert>);
         }
     if (!isLoaded) {
-        return (<CircularProgress />);
+        return (<Box textAlign='center'><CircularProgress /></Box>);
         }
     
     return (

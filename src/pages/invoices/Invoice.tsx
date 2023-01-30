@@ -6,7 +6,7 @@ import Notes from '../../shared/note/Notes';
 import InvoiceDetails from './InvoiceDetails';
 import { getInvoice } from '../../api/invoice.api';
 import { useParams } from 'react-router-dom';
-import { Alert, CircularProgress } from '@mui/material';
+import { Alert, Box, CircularProgress } from '@mui/material';
 import { listTaxes } from '../../api/tax.api';
 import { listPayments } from '../../api/payment.api';
 
@@ -59,7 +59,7 @@ function Invoice(props: any) {
         return (<Alert severity="error">{error}</Alert>);
         }
     if (!isLoaded) {
-        return (<CircularProgress />);
+        return (<Box textAlign='center'><CircularProgress /></Box>);
         }
     
     return (

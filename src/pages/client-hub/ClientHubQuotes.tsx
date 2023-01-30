@@ -68,7 +68,7 @@ function ClientHubQuotes(props: any) {
             {(['Pending', 'Approved', 'Rejected', 'Archived']).map((status, index) => (
                 <TabPanel value={value} index={index} key={index}>
                 <Grid container spacing={2}>
-                {loading && (<CircularProgress />)}
+                {loading && (<Box textAlign='center'><CircularProgress /></Box>)}
                 {error && (<Alert severity="error">{error}</Alert>)}
                 {!loading && !error && rows?.filter((quote: any) => quote.status === status)?.map((quote: any) => (
                     <Grid item xs={4} key={quote.id}>

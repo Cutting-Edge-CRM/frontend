@@ -50,7 +50,7 @@ export default function Table(props: any) {
   };
 
   const getLoadingState = () => {
-    return <CircularProgress />;
+    return <Box textAlign='center'><CircularProgress /></Box>;
   };
 
   return (

@@ -1,4 +1,4 @@
-import { Alert, Card, CircularProgress, List, ListItem, Typography } from '@mui/material';
+import { Alert, Box, Card, CircularProgress, List, ListItem, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 
@@ -42,7 +42,7 @@ function Timeline(props: any) {
     return (<Alert severity="error">{error}</Alert>);
     }
     if (!isLoaded) {
-    return (<CircularProgress />);
+    return (<Box textAlign='center'><CircularProgress /></Box>);
     }
 
     return (

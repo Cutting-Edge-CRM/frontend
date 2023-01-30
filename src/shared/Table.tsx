@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Card, CircularProgress, Typography } from '@mui/material';
+import { Box, Card, CircularProgress, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import NewClient from './client/NewClient';
@@ -51,7 +51,7 @@ export default function Table(props: any) {
   };
 
   const getLoadingState = () => {
-    return <CircularProgress />;
+    return <Box textAlign='center'><CircularProgress /></Box>;
   };
 
   return (

@@ -7,7 +7,7 @@ import QuoteDetails from './QuoteDetails';
 import { useParams } from 'react-router-dom';
 import Property from '../../shared/property/Property';
 import { getQuote } from '../../api/quote.api';
-import { Alert, CircularProgress } from '@mui/material';
+import { Alert, Box, CircularProgress } from '@mui/material';
 import { listTaxes } from '../../api/tax.api';
 import { listPayments } from '../../api/payment.api';
 
@@ -60,7 +60,7 @@ function Quote(props: any) {
         return (<Alert severity="error">{error}</Alert>);
         }
     if (!isLoaded) {
-        return (<CircularProgress />);
+        return (<Box textAlign='center'><CircularProgress /></Box>);
         }
 
     return (

@@ -129,7 +129,7 @@ function Property(props: any) {
       </Box>
       <Box>
         {error && <Alert severity="error">{error}</Alert>}
-        {!isLoaded && <CircularProgress />}
+        {!isLoaded && <Box textAlign='center'><CircularProgress /></Box>}
         {!error && isLoaded && (
           <DataGrid
             autoHeight

@@ -66,7 +66,7 @@ function ClientHubInvoices(props: any) {
             {(['Awaiting Payment', 'Paid']).map((status, index) => (
                 <TabPanel value={value} index={index} key={index}>
                 <Grid container spacing={2}>
-                {loading && (<CircularProgress />)}
+                {loading && (<Box textAlign='center'><CircularProgress /></Box>)}
                 {error && (<Alert severity="error">{error}</Alert>)}
                 {!loading && !error && rows?.filter((invoice: any) => invoice.status === status)?.map((invoice: any) => (
                     <Grid item xs={4} key={invoice.id}>

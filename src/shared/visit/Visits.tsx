@@ -7,6 +7,7 @@ import {
 } from '@mui/icons-material';
 import {
   Alert,
+  Box,
   Card,
   CircularProgress,
   Grid,
@@ -146,7 +147,7 @@ function Visits(props: any) {
           <AddCircleOutlineOutlined />
         </IconButton>
       </Stack>
-      {loading && <CircularProgress />}
+      {loading && <Box textAlign='center'><CircularProgress /></Box>}
       {error && <Alert severity="error">{error}</Alert>}
       {!loading && !error && (
         <List>

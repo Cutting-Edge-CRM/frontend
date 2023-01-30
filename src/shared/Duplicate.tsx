@@ -235,7 +235,7 @@ export default function SelectClient(props: any) {
         <Box mt={2}>
           {activeStep === 0 ? (
             <Box>
-              {!clientIsLoaded && <CircularProgress />}
+              {!clientIsLoaded && <Box textAlign='center'><CircularProgress /></Box>}
               {clientIsLoaded && (
                 <DataGrid
                   autoHeight
@@ -261,7 +261,7 @@ export default function SelectClient(props: any) {
             </Box>
           ) : (
             <Box>
-              {!propertyIsLoaded && <CircularProgress />}
+              {!propertyIsLoaded && <Box textAlign='center'><CircularProgress /></Box>}
               {propertyIsLoaded && (
                 <DataGrid
                   autoHeight

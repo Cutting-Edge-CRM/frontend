@@ -199,7 +199,7 @@ export default function SelectProperty(props: any) {
       <DialogContent>
         {loading && <LinearProgress />}
         <Box sx={{ width: '100%' }}>
-          {!propertyIsLoaded && <CircularProgress />}
+          {!propertyIsLoaded && <Box textAlign='center'><CircularProgress /></Box>}
           {propertyIsLoaded && (
             <DataGrid
               autoHeight

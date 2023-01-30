@@ -223,7 +223,7 @@ export default function SelectClient(props: any) {
   };
 
   const getLoadingState = () => {
-    return <CircularProgress />;
+    return <Box textAlign='center'><CircularProgress /></Box>;
   };
 
   useEffect(() => {

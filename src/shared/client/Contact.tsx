@@ -2,6 +2,7 @@ import { CreateOutlined } from '@mui/icons-material';
 import {
   Alert,
   Avatar,
+  Box,
   Card,
   CircularProgress,
   IconButton,
@@ -53,7 +54,7 @@ function Contact(props: any) {
     return <Alert severity="error">{error}</Alert>;
   }
   if (!isLoaded) {
-    return <CircularProgress />;
+    return <Box textAlign='center'><CircularProgress /></Box>;
   }
 
   return (
