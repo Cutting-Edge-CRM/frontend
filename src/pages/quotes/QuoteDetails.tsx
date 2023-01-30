@@ -710,6 +710,7 @@ function QuoteDetails(props: any) {
     );
   };
 
+
   return (
     <Stack spacing={2}>
       <Card sx={{ pb: 4, pt: 1 }}>
@@ -927,7 +928,8 @@ function QuoteDetails(props: any) {
           <>
             <Divider sx={{ my: 2 }} />
             <Stack alignItems="flex-end">
-              <Grid container xs={6}>
+            <Grid container justifyContent="flex-end">
+              <Grid item xs={6}>
                 <List>
                   {props.payments.map((payment: any) => (
                     <ListItemButton
@@ -945,13 +947,14 @@ function QuoteDetails(props: any) {
                           fontWeight={600}
                           color="neutral.main"
                         >
-                          ${payment.amount}
+                          ${payment?.amount?.toString()}
                         </Typography>
                       </Stack>
                     </ListItemButton>
                   ))}
                 </List>
               </Grid>
+            </Grid>
             </Stack>
           </>
         )}
