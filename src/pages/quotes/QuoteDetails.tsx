@@ -378,123 +378,152 @@ function TabPanel(props: any) {
               )}
             </>
           )}
-          <Stack alignItems="flex-end" mt={2.5} spacing={2}>
-            <Grid container xs={4}>
-              <Grid item xs={5}>
-                <Typography variant="body2" color="primary" fontWeight={600}>
-                  Subtotal
-                </Typography>
-              </Grid>
+          <Stack mt={2.5} spacing={2}>
+            <Grid container justifyContent="flex-end">
               <Grid item xs={4}>
-                <Typography
-                  variant="body2"
-                  fontWeight={600}
-                  color="neutral.main"
-                >
-                  ${subTotalAmount}
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid container xs={4} alignItems="center">
-              <Grid item xs={5}>
-                <Typography
-                  variant="body2"
-                  color="neutral.light"
-                  fontWeight={500}
-                >
-                  Deposit
-                </Typography>
-              </Grid>
-              <Grid item xs={props.editting ? 7 : 4}>
-                {props.editting ? (
-                  <Stack direction="row" spacing={1}>
-                    <TextField
-                      id="deposit"
-                      label="Deposit"
-                      value={props.option.deposit}
-                      onChange={handleChangeDeposit}
-                      size="small"
-                    />
-                    <Select
-                      labelId="deposit-percent-select-label"
-                      id="depositPercent"
-                      value={props.option.depositPercent ? 1 : 0}
-                      label="$/%"
-                      onChange={handleChangePercent}
-                      size="small"
+                <Grid container>
+                  <Grid item xs={5}>
+                    <Typography
+                      variant="body2"
+                      color="primary"
+                      fontWeight={600}
                     >
-                      <MenuItem value={1}>%</MenuItem>
-                      <MenuItem value={0}>$</MenuItem>
-                    </Select>
-                  </Stack>
-                ) : (
-                  <Typography
-                    variant="body2"
-                    fontWeight={600}
-                    color="neutral.main"
-                  >
-                    ${depositAmount}
-                  </Typography>
-                )}
+                      Subtotal
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Typography
+                      variant="body2"
+                      fontWeight={600}
+                      color="neutral.main"
+                    >
+                      ${subTotalAmount}
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
-            <Grid container xs={4} alignItems="center">
-              <Grid item xs={5}>
-                <Typography
-                  variant="body2"
-                  color="neutral.light"
-                  fontWeight={500}
-                >
-                  Taxes
-                </Typography>
-              </Grid>
+            <Grid container justifyContent="flex-end">
               <Grid item xs={4}>
-                {props.editting ? (
-                  <Select
-                    labelId="tax-label"
-                    id="tax"
-                    value={props.taxes.find(
-                      (t: any) => t.id === props.option.tax
+                <Grid container alignItems="center">
+                  <Grid item xs={5}>
+                    <Typography
+                      variant="body2"
+                      color="neutral.light"
+                      fontWeight={500}
+                    >
+                      Deposit
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={props.editting ? 7 : 4}>
+                    {props.editting ? (
+                      <Stack direction="row" spacing={1}>
+                        <TextField
+                          id="deposit"
+                          label="Deposit"
+                          value={props.option.deposit}
+                          onChange={handleChangeDeposit}
+                          size="small"
+                        />
+                        <Select
+                          labelId="deposit-percent-select-label"
+                          id="depositPercent"
+                          value={props.option.depositPercent ? 1 : 0}
+                          label="$/%"
+                          onChange={handleChangePercent}
+                          size="small"
+                        >
+                          <MenuItem value={1}>%</MenuItem>
+                          <MenuItem value={0}>$</MenuItem>
+                        </Select>
+                      </Stack>
+                    ) : (
+                      <Typography
+                        variant="body2"
+                        fontWeight={600}
+                        color="neutral.main"
+                      >
+                        ${depositAmount}
+                      </Typography>
                     )}
-                    onChange={handleChangeTax}
-                    renderValue={(selected) => (
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {selected.title}
-                      </Box>
-                    )}
-                    size="small"
-                  >
-                    {props.taxes.map((tax: any) => (
-                      <MenuItem key={tax.id} value={tax}>
-                        <Checkbox checked={tax.id === props.option.tax} />
-                        <ListItemText primary={tax.title} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                ) : (
-                  <Typography
-                    variant="body2"
-                    fontWeight={600}
-                    color="neutral.main"
-                  >
-                    {taxAmount}
-                  </Typography>
-                )}
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
-            <Grid container xs={5}>
-              <Divider sx={{ width: '100%' }} />
-            </Grid>
-            <Grid container xs={4}>
-              <Grid item xs={5}>
-                <Typography variant="h6" color="primary" fontWeight={700}>
-                  Total
-                </Typography>
-              </Grid>
+            <Grid container justifyContent="flex-end">
               <Grid item xs={4}>
-                <Typography variant="h6" fontWeight={600} color="neutral.main">
-                  ${totalAmount}
-                </Typography>
+                <Grid container alignItems="center">
+                  <Grid item xs={5}>
+                    <Typography
+                      variant="body2"
+                      color="neutral.light"
+                      fontWeight={500}
+                    >
+                      Taxes
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    {props.editting ? (
+                      <Select
+                        labelId="tax-label"
+                        id="tax"
+                        value={props.taxes.find(
+                          (t: any) => t.id === props.option.tax
+                        )}
+                        onChange={handleChangeTax}
+                        renderValue={(selected) => (
+                          <Box
+                            sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
+                          >
+                            {selected.title}
+                          </Box>
+                        )}
+                        size="small"
+                      >
+                        {props.taxes.map((tax: any) => (
+                          <MenuItem key={tax.id} value={tax}>
+                            <Checkbox checked={tax.id === props.option.tax} />
+                            <ListItemText primary={tax.title} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    ) : (
+                      <Typography
+                        variant="body2"
+                        fontWeight={600}
+                        color="neutral.main"
+                      >
+                        {taxAmount}
+                      </Typography>
+                    )}
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container justifyContent="flex-end">
+              <Grid item xs={5}>
+                <Divider sx={{ width: '100%' }} />
+              </Grid>
+            </Grid>
+            <Grid container justifyContent="flex-end">
+              <Grid item xs={4}>
+                <Grid container>
+                  <Grid item xs={5}>
+                    <Typography variant="h6" color="primary" fontWeight={700}>
+                      Total
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Typography
+                      variant="h6"
+                      fontWeight={600}
+                      color="neutral.main"
+                    >
+                      ${totalAmount}
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Stack>
@@ -680,6 +709,7 @@ function QuoteDetails(props: any) {
       (err: any) => {}
     );
   };
+
 
   return (
     <Stack spacing={2}>
@@ -898,7 +928,8 @@ function QuoteDetails(props: any) {
           <>
             <Divider sx={{ my: 2 }} />
             <Stack alignItems="flex-end">
-              <Grid container xs={6}>
+            <Grid container justifyContent="flex-end">
+              <Grid item xs={6}>
                 <List>
                   {props.payments.map((payment: any) => (
                     <ListItemButton
@@ -916,13 +947,14 @@ function QuoteDetails(props: any) {
                           fontWeight={600}
                           color="neutral.main"
                         >
-                          ${payment.amount}
+                          ${payment?.amount?.toString()}
                         </Typography>
                       </Stack>
                     </ListItemButton>
                   ))}
                 </List>
               </Grid>
+            </Grid>
             </Stack>
           </>
         )}

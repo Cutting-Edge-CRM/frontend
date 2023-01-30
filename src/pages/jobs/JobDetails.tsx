@@ -451,20 +451,22 @@ function JobDetails(props: any) {
             {props.job?.items?.length === 0 && <EmptyState type="job-items" />}
           </>
         )}
-        <Stack alignItems="flex-end" mt={2.5}>
-          <Grid container xs={4}>
-            <Grid item xs={5}>
-              <Typography variant="h6" color="primary" fontWeight={700}>
-                Subtotal
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="h6" fontWeight={600} color="neutral.main">
-                ${props.job.items.map((i: any) => i.price).reduce(add, 0)}
-              </Typography>
+        <Grid container justifyContent="flex-end" mt={2.5}>
+          <Grid item xs={4}>
+            <Grid container>
+              <Grid item xs={5}>
+                <Typography variant="h6" color="primary" fontWeight={700}>
+                  Subtotal
+                </Typography>
+              </Grid>
+              <Grid item xs={4}>
+                <Typography variant="h6" fontWeight={600} color="neutral.main">
+                  ${props.job.items.map((i: any) => i.price).reduce(add, 0)}
+                </Typography>
+              </Grid>
             </Grid>
           </Grid>
-        </Stack>
+        </Grid>
         {error && <Alert severity="error">{error}</Alert>}
         <ConfirmDelete
           open={deleteOpen}
