@@ -14,6 +14,8 @@ import { Link, Route, Routes, useParams } from 'react-router-dom';
 import ClientHubQuotes from './ClientHubQuotes';
 import Login from '../utility/login/Login';
 import ClientHubQuote from './ClientHubQuote';
+import ClientHubInvoices from './ClientHubInvoices';
+import ClientHubInvoice from './ClientHubInvoice';
 
 const drawerWidth = 240;
 const topTabs = [{display: 'Quotes', icon: <SellOutlined/>}, {display: 'Invoices', icon: <AttachMoney/>}];
@@ -111,6 +113,8 @@ function ClientHub() {
           <Routes>
             <Route path="/quotes" element={<ClientHubQuotes success={success} />} />
             <Route path="/quotes/:quoteId" element={<ClientHubQuote success={success} />} />
+            <Route path="/invoices" element={<ClientHubInvoices success={success} />} />
+            <Route path="/invoices/:invoiceId" element={<ClientHubInvoice success={success} />} />
             <Route path="*" element={<Login />} />
           </Routes>
           <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} open={successOpen} autoHideDuration={4000} onClose={handleSuccessClose}>

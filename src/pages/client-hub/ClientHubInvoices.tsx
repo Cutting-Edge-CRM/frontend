@@ -1,8 +1,8 @@
-import { EventAvailableOutlined, LocationOnOutlined, PersonOutline } from '@mui/icons-material';
+import { AttachMoney, EventAvailableOutlined, PersonOutline } from '@mui/icons-material';
 import { Alert, Box, Card, Chip, CircularProgress, Divider, Grid, ListItemButton, Stack, Tab, Tabs, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { listQuotes } from '../../api/quote.api';
+import { listInvoices } from '../../api/invoice.api';
 
 function TabPanel(props: any) {
     const { children, value, index, ...other } = props;
@@ -24,7 +24,7 @@ function TabPanel(props: any) {
 }
 
 
-function ClientHubQuotes(props: any) {
+function ClientHubInvoices(props: any) {
     const [rows, setRows] = useState([] as any);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -33,7 +33,7 @@ function ClientHubQuotes(props: any) {
     const [value, setValue] = useState(0);
 
     useEffect(() => {
-        listQuotes(clientId)
+        listInvoices(clientId)
         .then((result) => {
             setLoading(false);
             setRows(result.rows.filter((q: any) => q.status !== 'Draft'));
@@ -43,8 +43,8 @@ function ClientHubQuotes(props: any) {
         })
       }, [clientId])
 
-    const handleClick = (quoteId: string) => {
-        navigate(`/client-hub/${clientId}/quotes/${quoteId}`);
+    const handleClick = (invoiceId: string) => {
+        navigate(`/client-hub/${clientId}/invoices/${invoiceId}`);
     }
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -55,42 +55,40 @@ function ClientHubQuotes(props: any) {
         <Box>
             <>
             <Card>
-            <Typography>Your Quotes</Typography>
+            <Typography>Your Invoices</Typography>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs value={value} onChange={handleChange}>
-                <Tab label="Pending" id="pending" />
-                <Tab label="Approved" id="approved" />
-                <Tab label="Rejected" id="rejected" />
-                <Tab label="Archived" id="archived" />
+                <Tab label="Awaiting Payment" id="awaiting" />
+                <Tab label="Paid" id="paid" />
             </Tabs>
             </Box>
             </Card>
-            {(['Pending', 'Approved', 'Rejected', 'Archived']).map((status, index) => (
+            {(['Awaiting Payment', 'Paid']).map((status, index) => (
                 <TabPanel value={value} index={index} key={index}>
                 <Grid container spacing={2}>
                 {loading && (<CircularProgress />)}
                 {error && (<Alert severity="error">{error}</Alert>)}
-                {!loading && !error && rows?.filter((quote: any) => quote.status === status)?.map((quote: any) => (
-                    <Grid item xs={4} key={quote.id}>
+                {!loading && !error && rows?.filter((invoice: any) => invoice.status === status)?.map((invoice: any) => (
+                    <Grid item xs={4} key={invoice.id}>
                         <Card>
-                            <ListItemButton onClick={() => handleClick(quote.id)}>
+                            <ListItemButton onClick={() => handleClick(invoice.id)}>
                                 <Stack width={'100%'}>
                                     <Stack direction={'row'}>
-                                        <Typography>{`Quote #${quote.id}`}</Typography>
-                                        <Chip label={quote.status}></Chip>
+                                        <Typography>{`Invoice #${invoice.id}`}</Typography>
+                                        <Chip label={invoice.status}></Chip>
                                     </Stack>
                                     <Divider/>
                                     <Grid container>
                                         <Grid item xs={2}><PersonOutline/></Grid>
                                         <Grid item xs={10}><Typography>Client</Typography></Grid>
                                         <Grid item xs={2}></Grid>
-                                        <Grid item xs={10}><Typography>{quote.clientName}</Typography></Grid>
+                                        <Grid item xs={10}><Typography>{invoice.clientName}</Typography></Grid>
                                     </Grid>
                                     <Grid container>
-                                        <Grid item xs={2}><LocationOnOutlined/></Grid>
-                                        <Grid item xs={10}><Typography>Address</Typography></Grid>
+                                        <Grid item xs={2}><AttachMoney/></Grid>
+                                        <Grid item xs={10}><Typography>Total</Typography></Grid>
                                         <Grid item xs={2}></Grid>
-                                        <Grid item xs={10}><Typography>{quote.address}</Typography></Grid>
+                                        <Grid item xs={10}><Typography>{invoice.price}</Typography></Grid>
                                     </Grid>
                                     <Grid container>
                                         <Grid item xs={2}><EventAvailableOutlined/></Grid>
@@ -100,15 +98,15 @@ function ClientHubQuotes(props: any) {
                                     </Grid>
                                 <Divider/>
                                 <Stack direction={'row'}>
-                                    <Typography>Total</Typography>
-                                    <Typography>{`$${quote.price}`}</Typography>
+                                    <Typography>Balance</Typography>
+                                    <Typography>{`$${invoice.price}`}</Typography>
                                 </Stack>
                                 </Stack>
                                 </ListItemButton>
                             </Card>
                     </Grid>))}
                 </Grid>
-                {rows?.filter((quote: any) => quote.status === status)?.length === 0 && <Typography>{`No ${status} Quotes`}</Typography>}
+                {rows?.filter((invoice: any) => invoice.status === status)?.length === 0 && <Typography>{`No ${status} Invoices`}</Typography>}
                 </TabPanel>
             ))}
             </>
@@ -116,4 +114,4 @@ function ClientHubQuotes(props: any) {
     )
 }
 
-export default ClientHubQuotes;
+export default ClientHubInvoices;

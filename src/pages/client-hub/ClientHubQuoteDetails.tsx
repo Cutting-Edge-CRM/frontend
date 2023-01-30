@@ -82,7 +82,7 @@ function TabPanel(props: any) {
             {props.option.items.map(((item: any, index: number) => (
                 <QuoteItem key={index} item={item} upsell={item.addon === 1} {...props}/>
             )))}
-            {props.job?.items?.length === 0 && <EmptyState type='quote-items'/>}
+            {props.option?.items?.length === 0 && <EmptyState type='quote-items'/>}
             <Divider />
             <Stack direction="row">
                 <Typography>Subtotal</Typography>
@@ -109,8 +109,6 @@ function TabPanel(props: any) {
 
 function ClientHubQuoteDetails(props: any) {
     // const [value, setValue] = useState(0);
-    // const [error, setError] = useState(null);
-    // const [loading, setLoading] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [confirmType, setConfirmType] = useState('');
 
@@ -148,8 +146,12 @@ function ClientHubQuoteDetails(props: any) {
             </Stack>
             <Stack direction="row">
                 <Stack>
+                    <Typography>Client</Typography>
+                    <Typography>Jim Halpert</Typography>
+                </Stack>
+                <Stack>
                     <Typography>Sent</Typography>
-                    <Typography>{props.quote.quote.created}</Typography>
+                    <Typography>11/27/2022</Typography>
                 </Stack>
                 <Stack>
                     <Typography>Opened</Typography>
@@ -192,7 +194,6 @@ function ClientHubQuoteDetails(props: any) {
                 </Button>
             </>
                 }
-            {/* {error && <Alert severity="error">{error}</Alert>} */}
             <ConfirmChangeStatus
             open={confirmOpen}
             onClose={handleConfirmClose}
