@@ -43,7 +43,29 @@ async function getTenantForUser(email: string) {
     }
 }
 
+async function getTenantForClient(client: string) {
+    try {
+        var headers = {
+            'Content-Type': 'application/json',
+        }
+        const requestOptions = {
+            method: 'GET',
+            headers: headers,
+        };
+        let res = await fetch(`${process.env.REACT_APP_SERVER_URL}/tenants/get-tenant-for-client/${client}`, requestOptions);
+        let response = await res.json();
+        if (res.ok) {
+            return response;
+        }
+        return Promise.reject(new Error(response.kind));
+    } catch (err) {
+        console.error(err);
+        return Promise.reject(new Error(ErrorTypes.UNKNOWNERROR));
+    }
+}
+
 export {
     registerNewTenant,
-    getTenantForUser
+    getTenantForUser,
+    getTenantForClient
   };

@@ -111,10 +111,10 @@ export default function SendInvoiceModal(props: any) {
     }, [props.invoice.invoice.client])
 
     useEffect(() => {
-        let replyTo = props.settings.replyToEmail ? props.settings.replyToEmail : currentUser.email;
-        let emailSubject = props.settings.sendInvoiceEmailSubject ? props.settings.sendInvoiceEmailSubject : 'Invoice';
-        let emailBody = props.settings.sendInvoiceEmailBody ? props.settings.sendInvoiceEmailBody : `Thank you for your recent business. Your invoice is linked below.`;
-        let smsBody = props.settings.sendInvoiceSMSBody ? props.settings.sendInvoiceSMSBody : `Thank you for your recent business. Your invoice is linked below.`;
+        let replyTo = props.settings?.replyToEmail ? props.settings?.replyToEmail : currentUser.email;
+        let emailSubject = props.settings?.sendInvoiceEmailSubject ? props.settings?.sendInvoiceEmailSubject : 'Invoice';
+        let emailBody = props.settings?.sendInvoiceEmailBody ? props.settings?.sendInvoiceEmailBody : `Thank you for your recent business. Your invoice is linked below.`;
+        let smsBody = props.settings?.sendInvoiceSMSBody ? props.settings?.sendInvoiceSMSBody : `Thank you for your recent business. Your invoice is linked below.`;
         setEmailMessage({...emailMessage, replyTo: replyTo, subject: emailSubject, body: emailBody})
         setSMSMessage({...smsMessage, body: smsBody})
         // eslint-disable-next-line

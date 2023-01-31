@@ -111,10 +111,10 @@ export default function SendQuoteModal(props: any) {
     }, [props.quote.quote.client])
 
     useEffect(() => {
-        let replyTo = props.settings.replyToEmail ? props.settings.replyToEmail : currentUser.email;
-        let emailSubject = props.settings.sendQuoteEmailSubject ? props.settings.sendQuoteEmailSubject : 'Quote';
-        let emailBody = props.settings.sendQuoteEmailBody ? props.settings.sendQuoteEmailBody : `Thank you for your recent business. Your invoice is linked below.`;
-        let smsBody = props.settings.sendQuoteSMSBody ? props.settings.sendQuoteSMSBody : `Thank you for your recent business. Your invoice is linked below.`;
+        let replyTo = props.settings?.replyToEmail ? props.settings?.replyToEmail : currentUser.email;
+        let emailSubject = props.settings?.sendQuoteEmailSubject ? props.settings?.sendQuoteEmailSubject : 'Quote';
+        let emailBody = props.settings?.sendQuoteEmailBody ? props.settings?.sendQuoteEmailBody : `Thank you for your recent business. Your invoice is linked below.`;
+        let smsBody = props.settings?.sendQuoteSMSBody ? props.settings?.sendQuoteSMSBody : `Thank you for your recent business. Your invoice is linked below.`;
         setEmailMessage({...emailMessage, replyTo: replyTo, subject: emailSubject, body: emailBody})
         setSMSMessage({...smsMessage, body: smsBody})
         // eslint-disable-next-line

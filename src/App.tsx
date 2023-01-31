@@ -17,11 +17,16 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { ThemeProvider } from '@mui/material';
 import { theme } from './theme/theme';
 import ClientHub from './pages/client-hub/ClientHub';
+import { isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
+import { auth } from "./auth/firebase";
+import { getTenantForClient } from './api/tenant.api';
 
 function App() {
-  
-    return (
-      <>
+
+  let loading = true;
+
+  const children = (
+  <>
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Router>
@@ -41,7 +46,43 @@ function App() {
         </LocalizationProvider>
       </ThemeProvider>
       </>
-    );
+  );
+
+if (!isSignInWithEmailLink(auth, window.location.href)) {
+  loading = false;
+}
+
+  // Confirm the link is a sign-in with email link.
+if (isSignInWithEmailLink(auth, window.location.href)) {
+  let link = window.location.href;
+  const url = new URL(link);
+  let baseLink = window.location.href.split('?')[0];
+  let email = url.searchParams.get('email');
+  let client = url.pathname.split('/')[2];
+  if (!email) email = window.localStorage.getItem('emailForSignIn');
+  if (!email) email = window.prompt('Please provide your email for confirmation');
+  window.localStorage.setItem('emailForSignIn', email as string);
+  getTenantForClient(client).then(res => {
+    let tenantId = res.company;
+    auth.tenantId = tenantId;
+    signInWithEmailLink(auth, (email as string), link)
+    .then((result) => {
+      window.location.replace(baseLink);
+      loading = false;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }).catch(err => {
+    console.error(err);
+  })
+  }
+
+  if (loading) {
+    return (<></>);
+  }
+
+  return children;
 }
 
 
