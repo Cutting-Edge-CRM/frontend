@@ -5,6 +5,8 @@ import { getClient } from '../api/client.api';
 import { sendEmail } from '../api/email.api';
 import { sendSMS } from '../api/sms.api';
 import { currentUser } from '../auth/firebase';
+import RegexParser from 'regex-parser';
+
 
 export default function SendInvoiceModal(props: any) {
     const [value, setValue] = useState(0);
@@ -12,6 +14,7 @@ export default function SendInvoiceModal(props: any) {
     const [emailMessage, setEmailMessage] = useState({toList: [], to: '', subject: '', replyTo: '', body: ''} as any);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [emailsInvalid, setEmailsInvalid] = useState(false);
 
     const handleCancel = () => {
         props.onClose();
@@ -20,9 +23,12 @@ export default function SendInvoiceModal(props: any) {
     const handleSend = () => {
         setLoading(true);
         if (value === 0) {
+            if (!emailMessage.to || emailMessage.to?.trim() === '' || emailValid(emailMessage.to)) {
             // send email
+            let emailList = emailMessage.toList;
+            if (emailMessage.to && emailMessage.to?.trim() !== '') emailList.push(emailMessage.to);
             let email = {
-                emails: emailMessage.toList,
+                emails: emailList,
                 replyTo: emailMessage.replyTo,
                 subject: emailMessage.subject,
                 body: emailMessage.body,
@@ -37,6 +43,10 @@ export default function SendInvoiceModal(props: any) {
                 setLoading(false);
                 setError(err.message);
             })
+            } else {
+                setLoading(false);
+                setEmailsInvalid(true);
+            }
         }
         if (value === 1) {
             // send sms
@@ -62,6 +72,7 @@ export default function SendInvoiceModal(props: any) {
     };
 
     const handleEmailChange = (event: any) => {
+        setEmailsInvalid(false);
         setEmailMessage({ ...emailMessage, [event.target.id]: event.target.value?.trim()});
     }
 
@@ -75,11 +86,23 @@ export default function SendInvoiceModal(props: any) {
         setEmailMessage({ ...emailMessage, toList});
     }
 
+    const emailValid = (email: any) => {
+        // eslint-disable-next-line
+        let validEmail = RegexParser(
+        "/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$/."
+        );
+        return validEmail.test(email);
+    };
+
     const handleEmailKeyDown = (event: any) => {
         if (event.keyCode === 13) {
-            let toList = emailMessage.toList;
-            toList.push(event.target.value);
-            setEmailMessage({ ...emailMessage, toList, to: ''});
+            if (emailValid(event.target.value)) {
+                let toList = emailMessage.toList;
+                toList.push(event.target.value);
+                setEmailMessage({ ...emailMessage, toList, to: ''});
+            } else {
+                setEmailsInvalid(true);
+            }
         }
     }
 
@@ -135,6 +158,7 @@ export default function SendInvoiceModal(props: any) {
                 <TextField
                 id="to" 
                 value={emailMessage.to}
+                error={emailsInvalid}
                 onChange={handleEmailChange}
                 label="To"
                 onKeyDown={handleEmailKeyDown}
@@ -166,6 +190,8 @@ export default function SendInvoiceModal(props: any) {
                 <Typography variant="body2" color="primary">Email Body</Typography>
                 <TextField
                 id='body'
+                multiline
+                minRows={3}
                 value={emailMessage.body}
                 onChange={handleEmailChange}
                 />
@@ -197,6 +223,8 @@ export default function SendInvoiceModal(props: any) {
                 <Typography variant="body2" color="primary">Text Message</Typography>
                 <TextField
                 id='body'
+                multiline
+                minRows={3}
                 value={smsMessage.body}
                 onChange={handleSMSChange}
                 />

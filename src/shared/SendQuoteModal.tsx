@@ -5,6 +5,7 @@ import { getClient } from '../api/client.api';
 import { sendEmail } from '../api/email.api';
 import { sendSMS } from '../api/sms.api';
 import { currentUser } from '../auth/firebase';
+import RegexParser from 'regex-parser';
 
 export default function SendQuoteModal(props: any) {
     const [value, setValue] = useState(0);
@@ -12,6 +13,7 @@ export default function SendQuoteModal(props: any) {
     const [emailMessage, setEmailMessage] = useState({toList: [], to: '', subject: '', replyTo: '', body: ''} as any);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [emailsInvalid, setEmailsInvalid] = useState(false);
 
     const handleCancel = () => {
         props.onClose();
@@ -20,28 +22,37 @@ export default function SendQuoteModal(props: any) {
     const handleSend = () => {
         setLoading(true);
         if (value === 0) {
-            // send email
-            let email = {
-                emails: emailMessage.toList,
-                replyTo: emailMessage.replyTo,
-                subject: emailMessage.subject,
-                body: emailMessage.body,
-                quote: props.quote.quote.id,
-                client: props.quote.quote.client,
+            if (!emailMessage.to || emailMessage.to?.trim() === '' || emailValid(emailMessage.to)) {
+                // send email
+                let emailList = emailMessage.toList;
+                if (emailMessage.to && emailMessage.to?.trim() !== '') emailList.push(emailMessage.to);
+                let email = {
+                    emails: emailList,
+                    replyTo: emailMessage.replyTo,
+                    subject: emailMessage.subject,
+                    body: emailMessage.body,
+                    quote: props.quote.quote.id,
+                    client: props.quote.quote.client,
+                }
+                sendEmail(email)
+                .then(res => {
+                    setLoading(false);
+                    props.success('Sent email successfully');
+                }, err => {
+                    setLoading(false);
+                    setError(err.message);
+                })
+            } else {
+                setLoading(false);
+                setEmailsInvalid(true);
             }
-            sendEmail(email)
-            .then(res => {
-                setLoading(false);
-                props.success('Sent email successfully');
-            }, err => {
-                setLoading(false);
-                setError(err.message);
-            })
         }
         if (value === 1) {
             // send sms
+            let smsList = smsMessage.toList;
+            if (smsMessage.to && smsMessage.to?.trim() !== '') smsList.push(smsMessage.to);
             let sms = {
-                numbers: smsMessage.toList,
+                numbers: smsList,
                 body: smsMessage.body,
                 quote: props.quote.quote.id,
                 client: props.quote.quote.client,
@@ -62,6 +73,7 @@ export default function SendQuoteModal(props: any) {
     };
 
     const handleEmailChange = (event: any) => {
+        setEmailsInvalid(false);
         setEmailMessage({ ...emailMessage, [event.target.id]: event.target.value?.trim()});
     }
 
@@ -75,11 +87,23 @@ export default function SendQuoteModal(props: any) {
         setEmailMessage({ ...emailMessage, toList});
     }
 
+    const emailValid = (email: any) => {
+        // eslint-disable-next-line
+        let validEmail = RegexParser(
+        "/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$/."
+        );
+        return validEmail.test(email);
+    };
+
     const handleEmailKeyDown = (event: any) => {
         if (event.keyCode === 13) {
-            let toList = emailMessage.toList;
-            toList.push(event.target.value);
-            setEmailMessage({ ...emailMessage, toList, to: ''});
+            if (emailValid(event.target.value)) {
+                let toList = emailMessage.toList;
+                toList.push(event.target.value);
+                setEmailMessage({ ...emailMessage, toList, to: ''});
+            } else {
+                setEmailsInvalid(true);
+            }
         }
     }
 
@@ -92,6 +116,7 @@ export default function SendQuoteModal(props: any) {
     const handleSMSKeyDown = (event: any) => {
         if (event.keyCode === 13) {
             let toList = smsMessage.toList;
+
             toList.push(event.target.value);
             setSMSMessage({ ...smsMessage, toList, to: ''});
         }
@@ -134,6 +159,7 @@ export default function SendQuoteModal(props: any) {
                 <Stack spacing={2}>
                 <TextField
                 id="to" 
+                error={emailsInvalid}
                 value={emailMessage.to}
                 onChange={handleEmailChange}
                 label="To"
@@ -166,6 +192,8 @@ export default function SendQuoteModal(props: any) {
                 <Typography variant="body2" color="primary">Email Body</Typography>
                 <TextField
                 id='body'
+                multiline
+                minRows={3}
                 value={emailMessage.body}
                 onChange={handleEmailChange}
                 />
@@ -197,6 +225,8 @@ export default function SendQuoteModal(props: any) {
                 <Typography variant="body2" color="primary">Text Message</Typography>
                 <TextField
                 id='body'
+                multiline
+                minRows={3}
                 value={smsMessage.body}
                 onChange={handleSMSChange}
                 />
