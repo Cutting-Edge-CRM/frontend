@@ -26,6 +26,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { listNotes } from '../../api/note.api';
 import ConfirmDelete from '../ConfirmDelete';
+import EmptyState from '../EmptyState';
 import EditNote from './EditNote';
 
 function Notes(props: any) {
@@ -164,7 +165,7 @@ function Notes(props: any) {
                       </Typography>
                     )}
                     <ImageList
-                      cols={note.images.length < 3 ? note.images.length : 3}
+                      cols={2}
                       sx={{ mt: 1.5 }}
                     >
                       {note.images.map((image: any) => (
@@ -222,10 +223,7 @@ function Notes(props: any) {
             </ListItem>
           ))}
           {rows.length === 0 && (
-            <Typography>
-              This client doesn't have any notes yet, click the "+" icon to add
-              one.
-            </Typography>
+            <EmptyState type="notes"/>
           )}
         </List>
       )}

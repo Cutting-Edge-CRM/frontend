@@ -1,3 +1,5 @@
+// import { auth, currentUser } from "../auth/firebase";
+
 
 async function saveImagesCloudinary(images: {url: string, file: File}[]) {
     try {
@@ -23,16 +25,14 @@ async function updateImagesInCloudinary(images: any[], originalImages: any[]) {
         // add images which are in images but not in original images
         // skip images which are in both
 
-        // let toDelete = originalImages.filter(or => !images.find(im => im.url === or.url));
+        // let toDelete = originalImages.filter(or => !images.find(im => im.url === or.url)).map(im => im.public_id);
         let toSave = images.filter(im => !originalImages.find(or => or.url === im.url));
         let toSkip = originalImages.filter(or => images.find(im => im.url === or.url));
-        // let deletedPromises = toDelete.map(i => deleteImageCloudinary(i.public_id))
         let savedPromises = toSave.map(i => saveImageCloudinary(i.url));
         
-        // let returnPromises = deletedPromises.concat(savedPromises);
-
         return Promise.all(savedPromises)
         .then(res => {
+            // if (toDelete.length > 0) deleteImageCloudinary(toDelete);
             return res.concat(toSkip);
         }, err => {
             throw new Error(`Error updating images in cloudinary ${err}`);
@@ -70,28 +70,30 @@ async function saveImageCloudinary(image: string) {
     }
 }
 
-// async function deleteImageCloudinary(id: string) {
-//     let cloudName = 'dtjqpussy';
+// async function deleteImageCloudinary(ids: string[]) {
 //     try {
 //     var headers: HeadersInit = {
 //         'Content-Type': 'application/json',
+//         'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+//         'tenantId': auth.tenantId as string,
+//         'userId': auth.currentUser?.uid as string
 //     }
-//     var body = JSON.stringify({public_id: id});
+//     var body = JSON.stringify({images: ids});
 //     const requestOptions: RequestInit = {
 //         method: 'POST',
 //         headers: headers,
 //         body: body
 //     };
-//         let url = new URL(`https://api.cloudinary.com/v1_1/${cloudName}/destroy`);
+//         let url = new URL(`${process.env.REACT_APP_SERVER_URL}/images/delete-images-cloudinary`);
 //         return fetch(url, requestOptions)
 //         .then(res => {
 //             if (res.ok) {
 //                 return res.json();
 //             }
 //             res.json().then(err => {
-//                 console.error(`Error uploading photos: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+//                 console.error(`Error deleting images from cloudinary: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
 //             })
-//             throw new Error(`Error uploading photos`);
+//             throw new Error(`Error deleting images from cloudinary`);
 //         })
 //     } catch (err) {
 //         console.error(err);

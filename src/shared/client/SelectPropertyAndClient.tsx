@@ -12,6 +12,7 @@ import {
   Step,
   StepLabel,
   Stepper,
+  Typography,
 } from '@mui/material';
 import {
   DataGrid,
@@ -23,14 +24,14 @@ import mapboxgl from 'mapbox-gl';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { listClients } from '../api/client.api';
-import { createJob, updateJob } from '../api/job.api';
-import { listProperties } from '../api/property.api';
-import { createQuote, updateQuote } from '../api/quote.api';
-import EmptyState from './EmptyState';
-import EditProperty from './property/EditProperty';
-import NewClient from './client/NewClient';
-import CustomPagination from './CustomPagination';
+import { listClients } from '../../api/client.api';
+import { createJob, updateJob } from '../../api/job.api';
+import { listProperties } from '../../api/property.api';
+import { createQuote, updateQuote } from '../../api/quote.api';
+import CustomPagination from '../CustomPagination';
+import EmptyState from '../EmptyState';
+import EditProperty from '../property/EditProperty';
+import NewClient from './NewClient';
 
 mapboxgl.accessToken =
   'pk.eyJ1IjoiY3V0dGluZ2VkZ2Vjcm0iLCJhIjoiY2xjaHk1cWZrMmYzcDN3cDQ5bGRzYTY1bCJ9.0B4ntLJoCZzxQ0SUxqaQxg';
@@ -61,19 +62,21 @@ const propertyColumns: GridColDef[] = [
   },
 ];
 
-export default function SelectClient(props: any) {
+export default function SelectPropertyAndClient(props: any) {
   const [client, setClient] = useState({} as any);
   const [property, setProperty] = useState({} as any);
   const [activeStep, setActiveStep] = useState(0);
   const [clientRows, setClientRows] = useState([]);
   const [propertyRows, setPropertyRows] = useState([]);
-  const [clientIsLoaded, setClientIsLoaded] = useState(false);
-  const [propertyIsLoaded, setPropertyIsLoaded] = useState(false);
+  const [clientsAreLoading, setClientsAreLoading] = useState(false);
+  const [errorListingClients, setErrorListingClients] = useState(null);
+  const [propertiesAreLoading, setPropertiesAreLoading] = useState(true);
+  const [errorListingProperties, setErrorListingProperties] = useState(null);
   const [newClientOpen, setNewClientOpen] = useState(false);
   const [newPropertyOpen, setNewPropertyOpen] = useState(false);
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleCancel = () => {
     props.onClose();
@@ -93,28 +96,27 @@ export default function SelectClient(props: any) {
     setLoading(true);
     setProperty(event.row);
     switch (props.type) {
-      case 'Job':
+      case 'Jobs':
         let job: any = {
           client: client.id,
           property: event.row.id,
-          status: 'unscheduled',
+          status: 'Active',
         };
         createJob(job).then(
           (res) => {
             let updatingJob: any = {};
             updatingJob.job = job;
             updatingJob.job.id = res.id;
-            updatingJob.items = props.job.items;
+            updatingJob.items = [{ job: res.id, price: 0 }];
             updateJob(updatingJob).then(
               (_) => {
                 setLoading(false);
-                props.onClose();
                 navigate(`/jobs/${res.id}`);
-                props.success('Successfully duplicated job');
+                props.success('Successfully created new job');
               },
               (err) => {
-                setError(err.message);
                 setLoading(false);
+                setError(err.message);
               }
             );
           },
@@ -125,24 +127,31 @@ export default function SelectClient(props: any) {
         );
 
         break;
-      case 'Quote':
+      case 'Quotes':
         let quote: any = {
           client: client.id,
           property: event.row.id,
-          status: 'draft',
+          status: 'Draft',
         };
         createQuote(quote).then(
           (res) => {
             let updatingQuote: any = {};
             updatingQuote.quote = quote;
             updatingQuote.quote.id = res.id;
-            updatingQuote.options = props.quote.options;
+            updatingQuote.options = [
+              {
+                quote: res.id,
+                deposit: 0,
+                depositPercent: 0,
+                tax: null,
+                items: [{ quote: res.id, price: 0 }],
+              },
+            ];
             updateQuote(updatingQuote).then(
               (_) => {
                 setLoading(false);
-                props.onClose();
                 navigate(`/quotes/${res.id}`);
-                props.success('Successfully duplicated quote');
+                props.success('Successfully created new quote');
               },
               (err) => {
                 setLoading(false);
@@ -195,28 +204,52 @@ export default function SelectClient(props: any) {
     return <EmptyState type="properties" />;
   };
 
+  const getClientErrorState = () => {
+    return (
+      <>
+        <ClientToolbar />
+        <Typography>{errorListingClients}</Typography>
+      </>
+    );
+  };
+
+  const getPropertyErrorState = () => {
+    return (
+      <>
+        <PropertyToolbar />
+        <Typography>{errorListingProperties}</Typography>
+      </>
+    );
+  };
+
+  const getLoadingState = () => {
+    return <Box textAlign='center'><CircularProgress /></Box>;
+  };
+
   useEffect(() => {
     listClients().then(
       (result) => {
-        setClientIsLoaded(true);
+        setClientsAreLoading(false);
         setClientRows(result.rows);
       },
       (err) => {
-        setClientIsLoaded(true);
+        setErrorListingClients(err.message);
+        setClientsAreLoading(false);
       }
     );
   }, [newClientOpen]);
 
   useEffect(() => {
-    setPropertyIsLoaded(false);
+    setPropertiesAreLoading(true);
     if (!client) return;
     listProperties(client.id).then(
       (result) => {
         setPropertyRows(result);
-        setPropertyIsLoaded(true);
+        setPropertiesAreLoading(false);
       },
       (err) => {
-        setPropertyIsLoaded(true);
+        setErrorListingProperties(err.message);
+        setPropertiesAreLoading(false);
       }
     );
   }, [client, activeStep, newPropertyOpen]);
@@ -234,58 +267,57 @@ export default function SelectClient(props: any) {
         </Stepper>
         <Box mt={2}>
           {activeStep === 0 ? (
-            <Box>
-              {!clientIsLoaded && <Box textAlign='center'><CircularProgress /></Box>}
-              {clientIsLoaded && (
-                <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none'}}}>
-                <DataGrid
-                  autoHeight
-                  rows={clientRows}
-                  columns={clientColumns}
-                  pageSize={10}
-                  rowsPerPageOptions={[10, 20, 50]}
-                  components={{
-                    Toolbar: ClientToolbar,
-                    NoRowsOverlay: getClientEmptyState,
-                    Pagination: CustomPagination,
-                  }}
-                  componentsProps={{
-                    toolbar: {
-                      showQuickFilter: true,
-                      quickFilterProps: { debounceMs: 500 },
-                    },
-                    ...props,
-                  }}
-                  onRowClick={handleClientRowClick}
-                />
-                </Box>
-              )}
+            <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none'}}}>
+              <DataGrid
+                autoHeight
+                rows={clientRows}
+                columns={clientColumns}
+                pageSize={10}
+                rowsPerPageOptions={[10, 20, 50]}
+                loading={clientsAreLoading}
+                error={errorListingClients}
+                components={{
+                  Toolbar: ClientToolbar,
+                  NoRowsOverlay: getClientEmptyState,
+                  ErrorOverlay: getClientErrorState,
+                  LoadingOverlay: getLoadingState,
+                  Pagination: CustomPagination,
+                }}
+                componentsProps={{
+                  toolbar: {
+                    showQuickFilter: true,
+                    quickFilterProps: { debounceMs: 500 },
+                  },
+                  ...props,
+                }}
+                onRowClick={handleClientRowClick}
+              />
             </Box>
           ) : (
             <Box>
-              {!propertyIsLoaded && <Box textAlign='center'><CircularProgress /></Box>}
-              {propertyIsLoaded && (
-                <DataGrid
-                  autoHeight
-                  rows={propertyRows}
-                  columns={propertyColumns}
-                  pageSize={10}
-                  rowsPerPageOptions={[10, 20, 50]}
-                  components={{
-                    Toolbar: PropertyToolbar,
-                    NoRowsOverlay: getPropertiesEmptyState,
-                    Pagination: CustomPagination,
-                  }}
-                  componentsProps={{
-                    toolbar: {
-                      showQuickFilter: true,
-                      quickFilterProps: { debounceMs: 500 },
-                    },
-                    ...props,
-                  }}
-                  onRowClick={handlePropertyRowClick}
-                />
-              )}
+              <DataGrid
+                autoHeight
+                rows={propertyRows}
+                columns={propertyColumns}
+                pageSize={10}
+                rowsPerPageOptions={[10, 20, 50]}
+                loading={propertiesAreLoading}
+                error={errorListingProperties}
+                components={{
+                  Toolbar: PropertyToolbar,
+                  NoRowsOverlay: getPropertiesEmptyState,
+                  ErrorOverlay: getPropertyErrorState,
+                  LoadingOverlay: getLoadingState,
+                }}
+                componentsProps={{
+                  toolbar: {
+                    showQuickFilter: true,
+                    quickFilterProps: { debounceMs: 500 },
+                  },
+                  ...props,
+                }}
+                onRowClick={handlePropertyRowClick}
+              />
             </Box>
           )}
         </Box>
@@ -329,21 +361,21 @@ export default function SelectClient(props: any) {
 
   return (
     <Dialog onClose={handleCancel} open={props.open} fullWidth>
-      <DialogTitle align="center">Select client for {props.type}</DialogTitle>
+      <DialogTitle align="center">
+        Select client for {props.type.slice(0, -1)}
+      </DialogTitle>
       <DialogContent>
         {loading && <LinearProgress />}
         <Box sx={{ width: '100%' }}>
-          {(props.type === 'Quote' || props.type === 'Job') && (
-            <SelectStepper props={props} />
-          )}
+          <SelectStepper props={props} />
         </Box>
       </DialogContent>
       <DialogActions>
         <Button
-          variant="outlined"
           disabled={activeStep === 0}
           onClick={handleBack}
           sx={{ mr: 1 }}
+          variant="outlined"
         >
           Back
         </Button>
@@ -354,7 +386,6 @@ export default function SelectClient(props: any) {
         open={newClientOpen}
         onClose={handleCloseNewClient}
         update={handleSaveNewClient}
-        success={props.success}
       />
       <EditProperty
         setProperty={setProperty}
@@ -364,7 +395,6 @@ export default function SelectClient(props: any) {
         create={handleSaveNewProperty}
         type={'new'}
         token={mapboxgl.accessToken}
-        success={props.success}
       />
     </Dialog>
   );

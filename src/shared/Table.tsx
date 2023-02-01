@@ -4,10 +4,11 @@ import { Box, Card, CircularProgress, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import NewClient from './client/NewClient';
-import SelectClient from './client/SelectClient';
+import SelectPropertyAndClient from './client/SelectPropertyAndClient';
 import EmptyState from './EmptyState';
 import CustomToolbar from './CutomToolbar';
 import CustomPagination from './CustomPagination';
+import SelectClient from './client/SelectClient';
 
 export default function Table(props: any) {
   const navigate = useNavigate();
@@ -56,8 +57,8 @@ export default function Table(props: any) {
 
   return (
     <Card>
+      <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none'}}}>
       <DataGrid
-        checkboxSelection
         error={props.errorListing}
         loading={props.listLoading}
         autoHeight
@@ -98,17 +99,25 @@ export default function Table(props: any) {
         onClose={handleClose}
         success={props.success}
       />
-      <SelectClient
+      <SelectPropertyAndClient
         open={
           (props.type === 'Quotes' ||
-            props.type === 'Jobs' ||
-            props.type === 'Invoices') &&
+            props.type === 'Jobs') &&
           newOpen
         }
         onClose={handleClose}
         type={props.type}
         success={props.success}
       />
+      <SelectClient
+        open={
+          (props.type === 'Invoices') &&
+          newOpen
+        }
+        onClose={handleClose}
+        success={props.success}
+      />
+      </Box>
     </Card>
   );
 }

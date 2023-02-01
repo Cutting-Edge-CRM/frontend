@@ -30,6 +30,7 @@ import { listVisits } from '../../api/visit.api';
 import EditVisit from './EditVisit';
 import dayjs from 'dayjs';
 import ConfirmDelete from '../ConfirmDelete';
+import EmptyState from '../EmptyState';
 
 const StyledVisitContainer = styled(ListItem)<ListItemProps>(({ theme }) => ({
   backgroundColor: theme.palette.info.light,
@@ -255,10 +256,7 @@ function Visits(props: any) {
             </StyledVisitContainer>
           ))}
           {rows.length === 0 && (
-            <Typography>
-              This client doesn't have any visits yet, click the "+" icon to add
-              one.
-            </Typography>
+            <EmptyState type="visits"/>
           )}
         </List>
       )}

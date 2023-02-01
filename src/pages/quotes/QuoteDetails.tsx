@@ -36,8 +36,6 @@ import {
   Select,
   Stack,
   Switch,
-  Tab,
-  Tabs,
   TextField,
   Typography,
 } from '@mui/material';
@@ -228,7 +226,8 @@ function QuoteItemEdit(props: any) {
           {...props}
           type="quote"
         />
-        <Button
+        {props.option.items.length > 1 && 
+          <Button
           onClick={handleDeleteItem}
           startIcon={<DeleteOutline />}
           color="error"
@@ -236,6 +235,7 @@ function QuoteItemEdit(props: any) {
         >
           Delete Item
         </Button>
+        }
       </Stack>
       <Divider sx={{ my: 3 }} />
     </>
@@ -536,7 +536,7 @@ function TabPanel(props: any) {
 function QuoteDetails(props: any) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isOpen = Boolean(anchorEl);
-  const [value, setValue] = useState(0);
+  // const [value, setValue] = useState(0);
   const [editting, setEditting] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const navigate = useNavigate();
@@ -548,20 +548,20 @@ function QuoteDetails(props: any) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: any) => {
-    if (newValue === 'add') {
-      let options = props.quote.options;
-      options.push({
-        deposit: 0,
-        depositPercent: 0,
-        tax: null,
-        items: [{ price: 0 }],
-      });
-      setValue(props.quote.options.length - 1);
-    } else {
-      setValue(newValue);
-    }
-  };
+  // const handleChange = (event: React.SyntheticEvent, newValue: any) => {
+  //   if (newValue === 'add') {
+  //     let options = props.quote.options ? props.quote.options : [];
+  //     options.push({
+  //       deposit: 0,
+  //       depositPercent: 0,
+  //       tax: null,
+  //       items: [{ price: 0 }],
+  //     });
+  //     setValue(options.length - 1);
+  //   } else {
+  //     setValue(newValue);
+  //   }
+  // };
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -637,18 +637,18 @@ function QuoteDetails(props: any) {
       details: `Deposit for quote #${props.quote.quote.id}`,
       transDate: dayjs(),
       method: 'Cheque',
-      amount: props.quote.options[value].depositPercent
-        ? (+props.quote.options[value].deposit / 100) *
-          (props.quote.options[value].items
+      amount: props.quote.options[0].depositPercent
+        ? (+props.quote.options[0].deposit / 100) *
+          (props.quote.options[0].items
             .map((i: any) => i.price)
             .reduce(add, 0) +
             +props.taxes.find(
-              (t: any) => t.id === props.quote.options[value].tax
+              (t: any) => t.id === props.quote.options[0].tax
             )?.tax *
-              props.quote.options[value].items
+              props.quote.options[0].items
                 .map((i: any) => i.price)
                 .reduce(add, 0))
-        : props.quote.options[value].deposit,
+        : props.quote.options[0].deposit,
     });
     setPaymentOpen(true);
   };
@@ -902,7 +902,7 @@ function QuoteDetails(props: any) {
             </Button>
           )}
         </Stack>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        {/* <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange}>
             {props.quote.options?.map((_: any, index: number) => (
               <Tab
@@ -913,17 +913,17 @@ function QuoteDetails(props: any) {
             ))}
             {editting && <Tab label={`Add Option`} value="add" />}
           </Tabs>
-        </Box>
-        {props.quote.options?.map((option: any, index: number) => (
+        </Box> */}
+        {/* {props.quote.options?.map((option: any, index: number) => ( */}
           <TabPanel
-            option={option}
-            key={index}
-            value={value}
-            index={index}
+            option={props.quote.options?.[0]}
+            // key={index}
+            // value={value}
+            // index={index}
             editting={editting}
             {...props}
           />
-        ))}
+        {/* ))} */}
         {props.payments.length > 0 && (
           <>
             <Divider sx={{ my: 2 }} />

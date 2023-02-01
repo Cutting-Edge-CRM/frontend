@@ -1,5 +1,6 @@
-import { Chip } from "@mui/material";
+import { Chip, Typography } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import dayjs from "dayjs";
 import React from "react";
 
 const clientColumns: GridColDef[] = [
@@ -31,6 +32,11 @@ const clientColumns: GridColDef[] = [
       field: 'created',
       headerName: 'Created',
       width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => {    
+        return (
+          <Typography>{dayjs(params.value).format('MM/DD/YYYY')}</Typography>
+        );
+      }
     },
   ];
 
@@ -63,6 +69,11 @@ const quoteColumns: GridColDef[] = [
       field: 'created',
       headerName: 'Created',
       width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => {    
+        return (
+          <Typography>{dayjs(params.value).format('MM/DD/YYYY')}</Typography>
+        );
+      }
     },
   ];
 
@@ -96,6 +107,11 @@ const jobColumns: GridColDef[] = [
       field: 'created',
       headerName: 'Created',
       width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => {    
+        return (
+          <Typography>{dayjs(params.value).format('MM/DD/YYYY')}</Typography>
+        );
+      }
     },
   ];
 
@@ -128,9 +144,13 @@ const invoiceColumns: GridColDef[] = [
       field: 'created',
       headerName: 'Created',
       width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => {    
+        return (
+          <Typography>{dayjs(params.value).format('MM/DD/YYYY')}</Typography>
+        );
+      }
     },
   ];
-
 
 export {
     clientColumns,

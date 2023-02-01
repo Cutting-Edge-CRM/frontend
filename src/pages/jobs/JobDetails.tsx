@@ -158,7 +158,8 @@ function JobItemEdit(props: any) {
           {...props}
           type="job"
         />
-        <Button
+        {props.job.items.length > 1 && 
+          <Button
           onClick={handleDeleteItem}
           startIcon={<DeleteOutline />}
           color="error"
@@ -166,6 +167,7 @@ function JobItemEdit(props: any) {
         >
           Delete Item
         </Button>
+        }
       </Stack>
       <Divider sx={{ mt: 3, mb: 1 }} />
     </>
