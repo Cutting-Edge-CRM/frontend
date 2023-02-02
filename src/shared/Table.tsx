@@ -57,7 +57,7 @@ export default function Table(props: any) {
 
   return (
     <Card>
-      <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none'}}}>
+      <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'}}}>
       <DataGrid
         error={props.errorListing}
         loading={props.listLoading}

@@ -154,7 +154,7 @@ export default function SelectClient(props: any) {
       </DialogTitle>
       <DialogContent>
         {loading && <LinearProgress />}
-        <Box sx={{ height: 400, width: '100%', mt: 2, '& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none'} }}>
+        <Box sx={{ height: 400, width: '100%', mt: 2, '& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'} }}>
             <DataGrid
                 rows={clientRows}
                 columns={clientColumns}

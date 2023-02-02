@@ -201,7 +201,7 @@ export default function SelectProperty(props: any) {
         <Box sx={{ width: '100%' }}>
           {!propertyIsLoaded && <Box textAlign='center'><CircularProgress /></Box>}
           {propertyIsLoaded && (
-            <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none'}}}>
+            <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'}}}>
             <DataGrid
               autoHeight
               rows={propertyRows}

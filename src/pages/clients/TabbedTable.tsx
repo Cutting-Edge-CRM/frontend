@@ -90,7 +90,7 @@ export default function Table(props: any) {
   return (
     <Box>
       {loading && <LinearProgress />}
-      <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none'}}}>
+      <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'}}}>
       <DataGrid
         error={props.errorListing}
         loading={props.loadingList}

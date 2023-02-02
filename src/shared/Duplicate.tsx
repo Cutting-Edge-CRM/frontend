@@ -237,7 +237,7 @@ export default function SelectClient(props: any) {
             <Box>
               {!clientIsLoaded && <Box textAlign='center'><CircularProgress /></Box>}
               {clientIsLoaded && (
-                <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none'}}}>
+                <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'}}}>
                 <DataGrid
                   autoHeight
                   rows={clientRows}

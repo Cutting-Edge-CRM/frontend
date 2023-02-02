@@ -127,7 +127,7 @@ function Property(props: any) {
           />
         )}
       </Box>
-      <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none'}}}>
+      <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'}}}>
         {error && <Alert severity="error">{error}</Alert>}
         {!isLoaded && <Box textAlign='center'><CircularProgress /></Box>}
         {!error && isLoaded && (

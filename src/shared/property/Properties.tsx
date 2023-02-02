@@ -289,7 +289,7 @@ function Properties(props: any) {
           />
         )}
       </Box>
-      <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none'}}}>
+      <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell': {outline: 'none !important'}}}>
         <DataGrid
           error={error}
           loading={loading}

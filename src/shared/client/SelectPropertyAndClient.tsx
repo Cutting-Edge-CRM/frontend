@@ -267,7 +267,7 @@ export default function SelectPropertyAndClient(props: any) {
         </Stepper>
         <Box mt={2}>
           {activeStep === 0 ? (
-            <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none'}}}>
+            <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'}}}>
               <DataGrid
                 autoHeight
                 rows={clientRows}
