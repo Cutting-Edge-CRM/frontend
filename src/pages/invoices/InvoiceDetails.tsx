@@ -38,6 +38,7 @@ import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { updateInvoice } from '../../api/invoice.api';
+import { createTimeline } from '../../api/timeline.api';
 import ConfirmDelete from '../../shared/ConfirmDelete';
 import EmptyState from '../../shared/EmptyState';
 import PaymentModal from '../../shared/PaymentModal';
@@ -292,6 +293,13 @@ function InvoiceDetails(props: any) {
     props.invoice.invoice.status = status;
     updateInvoice(props.invoice).then(
       (res) => {
+        let timeline_event = {
+          client: props.invoice.invoice.client,
+          resourceId: props.invoice.invoice.id,
+          resourceType: 'invoice',
+          resourceAction: status.toLowerCase()
+        };
+        createTimeline(timeline_event);
         props.success('Status updated successfully');
       },
       (err) => {}

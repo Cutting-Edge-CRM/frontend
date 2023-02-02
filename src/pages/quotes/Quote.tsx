@@ -10,6 +10,7 @@ import { getQuote } from '../../api/quote.api';
 import { Alert, Box, CircularProgress } from '@mui/material';
 import { listTaxes } from '../../api/tax.api';
 import { listPayments } from '../../api/payment.api';
+import Timeline from '../../shared/timeline/Timeline';
 
 function Quote(props: any) {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -74,6 +75,7 @@ function Quote(props: any) {
             <Grid xs={4}>
                 <Stack spacing={2}>
                     <Contact client={quote.quote?.client} success={props.success}/>
+                    <Timeline client={quote.quote?.client} resourceType='quote' resourceId={quote.quote?.id} />
                     <Notes client={quote.quote?.client} success={props.success}/>
                 </Stack>
             </Grid>

@@ -9,6 +9,7 @@ import { getJob } from '../../api/job.api';
 import { useParams } from 'react-router-dom';
 import { Alert, Box, CircularProgress } from '@mui/material';
 import Property from '../../shared/property/Property';
+import Timeline from '../../shared/timeline/Timeline';
 
 function Job(props: any) {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -49,6 +50,7 @@ function Job(props: any) {
                 <Stack spacing={2}>
                     <Contact client={job?.job.client} success={props.success}/>
                     <Visits client={job?.job.client} success={props.success}/>
+                    <Timeline client={job.job?.client} resourceType='job' resourceId={job.job?.id} />
                     <Notes client={job?.job.client} success={props.success}/>
                 </Stack>
             </Grid>

@@ -32,6 +32,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createInvoice, updateInvoice } from '../../api/invoice.api';
 import { updateJob } from '../../api/job.api';
+import { createTimeline } from '../../api/timeline.api';
 import ConfirmDelete from '../../shared/ConfirmDelete';
 import Duplicate from '../../shared/Duplicate';
 import EmptyState from '../../shared/EmptyState';
@@ -249,6 +250,13 @@ function JobDetails(props: any) {
     props.job.job.status = status;
     updateJob(props.job).then(
       (res) => {
+        let timeline_event = {
+          client: props.job.job.client,
+          resourceId: props.job.job.id,
+          resourceType: 'job',
+          resourceAction: status.toLowerCase()
+        };
+        createTimeline(timeline_event);
         props.success('Status updated successfully');
       },
       (err) => {}

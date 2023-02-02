@@ -44,6 +44,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createJob, updateJob } from '../../api/job.api';
 import { updateQuote } from '../../api/quote.api';
+import { createTimeline } from '../../api/timeline.api';
 import ConfirmDelete from '../../shared/ConfirmDelete';
 import Duplicate from '../../shared/Duplicate';
 import EmptyState from '../../shared/EmptyState';
@@ -664,6 +665,13 @@ function QuoteDetails(props: any) {
     props.quote.quote.status = status;
     updateQuote(props.quote).then(
       (res) => {
+        let timeline_event = {
+          client: props.quote.quote.client,
+          resourceId: props.quote.quote.id,
+          resourceType: 'quote',
+          resourceAction: status.toLowerCase()
+        };
+        createTimeline(timeline_event);
         props.success('Status updated successfully');
       },
       (err) => {}
@@ -694,6 +702,13 @@ function QuoteDetails(props: any) {
         updatingJob.items = items;
         updateJob(updatingJob).then(
           (_) => {
+            let timeline_event = {
+              client: props.quote.quote.client,
+              resourceId: props.quote.quote.id,
+              resourceType: 'quote',
+              resourceAction: 'converted'
+            };
+            createTimeline(timeline_event);
             props.quote.quote.status = 'Converted';
             props.quote.quote.job = res.id;
             updateQuote(props.quote).then(

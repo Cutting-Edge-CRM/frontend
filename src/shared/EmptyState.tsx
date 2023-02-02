@@ -1,4 +1,4 @@
-import { AttachMoney, EventAvailable, FormatListBulleted, FormatPaint, MapsHomeWork, People, Sell } from '@mui/icons-material';
+import { AttachMoney, EventAvailable, FormatListBulleted, FormatPaint, History, MapsHomeWork, People, Sell } from '@mui/icons-material';
 import { Avatar, Box, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
@@ -72,6 +72,10 @@ export default function EmptyState(props: any) {
             case 'visits':
                 setLogo(<EventAvailable sx={{ fontSize: 60, color: 'primary.main' }}/>);
                 setBody(`This client doesn't have any visits yet, click the '+' icon above to add one!`);
+                break;
+            case 'timeline':
+                setLogo(<History sx={{ fontSize: 60, color: 'primary.main' }}/>);
+                setBody(`There is no history associated with this resource yet.`);
                 break;
             default:
                 break;

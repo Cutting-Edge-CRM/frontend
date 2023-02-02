@@ -1,6 +1,7 @@
 import { Alert, Button, Dialog, DialogActions, DialogContent, LinearProgress, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { updateQuote } from '../../api/quote.api';
+import { createTimeline } from '../../api/timeline.api';
 
 
 export default function ConfirmDelete(props: any) {
@@ -20,6 +21,13 @@ export default function ConfirmDelete(props: any) {
         updateQuote(props.quote)
         .then(res => {
             setLoading(false);
+            let timeline_event = {
+                client: props.quote.quote.client,
+                resourceId: props.quote.quote.id,
+                resourceType: 'quote',
+                resourceAction: `client-${props.type.toLowerCase()}`
+              };
+            createTimeline(timeline_event);
             props.onClose();
             props.success(`Successfully ${props.type} Quote`);
         }, err => {

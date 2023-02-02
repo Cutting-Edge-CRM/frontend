@@ -22,6 +22,7 @@ import {
   deletePayment,
   updatePayment,
 } from '../api/payment.api';
+import { createTimeline } from '../api/timeline.api';
 
 export default function PaymentModal(props: any) {
   const paymentMethods = [
@@ -41,6 +42,13 @@ export default function PaymentModal(props: any) {
     if (props.type === 'new') {
       createPayment(props.payment).then(
         (res) => {
+          let timeline_event = {
+            client: props.payment.client,
+            resourceId: res.id,
+            resourceType: props.paymentType?.toLowerCase(),
+            resourceAction: 'created'
+          };
+          createTimeline(timeline_event);
           props.onClose();
           props.success('Successfully recorded payment');
         },

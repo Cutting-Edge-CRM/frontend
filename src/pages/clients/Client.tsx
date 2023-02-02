@@ -9,6 +9,7 @@ import Notes from '../../shared/note/Notes';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@mui/material';
 import ConfirmDelete from '../../shared/ConfirmDelete';
+import Timeline from '../../shared/timeline/Timeline';
 
 function Client(props: any) {
   let { id } = useParams();
@@ -47,6 +48,7 @@ function Client(props: any) {
         <Stack spacing={2}>
           <Contact client={id} success={props.success} />
           <Visits client={id} success={props.success} />
+          <Timeline client={id}/>
           <Notes client={id} success={props.success} />
         </Stack>
       </Grid>

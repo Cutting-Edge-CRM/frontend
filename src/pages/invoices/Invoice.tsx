@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 import { Alert, Box, CircularProgress } from '@mui/material';
 import { listTaxes } from '../../api/tax.api';
 import { listPayments } from '../../api/payment.api';
+import Timeline from '../../shared/timeline/Timeline';
 
 function Invoice(props: any) {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -72,6 +73,7 @@ function Invoice(props: any) {
             <Grid xs={4}>
                 <Stack spacing={2}>
                     <Contact client={invoice?.invoice.client} success={props.success}/>
+                    <Timeline client={invoice.invoice?.client} resourceType='invoice' resourceId={invoice.invoice?.id} />
                     <Notes client={invoice?.invoice.client} success={props.success}/>
                 </Stack>
             </Grid>

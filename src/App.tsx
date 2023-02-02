@@ -20,6 +20,7 @@ import ClientHub from './pages/client-hub/ClientHub';
 import { isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
 import { auth } from "./auth/firebase";
 import { getTenantForClient } from './api/tenant.api';
+import { createTimeline } from './api/timeline.api';
 
 function App() {
 
@@ -59,6 +60,8 @@ if (isSignInWithEmailLink(auth, window.location.href)) {
   let baseLink = window.location.href.split('?')[0];
   let email = url.searchParams.get('email');
   let client = url.pathname.split('/')[2];
+  let resourceType = url.pathname.split('/')[3]?.slice(0,-1)?.toLowerCase();
+  let resourceId = url.pathname.split('/')[4];
   if (!email) email = window.localStorage.getItem('emailForSignIn');
   if (!email) email = window.prompt('Please provide your email for confirmation');
   window.localStorage.setItem('emailForSignIn', email as string);
@@ -67,6 +70,14 @@ if (isSignInWithEmailLink(auth, window.location.href)) {
     auth.tenantId = tenantId;
     signInWithEmailLink(auth, (email as string), link)
     .then((result) => {
+      // mark quote/invoice as opened
+      let timeline_event = {
+        client: client,
+        resourceId: resourceId,
+        resourceType: resourceType,
+        resourceAction: 'opened'
+      };
+      createTimeline(timeline_event);
       window.location.replace(baseLink);
       loading = false;
     })
