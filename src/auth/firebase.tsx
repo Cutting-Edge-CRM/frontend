@@ -19,8 +19,8 @@ import {
   addDoc,
 } from "firebase/firestore";
 import { getTenantForUser } from "../api/tenant.api";
-import { addUserToTenant, inviteUser } from "../api/user.api";
-import {v4 as uuidv4} from 'uuid';
+import { addUserToTenant } from "../api/user.api";
+// import {v4 as uuidv4} from 'uuid';
 import { ErrorTypes } from "../util/errors";
 
 // Your web app's Firebase configuration
@@ -110,19 +110,19 @@ const registerNewTenantUser = async (id: string, email: string, password: string
   }
 };
 
-const inviteNewUser = async (name: string, email: string) => {
-  try {
-    // TODO: pass params to server and create user there so it doesn't login user
-    const tmpPass = uuidv4();
-    createUserWithEmailAndPassword(auth, email, tmpPass).then(userCred => {
-      inviteUser(email, name, userCred.user.uid);
-    }).catch(err => {
-      console.error(err);
-    })
-  } catch {
+// const inviteNewUser = async (name: string, email: string) => {
+//   try {
+//     // TODO: pass params to server and create user there so it doesn't login user
+//     const tmpPass = uuidv4();
+//     createUserWithEmailAndPassword(auth, email, tmpPass).then(userCred => {
+//       inviteUser(email, name, userCred.user.uid);
+//     }).catch(err => {
+//       console.error(err);
+//     })
+//   } catch {
 
-  }
-}
+//   }
+// }
 
 const sendPasswordReset = async (email: string) => {
   try {
@@ -167,5 +167,5 @@ export {
   sendPasswordReset,
   logout,
   registerNewTenantUser,
-  inviteNewUser
+  // inviteNewUser
 };

@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
-import { logout, inviteNewUser, auth, currentUser } from '../../auth/firebase';
+import React from 'react';
+import { logout, auth, currentUser } from '../../auth/firebase';
 
 
 function Dashboard(props: any) {
 
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
+    // const [name, setName] = useState("");
+    // const [email, setEmail] = useState("");
 
-    function inviteUser() {
-        inviteNewUser(name, email)
-      }
+    // function inviteUser() {
+    //     inviteNewUser(name, email)
+    //   }
 
     return (
         <div>
             <button onClick={logout}>Logout</button>
             <div>
-                <br></br>
+                {/* <br></br>
                 <h3>Invite User</h3>
                 <label>Name</label>
                 <input type="text" name="name" onChange={(e) => setName(e.target.value)}/>
                 <label>Email</label>
-                <input type="email" name="email" onChange={(e) => setEmail(e.target.value)}/>
-                <button onClick={inviteUser}>Invite</button>
+                <input type="email" name="email" onChange={(e) => setEmail(e.target.value)}/> */}
+                {/* <button onClick={inviteUser}>Invite</button> */}
             </div>
             <form action={`${process.env.REACT_APP_SERVER_URL}/subscriptions/checkout`} method="POST">
             <input type="hidden" name="priceId" value="price_1MJLW5Keym0SOuzyP4lkwwuI" />

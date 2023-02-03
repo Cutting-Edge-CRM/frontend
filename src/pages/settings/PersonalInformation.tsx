@@ -1,18 +1,42 @@
 import { AddressAutofill } from '@mapbox/search-js-react';
 import { Email, Person, Phone, Place } from '@mui/icons-material';
-import { Button, Card, InputAdornment, InputLabel, Stack, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import { Alert, Button, Card, InputAdornment, InputLabel, Stack, TextField, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { getUser, updateUser } from '../../api/user.api';
 
 function PersonalInformation(props: any) {
-    const [loading, setLoading] = useState(false);
-    const [settings, setSettings] = useState({} as any);
+    const [error, setError] = useState(null);
+    const [user, setUser] = useState({} as any);
 
     const handleChange = (event: any) => {
-        setSettings({ ...settings, [event.target.id]: event.target.value });
+        setUser({ ...user, [event.target.id]: event.target.value });
       };
+
+    const handleSave = () => {
+        updateUser(user)
+        .then(res => {
+            props.success('Successfully updated user');   
+        }, err => {
+            setError(err);
+        })
+    }
+
+    const handleReload = () => {
+        window.location.reload();
+    }
+
+    useEffect(() => {
+    getUser()
+    .then((result) => {
+        setUser(result);
+    }, (err) => {
+        setError(err.message);
+    })
+    }, []);
 
     return (
         <>
+        {error && <Alert severity="error">{error}</Alert>}
         <Card sx={{ py: 3 }}>
             <Typography align='center'>Personal Information</Typography>
             <Stack m={4} >
@@ -23,8 +47,8 @@ function PersonalInformation(props: any) {
                         </InputLabel>
                         <TextField
                             id="first"
-                            defaultValue={
-                            settings.first ? settings.first : undefined
+                            value={
+                            user.first ? user.first : ''
                             }
                             onChange={handleChange}
                             InputProps={{
@@ -40,8 +64,8 @@ function PersonalInformation(props: any) {
                         </InputLabel>
                         <TextField
                             id="phone"
-                            defaultValue={settings.phone ? settings.phone : undefined}
-                            onChange={props.handleChangeProperty}
+                            value={user.phone ? user.phone : ''}
+                            onChange={handleChange}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -57,8 +81,8 @@ function PersonalInformation(props: any) {
                         </InputLabel>
                         <TextField
                             id="last"
-                            defaultValue={
-                            settings.last ? settings.last : undefined
+                            value={
+                            user.last ? user.last : ''
                             }
                             onChange={handleChange}
                             InputProps={{
@@ -74,8 +98,8 @@ function PersonalInformation(props: any) {
                         </InputLabel>
                         <TextField
                             id="email"
-                            defaultValue={
-                            settings.email ? settings.email : undefined
+                            value={
+                            user.email ? user.email : ''
                             }
                             onChange={handleChange}
                             InputProps={{
@@ -90,8 +114,8 @@ function PersonalInformation(props: any) {
                 </Stack>
             </Stack>
             <Stack direction={'row'} spacing={2} justifyContent='center'>
-                <Button variant="outlined">Cancel</Button>
-                <Button variant="contained">Save Changes</Button>
+                <Button variant="outlined" onClick={handleReload}>Cancel</Button>
+                <Button variant="contained" onClick={handleSave}>Save Changes</Button>
             </Stack>
         </Card>
         <Card sx={{ py: 3 }}>
@@ -107,8 +131,8 @@ function PersonalInformation(props: any) {
                         <TextField
                             id="address"
                             autoComplete="street-address"
-                            defaultValue={
-                            settings.address ? settings.address : undefined
+                            value={
+                            user.address ? user.address : ''
                             }
                             onChange={handleChange}
                             InputProps={{
@@ -125,8 +149,8 @@ function PersonalInformation(props: any) {
                         <TextField
                             id="city"
                             autoComplete="address-level2"
-                            defaultValue={settings.city ? settings.city : undefined}
-                            onChange={props.handleChangeProperty}
+                            value={user.city ? user.city : ''}
+                            onChange={handleChange}
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -141,7 +165,7 @@ function PersonalInformation(props: any) {
                         <TextField
                             id="zip"
                             autoComplete="postal-code"
-                            defaultValue={settings.zip ? settings.zip : undefined}
+                            value={user.zip ? user.zip : ''}
                             onChange={handleChange}
                             InputProps={{
                                 startAdornment: (
@@ -158,8 +182,8 @@ function PersonalInformation(props: any) {
                         </InputLabel>
                         <TextField
                             id="address2"
-                            defaultValue={
-                            settings.address2 ? settings.address2 : undefined
+                            value={
+                            user.address2 ? user.address2 : ''
                             }
                             onChange={handleChange}
                             InputProps={{
@@ -176,8 +200,8 @@ function PersonalInformation(props: any) {
                         <TextField
                             id="state"
                             autoComplete="address-level1"
-                            defaultValue={
-                            settings.state ? settings.state : undefined
+                            value={
+                            user.state ? user.state : ''
                             }
                             onChange={handleChange}
                             InputProps={{
@@ -194,8 +218,8 @@ function PersonalInformation(props: any) {
                         <TextField
                             id="country"
                             autoComplete="country-name"
-                            defaultValue={
-                            settings.country ? settings.country : undefined
+                            value={
+                            user.country ? user.country : ''
                             }
                             onChange={handleChange}
                             InputProps={{
@@ -212,8 +236,8 @@ function PersonalInformation(props: any) {
             </form>
             </Stack>
             <Stack direction={'row'} spacing={2} justifyContent='center'>
-                <Button variant="outlined">Cancel</Button>
-                <Button variant="contained">Save Changes</Button>
+                <Button variant="outlined" onClick={handleReload}>Cancel</Button>
+                <Button variant="contained" onClick={handleSave}>Save Changes</Button>
             </Stack>
         </Card>
         </>

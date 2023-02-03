@@ -13,7 +13,7 @@ function Employees(props: any) {
   const [errorListingEmployees, setErrorListingEmployees] = useState(null);
   const [newOpen, setNewOpen] = useState(false);
   const [employee, setEmployee] = useState(null);
-  const [type, setType] = useState('');
+  // const [type, setType] = useState('');
 
   const handleRowClick = (event: any) => {
     // navigate(`/${props.type}/${event.id}`);
@@ -24,7 +24,7 @@ function Employees(props: any) {
   };
 
   const handleNewOpen = () => {
-    setType('new');
+    // setType('new');
     setNewOpen(true);
   };
 
