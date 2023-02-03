@@ -17,7 +17,6 @@ import {
   GridToolbarContainer,
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid';
-import mapboxgl from 'mapbox-gl';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -27,9 +26,6 @@ import { createQuote, updateQuote } from '../api/quote.api';
 import CustomPagination from './CustomPagination';
 import EmptyState from './EmptyState';
 import EditProperty from './property/EditProperty';
-
-mapboxgl.accessToken =
-  'pk.eyJ1IjoiY3V0dGluZ2VkZ2Vjcm0iLCJhIjoiY2xjaHk1cWZrMmYzcDN3cDQ5bGRzYTY1bCJ9.0B4ntLJoCZzxQ0SUxqaQxg';
 
 const propertyColumns: GridColDef[] = [
   {
@@ -240,7 +236,7 @@ export default function SelectProperty(props: any) {
         onClose={handleCloseNewProperty}
         create={handleSaveNewProperty}
         type={'new'}
-        token={mapboxgl.accessToken}
+        token={process.env.REACT_APP_MAPBOX_TOKEN}
         success={props.success}
       />
     </Dialog>

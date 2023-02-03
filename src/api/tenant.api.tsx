@@ -1,4 +1,5 @@
 import { ErrorTypes } from '../util/errors';
+import { auth, currentUser } from "../auth/firebase";
 
 
 async function registerNewTenant(name: string, email: string) {
@@ -67,5 +68,5 @@ async function getTenantForClient(client: string) {
 export {
     registerNewTenant,
     getTenantForUser,
-    getTenantForClient
+    getTenantForClient,
   };

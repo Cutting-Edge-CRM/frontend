@@ -7,21 +7,22 @@ const clientColumns: GridColDef[] = [
     { 
         field: 'name',
         headerName: 'Name',
-        width: 150 },
+        flex: 1 
+      },
     {
       field: 'address',
       headerName: 'Address',
-      width: 150,
+      flex: 1,
     },
     {
       field: 'contact',
       headerName: 'Contact',
-      width: 150,
+      flex: 1,
     },
     {
       field: 'status',
       headerName: 'Status',
-      width: 150,
+      flex: 1,
       renderCell: (params: GridRenderCellParams<string>) => {    
         return (
           <Chip label={params.value} color="success" />
@@ -31,7 +32,7 @@ const clientColumns: GridColDef[] = [
     {
       field: 'created',
       headerName: 'Created',
-      width: 150,
+      flex: 1,
       renderCell: (params: GridRenderCellParams<string>) => {    
         return (
           <Typography>{dayjs(params.value).format('MM/DD/YYYY')}</Typography>
@@ -44,21 +45,21 @@ const quoteColumns: GridColDef[] = [
     { 
       field: 'clientName',
       headerName: 'Client',
-      width: 150 },
+      flex: 1 },
     {
       field: 'address',
       headerName: 'Address',
-      width: 150,
+      flex: 1,
     },
     {
       field: 'price',
       headerName: 'Price',
-      width: 150,
+      flex: 1,
     },
     {
       field: 'status',
       headerName: 'Status',
-      width: 150,
+      flex: 1,
       renderCell: (params: GridRenderCellParams<string>) => {    
         return (
           <Chip label={params.value} color="success" />
@@ -68,7 +69,7 @@ const quoteColumns: GridColDef[] = [
     {
       field: 'created',
       headerName: 'Created',
-      width: 150,
+      flex: 1,
       renderCell: (params: GridRenderCellParams<string>) => {    
         return (
           <Typography>{dayjs(params.value).format('MM/DD/YYYY')}</Typography>
@@ -81,22 +82,22 @@ const jobColumns: GridColDef[] = [
     { 
       field: 'clientName',
       headerName: 'Client',
-      width: 150 ,
+      flex: 1 ,
     },
     {
       field: 'address',
       headerName: 'Address',
-      width: 150,
+      flex: 1,
     },
     {
       field: 'price',
       headerName: 'Price',
-      width: 150,
+      flex: 1,
     },
     {
       field: 'status',
       headerName: 'Status',
-      width: 150,
+      flex: 1,
       renderCell: (params: GridRenderCellParams<string>) => {    
         return (
           <Chip label={params.value} color="success" />
@@ -106,7 +107,7 @@ const jobColumns: GridColDef[] = [
     {
       field: 'created',
       headerName: 'Created',
-      width: 150,
+      flex: 1,
       renderCell: (params: GridRenderCellParams<string>) => {    
         return (
           <Typography>{dayjs(params.value).format('MM/DD/YYYY')}</Typography>
@@ -119,21 +120,22 @@ const invoiceColumns: GridColDef[] = [
     { 
         field: 'clientName',
         headerName: 'Client',
-        width: 150 },
+        flex: 1 
+      },
     {
       field: 'price',
       headerName: 'Price',
-      width: 150,
+      flex: 1,
     },
     {
       field: 'balance',
       headerName: 'Balance',
-      width: 150,
+      flex: 1,
     },
     {
       field: 'status',
       headerName: 'Status',
-      width: 150,
+      flex: 1,
       renderCell: (params: GridRenderCellParams<string>) => {    
         return (
           <Chip label={params.value} color="success" />
@@ -143,7 +145,39 @@ const invoiceColumns: GridColDef[] = [
     {
       field: 'created',
       headerName: 'Created',
-      width: 150,
+      flex: 1,
+      renderCell: (params: GridRenderCellParams<string>) => {    
+        return (
+          <Typography>{dayjs(params.value).format('MM/DD/YYYY')}</Typography>
+        );
+      }
+    },
+  ];
+
+  const employeeColumns: GridColDef[] = [
+    { 
+        field: 'name',
+        headerName: 'Name',
+        flex: 1 },
+    {
+      field: 'email',
+      headerName: 'Email',
+      flex: 1,
+    },
+    {
+      field: 'phone',
+      headerName: 'Phone',
+      flex: 1,
+    },
+    {
+      field: 'address',
+      headerName: 'Address',
+      flex: 1,
+    },
+    {
+      field: 'created',
+      headerName: 'Created',
+      flex: 1,
       renderCell: (params: GridRenderCellParams<string>) => {    
         return (
           <Typography>{dayjs(params.value).format('MM/DD/YYYY')}</Typography>
@@ -156,5 +190,6 @@ export {
     clientColumns,
     jobColumns,
     invoiceColumns,
-    quoteColumns
+    quoteColumns,
+    employeeColumns
 }

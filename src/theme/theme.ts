@@ -24,15 +24,16 @@ declare module '@mui/material/styles' {
   interface SimplePaletteColorOptions {
     darker?: string;
   }
-
-  interface ThemeOptions {
-    status: {
-      danger: React.CSSProperties['color'];
-    };
-  }
 }
 
-export const theme = createTheme();
+export const theme = createTheme({
+  typography: {
+    fontFamily: [
+      'Poppins',
+      'sans-serif'
+    ].join(',')
+  }
+});
 
 theme.palette = createPalette(theme);
 theme.components = componentsOverrides(theme);

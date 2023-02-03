@@ -51,9 +51,9 @@ import Quote from '../quotes/Quote';
 import Job from '../jobs/Job';
 import Invoice from '../invoices/Invoice';
 import Schedule from '../schedule/Schedule';
-import Settings from '../settings/Settings';
 import { useEffect } from 'react';
 import { getSettings } from '../../api/settings.api';
+import CompanySettings from '../settings/CompanySettings';
 
 const NavList = styled(List)<ListProps>(({ theme }) => ({
   padding: theme.spacing(0, 3),
@@ -77,19 +77,19 @@ const NavList = styled(List)<ListProps>(({ theme }) => ({
 
 const drawerWidth = 270;
 const topTabs = [
-  { display: 'Dashboard', icon: <TrendingUpOutlined /> },
-  { display: 'Schedule', icon: <CalendarMonthOutlined /> },
-  { display: 'Clients', icon: <PeopleOutlineOutlined /> },
-  { display: 'Quotes', icon: <SellOutlined /> },
-  { display: 'Jobs', icon: <FormatPaintOutlined /> },
-  { display: 'Invoices', icon: <AttachMoney /> },
-  { display: 'Timesheets', icon: <AccessTimeOutlined /> },
+  { display: 'Dashboard', slug: 'dashbaord', icon: <TrendingUpOutlined /> },
+  { display: 'Schedule', slug: 'schedule', icon: <CalendarMonthOutlined /> },
+  { display: 'Clients', slug: 'clients', icon: <PeopleOutlineOutlined /> },
+  { display: 'Quotes', slug: 'quotes', icon: <SellOutlined /> },
+  { display: 'Jobs', slug: 'jobs', icon: <FormatPaintOutlined /> },
+  { display: 'Invoices', slug: 'invoices', icon: <AttachMoney /> },
+  { display: 'Timesheets', slug: 'timesheets', icon: <AccessTimeOutlined /> },
 ];
 const middleTabs = [
-  { display: 'Reports', icon: <SummarizeOutlined /> },
-  { display: 'Settings', icon: <SettingsOutlined /> },
+  { display: 'Reports', slug: 'reports', icon: <SummarizeOutlined /> },
+  { display: 'Settings', slug: 'settings', icon: <SettingsOutlined /> },
 ];
-const bottomTabs = [{ display: 'Log out', icon: <Logout /> }];
+const bottomTabs = [{ display: 'Log out', slug: 'dashbaord', icon: <Logout /> }];
 
 function Shell() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -152,8 +152,8 @@ function Shell() {
             <ListItem key={tab.display} disablePadding>
               <ListItemButton
                 component={Link}
-                to={topTabs[index].display}
-                selected={location.pathname.includes(topTabs[index].display)}
+                to={topTabs[index].slug}
+                selected={location.pathname.includes(topTabs[index].slug)}
               >
                 <ListItemIcon>{tab.icon}</ListItemIcon>
                 <ListItemText
@@ -169,8 +169,8 @@ function Shell() {
             <ListItem key={tab.display} disablePadding>
               <ListItemButton
                 component={Link}
-                to={topTabs[index].display}
-                selected={location.pathname.includes(topTabs[index].display)}
+                to={middleTabs[index].slug}
+                selected={location.pathname.includes(middleTabs[index].slug)}
               >
                 <ListItemIcon>{tab.icon}</ListItemIcon>
                 <ListItemText
@@ -186,8 +186,8 @@ function Shell() {
             <ListItem key={tab.display} disablePadding>
               <ListItemButton
                 component={Link}
-                to={topTabs[index].display}
-                selected={location.pathname.includes(topTabs[index].display)}
+                to={bottomTabs[index].slug}
+                selected={location.pathname.includes(bottomTabs[index].slug)}
               >
                 <ListItemIcon>{tab.icon}</ListItemIcon>
                 <ListItemText
@@ -387,7 +387,7 @@ function Shell() {
             path="/invoices/:id"
             element={<Invoice success={success} settings={settings} />}
           />
-          <Route path="/settings" element={<Settings success={success} />} />
+          <Route path="/settings" element={<CompanySettings success={success} />} />
           <Route path="/" element={<Dashboard success={success} />} />
         </Routes>
         <Snackbar

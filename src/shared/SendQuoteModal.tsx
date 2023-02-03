@@ -10,7 +10,7 @@ import RegexParser from 'regex-parser';
 export default function SendQuoteModal(props: any) {
     const [value, setValue] = useState(0);
     const [smsMessage, setSMSMessage] = useState({toList: [], to: '', body: ''} as any);
-    const [emailMessage, setEmailMessage] = useState({toList: [], to: '', subject: '', replyTo: '', body: ''} as any);
+    const [emailMessage, setEmailMessage] = useState({toList: [], to: '', subject: '', replyToQuoteEmail: '', body: ''} as any);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [emailsInvalid, setEmailsInvalid] = useState(false);
@@ -28,7 +28,7 @@ export default function SendQuoteModal(props: any) {
                 if (emailMessage.to && emailMessage.to?.trim() !== '') emailList.push(emailMessage.to);
                 let email = {
                     emails: emailList,
-                    replyTo: emailMessage.replyTo,
+                    replyToQuoteEmail: emailMessage.replyToQuoteEmail,
                     subject: emailMessage.subject,
                     body: emailMessage.body,
                     quote: props.quote.quote.id,
@@ -136,11 +136,11 @@ export default function SendQuoteModal(props: any) {
     }, [props.quote.quote.client])
 
     useEffect(() => {
-        let replyTo = props.settings?.replyToEmail ? props.settings?.replyToEmail : currentUser.email;
+        let replyToQuoteEmail = props.settings?.replyToQuoteEmailEmail ? props.settings?.replyToQuoteEmailEmail : currentUser.email;
         let emailSubject = props.settings?.sendQuoteEmailSubject ? props.settings?.sendQuoteEmailSubject : 'Quote';
         let emailBody = props.settings?.sendQuoteEmailBody ? props.settings?.sendQuoteEmailBody : `Thank you for your recent business. Your invoice is linked below.`;
         let smsBody = props.settings?.sendQuoteSMSBody ? props.settings?.sendQuoteSMSBody : `Thank you for your recent business. Your invoice is linked below.`;
-        setEmailMessage({...emailMessage, replyTo: replyTo, subject: emailSubject, body: emailBody})
+        setEmailMessage({...emailMessage, replyToQuoteEmail: replyToQuoteEmail, subject: emailSubject, body: emailBody})
         setSMSMessage({...smsMessage, body: smsBody})
         // eslint-disable-next-line
     }, [props])
@@ -178,9 +178,9 @@ export default function SendQuoteModal(props: any) {
                 }}
                 />
                 <TextField
-                id="replyTo"
+                id="replyToQuoteEmail"
                 label="Reply To"
-                value={emailMessage.replyTo}
+                value={emailMessage.replyToQuoteEmail}
                 onChange={handleEmailChange}
                 />
                 <TextField

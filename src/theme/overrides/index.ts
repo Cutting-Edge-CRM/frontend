@@ -1,4 +1,5 @@
 import { Theme } from '@mui/material';
+import { Accordion } from './Accordian';
 import { Button } from './Button';
 import { Card } from './Card';
 import { Chip } from './Chip';
@@ -19,5 +20,6 @@ export const componentsOverrides = (theme: Theme) => {
     ...IconButton(theme),
     ...Chip(theme),
     ...Dialog(theme),
+    ...Accordion(theme)
   };
 };

@@ -11,7 +11,7 @@ import RegexParser from 'regex-parser';
 export default function SendInvoiceModal(props: any) {
     const [value, setValue] = useState(0);
     const [smsMessage, setSMSMessage] = useState({toList: [], to: '', body: ''} as any);
-    const [emailMessage, setEmailMessage] = useState({toList: [], to: '', subject: '', replyTo: '', body: ''} as any);
+    const [emailMessage, setEmailMessage] = useState({toList: [], to: '', subject: '', replyToInvoiceEmail: '', body: ''} as any);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [emailsInvalid, setEmailsInvalid] = useState(false);
@@ -29,7 +29,7 @@ export default function SendInvoiceModal(props: any) {
             if (emailMessage.to && emailMessage.to?.trim() !== '') emailList.push(emailMessage.to);
             let email = {
                 emails: emailList,
-                replyTo: emailMessage.replyTo,
+                replyToInvoiceEmail: emailMessage.replyToInvoiceEmail,
                 subject: emailMessage.subject,
                 body: emailMessage.body,
                 invoice: props.invoice.invoice.id,
@@ -134,11 +134,11 @@ export default function SendInvoiceModal(props: any) {
     }, [props.invoice.invoice.client])
 
     useEffect(() => {
-        let replyTo = props.settings?.replyToEmail ? props.settings?.replyToEmail : currentUser.email;
+        let replyToInvoiceEmail = props.settings?.replyToInvoiceEmailEmail ? props.settings?.replyToInvoiceEmailEmail : currentUser.email;
         let emailSubject = props.settings?.sendInvoiceEmailSubject ? props.settings?.sendInvoiceEmailSubject : 'Invoice';
         let emailBody = props.settings?.sendInvoiceEmailBody ? props.settings?.sendInvoiceEmailBody : `Thank you for your recent business. Your invoice is linked below.`;
         let smsBody = props.settings?.sendInvoiceSMSBody ? props.settings?.sendInvoiceSMSBody : `Thank you for your recent business. Your invoice is linked below.`;
-        setEmailMessage({...emailMessage, replyTo: replyTo, subject: emailSubject, body: emailBody})
+        setEmailMessage({...emailMessage, replyToInvoiceEmail: replyToInvoiceEmail, subject: emailSubject, body: emailBody})
         setSMSMessage({...smsMessage, body: smsBody})
         // eslint-disable-next-line
     }, [props])
@@ -176,9 +176,9 @@ export default function SendInvoiceModal(props: any) {
                 }}
                 />
                 <TextField
-                id="replyTo"
+                id="replyToInvoiceEmail"
                 label="Reply To"
-                value={emailMessage.replyTo}
+                value={emailMessage.replyToInvoiceEmail}
                 onChange={handleEmailChange}
                 />
                 <TextField

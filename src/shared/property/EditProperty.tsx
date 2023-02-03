@@ -69,7 +69,7 @@ export default function EditProperty(props: any) {
         {loading && <LinearProgress />}
         <Stack mt={2} >
           <form>
-              <AddressAutofill accessToken={props.token}>
+              <AddressAutofill accessToken={process.env.REACT_APP_MAPBOX_TOKEN as string}>
                 <Stack spacing={2}>
                   <TextField
                     id="address"

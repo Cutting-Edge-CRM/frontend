@@ -29,8 +29,6 @@ import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 import EmptyState from '../EmptyState';
 import ConfirmDelete from '../ConfirmDelete';
 
-mapboxgl.accessToken =
-  'pk.eyJ1IjoiY3V0dGluZ2VkZ2Vjcm0iLCJhIjoiY2xjaHk1cWZrMmYzcDN3cDQ5bGRzYTY1bCJ9.0B4ntLJoCZzxQ0SUxqaQxg';
 const geocodingClient = mbxGeocoding({ accessToken: mapboxgl.accessToken });
 
 const CardHeader = styled(Box)<BoxProps>(({ theme }) => ({
@@ -316,7 +314,7 @@ function Properties(props: any) {
         update={handleUpdate}
         create={handleCreate}
         modalType={modalType}
-        token={mapboxgl.accessToken}
+        token={process.env.REACT_APP_MAPBOX_TOKEN}
         success={props.success}
         {...props}
       />
