@@ -1,7 +1,8 @@
 import { Button, Card, Chip, Divider, Grid, List, Stack, Typography } from '@mui/material';
 import dayjs from 'dayjs';
-import React from 'react';
+import React, { useState } from 'react';
 import EmptyState from '../../shared/EmptyState';
+import PaymentModal from './PaymentModal';
 
 function add(accumulator: number, a: number) {
     return (+accumulator) + (+a);
@@ -40,7 +41,16 @@ function InvoiceItemSaved(props: any) {
 function ClientHubInvoiceDetails(props: any) {
     // const [error, setError] = useState(null);
     // const [loading, setLoading] = useState(false);
+    const [paymentOpen, setPaymentOpen] = useState(false);
 
+
+    const handlePaymentClose = (value: string) => {
+        setPaymentOpen(false);
+    };
+
+    const handleOpenPayment = () => {
+        setPaymentOpen(true);
+    }
 
     return (
         <Card>
@@ -79,11 +89,15 @@ function ClientHubInvoiceDetails(props: any) {
                 <Typography>Taxes</Typography>
                 <Typography>{(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax)*(props.invoice.items.map((i: any) => i.price).reduce(add, 0))}</Typography>
             </Stack>
+            <Stack direction="row">
+                <Typography>Total</Typography>
+                <Typography>${+(props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax)*(props.invoice.items.map((i: any) => i.price).reduce(add, 0))}</Typography>
+            </Stack>
             <Divider/>
             <List>
                 {props.payments.map((payment: any) => (
-                    <Stack direction={'row'}>
-                        <Typography>Deposit collected {dayjs(payment.transDate).format('MMM D')}</Typography>
+                    <Stack direction={'row'} key={payment.id}>
+                        <Typography>{`${payment.type} collected ${dayjs(payment.transDate).format('MMM D')}`}</Typography>
                         <Typography>${payment.amount}</Typography>
                     </Stack>
                 ))}
@@ -91,10 +105,18 @@ function ClientHubInvoiceDetails(props: any) {
             {props.invoice.invoice.status === 'Awaiting Payment' && 
             <>
                 <Button
+                onClick={handleOpenPayment}
                 >Pay Invoice
                 </Button>
             </>
                 }
+            <PaymentModal
+            open={paymentOpen}
+            onClose={handlePaymentClose}
+            success={props.success}
+            invoice={props.invoice}
+            type='payment'
+            />
         </Card>
     )
 }

@@ -16,8 +16,8 @@ import {
   import { useState } from 'react';
   
   export default function EditEmployee(props: any) {
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [error] = useState(null);
+    const [loading] = useState(false);
   
     const handleCancel = () => {
       props.onClose();

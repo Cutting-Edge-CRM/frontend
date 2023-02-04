@@ -307,11 +307,11 @@ function InvoiceDetails(props: any) {
   };
 
   const handleChangeTax = (event: any) => {
-    let invoice = props.invoice.invoice;
-    invoice.tax = event.target.value.id;
+    let invoiceWithTax = props.invoice.invoice;
+    invoiceWithTax.tax = event.target.value.id;
     props.setInvoice({
       ...props.invoice,
-      invoice: invoice,
+      invoice: invoiceWithTax,
     });
   };
 
@@ -371,7 +371,7 @@ function InvoiceDetails(props: any) {
                 <ListItemIcon>
                   <DeleteOutline />
                 </ListItemIcon>
-                <ListItemText>Delete quote</ListItemText>
+                <ListItemText>Delete invoice</ListItemText>
               </MenuItem>
             </MenuList>
           </Menu>
@@ -572,6 +572,27 @@ function InvoiceDetails(props: any) {
               </Grid>
             </Grid>
           </Grid>
+          <Grid container justifyContent="flex-end">
+            <Grid item xs={4}>
+              <Grid container>
+                <Grid item xs={5}>
+                  <Typography variant="body2" color="primary" fontWeight={600}>
+                    Total
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography
+                    variant="body2"
+                    fontWeight={600}
+                    color="neutral.main"
+                  >
+                    $
+                    {(+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0)}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </Stack>
         {props.payments.length > 0 && (
           <>
@@ -587,10 +608,7 @@ function InvoiceDetails(props: any) {
                         onClick={(e) => handleEditPayment(e, payment)}
                       >
                         <Stack direction={'row'} spacing={5}>
-                          <Typography variant="body1" color="neutral.main">
-                            Deposit collected{' '}
-                            {dayjs(payment.transDate).format('MMM D')}
-                          </Typography>
+                          <Typography variant="body1" color="neutral.main">{`${payment.type} collected ${dayjs(payment.transDate).format('MMM D')}`}</Typography>
                           <Typography
                             variant="body1"
                             fontWeight={600}

@@ -5,6 +5,11 @@ import { getInvoice } from '../../api/invoice.api';
 import { Alert, Box, CircularProgress } from '@mui/material';
 import { listTaxes } from '../../api/tax.api';
 import { listPayments } from '../../api/payment.api';
+import { Elements } from '@stripe/react-stripe-js';
+import PaymentStatus from './PaymentStatus';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe("pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww");
 
 function ClientHubInvoice(props: any) {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -46,7 +51,7 @@ function ClientHubInvoice(props: any) {
     useEffect(() => {
         listPayments(clientId)
         .then(res => {
-            setPayments(res.filter((p: any) => p.type === 'deposit' && p.typeId === invoice.invoice?.id));
+            setPayments(res.filter((p: any) => (p.type === 'deposit' && p.typeId === invoice.invoice?.quote) || (p.type === 'payment' && p.typeId === invoice.invoice?.id)));
         }, (err) => {
             setError(err.message);
         })
@@ -61,7 +66,10 @@ function ClientHubInvoice(props: any) {
         }
 
     return (
+        <Elements stripe={stripePromise}>
+        <PaymentStatus/>
         <ClientHubInvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload}/>
+        </Elements>
     )
 }
 

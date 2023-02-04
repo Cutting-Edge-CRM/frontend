@@ -280,23 +280,23 @@ function TabPanel(props: any) {
 
   useEffect(() => {
     setSubtotalAmount(
-      props.option.items.map((i: any) => i.price).reduce(add, 0)
+      props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0)
     );
     setTaxAmount(
       +props.taxes.find((t: any) => t.id === props.option.tax)?.tax *
-        props.option.items.map((i: any) => i.price).reduce(add, 0)
+        props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0)
     );
     setTotalAmount(
-      props.option.items.map((i: any) => i.price).reduce(add, 0) +
+      props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) +
         +props.taxes.find((t: any) => t.id === props.option.tax)?.tax *
-          props.option.items.map((i: any) => i.price).reduce(add, 0)
+          props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0)
     );
     setDepositAmount(
       props.option.depositPercent
         ? (+props.option.deposit / 100) *
-            (props.option.items.map((i: any) => i.price).reduce(add, 0) +
+            (props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) +
               +props.taxes.find((t: any) => t.id === props.option.tax)?.tax *
-                props.option.items.map((i: any) => i.price).reduce(add, 0))
+                props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))
         : props.option.deposit
     );
   }, [props]);
@@ -684,6 +684,7 @@ function QuoteDetails(props: any) {
       property: props.quote.quote.property,
       status: 'Active',
       quote: props.quote.quote.id,
+      tax: props.quote?.options?.[0]?.tax
     };
     createJob(job).then(
       (res) => {

@@ -49,7 +49,7 @@ function Invoice(props: any) {
     useEffect(() => {
         listPayments(invoice.invoice?.client)
         .then(res => {
-            setPayments(res.filter((p: any) => p.typeId === invoice.invoice?.id || p.typeId === invoice.invoice?.quote));
+            setPayments(res.filter((p: any) => (p.type === 'payment' && p.typeId === invoice.invoice?.id) || (p.type === 'deposit' && p.typeId === invoice.invoice?.quote)));
         }, (err) => {
             setError(err.message);
         })

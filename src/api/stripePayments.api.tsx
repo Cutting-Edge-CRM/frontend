@@ -1,37 +1,6 @@
 import { auth, currentUser } from "../auth/firebase";
 
-async function createInvoice(invoice: any) {
-    try {
-    var headers: HeadersInit = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
-        'tenantId': auth.tenantId as string,
-        'userId': auth.currentUser?.uid as string
-    }
-    var body = JSON.stringify(invoice);
-    const requestOptions: RequestInit = {
-        method: 'POST',
-        headers: headers,
-        body: body
-    };
-        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/invoices/create-invoice`);
-        return fetch(url, requestOptions)
-        .then(res => {
-            if (res.ok) {
-                return res.json();
-            }
-            res.json().then(err => {
-                console.error(`Error creating invoice: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error creating invoice: ${err.message}`);
-            })
-        })
-    } catch (err) {
-        console.error(err);
-    }
-}
-
-
-async function getInvoice(id?: string) {
+async function startPaymentSetUp() {
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -43,82 +12,23 @@ async function getInvoice(id?: string) {
         method: 'GET',
         headers: headers,
     };
-        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/invoices/get-invoice/${id}`);
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/stripe-payments/start-setup`);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
                 return res.json();
             }
             res.json().then(err => {
-                console.error(`Error getting invoice: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                console.error(`Error starting payments setup: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
             })
-            throw new Error(`Error getting invoice`);
+            throw new Error(`Error starting payments setup`);
         })
     } catch (err) {
         console.error(err);
     }
 }
 
-async function updateInvoice(invoice: any) {
-    console.log(invoice);
-    try {
-    var headers: HeadersInit = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
-        'tenantId': auth.tenantId as string,
-        'userId': auth.currentUser?.uid as string
-    }
-    var body = JSON.stringify(invoice);
-    const requestOptions: RequestInit = {
-        method: 'POST',
-        headers: headers,
-        body: body
-    };
-        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/invoices/update-invoice/${invoice.invoice.id}`);
-        return fetch(url, requestOptions)
-        .then(res => {
-            if (res.ok) {
-                return res.json();
-            }
-            res.json().then(err => {
-                console.error(`Error updating invoice: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error updating invoice: ${err.message}`);
-            })
-        })
-    } catch (err) {
-        console.error(err);
-    }
-}
-
-async function deleteInvoice(id: any) {
-    try {
-    var headers: HeadersInit = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
-        'tenantId': auth.tenantId as string,
-        'userId': auth.currentUser?.uid as string
-    }
-    const requestOptions: RequestInit = {
-        method: 'POST',
-        headers: headers,
-    };
-        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/invoices/delete-invoice/${id}`);
-        return fetch(url, requestOptions)
-        .then(res => {
-            if (res.ok) {
-                return res.json();
-            }
-            res.json().then(err => {
-                console.error(`Error deleting invoice: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error deleting invoice: ${err.message}`);
-            })
-        })
-    } catch (err) {
-        console.error(err);
-    }
-}
-
-async function listInvoices(client?: string, query?: string, page?: number, pageSize?: number) {
+async function continuePaymentSetUp() {
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -130,31 +40,114 @@ async function listInvoices(client?: string, query?: string, page?: number, page
         method: 'GET',
         headers: headers,
     };
-    let url = new URL(`${process.env.REACT_APP_SERVER_URL}/invoices/list-invoices`);
-    if (page) url.searchParams.set('page', `${page}`);
-    if (client) url.searchParams.set('client', client);
-    if (pageSize) url.searchParams.set('pageSize', `${pageSize}`);
-    if (query) url.searchParams.set('query', query);
-    return fetch(url, requestOptions)
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/stripe-payments/continue-setup`);
+        return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
                 return res.json();
             }
             res.json().then(err => {
-                console.error(`Error listing invoices: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                console.error(`Error starting payments setup: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
             })
-            throw new Error(`Error listing invoices`);
+            throw new Error(`Error starting payments setup`);
         })
     } catch (err) {
         console.error(err);
     }
 }
 
+async function retrieveAccount() {
+    try {
+    var headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+        'tenantId': auth.tenantId as string,
+        'userId': auth.currentUser?.uid as string
+    }
+    const requestOptions: RequestInit = {
+        method: 'GET',
+        headers: headers,
+    };
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/stripe-payments/retrieve-account`);
+        return fetch(url, requestOptions)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            res.json().then(err => {
+                console.error(`Error retrieving account: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+            })
+            throw new Error(`Error retrieving account`);
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function createDeposit(client: string, quote: string) {
+    try {
+    var headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+        'tenantId': auth.tenantId as string,
+        'userId': auth.currentUser?.uid as string
+    }
+    var body = JSON.stringify({client: client, quote: quote});
+    const requestOptions: RequestInit = {
+        method: 'POST',
+        headers: headers,
+        body: body
+    };
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/stripe-payments/create-deposit`);
+        return fetch(url, requestOptions)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            res.json().then(err => {
+                console.error(`Error creating deposit: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+            })
+            throw new Error(`Error creating deposit`);
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function createPayment(client: string, invoice: string) {
+    try {
+    var headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+        'tenantId': auth.tenantId as string,
+        'userId': auth.currentUser?.uid as string
+    }
+    var body = JSON.stringify({client: client, invoice: invoice});
+    const requestOptions: RequestInit = {
+        method: 'POST',
+        headers: headers,
+        body: body
+    };
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/stripe-payments/create-payment`);
+        return fetch(url, requestOptions)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            res.json().then(err => {
+                console.error(`Error creating payment: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+            })
+            throw new Error(`Error creating payment`);
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
 
 export {
-    listInvoices,
-    getInvoice,
-    updateInvoice,
-    createInvoice,
-    deleteInvoice
+    startPaymentSetUp,
+    continuePaymentSetUp,
+    retrieveAccount,
+    createDeposit,
+    createPayment
   };

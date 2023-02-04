@@ -5,6 +5,11 @@ import { getQuote } from '../../api/quote.api';
 import { Alert, Box, CircularProgress } from '@mui/material';
 import { listTaxes } from '../../api/tax.api';
 import { listPayments } from '../../api/payment.api';
+import PaymentStatus from './PaymentStatus';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe("pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww");
 
 function ClientHubQuote(props: any) {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -61,7 +66,10 @@ function ClientHubQuote(props: any) {
         }
 
     return (
+        <Elements stripe={stripePromise}>
+        <PaymentStatus/>
         <ClientHubQuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload}/>
+        </Elements>
     )
 }
 

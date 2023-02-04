@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import EmptyState from '../../shared/EmptyState';
 import ConfirmChangeStatus from './ConfirmChangeStatus';
+import PaymentModal from './PaymentModal';
 
 function add(accumulator: any, a: any) {
     return (+accumulator) + (+a);
@@ -111,6 +112,7 @@ function ClientHubQuoteDetails(props: any) {
     // const [value, setValue] = useState(0);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [confirmType, setConfirmType] = useState('');
+    const [paymentOpen, setPaymentOpen] = useState(false);
 
 
     // const handleChange = (event: React.SyntheticEvent, newValue: any) => {
@@ -137,6 +139,14 @@ function ClientHubQuoteDetails(props: any) {
     const handleConfirmClose = (value: string) => {
         setConfirmOpen(false);
     };
+
+    const handlePaymentClose = (value: string) => {
+        setPaymentOpen(false);
+    };
+
+    const handleOpenPayment = () => {
+        setPaymentOpen(true);
+    }
 
     return (
         <Card>
@@ -194,6 +204,14 @@ function ClientHubQuoteDetails(props: any) {
                 </Button>
             </>
                 }
+            {props.quote.quote.status === 'Approved' && props.quote.options?.[0]?.deposit  &&
+            <>
+                <Button
+                onClick={handleOpenPayment}
+                >Pay Deposit
+                </Button>
+            </>
+                }
             <ConfirmChangeStatus
             open={confirmOpen}
             onClose={handleConfirmClose}
@@ -201,6 +219,13 @@ function ClientHubQuoteDetails(props: any) {
             price={props.quote.options?.[0].items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) + (+props.taxes.find((t: any) => t.id === props.quote.options?.[0].tax)?.tax)*(props.quote.options?.[0].items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))}
             success={props.success}
             {...props}
+            />
+            <PaymentModal
+            open={paymentOpen}
+            onClose={handlePaymentClose}
+            success={props.success}
+            quote={props.quote}
+            type='deposit'
             />
         </Card>
     )

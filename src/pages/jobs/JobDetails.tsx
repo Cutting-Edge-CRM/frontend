@@ -270,6 +270,7 @@ function JobDetails(props: any) {
       status: 'Draft',
       job: props.job.job.id,
       quote: props.job.job.quote,
+      tax: props.job?.job?.tax
     };
     createInvoice(invoice).then(
       (res) => {

@@ -85,9 +85,9 @@ export default function ConfirmDelete(props: any) {
         );
         break;
       case 'invoices':
-        setTitle('No Invoices');
+        setTitle('Delete Invoice');
         setBody(
-          `You haven't created any invoices yet, click "New Invoice" above to create one!`
+          `Are you sure you want to delete this invoice? This is will delete all line items associated to this invoice.`
         );
         break;
       case 'properties':
