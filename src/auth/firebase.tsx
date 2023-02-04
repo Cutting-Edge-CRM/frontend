@@ -8,7 +8,8 @@ import {
   sendPasswordResetEmail,
   signOut,
   onAuthStateChanged,
-  User
+  User,
+  signInAnonymously,
 } from "firebase/auth";
 import {
   getFirestore,
@@ -18,7 +19,7 @@ import {
   where,
   addDoc,
 } from "firebase/firestore";
-import { getTenantForUser } from "../api/tenant.api";
+import { getTenantForClient, getTenantForUser } from "../api/tenant.api";
 import { addUserToTenant } from "../api/user.api";
 // import {v4 as uuidv4} from 'uuid';
 import { ErrorTypes } from "../util/errors";
@@ -77,6 +78,27 @@ const logInWithEmailAndPassword = async (email: string, password: string) => {
     return Promise.reject(err);
   }
 };
+
+const loginAnonymously = async (client: string) => {
+  try {
+    return getTenantForClient(client).then(res => {
+      let tenantId = res.company;
+      auth.tenantId = tenantId;
+      return signInAnonymously(auth)
+      .then((result) => {
+        console.log(result);
+        return result;
+      })
+      .catch((error) => {
+        return Promise.reject(error);
+      });
+    }).catch(err => {
+      return Promise.reject(err);
+    })
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}
 
 const registerWithEmailAndPassword = async (email: string, password: string) => {
   try {
@@ -167,5 +189,6 @@ export {
   sendPasswordReset,
   logout,
   registerNewTenantUser,
+  loginAnonymously
   // inviteNewUser
 };

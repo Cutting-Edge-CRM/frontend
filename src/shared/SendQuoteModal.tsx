@@ -28,12 +28,13 @@ export default function SendQuoteModal(props: any) {
                 if (emailMessage.to && emailMessage.to?.trim() !== '') emailList.push(emailMessage.to);
                 let email = {
                     emails: emailList,
-                    replyToQuoteEmail: emailMessage.replyToQuoteEmail,
+                    replyTo: emailMessage.replyToQuoteEmail,
                     subject: emailMessage.subject,
                     body: emailMessage.body,
                     quote: props.quote.quote.id,
                     client: props.quote.quote.client,
                 }
+                console.log(email);
                 sendEmail(email)
                 .then(res => {
                     setLoading(false);

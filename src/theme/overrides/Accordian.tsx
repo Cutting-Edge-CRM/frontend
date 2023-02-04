@@ -1,4 +1,4 @@
-import { Theme, TypographyProps } from '@mui/material';
+import { Theme } from '@mui/material';
 
 export const Accordion = (theme: Theme) => {
   return {

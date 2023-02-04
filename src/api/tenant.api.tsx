@@ -1,5 +1,4 @@
 import { ErrorTypes } from '../util/errors';
-import { auth, currentUser } from "../auth/firebase";
 
 
 async function registerNewTenant(name: string, email: string) {

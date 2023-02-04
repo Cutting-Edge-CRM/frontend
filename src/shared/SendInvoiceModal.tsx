@@ -29,7 +29,7 @@ export default function SendInvoiceModal(props: any) {
             if (emailMessage.to && emailMessage.to?.trim() !== '') emailList.push(emailMessage.to);
             let email = {
                 emails: emailList,
-                replyToInvoiceEmail: emailMessage.replyToInvoiceEmail,
+                replyTo: emailMessage.replyToInvoiceEmail,
                 subject: emailMessage.subject,
                 body: emailMessage.body,
                 invoice: props.invoice.invoice.id,

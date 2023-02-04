@@ -17,7 +17,7 @@ export default function Table(props: any) {
   const [loading, setLoading] = useState(false);
 
   const handleRowClick = (event: any) => {
-    navigate(`/${props.type}/${event.id}`);
+    navigate(`/${props.type?.toLowerCase()}/${event.id}`);
   };
 
   const handleClose = (value: string) => {

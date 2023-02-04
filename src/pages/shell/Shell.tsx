@@ -16,7 +16,6 @@ import {
   TrendingUpOutlined,
   SellOutlined,
   AccessTimeOutlined,
-  SummarizeOutlined,
   SettingsOutlined,
   Settings as SettingsIcon,
   Search,
@@ -85,11 +84,13 @@ const topTabs = [
   { display: 'Invoices', slug: 'invoices', icon: <AttachMoney /> },
   { display: 'Timesheets', slug: 'timesheets', icon: <AccessTimeOutlined /> },
 ];
-const middleTabs = [
-  { display: 'Reports', slug: 'reports', icon: <SummarizeOutlined /> },
+// const middleTabs = [
+//   { display: 'Reports', slug: 'reports', icon: <SummarizeOutlined /> },
+// ];
+const bottomTabs = [
   { display: 'Settings', slug: 'settings', icon: <SettingsOutlined /> },
-];
-const bottomTabs = [{ display: 'Log out', slug: 'dashbaord', icon: <Logout /> }];
+  { display: 'Log out', slug: 'dashbaord', icon: <Logout /> }]
+  ;
 
 function Shell() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -165,7 +166,7 @@ function Shell() {
           ))}
         </NavList>
         <NavList>
-          {middleTabs.map((tab, index) => (
+          {/* {middleTabs.map((tab, index) => (
             <ListItem key={tab.display} disablePadding>
               <ListItemButton
                 component={Link}
@@ -179,7 +180,7 @@ function Shell() {
                 />
               </ListItemButton>
             </ListItem>
-          ))}
+          ))} */}
         </NavList>
         <NavList>
           {bottomTabs.map((tab, index) => (
