@@ -37,7 +37,6 @@ export default function EditContact(props: any) {
       (con: any) => con.content.length > 0
     );
     props.setContact({ ...props.contact, contacts: contacts });
-    console.log(props.contact);
     updateClient(props.contact).then(
       (res) => {
         setLoading(false);

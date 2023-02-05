@@ -830,7 +830,7 @@ function QuoteDetails(props: any) {
               Created
             </Typography>
             <Typography textAlign="center" variant="body2">
-              {props.quote.quote.created}
+              {dayjs(props.quote.quote.created).format("MM/DD/YYYY")}
             </Typography>
           </Stack>
           <Stack spacing={2}>

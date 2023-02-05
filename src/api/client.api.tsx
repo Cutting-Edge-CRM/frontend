@@ -66,7 +66,6 @@ async function updateClient(client: any) {
         'tenantId': auth.tenantId as string,
         'userId': auth.currentUser?.uid as string
     }
-    console.log(client);
     var body = JSON.stringify(client);
     const requestOptions: RequestInit = {
         method: 'POST',

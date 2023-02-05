@@ -132,6 +132,7 @@ function Property(props: any) {
         {!isLoaded && <Box textAlign='center'><CircularProgress /></Box>}
         {!error && isLoaded && (
           <DataGrid
+            disableSelectionOnClick
             autoHeight
             rows={rows}
             columns={columns}

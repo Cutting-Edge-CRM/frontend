@@ -71,7 +71,7 @@ function InvoiceItemSaved(props: any) {
               Total
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
-              ${props.item.price.toFixed(2)}
+              ${(+props.item.price)?.toFixed(2)}
             </Typography>
           </Stack>
         </Grid>
@@ -150,7 +150,7 @@ function InvoiceItemEdit(props: any) {
                   </InputAdornment>
                 ),
               }}
-              value={props.item.price ? props.item.price.toFixed(2) : ''}
+              value={props.item.price ? props.item.price : ''}
               onChange={handleChange}
               size="small"
             />

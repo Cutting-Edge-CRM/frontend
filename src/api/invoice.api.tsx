@@ -60,7 +60,6 @@ async function getInvoice(id?: string) {
 }
 
 async function updateInvoice(invoice: any) {
-    console.log(invoice);
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',

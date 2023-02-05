@@ -94,7 +94,7 @@ export default function EditProperty(props: any) {
                       label="City"
                       autoComplete="address-level2"
                       defaultValue={props.property.city ? props.property.city : undefined}
-                      onChange={props.handleChangeProperty}
+                      onChange={handleChange}
                     />
                     <TextField
                       id="state"

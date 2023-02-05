@@ -34,7 +34,6 @@ export default function SendQuoteModal(props: any) {
                     quote: props.quote.quote.id,
                     client: props.quote.quote.client,
                 }
-                console.log(email);
                 sendEmail(email)
                 .then(res => {
                     setLoading(false);

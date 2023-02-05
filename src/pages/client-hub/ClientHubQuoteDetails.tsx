@@ -188,7 +188,7 @@ function ClientHubQuoteDetails(props: any) {
                 {props.payments.map((payment: any) => (
                     <Stack direction={'row'} key={payment.id}>
                         <Typography>Deposit collected {dayjs(payment.transDate).format('MMM D')}</Typography>
-                        <Typography>${(payment.amount).toFixed(2)}</Typography>
+                        <Typography>${(+payment.amount).toFixed(2)}</Typography>
                     </Stack>
                 ))}
             </List>
