@@ -86,7 +86,6 @@ function InvoiceItemSaved(props: any) {
           dangerouslySetInnerHTML={{ __html: props.item.description }}
         ></Typography>
       </Stack>
-      <Divider />
     </Box>
   );
 }
@@ -573,16 +572,21 @@ function InvoiceDetails(props: any) {
             </Grid>
           </Grid>
           <Grid container justifyContent="flex-end">
+              <Grid item xs={5}>
+                <Divider sx={{ width: '100%' }} />
+              </Grid>
+            </Grid>
+          <Grid container justifyContent="flex-end">
             <Grid item xs={4}>
               <Grid container>
                 <Grid item xs={5}>
-                  <Typography variant="body2" color="primary" fontWeight={600}>
+                  <Typography variant="h6" color="primary" fontWeight={700}>
                     Total
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
                   <Typography
-                    variant="body2"
+                    variant="h6"
                     fontWeight={600}
                     color="neutral.main"
                   >
@@ -593,36 +597,89 @@ function InvoiceDetails(props: any) {
               </Grid>
             </Grid>
           </Grid>
+          <Grid container justifyContent="flex-end">
+            <Grid item xs={4}>
+              <Grid container>
+                <Grid item xs={5}>
+                  <Typography variant="body2" color="neutral.light" fontWeight={600}>
+                    Balance
+                  </Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography
+                    variant="body2"
+                    fontWeight={600}
+                    color="neutral.main"
+                  >
+                    $
+                    {(+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0)
+                    - props.payments.map((p: any) => p.amount).reduce(add, 0)}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </Stack>
         {props.payments.length > 0 && (
           <>
-            <Divider sx={{ my: 2 }} />
-            <Stack>
-              <Grid container justifyContent="flex-end">
-                <Grid item xs={6}>
-                  <List>
-                    {props.payments.map((payment: any) => (
-                      <ListItemButton
-                        key={payment.id}
-                        id={payment.id}
-                        onClick={(e) => handleEditPayment(e, payment)}
-                      >
-                        <Stack direction={'row'} spacing={5}>
-                          <Typography variant="body1" color="neutral.main">{`${payment.type} collected ${dayjs(payment.transDate).format('MMM D')}`}</Typography>
-                          <Typography
-                            variant="body1"
-                            fontWeight={600}
-                            color="neutral.main"
-                          >
-                            ${payment.amount}
-                          </Typography>
-                        </Stack>
-                      </ListItemButton>
-                    ))}
-                  </List>
-                </Grid>
-              </Grid>
-            </Stack>
+              <Stack mt={2.5} spacing={2}>
+                <List>
+                  {props.payments.map((payment: any) => (
+                    <ListItemButton
+                      key={payment.id}
+                      id={payment.id}
+                      onClick={(e) => handleEditPayment(e, payment)}
+                    >
+                        <Grid container justifyContent="flex-end">
+                        <Grid item xs={4}>
+                          <Grid container alignItems="center">
+                            <Grid item xs={8}>
+                              <Typography
+                                variant="body2"
+                                color="neutral.light"
+                                fontWeight={500}
+                              >
+                                {`${payment.type} collected ${dayjs(payment.transDate).format('MMM D')}`}
+                              </Typography>
+                            </Grid>
+
+                            <Grid item xs={4}>
+                              {props.editting ? (
+                                <Stack direction="row" spacing={1}>
+                                  <TextField
+                                    id="deposit"
+                                    label="Deposit"
+                                    value={props.option.deposit}
+                                    size="small"
+                                  />
+                                  <Select
+                                    labelId="deposit-percent-select-label"
+                                    id="depositPercent"
+                                    value={props.option.depositPercent ? 1 : 0}
+                                    label="$/%"
+                                    size="small"
+                                  >
+                                    <MenuItem value={1}>%</MenuItem>
+                                    <MenuItem value={0}>$</MenuItem>
+                                  </Select>
+                                </Stack>
+                              ) : (
+                                <Typography
+                                  variant="body2"
+                                  fontWeight={600}
+                                  color="neutral.main"
+                                >
+                                  ${payment?.amount?.toString()}
+                                </Typography>
+                              )}
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </ListItemButton>
+                  ))}
+                </List>
+              </Stack>
           </>
         )}
         {error && <Alert severity="error">{error}</Alert>}
@@ -650,6 +707,7 @@ function InvoiceDetails(props: any) {
           paymentType={'Payment'}
           type={type}
           success={props.success}
+          invoice={props.invoice}
         />
       </Card>
     </Stack>

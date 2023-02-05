@@ -1,6 +1,6 @@
 import { auth, currentUser } from "../auth/firebase";
 
-async function createPayment(payment: any) {
+async function recordPayment(payment: any) {
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -149,7 +149,7 @@ async function listPayments(client?: string) {
 export {
     listPayments,
     getPayment,
-    createPayment,
+    recordPayment,
     updatePayment,
     deletePayment
   };

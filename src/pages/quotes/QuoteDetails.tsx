@@ -117,7 +117,6 @@ function QuoteItemSaved(props: any) {
           dangerouslySetInnerHTML={{ __html: props.item.description }}
         ></Typography>
       </Stack>
-      <Divider />
     </>
   );
 }
@@ -942,10 +941,7 @@ function QuoteDetails(props: any) {
         {/* ))} */}
         {props.payments.length > 0 && (
           <>
-            <Divider sx={{ my: 2 }} />
-            <Stack alignItems="flex-end">
-            <Grid container justifyContent="flex-end">
-              <Grid item xs={6}>
+              <Stack mt={2.5} spacing={2}>
                 <List>
                   {props.payments.map((payment: any) => (
                     <ListItemButton
@@ -953,25 +949,56 @@ function QuoteDetails(props: any) {
                       id={payment.id}
                       onClick={(e) => handleEditDeposit(e, payment)}
                     >
-                      <Stack direction={'row'} spacing={3}>
-                        <Typography variant="body1" color="neutral.main">
-                          Deposit collected{' '}
-                          {dayjs(payment.transDate).format('MMM D')}
-                        </Typography>
-                        <Typography
-                          variant="body1"
-                          fontWeight={600}
-                          color="neutral.main"
-                        >
-                          ${payment?.amount?.toString()}
-                        </Typography>
-                      </Stack>
+                        <Grid container justifyContent="flex-end">
+                        <Grid item xs={4}>
+                          <Grid container alignItems="center">
+                            <Grid item xs={8}>
+                              <Typography
+                                variant="body2"
+                                color="neutral.light"
+                                fontWeight={500}
+                              >
+                                Deposit collected{' '}{dayjs(payment.transDate).format('MMM D')}
+                              </Typography>
+                            </Grid>
+
+                            <Grid item xs={4}>
+                              {props.editting ? (
+                                <Stack direction="row" spacing={1}>
+                                  <TextField
+                                    id="deposit"
+                                    label="Deposit"
+                                    value={props.option.deposit}
+                                    size="small"
+                                  />
+                                  <Select
+                                    labelId="deposit-percent-select-label"
+                                    id="depositPercent"
+                                    value={props.option.depositPercent ? 1 : 0}
+                                    label="$/%"
+                                    size="small"
+                                  >
+                                    <MenuItem value={1}>%</MenuItem>
+                                    <MenuItem value={0}>$</MenuItem>
+                                  </Select>
+                                </Stack>
+                              ) : (
+                                <Typography
+                                  variant="body2"
+                                  fontWeight={600}
+                                  color="neutral.main"
+                                >
+                                  ${payment?.amount?.toString()}
+                                </Typography>
+                              )}
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
                     </ListItemButton>
                   ))}
                 </List>
-              </Grid>
-            </Grid>
-            </Stack>
+              </Stack>
           </>
         )}
         {error && <Alert severity="error">{error}</Alert>}
@@ -1006,6 +1033,7 @@ function QuoteDetails(props: any) {
           paymentType={'Deposit'}
           type={type}
           success={props.success}
+          quote={props.quote}
         />
       </Card>
     </Stack>

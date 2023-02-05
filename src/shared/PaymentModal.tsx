@@ -1,5 +1,6 @@
 import { AttachMoney } from '@mui/icons-material';
 import {
+  Alert,
   Box,
   Button,
   Checkbox,
@@ -16,15 +17,24 @@ import {
 } from '@mui/material';
 import { Stack } from '@mui/system';
 import { DatePicker } from '@mui/x-date-pickers';
-import React from 'react';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import React, { useEffect, useState } from 'react';
 import {
-  createPayment,
   deletePayment,
+  recordPayment,
   updatePayment,
 } from '../api/payment.api';
+import { createDeposit, createPayment } from '../api/stripePayments.api';
 import { createTimeline } from '../api/timeline.api';
+import CheckoutForm from '../pages/client-hub/CheckoutForm';
 
 export default function PaymentModal(props: any) {
+  const [loading, setLoading] = useState(false);
+  const [intent, setIntent] = useState({} as any);
+  const [stripePromise, setStripePromise] = useState(null as any);
+  const [error, setError] = useState(null);
+
   const paymentMethods = [
     'Cash',
     'Bank Transfer',
@@ -40,7 +50,7 @@ export default function PaymentModal(props: any) {
 
   const handleSave = () => {
     if (props.type === 'new') {
-      createPayment(props.payment).then(
+      recordPayment(props.payment).then(
         (res) => {
           let timeline_event = {
             client: props.payment.client,
@@ -93,14 +103,56 @@ export default function PaymentModal(props: any) {
     props.setPayment({ ...props.payment, transDate: date });
   };
 
+  useEffect(() => {
+    if (!props.open || intent.client_secret || props.payment.method !== 'Credit Card') return;
+    setLoading(true);
+    if (props.paymentType === 'Deposit') {
+        createDeposit(props.quote.quote.client, props.quote.quote.id)
+        .then(intent => {
+            loadStripe("pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww").then(loadStripe => {
+                setStripePromise(loadStripe);
+                setIntent(intent);
+                setLoading(false);
+              }, err => {
+                setError(err.message);
+                setLoading(false);
+              })
+            
+        }, err => {
+            setError(err.message);
+            setLoading(false);
+        })
+    } else {
+        createPayment(props.invoice.invoice.client, props.invoice.invoice.id)
+        .then(intent => {
+            loadStripe("pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww").then(loadStripe => {
+                setStripePromise(loadStripe);
+                setIntent(intent);
+                setLoading(false);
+              }, err => {
+                setError(err.message);
+                setLoading(false);
+              })
+            
+        }, err => {
+            setError(err.message);
+            setLoading(false);
+        })
+    }
+
+}, [props.quote, props.invoice, props.open, props.paymentType, props.payment.method, intent])
+
   return (
     <Dialog onClose={handleCancel} open={props.open}>
       <DialogTitle align="center">Collect {props.paymentType}</DialogTitle>
+      {error && <Alert severity="error">{error}</Alert>}
+      {props.payment.method !== 'Credit Card' &&
+      <>
       <DialogContent>
         <Stack spacing={2}>
           <Stack spacing={1}>
             <InputLabel id="method-label" sx={{ color: 'primary.main' }}>
-              Property
+              Payment Method
             </InputLabel>
             <Select
               labelId="method-label"
@@ -121,9 +173,11 @@ export default function PaymentModal(props: any) {
               ))}
             </Select>
           </Stack>
+          <InputLabel id="amount-label" sx={{ color: 'primary.main' }}>
+              Amount
+          </InputLabel>
           <TextField
             id="amount"
-            label="Amount"
             defaultValue={
               props.payment.amount ? props.payment.amount : undefined
             }
@@ -136,8 +190,10 @@ export default function PaymentModal(props: any) {
               ),
             }}
           />
+          <InputLabel id="date-label" sx={{ color: 'primary.main' }}>
+              Payment Date
+          </InputLabel>
           <DatePicker
-            label="Payment Date"
             value={props.payment.transDate}
             onChange={handlePaymentDateChange}
             renderInput={(params) => <TextField {...params} />}
@@ -145,11 +201,13 @@ export default function PaymentModal(props: any) {
               color: 'primary',
             }}
           />
+          <InputLabel id="details-label" sx={{ color: 'primary.main' }}>
+              Details
+          </InputLabel>
           <TextField
             multiline
             minRows={3}
             id="details"
-            label="Details"
             defaultValue={
               props.payment.details ? props.payment.details : undefined
             }
@@ -171,6 +229,39 @@ export default function PaymentModal(props: any) {
           Save
         </Button>
       </DialogActions>
+      </>}
+      {props.payment.method === 'Credit Card' && !loading && intent.client_secret && stripePromise &&
+            <DialogContent>
+            <Stack spacing={2}>
+            <Stack spacing={1}>
+              <InputLabel id="method-label" sx={{ color: 'primary.main' }}>
+                Payment Method
+              </InputLabel>
+              <Select
+                labelId="method-label"
+                id="method"
+                value={props.payment.method}
+                onChange={handleChangeMethod}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected}
+                  </Box>
+                )}
+              >
+                {paymentMethods.map((method: any) => (
+                  <MenuItem key={method} value={method}>
+                    <Checkbox checked={method === props.payment.method} />
+                    <ListItemText primary={method} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </Stack>
+            <Elements stripe={stripePromise} options={{clientSecret: intent.client_secret}}>
+                <CheckoutForm handleCancel={handleCancel}/>
+            </Elements>
+            </Stack>
+            </DialogContent>
+          }
     </Dialog>
   );
 }
