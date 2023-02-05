@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,7 +20,7 @@ import { Stack } from '@mui/system';
 import { DatePicker } from '@mui/x-date-pickers';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   deletePayment,
   recordPayment,
@@ -34,6 +35,7 @@ export default function PaymentModal(props: any) {
   const [intent, setIntent] = useState({} as any);
   const [stripePromise, setStripePromise] = useState(null as any);
   const [error, setError] = useState(null);
+  const [step, setStep] = useState(0);
 
   const paymentMethods = [
     'Cash',
@@ -103,11 +105,19 @@ export default function PaymentModal(props: any) {
     props.setPayment({ ...props.payment, transDate: date });
   };
 
-  useEffect(() => {
-    if (!props.open || intent.client_secret || props.payment.method !== 'Credit Card') return;
+  const handleChangeStep = () => {
+    if (step === 0) {
+        getIntent();
+        setStep(1);
+    } else {
+        setStep(0);
+    }
+}
+
+const getIntent = () => {
     setLoading(true);
     if (props.paymentType === 'Deposit') {
-        createDeposit(props.quote.quote.client, props.quote.quote.id)
+        createDeposit(props.quote.quote.client, props.quote.quote.id, (+(+props.payment.amount).toFixed(2)))
         .then(intent => {
             loadStripe("pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww").then(loadStripe => {
                 setStripePromise(loadStripe);
@@ -123,7 +133,7 @@ export default function PaymentModal(props: any) {
             setLoading(false);
         })
     } else {
-        createPayment(props.invoice.invoice.client, props.invoice.invoice.id)
+        createPayment(props.invoice.invoice.client, props.invoice.invoice.id, (+(+props.payment.amount).toFixed(2)))
         .then(intent => {
             loadStripe("pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww").then(loadStripe => {
                 setStripePromise(loadStripe);
@@ -139,8 +149,7 @@ export default function PaymentModal(props: any) {
             setLoading(false);
         })
     }
-
-}, [props.quote, props.invoice, props.open, props.paymentType, props.payment.method, intent])
+}
 
   return (
     <Dialog onClose={handleCancel} open={props.open}>
@@ -182,6 +191,8 @@ export default function PaymentModal(props: any) {
               props.payment.amount ? props.payment.amount : undefined
             }
             onChange={handleChange}
+            type='number'
+            error={props.payment?.amount === '0'}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -209,7 +220,7 @@ export default function PaymentModal(props: any) {
             minRows={3}
             id="details"
             defaultValue={
-              props.payment.details ? props.payment.details : undefined
+              props.payment.details ? props.payment.details : ''
             }
             onChange={handleChange}
           />
@@ -225,14 +236,67 @@ export default function PaymentModal(props: any) {
           </Button>
         )}
         <Button onClick={handleSaveAndReciept}>Save & Email Receipt</Button>
-        <Button onClick={handleSave} variant="contained">
+        <Button onClick={handleSave} disabled={!props.payment.amount || props.payment?.amount === '0'} variant="contained">
           Save
         </Button>
       </DialogActions>
       </>}
-      {props.payment.method === 'Credit Card' && !loading && intent.client_secret && stripePromise &&
-            <DialogContent>
-            <Stack spacing={2}>
+      {props.payment.method === 'Credit Card' &&
+        <DialogContent>
+          <Stack spacing={2}>
+          {step === 0 &&
+          <>
+          <Stack spacing={1}>
+          <InputLabel id="method-label" sx={{ color: 'primary.main' }}>
+            Payment Method
+          </InputLabel>
+          <Select
+            labelId="method-label"
+            id="method"
+            value={props.payment.method}
+            onChange={handleChangeMethod}
+            renderValue={(selected) => (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                {selected}
+              </Box>
+            )}
+          >
+            {paymentMethods.map((method: any) => (
+              <MenuItem key={method} value={method}>
+                <Checkbox checked={method === props.payment.method} />
+                <ListItemText primary={method} />
+              </MenuItem>
+            ))}
+          </Select>
+          </Stack>
+          <InputLabel id="amount-label" sx={{ color: 'primary.main' }}>
+              Amount
+          </InputLabel>
+          <TextField
+              id="amount"
+              value={
+                props.payment.amount ? props.payment.amount : ''
+              }
+              onChange={handleChange}
+              type='number'
+              error={props.payment?.amount === '0'}
+              InputProps={{
+              startAdornment: (
+                  <InputAdornment position="start">
+                      <AttachMoney color="primary" />
+                  </InputAdornment>
+              ),
+              }}
+          />
+          <DialogActions sx={{mt: 3}}>
+              <Button variant='outlined' onClick={handleCancel}>Cancel</Button>
+              <Button variant='contained' onClick={handleChangeStep} disabled={!props.payment.amount || props.payment?.amount === '0'}>Continue</Button>
+          </DialogActions>
+          </>
+          }
+          {loading && <Box textAlign='center'><CircularProgress /></Box>}
+          {!loading && intent.client_secret && stripePromise && step === 1 &&
+          <>
             <Stack spacing={1}>
               <InputLabel id="method-label" sx={{ color: 'primary.main' }}>
                 Payment Method
@@ -257,11 +321,13 @@ export default function PaymentModal(props: any) {
               </Select>
             </Stack>
             <Elements stripe={stripePromise} options={{clientSecret: intent.client_secret}}>
-                <CheckoutForm handleCancel={handleCancel}/>
+                <CheckoutForm handleChangeStep={handleChangeStep} handleCancel={handleCancel}/>
             </Elements>
-            </Stack>
-            </DialogContent>
+            </>
           }
+          </Stack>
+        </DialogContent>
+            }
     </Dialog>
   );
 }

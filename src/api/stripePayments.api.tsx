@@ -84,7 +84,7 @@ async function retrieveAccount() {
     }
 }
 
-async function createDeposit(client: string, quote: string) {
+async function createDeposit(client: string, quote: string, paymentAmount: number) {
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ async function createDeposit(client: string, quote: string) {
         'tenantId': auth.tenantId as string,
         'userId': auth.currentUser?.uid as string
     }
-    var body = JSON.stringify({client: client, quote: quote});
+    var body = JSON.stringify({client: client, quote: quote, paymentAmount: paymentAmount});
     const requestOptions: RequestInit = {
         method: 'POST',
         headers: headers,
@@ -114,7 +114,7 @@ async function createDeposit(client: string, quote: string) {
     }
 }
 
-async function createPayment(client: string, invoice: string) {
+async function createPayment(client: string, invoice: string, paymentAmount: number) {
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ async function createPayment(client: string, invoice: string) {
         'tenantId': auth.tenantId as string,
         'userId': auth.currentUser?.uid as string
     }
-    var body = JSON.stringify({client: client, invoice: invoice});
+    var body = JSON.stringify({client: client, invoice: invoice, paymentAmount: paymentAmount});
     const requestOptions: RequestInit = {
         method: 'POST',
         headers: headers,

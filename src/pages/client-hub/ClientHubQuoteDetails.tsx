@@ -44,7 +44,7 @@ function QuoteItem(props: any) {
                 <Grid item={true} xs={4}>
                     <Stack>
                         <Typography>Total</Typography>
-                        <Typography>${props.item.price}</Typography>
+                        <Typography>${(props.item.price).toFixed(2)}</Typography>
                     </Stack>
                 </Grid>
             </Grid>
@@ -87,20 +87,20 @@ function TabPanel(props: any) {
             <Divider />
             <Stack direction="row">
                 <Typography>Subtotal</Typography>
-                <Typography>${subTotalAmount}</Typography>
+                <Typography>${subTotalAmount.toFixed(2)}</Typography>
             </Stack>
             <Stack direction="row">
                 <Typography>Taxes</Typography>
-                <Typography>{taxAmount}</Typography>
+                <Typography>{taxAmount.toFixed(2)}</Typography>
             </Stack>
             <Divider />
             <Stack direction="row">
                 <Typography>Total</Typography>
-                <Typography>${totalAmount}</Typography>
+                <Typography>${totalAmount.toFixed(2)}</Typography>
             </Stack>
             <Stack direction="row">
                 <Typography>Deposit</Typography>
-                <Typography>${depositAmount}</Typography>
+                <Typography>${depositAmount.toFixed(2)}</Typography>
             </Stack>
             </>
         {/* )} */}
@@ -188,7 +188,7 @@ function ClientHubQuoteDetails(props: any) {
                 {props.payments.map((payment: any) => (
                     <Stack direction={'row'} key={payment.id}>
                         <Typography>Deposit collected {dayjs(payment.transDate).format('MMM D')}</Typography>
-                        <Typography>${payment.amount}</Typography>
+                        <Typography>${(payment.amount).toFixed(2)}</Typography>
                     </Stack>
                 ))}
             </List>
@@ -216,7 +216,7 @@ function ClientHubQuoteDetails(props: any) {
             open={confirmOpen}
             onClose={handleConfirmClose}
             type={confirmType}
-            price={props.quote.options?.[0].items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) + (+props.taxes.find((t: any) => t.id === props.quote.options?.[0].tax)?.tax)*(props.quote.options?.[0].items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))}
+            price={(props.quote.options?.[0].items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) + (+props.taxes.find((t: any) => t.id === props.quote.options?.[0].tax)?.tax)*(props.quote.options?.[0].items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))).toFixed(2)}
             success={props.success}
             {...props}
             />
@@ -226,6 +226,7 @@ function ClientHubQuoteDetails(props: any) {
             success={props.success}
             quote={props.quote}
             type='deposit'
+            amount={(props.quote.options?.[0]?.depositPercent ? (+props.quote.options?.[0]?.deposit/100)*(props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) + (+props.taxes.find((t: any) => t.id === props.quote.options?.[0]?.tax)?.tax)*(props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))) : props.quote.options?.[0]?.deposit).toFixed(2)}
             />
         </Card>
     )

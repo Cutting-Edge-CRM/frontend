@@ -37,6 +37,7 @@ import {
   Stack,
   Switch,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
@@ -101,7 +102,7 @@ function QuoteItemSaved(props: any) {
               color="neutral.main"
               fontWeight={600}
             >
-              ${props.item.price}
+              ${(+props.item.price).toFixed(2)}
             </Typography>
           </Stack>
         </Grid>
@@ -397,7 +398,7 @@ function TabPanel(props: any) {
                       fontWeight={600}
                       color="neutral.main"
                     >
-                      ${subTotalAmount}
+                      ${subTotalAmount.toFixed(2)}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -444,7 +445,7 @@ function TabPanel(props: any) {
                         fontWeight={600}
                         color="neutral.main"
                       >
-                        ${depositAmount}
+                        ${depositAmount.toFixed(2)}
                       </Typography>
                     )}
                   </Grid>
@@ -494,7 +495,7 @@ function TabPanel(props: any) {
                         fontWeight={600}
                         color="neutral.main"
                       >
-                        {taxAmount}
+                        {taxAmount.toFixed(2)}
                       </Typography>
                     )}
                   </Grid>
@@ -520,7 +521,7 @@ function TabPanel(props: any) {
                       fontWeight={600}
                       color="neutral.main"
                     >
-                      ${totalAmount}
+                      ${totalAmount.toFixed(2)}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -637,23 +638,20 @@ function QuoteDetails(props: any) {
       details: `Deposit for quote #${props.quote.quote.id}`,
       transDate: dayjs(),
       method: 'Cheque',
-      amount: props.quote.options[0].depositPercent
-        ? (+props.quote.options[0].deposit / 100) *
-          (props.quote.options[0].items
-            .map((i: any) => i.price)
-            .reduce(add, 0) +
-            +props.taxes.find(
-              (t: any) => t.id === props.quote.options[0].tax
-            )?.tax *
-              props.quote.options[0].items
-                .map((i: any) => i.price)
-                .reduce(add, 0))
-        : props.quote.options[0].deposit,
+      amount: (props.quote.options?.[0]?.depositPercent
+      ? (+props.quote.options?.[0]?.deposit / 100) *
+          (props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) +
+            +props.taxes.find((t: any) => t.id === props.quote.options?.[0]?.tax)?.tax *
+              props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))
+      : props.quote.options?.[0]?.deposit).toFixed(2)
     });
     setPaymentOpen(true);
   };
 
   const handleEditDeposit = (event: any, currPayment: any) => {
+    if (currPayment.method === 'Credit Card') {
+      return;
+    }
     setType('edit');
     setPayment(currPayment);
     setPaymentOpen(true);
@@ -944,8 +942,8 @@ function QuoteDetails(props: any) {
               <Stack mt={2.5} spacing={2}>
                 <List>
                   {props.payments.map((payment: any) => (
+                    <Tooltip key={payment.id} title={payment.method === 'Credit Card' ? "Cannot edit credit card payments": ''}>
                     <ListItemButton
-                      key={payment.id}
                       id={payment.id}
                       onClick={(e) => handleEditDeposit(e, payment)}
                     >
@@ -988,7 +986,7 @@ function QuoteDetails(props: any) {
                                   fontWeight={600}
                                   color="neutral.main"
                                 >
-                                  ${payment?.amount?.toString()}
+                                  ${(+payment?.amount)?.toFixed(2)}
                                 </Typography>
                               )}
                             </Grid>
@@ -996,6 +994,7 @@ function QuoteDetails(props: any) {
                         </Grid>
                       </Grid>
                     </ListItemButton>
+                    </Tooltip>
                   ))}
                 </List>
               </Stack>

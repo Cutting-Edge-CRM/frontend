@@ -32,6 +32,7 @@ import {
   Select,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
@@ -70,7 +71,7 @@ function InvoiceItemSaved(props: any) {
               Total
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
-              ${props.item.price}
+              ${props.item.price.toFixed(2)}
             </Typography>
           </Stack>
         </Grid>
@@ -149,7 +150,7 @@ function InvoiceItemEdit(props: any) {
                   </InputAdornment>
                 ),
               }}
-              value={props.item.price ? props.item.price : ''}
+              value={props.item.price ? props.item.price.toFixed(2) : ''}
               onChange={handleChange}
               size="small"
             />
@@ -268,20 +269,16 @@ function InvoiceDetails(props: any) {
       details: `Payment for invoice #${props.invoice.invoice.id}`,
       transDate: dayjs(),
       method: 'Cheque',
-      amount: props.invoice.invoice.depositPercent
-        ? (+props.invoice.invoice.deposit / 100) *
-          (props.invoice.invoice.items.map((i: any) => i.price).reduce(add, 0) +
-            +props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)
-              ?.tax *
-              props.invoice.invoice.items
-                .map((i: any) => i.price)
-                .reduce(add, 0))
-        : props.invoice.invoice.deposit,
+      amount: ((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0)
+      - props.payments.map((p: any) => p.amount).reduce(add, 0)).toFixed(2)
     });
     setPaymentOpen(true);
   };
 
   const handleEditPayment = (event: any, currPayment: any) => {
+    if (currPayment.method === 'Credit Card') {
+      return;
+    }
     setType('edit');
     setPayment(currPayment);
     setPaymentOpen(true);
@@ -504,9 +501,9 @@ function InvoiceDetails(props: any) {
                     color="neutral.main"
                   >
                     $
-                    {props.invoice.items
+                    {(props.invoice.items
                       .map((i: any) => i.price)
-                      .reduce(add, 0)}
+                      .reduce(add, 0)).toFixed(2)}
                   </Typography>
                 </Grid>
               </Grid>
@@ -557,14 +554,14 @@ function InvoiceDetails(props: any) {
                       fontWeight={600}
                       color="neutral.main"
                     >
-                      {+(
+                      {(+(
                         props.taxes.find(
                           (t: any) => t.id === props.invoice.invoice.tax
                         )?.tax ?? 0
                       ) *
                         props.invoice.items
                           .map((i: any) => i.price)
-                          .reduce(add, 0)}
+                          .reduce(add, 0)).toFixed(2)}
                     </Typography>
                   )}
                 </Grid>
@@ -591,7 +588,7 @@ function InvoiceDetails(props: any) {
                     color="neutral.main"
                   >
                     $
-                    {(+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0)}
+                    {((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0)).toFixed(2)}
                   </Typography>
                 </Grid>
               </Grid>
@@ -612,8 +609,8 @@ function InvoiceDetails(props: any) {
                     color="neutral.main"
                   >
                     $
-                    {(+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0)
-                    - props.payments.map((p: any) => p.amount).reduce(add, 0)}
+                    {((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0)
+                    - props.payments.map((p: any) => p.amount).reduce(add, 0)).toFixed(2)}
                   </Typography>
                 </Grid>
               </Grid>
@@ -625,10 +622,11 @@ function InvoiceDetails(props: any) {
               <Stack mt={2.5} spacing={2}>
                 <List>
                   {props.payments.map((payment: any) => (
+                    <Tooltip key={payment.id} title={payment.method === 'Credit Card' ? "Cannot edit credit card payments": ''}>
                     <ListItemButton
-                      key={payment.id}
                       id={payment.id}
                       onClick={(e) => handleEditPayment(e, payment)}
+                      
                     >
                         <Grid container justifyContent="flex-end">
                         <Grid item xs={4}>
@@ -669,7 +667,7 @@ function InvoiceDetails(props: any) {
                                   fontWeight={600}
                                   color="neutral.main"
                                 >
-                                  ${payment?.amount?.toString()}
+                                  ${(+payment?.amount).toFixed(2)}
                                 </Typography>
                               )}
                             </Grid>
@@ -677,6 +675,7 @@ function InvoiceDetails(props: any) {
                         </Grid>
                       </Grid>
                     </ListItemButton>
+                    </Tooltip>
                   ))}
                 </List>
               </Stack>
