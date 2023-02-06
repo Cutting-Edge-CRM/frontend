@@ -20,6 +20,32 @@ function Timeline(props: any) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  function getTimelineWording(event: any) {
+    switch (event.resourceAction) {
+      case 'converted':
+        return (`${event.resourceType?.charAt(0).toUpperCase() + event.resourceType?.slice(1)} #${event.resourceId} was converted to job`)
+      case 'pending':
+        return (`${event.resourceType?.charAt(0).toUpperCase() + event.resourceType?.slice(1)} #${event.resourceId} was marked as pending`)
+      case 'client-approved':
+        return (`${event.resourceType?.charAt(0).toUpperCase() + event.resourceType?.slice(1)} #${event.resourceId} was approved by client`)
+      case 'client-rejected':
+        return (`${event.resourceType?.charAt(0).toUpperCase() + event.resourceType?.slice(1)} #${event.resourceId} was rejected by client`)
+      case 'opened':
+        return (`${event.resourceType?.charAt(0).toUpperCase() + event.resourceType?.slice(1)} #${event.resourceId} was opened by client`)
+      case 'client-created':
+        return (`${event.resourceType?.charAt(0).toUpperCase() + event.resourceType?.slice(1)} #${event.resourceId} was made by client`)
+      case 'created':
+        if (event.resourceType === 'payment') return (`${event.resourceType?.charAt(0).toUpperCase() + event.resourceType?.slice(1)} #${event.resourceId} was recorded`)
+        return (`${event.resourceType?.charAt(0).toUpperCase() + event.resourceType?.slice(1)} #${event.resourceId} was ${event.resourceAction}`)
+      case 'complete':
+        return (`${event.resourceType?.charAt(0).toUpperCase() + event.resourceType?.slice(1)} #${event.resourceId} was marked as complete`)
+      case 'awaiting payment':
+        return (`${event.resourceType?.charAt(0).toUpperCase() + event.resourceType?.slice(1)} #${event.resourceId} was marked as awaiting payment`)
+      default:
+        return (`${event.resourceType?.charAt(0).toUpperCase() + event.resourceType?.slice(1)} #${event.resourceId} was ${event.resourceAction}`)
+    }
+  }
+
   useEffect(() => {
     listTimeline(props.client, props.resourceType, props.resourceId).then(
       (result) => {
@@ -36,14 +62,17 @@ function Timeline(props: any) {
   return (
     <Card sx={{ py: 2 }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Typography fontWeight={600} fontSize={18}>
+        <Typography fontWeight={600} fontSize={18} marginBottom={1}>
           Timeline
         </Typography>
       </Stack>
       {loading && <Box textAlign='center'><CircularProgress /></Box>}
       {error && <Alert severity="error">{error}</Alert>}
       {!loading && !error && (
-        <List>
+        <List sx={{
+          overflow: 'auto',
+          maxHeight: 400,
+        }}>
           {rows.map((event: any) => (
             <ListItem
               sx={{
@@ -67,7 +96,7 @@ function Timeline(props: any) {
                     fontWeight={600}
                     sx={{ opacity: 0.7 }}
                     >
-                      {event.resourceType?.charAt(0).toUpperCase() + event.resourceType?.slice(1)} #{event.resourceId} was {event.resourceAction}
+                      {getTimelineWording(event)}
                     </Typography>
                     <Typography
                       color="primary"

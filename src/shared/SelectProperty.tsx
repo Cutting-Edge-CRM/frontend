@@ -132,6 +132,7 @@ export default function SelectProperty(props: any) {
   };
 
   const handleCloseNewProperty = (value: string) => {
+    console.log('closing');
     setNewPropertyOpen(false);
   };
 
@@ -235,9 +236,10 @@ export default function SelectProperty(props: any) {
         open={newPropertyOpen}
         onClose={handleCloseNewProperty}
         create={handleSaveNewProperty}
-        type={'new'}
+        modalType={'new'}
         token={process.env.REACT_APP_MAPBOX_TOKEN}
         success={props.success}
+        client={props.client}
       />
     </Dialog>
   );

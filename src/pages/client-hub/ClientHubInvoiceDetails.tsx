@@ -283,13 +283,16 @@ function ClientHubInvoiceDetails(props: any) {
                   </Stack>
               </>
             )}
-            {props.invoice.invoice.status === 'Awaiting Payment' && 
-            <>
+            {props.invoice.invoice.status === 'Awaiting Payment' &&  (props.payments.map((p: any) => p.amount).reduce(add, 0) < 
+            ((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0))) &&
+            <Box display={'flex'} justifyContent='end'>
                 <Button
                 onClick={handleOpenPayment}
+                variant='contained'
+                sx={{margin: 5}}
                 >Pay Invoice
                 </Button>
-            </>
+            </Box>
                 }
             <PaymentModal
             open={paymentOpen}

@@ -41,6 +41,7 @@ export default function EditProperty(props: any) {
       // save value
       createProperty({ ...props.property, client: props.client }).then(
         (res) => {
+          console.log('created');
           setLoading(false);
           props.create(res);
           props.success('Successfully created property');
