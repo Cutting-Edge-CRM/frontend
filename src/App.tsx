@@ -19,6 +19,7 @@ import { theme } from './theme/theme';
 import ClientHub from './pages/client-hub/ClientHub';
 import { loginAnonymously } from "./auth/firebase";
 import { createTimeline } from './api/timeline.api';
+import CryptoJS from 'crypto-js';
 
 function App() {
 
@@ -49,6 +50,7 @@ function App() {
 
 if (!window.location.href.includes('anonymous')) {
   loading = false;
+  return children;
 }
 
   // Confirm the link is a sign-in with email link.
@@ -56,15 +58,16 @@ if (window.location.href.includes('anonymous')) {
   let link = window.location.href;
   const url = new URL(link);
   let baseLink = window.location.href.split('?')[0];
-  // let anonymous = Buffer.from(url.searchParams.get('anonymous') as string, 'base64').toString('ascii');
+  let decrypt = CryptoJS.AES.decrypt(url.searchParams.get('anonymous') as string, process.env.REACT_APP_ENCRYPT_KEY as string).toString(CryptoJS.enc.Utf8);
+  console.log(decodeURIComponent(decrypt));
   let client = url.pathname.split('/')[2];
   let resourceType = url.pathname.split('/')[3]?.slice(0,-1)?.toLowerCase();
   let resourceId = url.pathname.split('/')[4];
-
+  if (!(decodeURIComponent(decrypt) === `${client}${resourceId}`)) {
+    return children;
+  }
   loginAnonymously(client)
   .then(res => {
-    console.log(res);
-    // mark quote/invoice as opened
     let timeline_event = {
       client: client,
       resourceId: resourceId,
@@ -77,7 +80,6 @@ if (window.location.href.includes('anonymous')) {
     }, err => {
       console.error(err);
     })
-
   }
 
   if (loading) {
