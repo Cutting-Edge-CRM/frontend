@@ -13,7 +13,7 @@ function CompanySettings(props: any) {
     // const [loading, setLoading] = useState(false);
     const [settings, setSettings] = useState({} as any);
     const [company, setCompany] = useState({} as any);
-    // const [error, setError] = useState(null);
+    const [logoUrl, setLogoUrl] = useState([] as any);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -34,6 +34,9 @@ function CompanySettings(props: any) {
         getCompany()
         .then((result) => {
             // setLoading(false);
+            if (result.logo) {
+                setLogoUrl([{url: result.logo}]);
+            }
             setCompany(result);
         }, (err) => {
             // setLoading(false);
@@ -57,7 +60,7 @@ function CompanySettings(props: any) {
                 </Box>
             </Card>
             {value === 0 && <PersonalInformation success={props.success}/>}
-            {value === 1 && <CompanyInformation company={company} setCompany={setCompany} success={props.success}/>}
+            {value === 1 && <CompanyInformation company={company} setCompany={setCompany} success={props.success} fileURLs={logoUrl} setFileURLs={setLogoUrl} />}
             {value === 2 && <Employees success={props.success}/>}
             {value === 3 && <EmailSmsSettings settings={settings} setSettings={setSettings} success={props.success}/>}
             {value === 4 && <Payments/>}

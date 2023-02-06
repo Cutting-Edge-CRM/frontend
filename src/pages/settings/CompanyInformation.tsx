@@ -1,28 +1,92 @@
 import { AddressAutofill } from '@mapbox/search-js-react';
-import { AddAPhoto, Email, Language, MapsHomeWork, Phone, Place } from '@mui/icons-material';
-import { Alert, Box, Button, Card, Divider, InputAdornment, InputLabel, Stack, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import { AddAPhoto, Close, Email, Language, MapsHomeWork, Phone, Place } from '@mui/icons-material';
+import { Alert, Box, Button, Card, Divider, IconButton, ImageListItem, InputAdornment, InputLabel, LinearProgress, Stack, TextField, Typography } from '@mui/material';
+import React, { useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { updateCompany } from '../../api/company.api';
+import { saveImagesCloudinary } from '../../api/images.api';
 
 function CompanyInformation(props: any) {
     const [error, setError] = useState(null);
+    const [loadingFiles, setLoadingFiles] = useState(false);
+    
 
     const handleChange = (event: any) => {
         props.setCompany({ ...props.company, [event.target.id]: event.target.value });
       };
 
     const handleSave = () => {
-        updateCompany(props.company)
-        .then(res => {
-            props.success('Successfully updated company');   
-        }, err => {
-            setError(err);
-        })
+        if (props.fileURLs?.[0]?.url !== props.company?.logo) {
+            saveImagesCloudinary(props.fileURLs).then(
+              (res) => {
+                props.setCompany({...props.company, logo: res?.[0]?.url});
+                updateCompany({...props.company, logo: res?.[0]?.url})
+                    .then(res => {
+                        props.success('Successfully updated company');   
+                    }, err => {
+                        setError(err);
+                    })
+              },
+              (err) => {
+                setError(err.message);
+                console.log('error' + err.message);
+              }
+            );
+          } else {
+            updateCompany(props.company)
+            .then(res => {
+                props.success('Successfully updated company');   
+            }, err => {
+                setError(err);
+            })
+          }
+
     }
 
     const handleReload = () => {
         window.location.reload();
     }
+
+    const onDrop = useCallback(
+        (acceptedFiles: File[]) => {
+          const readAsDataURL = (files: File[]) => {
+            setLoadingFiles(true);
+            fileToDataURL(files[0]).then((file) => {
+              setLoadingFiles(false);
+              props.setFileURLs([file] as { url: string; file: File }[]);
+            });
+          };
+          readAsDataURL(acceptedFiles);
+        },
+        [props]
+      );
+    
+      let { getRootProps, getInputProps, isDragActive } =
+        useDropzone({
+          accept: {
+            'image/jpeg': ['.jpeg', '.jpg'],
+            'image/png': ['.png'],
+            'image/tiff': ['.tif', '.tiff'],
+            'image/svg+xml': ['.svg'],
+            'image/webp': ['.webp'],
+          },
+          maxFiles: 1,
+          onDrop,
+        });
+    
+      const handleDelete = () => {
+        props.setFileURLs([]);
+      };
+    
+      const fileToDataURL = (file: File) => {
+        var reader = new FileReader();
+        return new Promise(function (resolve, reject) {
+          reader.onload = function (event) {
+            resolve({ url: event.target?.result, file: file });
+          };
+          reader.readAsDataURL(file);
+        });
+      };
 
     return (
         <>
@@ -99,7 +163,7 @@ function CompanyInformation(props: any) {
                         </InputLabel>
                         <Box>
                             <Box
-                            // {...getRootProps()}
+                            {...getRootProps()}
                             sx={{
                                 backgroundColor: 'default.light',
                                 borderRadius: '10px',
@@ -107,44 +171,47 @@ function CompanyInformation(props: any) {
                                 cursor: 'pointer',
                                 border: '1px dashed',
                                 borderColor: 'default.main',
+                                display: 'flex',
+                                justifyContent: 'center'
                             }}
                             >
-                            {/* <input {...getInputProps()} /> */}
-                            {/* {isDragActive ? (
-                                <Typography variant="body2">Drop the files here ...</Typography>
-                            ) : ( */}
-                                <Stack
-                                justifyContent="center"
-                                alignItems="center"
-                                spacing={1.5}
-                                >
-                                <AddAPhoto color="primary" fontSize="large" />
-                                <Typography variant="body2" color="default.main">
-                                    Drop an image file here
-                                </Typography>
-                                <Divider>
+                            {props.fileURLs.length === 0 &&
+                                <>
+                                <input {...getInputProps()} />
+                                {isDragActive ? (
+                                    <Typography variant="body2">Drop the files here ...</Typography>
+                                ) : (
+                                    <Stack
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    spacing={1.5}
+                                    >
+                                    <AddAPhoto color="primary" fontSize="large" />
                                     <Typography variant="body2" color="default.main">
-                                    Or
+                                        Drop an image file here
                                     </Typography>
-                                </Divider>
-                                <Button>Browse files</Button>
-                                </Stack>
-                            {/* )} */}
+                                    <Divider>
+                                        <Typography variant="body2" color="default.main">
+                                        Or
+                                        </Typography>
+                                    </Divider>
+                                    <Button>Browse files</Button>
+                                    </Stack>
+                                )}
+                                </>
+                                }
+                                {props.fileURLs.length > 0 &&
+                                    <Box>
+                                    <IconButton onClick={() => handleDelete()}>
+                                        <Close />
+                                    </IconButton>
+                                    <ImageListItem>
+                                        <img src={props.fileURLs?.[0]?.url} alt="company logo" />
+                                    </ImageListItem>
+                                    </Box>
+                            }
                             </Box>
-                            {/* {loadingFiles && <LinearProgress />}
-                            <ImageList cols={3} rowHeight={164}>
-                            {props.fileURLs.map((file: any) => (
-                                <Box key={file.url}>
-                                <IconButton onClick={() => handleDelete(file)}>
-                                    <Close />
-                                </IconButton>
-                                <ImageListItem> */}
-                                    {/* eslint-disable-next-line */}
-                                    {/* <img src={file.url} />
-                                </ImageListItem>
-                                </Box>
-                            ))}
-                            </ImageList> */}
+                            {loadingFiles && <LinearProgress />}
                         </Box>
                     </Stack>
                 </Stack>
