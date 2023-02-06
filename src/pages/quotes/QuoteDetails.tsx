@@ -723,6 +723,87 @@ function QuoteDetails(props: any) {
     );
   };
 
+  function getActionButtons(props: any) {
+
+    if (props.quote.quote.status === 'Draft') {
+      return (
+        <>
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={handleSend}
+        >
+          Send
+        </Button>
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={() => markQuoteAs('Pending')}
+        >
+          Mark as Pending
+        </Button>
+        </>
+      )
+    }
+    if (props.quote.quote.status === 'Pending') {
+      return (
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={() => markQuoteAs('Approved')}
+        >
+          Approve
+        </Button>
+      )
+    }
+    
+    if (props.quote.quote.status === 'Approved' && (props.payments.map((p: any) => p.amount).reduce(add, 0) < 
+    (props.quote.options?.[0]?.depositPercent
+      ? (+props.quote.options?.[0]?.deposit / 100) *
+          (props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) +
+            +props.taxes.find((t: any) => t.id === props.quote.options?.[0]?.tax)?.tax *
+              props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))
+      : props.quote.options?.[0]?.deposit))
+    ) {
+      return (
+        <>
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={handleNewDeposit}
+        >
+          Collect deposit
+        </Button>
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={handleConvertToJob}
+        >
+          Convert to Job
+        </Button>
+        </>
+      )
+    }
+    if (props.quote.quote.status === 'Approved') {
+      return (
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={handleConvertToJob}
+        >
+          Convert to Job
+        </Button>
+      )
+    }
+    if (props.quote.quote.status === 'Rejected') {
+      return (<></>);
+    }
+    if (props.quote.quote.status === 'Converted') {
+      return (<></>);
+    }
+  
+  }
+
 
   return (
     <Stack spacing={2}>
@@ -736,6 +817,8 @@ function QuoteDetails(props: any) {
           <Typography variant="h6" fontWeight={600}>
             {`Quote #${props.quote.quote.id}`}
           </Typography>
+          <Stack direction={'row'} spacing={2}>
+          {getActionButtons(props)}
           <IconButton onClick={openMenu} color="primary">
             <MoreVert />
           </IconButton>
@@ -746,7 +829,7 @@ function QuoteDetails(props: any) {
             onClose={closeMenu}
           >
             <MenuList>
-              {props.quote.quote.status !== ('Converted' || 'Pending') && (
+              {props.quote.quote.status !== 'Converted' && props.quote.quote.status !=='Pending' && (
                 <MenuItem onClick={() => markQuoteAs('Pending')}>
                   <ListItemIcon>
                     <MarkEmailReadOutlined />
@@ -754,7 +837,7 @@ function QuoteDetails(props: any) {
                   <ListItemText>Mark as Pending</ListItemText>
                 </MenuItem>
               )}
-              {props.quote.quote.status !== ('Converted' || 'Approved') && (
+              {props.quote.quote.status !== 'Converted' && props.quote.quote.status !=='Approved'  && (
                 <MenuItem onClick={() => markQuoteAs('Approved')}>
                   <ListItemIcon>
                     <Check />
@@ -762,7 +845,7 @@ function QuoteDetails(props: any) {
                   <ListItemText>Mark as Approved</ListItemText>
                 </MenuItem>
               )}
-              {props.quote.quote.status !== ('Converted' || 'Rejected') && (
+              {props.quote.quote.status !== 'Converted' && props.quote.quote.status !=='Rejected'  && (
                 <MenuItem onClick={() => markQuoteAs('Rejected')}>
                   <ListItemIcon>
                     <ThumbDownAltOutlined />
@@ -770,12 +853,14 @@ function QuoteDetails(props: any) {
                   <ListItemText>Mark as Rejected</ListItemText>
                 </MenuItem>
               )}
+              {props.quote.quote.status === 'Approved' && (
               <MenuItem onClick={handleNewDeposit}>
                 <ListItemIcon>
                   <AttachMoney />
                 </ListItemIcon>
                 <ListItemText>Collect Deposit</ListItemText>
               </MenuItem>
+              )}
               {props.quote.quote.status === 'Approved' && (
                 <MenuItem onClick={handleConvertToJob}>
                   <ListItemIcon>
@@ -818,6 +903,7 @@ function QuoteDetails(props: any) {
               </MenuItem>
             </MenuList>
           </Menu>
+          </Stack>
         </Stack>
         <Stack direction="row" justifyContent="space-between">
           <Stack spacing={2}>

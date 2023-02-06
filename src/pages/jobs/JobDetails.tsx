@@ -307,6 +307,25 @@ function JobDetails(props: any) {
           <Typography variant="h6" fontWeight={600}>
             {`Job #${props.job.job.id}`}
           </Typography>
+          <Stack direction={'row'} spacing={2}>
+          {props.job.job.status === 'Active' &&
+          <Button
+          variant="contained"
+          color="primary"
+          onClick={() => markJobAs('Complete')}
+          >
+            Mark as Complete
+          </Button>
+          }
+          {!props.job.job.invoice &&
+          <Button
+          variant="contained"
+          color="primary"
+          onClick={handleGenerateInvoice}
+          >
+            Generate Invoice
+          </Button>
+          }
           <IconButton onClick={openMenu} color="primary">
             <MoreVert />
           </IconButton>
@@ -317,7 +336,7 @@ function JobDetails(props: any) {
             onClose={closeMenu}
           >
             <MenuList>
-              {props.job.job.status !== ('Complete' || 'Archived') && (
+              {props.job.job.status === 'Active' && (
                 <MenuItem onClick={() => markJobAs('Complete')}>
                   <ListItemIcon>
                     <Check />
@@ -345,6 +364,7 @@ function JobDetails(props: any) {
               </MenuItem>
             </MenuList>
           </Menu>
+          </Stack>
         </Stack>
         <Stack direction="row" justifyContent="space-between">
           <Stack spacing={2}>

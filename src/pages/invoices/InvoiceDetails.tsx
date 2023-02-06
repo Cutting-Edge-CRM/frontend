@@ -311,6 +311,60 @@ function InvoiceDetails(props: any) {
     });
   };
 
+  function getActionButtons(props: any) {
+
+    if (props.invoice.invoice.status === 'Draft') {
+      return (
+        <>
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={handleSend}
+        >
+          Send
+        </Button>
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={() => markInvoiceAs('Awaiting Payment')}
+        >
+          Mark as sent
+        </Button>
+        </>
+      )
+    }
+    
+    if (props.invoice.invoice.status === 'Awaiting Payment' && (props.payments.map((p: any) => p.amount).reduce(add, 0) < 
+    ((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0)))
+    ) {
+      return (
+        <>
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={handleNewPayment}
+        >
+          Collect Payment
+        </Button>
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={handleSend}
+        >
+          Send
+        </Button>
+        </>
+      )
+    }
+    if (props.invoice.invoice.status === 'Paid') {
+      return (<></>);
+    }
+    if (props.invoice.invoice.status === 'Bad Debt') {
+      return (<></>);
+    }
+  
+  }
+
   return (
     <Stack spacing={2}>
       <Card sx={{ pb: 4, pt: 1 }}>
@@ -323,6 +377,8 @@ function InvoiceDetails(props: any) {
           <Typography variant="h6" fontWeight={600}>
             {`Invoice #${props.invoice.invoice.id}`}
           </Typography>
+          <Stack direction={'row'} spacing={2}>
+          {getActionButtons(props)}
           <IconButton onClick={openMenu} color="primary">
             <MoreVert />
           </IconButton>
@@ -333,24 +389,30 @@ function InvoiceDetails(props: any) {
             onClose={closeMenu}
           >
             <MenuList>
-              <MenuItem onClick={() => markInvoiceAs('Awaiting Payment')}>
-                <ListItemIcon>
-                  <MarkEmailReadOutlined />
-                </ListItemIcon>
-                <ListItemText>Mark as Sent</ListItemText>
+              {props.invoice.invoice.status === 'Draft' &&
+                <MenuItem onClick={() => markInvoiceAs('Awaiting Payment')}>
+                  <ListItemIcon>
+                    <MarkEmailReadOutlined />
+                  </ListItemIcon>
+                  <ListItemText>Mark as Sent</ListItemText>
               </MenuItem>
-              <MenuItem onClick={() => markInvoiceAs('Bad Debt')}>
-                <ListItemIcon>
-                  <MoneyOffOutlined />
-                </ListItemIcon>
-                <ListItemText>Mark as Bad Debt</ListItemText>
-              </MenuItem>
+              }
+              {props.invoice.invoice.status === 'Awaiting Payment' && 
+                <MenuItem onClick={() => markInvoiceAs('Bad Debt')}>
+                  <ListItemIcon>
+                    <MoneyOffOutlined />
+                  </ListItemIcon>
+                  <ListItemText>Mark as Bad Debt</ListItemText>
+                </MenuItem>
+              }
+              {props.invoice.invoice.status !== 'Paid' && props.invoice.invoice.status !== 'Draft' &&
               <MenuItem onClick={handleNewPayment}>
                 <ListItemIcon>
                   <AttachMoney />
                 </ListItemIcon>
                 <ListItemText>Collect Payment</ListItemText>
               </MenuItem>
+              }
               <MenuItem onClick={handleSend}>
                 <ListItemIcon>
                   <SendOutlined />
@@ -371,6 +433,7 @@ function InvoiceDetails(props: any) {
               </MenuItem>
             </MenuList>
           </Menu>
+          </Stack>
         </Stack>
         <Stack direction="row" justifyContent="space-between">
           <Stack spacing={2}>
