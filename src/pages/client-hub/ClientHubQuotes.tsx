@@ -54,8 +54,8 @@ function ClientHubQuotes(props: any) {
     return (
         <Box>
             <>
-            <Card>
-            <Typography>Your Quotes</Typography>
+            <Card sx={{marginBottom: 4, pt: 2}}>
+            <Typography variant="h6" fontWeight={600}>Your Quotes</Typography>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs value={value} onChange={handleChange}>
                 <Tab label="Pending" id="pending" />
@@ -74,41 +74,41 @@ function ClientHubQuotes(props: any) {
                     <Grid item xs={4} key={quote.id}>
                         <Card>
                             <ListItemButton onClick={() => handleClick(quote.id)}>
-                                <Stack width={'100%'}>
-                                    <Stack direction={'row'}>
-                                        <Typography>{`Quote #${quote.id}`}</Typography>
+                                <Stack width={'100%'} spacing={2}>
+                                    <Stack direction={'row'} justifyContent='space-between'>
+                                        <Typography fontWeight={600} fontSize={18}>{`Quote #${quote.id}`}</Typography>
                                         <Chip label={quote.status}></Chip>
                                     </Stack>
                                     <Divider/>
                                     <Grid container>
-                                        <Grid item xs={2}><PersonOutline/></Grid>
-                                        <Grid item xs={10}><Typography>Client</Typography></Grid>
+                                        <Grid item xs={2}><PersonOutline color='primary'/></Grid>
+                                        <Grid item xs={10}><Typography color="primary" variant="body1">Client</Typography></Grid>
                                         <Grid item xs={2}></Grid>
-                                        <Grid item xs={10}><Typography>{quote.clientName}</Typography></Grid>
+                                        <Grid item xs={10}><Typography variant="body1">{quote.clientName}</Typography></Grid>
                                     </Grid>
                                     <Grid container>
-                                        <Grid item xs={2}><LocationOnOutlined/></Grid>
-                                        <Grid item xs={10}><Typography>Address</Typography></Grid>
+                                        <Grid item xs={2}><LocationOnOutlined color='primary'/></Grid>
+                                        <Grid item xs={10}><Typography color="primary" variant="body1">Address</Typography></Grid>
                                         <Grid item xs={2}></Grid>
-                                        <Grid item xs={10}><Typography>{quote.address}</Typography></Grid>
+                                        <Grid item xs={10}><Typography variant="body1">{quote.address}</Typography></Grid>
                                     </Grid>
                                     <Grid container>
-                                        <Grid item xs={2}><EventAvailableOutlined/></Grid>
-                                        <Grid item xs={10}><Typography>Sent</Typography></Grid>
+                                        <Grid item xs={2}><EventAvailableOutlined color='primary'/></Grid>
+                                        <Grid item xs={10}><Typography color="primary" variant="body1">Sent</Typography></Grid>
                                         <Grid item xs={2}></Grid>
-                                        <Grid item xs={10}><Typography>11/23/2022</Typography></Grid>
+                                        <Grid item xs={10}><Typography variant="body1">11/23/2022</Typography></Grid>
                                     </Grid>
                                 <Divider/>
-                                <Stack direction={'row'}>
-                                    <Typography>Total</Typography>
-                                    <Typography>{`$${quote.price}`}</Typography>
+                                <Stack direction={'row'} spacing={1} justifyContent='end'>
+                                    <Typography variant="h6" color="primary" fontWeight={700}>Total</Typography>
+                                    <Typography variant="h6" fontWeight={700}>{`$${quote.price}`}</Typography>
                                 </Stack>
                                 </Stack>
                                 </ListItemButton>
                             </Card>
                     </Grid>))}
                 </Grid>
-                {rows?.filter((quote: any) => quote.status === status)?.length === 0 && <Typography>{`No ${status} Quotes`}</Typography>}
+                {/* {rows?.filter((quote: any) => quote.status === status)?.length === 0 && <Typography>{`No ${status} Quotes`}</Typography>} */}
                 </TabPanel>
             ))}
             </>
