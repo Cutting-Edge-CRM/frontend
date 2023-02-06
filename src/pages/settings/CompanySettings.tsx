@@ -2,6 +2,7 @@ import { Box, Card, CardHeader, Stack, Tab, Tabs } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { getCompany } from '../../api/company.api';
 import { getSettings } from '../../api/settings.api';
+import { listTaxes } from '../../api/tax.api';
 import CompanyInformation from './CompanyInformation';
 import EmailSmsSettings from './EmailSmsSettings';
 import Employees from './Employees';
@@ -14,6 +15,7 @@ function CompanySettings(props: any) {
     const [settings, setSettings] = useState({} as any);
     const [company, setCompany] = useState({} as any);
     const [logoUrl, setLogoUrl] = useState([] as any);
+    const [taxes, setTaxes] = useState({} as any);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -29,6 +31,22 @@ function CompanySettings(props: any) {
         // setError(err.message);
     })
     }, []);
+
+    useEffect(() => {
+        listTaxes()
+        .then((result) => {
+            // setLoading(false);
+            setTaxes({taxes: result.map((r: any) => {
+                return {
+                    ...r,
+                    tax: (r.tax*100).toFixed(2)
+                }
+            })});
+        }, (err) => {
+            // setLoading(false);
+            // setError(err.message);
+        })
+        }, []);
 
     useEffect(() => {
         getCompany()
@@ -63,7 +81,7 @@ function CompanySettings(props: any) {
             {value === 1 && <CompanyInformation company={company} setCompany={setCompany} success={props.success} fileURLs={logoUrl} setFileURLs={setLogoUrl} />}
             {value === 2 && <Employees success={props.success}/>}
             {value === 3 && <EmailSmsSettings settings={settings} setSettings={setSettings} success={props.success}/>}
-            {value === 4 && <Payments/>}
+            {value === 4 && <Payments settings={settings} setSettings={setSettings} taxes={taxes} setTaxes={setTaxes} success={props.success} />}
         </Stack>
     )
 }
