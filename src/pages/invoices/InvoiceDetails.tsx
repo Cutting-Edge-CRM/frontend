@@ -162,9 +162,9 @@ function InvoiceItemEdit(props: any) {
           Description
         </Typography>
         <RichText
-          content={props.item.description ? props.item.description : ''}
-          {...props}
-          type="invoice"
+          id="description"
+          value={props.item.description ? props.item.description : ''}
+          onChange={handleChange}
         />
         {props.invoice.items.length > 1 && 
           <Button

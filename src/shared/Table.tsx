@@ -55,6 +55,10 @@ export default function Table(props: any) {
     return <Box textAlign='center'><CircularProgress /></Box>;
   };
 
+  const handleFilterChange = (filterModel: any) => {
+    props.setQuery(filterModel.quickFilterValues?.join(' '))
+  }
+
   return (
     <Card>
       <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'}}}>
@@ -72,6 +76,8 @@ export default function Table(props: any) {
         onPageChange={(newPage) => props.setPage(newPage)}
         onPageSizeChange={(newPageSize) => props.setPageSize(newPageSize)}
         paginationMode="server"
+        filterMode="server"
+        onFilterModelChange={handleFilterChange}
         components={{
           Toolbar: CustomToolbar,
           NoRowsOverlay: getEmptyState,

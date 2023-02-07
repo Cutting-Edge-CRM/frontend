@@ -12,9 +12,10 @@ function Quotes(props: any) {
   const [rowCount, setRowCount] = useState(0);
   const [quotesAreLoading, setQuotesAreLoading] = useState(true);
   const [errorListingQuotes, setErrorListingQuotes] = useState(null);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
-    listQuotes(undefined, undefined, page, pageSize)
+    listQuotes(undefined, query, page, pageSize)
     .then((result) => {
       setQuotesAreLoading(false);
       setRows(result?.rows);
@@ -23,7 +24,7 @@ function Quotes(props: any) {
       setQuotesAreLoading(false);
       setErrorListingQuotes(err.message)
     })
-  }, [page, pageSize])
+  }, [page, pageSize, query])
 
     return (
         
@@ -41,6 +42,7 @@ function Quotes(props: any) {
           success={props.success}
           errorListing={errorListingQuotes}
           listLoading={quotesAreLoading}
+          setQuery={setQuery}
           ></Table>
       </Box>
     )

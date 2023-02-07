@@ -155,9 +155,9 @@ function JobItemEdit(props: any) {
           Description
         </Typography>
         <RichText
-          content={props.item.description ? props.item.description : ''}
-          {...props}
-          type="job"
+          id="description"
+          value={props.item.description ? props.item.description : ''}
+          onChange={handleChange}
         />
         {props.job.items.length > 1 && 
           <Button

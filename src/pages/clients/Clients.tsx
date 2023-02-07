@@ -15,6 +15,7 @@ function Clients(props: any) {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [rowCount, setRowCount] = useState(0);
+  const [query, setQuery] = useState('');
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -48,7 +49,7 @@ function Clients(props: any) {
   }
 
   useEffect(() => {
-    listClients(undefined, page, pageSize)
+    listClients(query, page, pageSize)
     .then((result) => {
       setClientsAreLoading(false);
       setRows(result?.rows);
@@ -57,7 +58,7 @@ function Clients(props: any) {
       setClientsAreLoading(false);
       setErrorListingClients(err.message);
     })
-  }, [page, pageSize]);
+  }, [page, pageSize, query]);
 
     return (
         <Box>
@@ -76,6 +77,7 @@ function Clients(props: any) {
           success={props.success}
           errorListing={errorListingClients}
           listLoading={clientsAreLoading}
+          setQuery={setQuery}
           ></Table>
           <ImportClients
             selectedValue={selectedValue}

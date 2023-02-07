@@ -78,6 +78,7 @@ export default function CustomToolbar(props: CustomToolbarProps) {
       <FilterContainer>
         <>
           <GridToolbarQuickFilter variant="outlined" size="small" />
+          <Box justifyContent={'end'}>
           {props.type === 'Clients' && (
             <>
               <Button startIcon={<ImportExport />} onClick={openMenu}>
@@ -114,6 +115,7 @@ export default function CustomToolbar(props: CustomToolbarProps) {
           >
             New {props.type.slice(0, -1)}
           </Button>
+          </Box>
         </>
       </FilterContainer>
     </StyledGridToolbarContainer>
