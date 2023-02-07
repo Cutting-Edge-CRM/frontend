@@ -3,6 +3,7 @@ import { Alert, Box, Card, Chip, CircularProgress, Divider, Grid, ListItemButton
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { listQuotes } from '../../api/quote.api';
+import { getChipColor } from '../../theme/theme';
 
 function TabPanel(props: any) {
     const { children, value, index, ...other } = props;
@@ -77,7 +78,7 @@ function ClientHubQuotes(props: any) {
                                 <Stack width={'100%'} spacing={2}>
                                     <Stack direction={'row'} justifyContent='space-between'>
                                         <Typography fontWeight={600} fontSize={18}>{`Quote #${quote.id}`}</Typography>
-                                        <Chip label={quote.status}></Chip>
+                                        <Chip label={quote.status}  sx={{backgroundColor: `${getChipColor(quote.status as string)}.main`, color: `${getChipColor(quote.status as string)}.dark`}} ></Chip>
                                     </Stack>
                                     <Divider/>
                                     <Grid container>

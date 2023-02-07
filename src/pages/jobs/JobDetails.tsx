@@ -39,6 +39,7 @@ import ConfirmDelete from '../../shared/ConfirmDelete';
 import Duplicate from '../../shared/Duplicate';
 import EmptyState from '../../shared/EmptyState';
 import RichText from '../../shared/richtext/RichText';
+import { getChipColor } from '../../theme/theme';
 
 function add(accumulator: number, a: number) {
   return +accumulator + +a;
@@ -434,7 +435,7 @@ function JobDetails(props: any) {
             >
               Status
             </Typography>
-            <Chip label={props.job.job.status} color="success" />
+            <Chip label={props.job.job.status}  sx={{backgroundColor: `${getChipColor(props.job.job.status as string)}.main`, color: `${getChipColor(props.job.job.status as string)}.dark`}}  />
           </Stack>
         </Stack>
       </Card>

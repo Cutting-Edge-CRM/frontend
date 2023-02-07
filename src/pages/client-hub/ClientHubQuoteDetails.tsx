@@ -262,6 +262,7 @@
   import dayjs from 'dayjs';
   import React, { useEffect, useState } from 'react';
   import EmptyState from '../../shared/EmptyState';
+import { getChipColor } from '../../theme/theme';
 import ConfirmChangeStatus from './ConfirmChangeStatus';
 import PaymentModal from './PaymentModal';
   
@@ -595,7 +596,7 @@ import PaymentModal from './PaymentModal';
               >
                 Status
               </Typography>
-              <Chip label={props.quote.quote.status} color="warning" />
+              <Chip label={props.quote.quote.status} sx={{backgroundColor: `${getChipColor(props.quote.quote.status as string)}.main`, color: `${getChipColor(props.quote.quote.status as string)}.dark`}} />
             </Stack>
           </Stack>
         </Card>

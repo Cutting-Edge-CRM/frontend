@@ -2,27 +2,61 @@ import { createTheme } from '@mui/material';
 import { componentsOverrides } from './overrides';
 import { createPalette } from './palette';
 
-declare module '@mui/material/styles' {
-  interface Theme {
-    status: {
-      danger: React.CSSProperties['color'];
-    };
+export function getChipColor(status: string) {
+  switch (status) {
+    case 'Lead':
+      return 'purple'
+    case 'Pending':
+      return 'yellow'
+    case 'Awaiting Payment':
+      return 'yellow'
+    case 'Approved':
+      return 'green'
+    case 'Active':
+      return 'green'
+    case 'Paid':
+      return 'green'
+    case 'Rejected':
+      return 'red' 
+    case 'Bad Debt':
+      return 'red'
+    case 'Past Client':
+      return 'blue' 
+    case 'Converted':
+      return 'blue'
+    case 'Complete':
+      return 'blue'
+    case 'Archived':
+      return 'gray'
+    case 'Draft':
+      return 'gray'
+    case 'Imported':
+      return 'gray'
+    default:
+      return 'gray'
   }
+}
+
+declare module '@mui/material/styles' {
 
   interface Palette {
     neutral: Palette['primary'];
+    red: Palette['primary'];
+    blue: Palette['primary'];
+    yellow: Palette['primary'];
+    green: Palette['primary'];
+    gray: Palette['primary'];
+    purple: Palette['primary'];
   }
 
   interface PaletteOptions {
-    neutral: PaletteOptions['primary'];
-  }
-
-  interface PaletteColor {
-    darker?: string;
-  }
-
-  interface SimplePaletteColorOptions {
-    darker?: string;
+    neutral: Palette['primary'];
+    red: Palette['primary'];
+    blue: Palette['primary'];
+    yellow: Palette['primary'];
+    green: Palette['primary'];
+    gray: Palette['primary'];
+    purple: Palette['primary'];
   }
 }
 

@@ -52,6 +52,7 @@ import EmptyState from '../../shared/EmptyState';
 import PaymentModal from '../../shared/PaymentModal';
 import RichText from '../../shared/richtext/RichText';
 import SendQuoteModal from '../../shared/SendQuoteModal';
+import { getChipColor } from '../../theme/theme';
 
 function add(accumulator: any, a: any) {
   return +accumulator + +a;
@@ -967,7 +968,7 @@ function QuoteDetails(props: any) {
             >
               Status
             </Typography>
-            <Chip label={props.quote.quote.status} color="warning" />
+            <Chip label={props.quote.quote.status}  sx={{backgroundColor: `${getChipColor(props.quote.quote.status as string)}.main`, color: `${getChipColor(props.quote.quote.status as string)}.dark`}}  />
           </Stack>
         </Stack>
       </Card>

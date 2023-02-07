@@ -46,6 +46,7 @@ import EmptyState from '../../shared/EmptyState';
 import PaymentModal from '../../shared/PaymentModal';
 import RichText from '../../shared/richtext/RichText';
 import SendInvoiceModal from '../../shared/SendInvoiceModal';
+import { getChipColor } from '../../theme/theme';
 
 function add(accumulator: number, a: number) {
   return +accumulator + +a;
@@ -497,7 +498,7 @@ function InvoiceDetails(props: any) {
             >
               Status
             </Typography>
-            <Chip label={props.invoice.invoice.status} color="primary" />
+            <Chip label={props.invoice.invoice.status}  sx={{backgroundColor: `${getChipColor(props.invoice.invoice.status as string)}.main`, color: `${getChipColor(props.invoice.invoice.status as string)}.dark`}}  />
           </Stack>
         </Stack>
       </Card>

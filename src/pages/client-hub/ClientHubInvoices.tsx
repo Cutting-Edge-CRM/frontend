@@ -3,6 +3,7 @@ import { Alert, Box, Card, Chip, CircularProgress, Divider, Grid, ListItemButton
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { listInvoices } from '../../api/invoice.api';
+import { getChipColor } from '../../theme/theme';
 
 function TabPanel(props: any) {
     const { children, value, index, ...other } = props;
@@ -75,7 +76,7 @@ function ClientHubInvoices(props: any) {
                                 <Stack width={'100%'} spacing={2}>
                                     <Stack direction={'row'} justifyContent='space-between'>
                                         <Typography fontWeight={600} fontSize={18}>{`Invoice #${invoice.id}`}</Typography>
-                                        <Chip label={invoice.status}></Chip>
+                                        <Chip label={invoice.status} sx={{backgroundColor: `${getChipColor(invoice.status as string)}.main`, color: `${getChipColor(invoice.status as string)}.dark`}}></Chip>
                                     </Stack>
                                     <Divider/>
                                     <Grid container>

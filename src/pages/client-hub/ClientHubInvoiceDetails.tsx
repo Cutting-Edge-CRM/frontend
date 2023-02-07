@@ -2,6 +2,7 @@ import { Box, Button, Card, Chip, Divider, Grid, Stack, Typography } from '@mui/
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import EmptyState from '../../shared/EmptyState';
+import { getChipColor } from '../../theme/theme';
 import PaymentModal from './PaymentModal';
 
 function add(accumulator: number, a: number) {
@@ -125,7 +126,7 @@ function ClientHubInvoiceDetails(props: any) {
                 >
                   Status
                 </Typography>
-                <Chip label={props.invoice.invoice.status} color="primary" />
+                <Chip label={props.invoice.invoice.status} sx={{backgroundColor: `${getChipColor(props.invoice.invoice.status as string)}.main`, color: `${getChipColor(props.invoice.invoice.status as string)}.dark`}} />
               </Stack>
             </Stack>
           </Card>

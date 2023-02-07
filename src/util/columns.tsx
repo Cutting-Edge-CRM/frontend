@@ -2,6 +2,7 @@ import { Chip, Typography } from "@mui/material";
 import { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import dayjs from "dayjs";
 import React from "react";
+import { getChipColor } from "../theme/theme";
 
 const clientColumns: GridColDef[] = [
     { 
@@ -25,7 +26,7 @@ const clientColumns: GridColDef[] = [
       flex: 1,
       renderCell: (params: GridRenderCellParams<string>) => {    
         return (
-          <Chip label={params.value} color="success" />
+          <Chip label={params.value} sx={{backgroundColor: `${getChipColor(params.value as string)}.main`, color: `${getChipColor(params.value as string)}.dark`}} />
         );
       }
     },
@@ -62,7 +63,7 @@ const quoteColumns: GridColDef[] = [
       flex: 1,
       renderCell: (params: GridRenderCellParams<string>) => {    
         return (
-          <Chip label={params.value} color="success" />
+          <Chip label={params.value} color="success" sx={{backgroundColor: `${getChipColor(params.value as string)}.main`, color: `${getChipColor(params.value as string)}.dark`}} />
         );
       }
     },
@@ -100,7 +101,7 @@ const jobColumns: GridColDef[] = [
       flex: 1,
       renderCell: (params: GridRenderCellParams<string>) => {    
         return (
-          <Chip label={params.value} color="success" />
+          <Chip label={params.value} color="success" sx={{backgroundColor: `${getChipColor(params.value as string)}.main`, color: `${getChipColor(params.value as string)}.dark`}} />
         );
       }
     },
@@ -138,7 +139,7 @@ const invoiceColumns: GridColDef[] = [
       flex: 1,
       renderCell: (params: GridRenderCellParams<string>) => {    
         return (
-          <Chip label={params.value} color="success" />
+          <Chip label={params.value} color="success" sx={{backgroundColor: `${getChipColor(params.value as string)}.main`, color: `${getChipColor(params.value as string)}.dark`}} />
         );
       }
     },
