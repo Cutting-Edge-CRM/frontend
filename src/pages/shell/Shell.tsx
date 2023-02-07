@@ -210,8 +210,8 @@ function Shell() {
       <AppBar
         position="fixed"
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
+          width: { lg: `calc(100% - ${drawerWidth}px)` },
+          ml: { lg: `${drawerWidth}px` },
           boxShadow: 'none',
         }}
         color="inherit"
@@ -223,7 +223,7 @@ function Shell() {
             color="inherit"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+            sx={{ mr: 2, display: { lg: 'none' } }}
           >
             <MenuIcon />
           </IconButton>
@@ -253,7 +253,7 @@ function Shell() {
                 variant="body2"
                 noWrap
                 component="div"
-                sx={{ display: { xs: 'none', sm: 'block' } }}
+                sx={{ display: { xs: 'none', lg: 'block' } }}
               >
                 White Mountain Painting
               </Typography>
@@ -321,7 +321,7 @@ function Shell() {
 
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        sx={{ width: { lg: drawerWidth }, flexShrink: { lg: 0 } }}
       >
         <Drawer
           variant="temporary"
@@ -332,7 +332,7 @@ function Shell() {
           }}
           PaperProps={{ elevation: 2 }}
           sx={{
-            display: { xs: 'block', sm: 'none' },
+            display: { xs: 'block', lg: 'none' },
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,
@@ -347,7 +347,7 @@ function Shell() {
           variant="permanent"
           PaperProps={{ elevation: 2 }}
           sx={{
-            display: { xs: 'none', sm: 'block' },
+            display: { xs: 'none', lg: 'block' },
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawerWidth,
@@ -365,7 +365,7 @@ function Shell() {
         sx={{
           flexGrow: 1,
           p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          width: { lg: `calc(100% - ${drawerWidth}px)` },
         }}
       >
         <Toolbar />

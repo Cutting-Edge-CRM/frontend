@@ -3,10 +3,10 @@ import {
   AttachMoney,
   DeleteOutline,
   FileDownloadOutlined,
+  FormatPaintOutlined,
   MarkEmailReadOutlined,
   MoneyOffOutlined,
   MoreVert,
-  PersonOutline,
   SendOutlined,
 } from '@mui/icons-material';
 import {
@@ -20,6 +20,7 @@ import {
   Grid,
   IconButton,
   InputAdornment,
+  InputLabel,
   LinearProgress,
   Link,
   List,
@@ -43,7 +44,7 @@ import { createTimeline } from '../../api/timeline.api';
 import ConfirmDelete from '../../shared/ConfirmDelete';
 import EmptyState from '../../shared/EmptyState';
 import PaymentModal from '../../shared/PaymentModal';
-import RichText from '../../shared/RichText';
+import RichText from '../../shared/richtext/RichText';
 import SendInvoiceModal from '../../shared/SendInvoiceModal';
 
 function add(accumulator: number, a: number) {
@@ -116,17 +117,19 @@ function InvoiceItemEdit(props: any) {
   };
 
   return (
-    <>
+    <Card sx={{backgroundColor: '#F3F5F8', my: 3, py: 3, boxShadow: 'none'}}>
       <Grid container spacing={2} mt={1}>
         <Grid item={true} xs={4}>
+          <InputLabel id="service-label" sx={{ color: 'primary.main' }}>
+            Service
+          </InputLabel>
           <TextField
             id="title"
-            label="Service"
             error={!props.item.title?.trim()?.length}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <PersonOutline />
+                   <FormatPaintOutlined color='primary' />
                 </InputAdornment>
               ),
             }}
@@ -139,14 +142,16 @@ function InvoiceItemEdit(props: any) {
         <Grid item={true} xs={4}></Grid>
         <Grid item={true} xs={4}>
           <Stack>
+            <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
+              Price
+            </InputLabel>
             <TextField
               id="price"
-              label="Price"
               type="number"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <PersonOutline />
+                     <AttachMoney color='primary' />
                   </InputAdornment>
                 ),
               }}
@@ -158,9 +163,9 @@ function InvoiceItemEdit(props: any) {
         </Grid>
       </Grid>
       <Stack spacing={1.5} mt={2}>
-        <Typography variant="body2" color="neutral.main">
+        <InputLabel id="description-label" sx={{ color: 'primary.main' }}>
           Description
-        </Typography>
+        </InputLabel>
         <RichText
           id="description"
           value={props.item.description ? props.item.description : ''}
@@ -177,8 +182,7 @@ function InvoiceItemEdit(props: any) {
         </Button>
         }
       </Stack>
-      <Divider sx={{ mt: 3, mb: 1 }} />
-    </>
+    </Card>
   );
 }
 

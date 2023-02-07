@@ -30,27 +30,31 @@ function Client(props: any) {
   };
 
   return (
+    <>
     <Grid container spacing={2}>
-      <Grid xs={8}>
-        <Stack spacing={2}>
-          <Properties type="client" client={id} success={props.success} />
-          <TabbedSummary client={id} success={props.success} />
-          <Button
-            onClick={handleDeleteOpen}
-            color="error"
-            sx={{ alignSelf: 'flex-start' }}
-          >
-            Delete Client
-          </Button>
-        </Stack>
+      <Grid xs={12} md={8} container spacing={2}>
+          <Grid xs={12}>
+            <Properties type="client" client={id} success={props.success} />
+          </Grid>
+          <Grid xs={12}>
+            <TabbedSummary client={id} success={props.success} />
+          </Grid>
       </Grid>
-      <Grid xs={4}>
-        <Stack spacing={2}>
+      <Grid xs={12} md={4} spacing={2}>
+      <Grid container>
+        <Grid xs={12}>
           <Contact client={id} success={props.success} />
+        </Grid>
+        <Grid xs={12}>
           <Visits client={id} success={props.success} />
+        </Grid>
+        <Grid xs={12} sm={6} md={12}>
           <Timeline client={id}/>
+        </Grid>
+        <Grid xs={12} sm={6} md={12}>
           <Notes client={id} success={props.success} />
-        </Stack>
+        </Grid>
+        </Grid>
       </Grid>
       <ConfirmDelete
         open={deleteOpen}
@@ -61,6 +65,14 @@ function Client(props: any) {
         success={props.success}
       />
     </Grid>
+    <Button
+    onClick={handleDeleteOpen}
+    color="error"
+    sx={{ alignSelf: 'flex-start', mt: 3 }}
+    >
+    Delete Client
+  </Button>
+  </>
   );
 }
 

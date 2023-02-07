@@ -9,7 +9,6 @@ import {
   FormatPaintOutlined,
   MarkEmailReadOutlined,
   MoreVert,
-  PersonOutline,
   SendOutlined,
   ThumbDownAltOutlined,
 } from '@mui/icons-material';
@@ -24,6 +23,7 @@ import {
   Grid,
   IconButton,
   InputAdornment,
+  InputLabel,
   LinearProgress,
   Link,
   List,
@@ -50,7 +50,7 @@ import ConfirmDelete from '../../shared/ConfirmDelete';
 import Duplicate from '../../shared/Duplicate';
 import EmptyState from '../../shared/EmptyState';
 import PaymentModal from '../../shared/PaymentModal';
-import RichText from '../../shared/RichText';
+import RichText from '../../shared/richtext/RichText';
 import SendQuoteModal from '../../shared/SendQuoteModal';
 
 function add(accumulator: any, a: any) {
@@ -80,7 +80,7 @@ function QuoteItemSaved(props: any) {
                 color="neutral.light"
                 fontWeight={500}
               >
-                Recommended
+                Selected
               </Typography>
               <Switch disabled checked={props.item.selected === 1}></Switch>
             </Stack>
@@ -164,17 +164,19 @@ function QuoteItemEdit(props: any) {
   };
 
   return (
-    <>
+    <Card sx={{backgroundColor: '#F3F5F8', my: 3, py: 3, boxShadow: 'none'}}>
       <Grid container spacing={2}>
         <Grid item={true} xs={4}>
+          <InputLabel id="service-label" sx={{ color: 'primary.main' }}>
+              Service
+          </InputLabel>
           <TextField
             id="title"
-            label="Service"
             error={!props.item.title?.trim()?.length}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <PersonOutline />
+                  <FormatPaintOutlined color='primary' />
                 </InputAdornment>
               ),
             }}
@@ -186,9 +188,9 @@ function QuoteItemEdit(props: any) {
         <Grid item={true} xs={4}>
           {props.upsell && (
             <Stack alignItems="center">
-              <Typography variant="body2" color="neutral.main">
-                Recommended
-              </Typography>
+              <InputLabel id="selected-label" sx={{ color: 'primary.main' }}>
+                Selected
+              </InputLabel>
               <Switch
                 id="selected"
                 checked={props.item.selected === 1}
@@ -199,14 +201,16 @@ function QuoteItemEdit(props: any) {
         </Grid>
         <Grid item={true} xs={4}>
           <Stack>
+            <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
+                Price
+            </InputLabel>
             <TextField
               id="price"
-              label="Price"
               type="number"
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <PersonOutline />
+                    <AttachMoney color='primary' />
                   </InputAdornment>
                 ),
               }}
@@ -219,9 +223,9 @@ function QuoteItemEdit(props: any) {
         </Grid>
       </Grid>
       <Stack spacing={1.5} mt={2}>
-        <Typography variant="body2" color="neutral.main">
+        <InputLabel id="description-label" sx={{ color: 'primary.main' }}>
           Description
-        </Typography>
+        </InputLabel>
         <RichText
           id="description"
           value={props.item.description ? props.item.description : ''}
@@ -238,8 +242,7 @@ function QuoteItemEdit(props: any) {
         </Button>
         }
       </Stack>
-      <Divider sx={{ my: 3 }} />
-    </>
+    </Card>
   );
 }
 
