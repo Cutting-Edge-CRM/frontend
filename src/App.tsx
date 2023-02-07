@@ -20,13 +20,14 @@ import ClientHub from './pages/client-hub/ClientHub';
 import { loginAnonymously } from "./auth/firebase";
 import { createTimeline } from './api/timeline.api';
 import CryptoJS from 'crypto-js';
+import {HelmetProvider} from "react-helmet-async";
 
 function App() {
 
   let loading = true;
 
   const children = (
-  <>
+  <HelmetProvider>
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Router>
@@ -45,7 +46,7 @@ function App() {
           </Router>
         </LocalizationProvider>
       </ThemeProvider>
-      </>
+      </HelmetProvider>
   );
 
 if (!window.location.href.includes('anonymous')) {

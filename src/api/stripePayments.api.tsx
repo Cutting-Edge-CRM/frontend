@@ -56,6 +56,34 @@ async function continuePaymentSetUp() {
     }
 }
 
+async function createAccountSession() {
+    try {
+    var headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+        'tenantId': auth.tenantId as string,
+        'userId': auth.currentUser?.uid as string
+    }
+    const requestOptions: RequestInit = {
+        method: 'POST',
+        headers: headers,
+    };
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/stripe-payments/create-account-session`);
+        return fetch(url, requestOptions)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            res.json().then(err => {
+                console.error(`Error creating account session: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+            })
+            throw new Error(`Error creating account session`);
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 async function retrieveAccount() {
     try {
     var headers: HeadersInit = {
@@ -149,5 +177,6 @@ export {
     continuePaymentSetUp,
     retrieveAccount,
     createDeposit,
-    createPayment
+    createPayment,
+    createAccountSession
   };

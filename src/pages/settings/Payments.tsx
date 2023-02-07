@@ -1,9 +1,11 @@
 import { AddCircleOutlineOutlined, DeleteOutline, Percent } from '@mui/icons-material';
-import { Alert, Box, Button, Card, CircularProgress, IconButton, InputLabel, ListItemText, MenuItem, Select, Stack, TextField } from '@mui/material';
+import { Alert, Box, Button, Card, CircularProgress, Grid, IconButton, InputLabel, ListItemText, MenuItem, Select, Stack, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { updateSettings } from '../../api/settings.api';
 import { retrieveAccount, startPaymentSetUp, continuePaymentSetUp } from '../../api/stripePayments.api';
 import { updateTaxes } from '../../api/tax.api';
+import StripePayments from './StripePayments'
+import StripePayouts from './StripePayouts';
 
 const currencies = [{id: 'cad', display: 'CAD'}, {id: 'usd', display: 'USD'}];
 
@@ -90,7 +92,6 @@ function Payments(props: any) {
         retrieveAccount()
         .then(res => {
             setLoading(false);
-            console.log(res);
             if (res.stripeRes?.id === null) {
                 setSetupStatus('not-started');
             } else if (!res.stripeRes?.charges_enabled) {
@@ -107,13 +108,21 @@ function Payments(props: any) {
     if (loading) return (<Box textAlign='center'><CircularProgress /></Box>);
 
     return (
+    <>
     <Card sx={{ py: 3 }}>
-        <Stack direction={'row'}>
-            <Stack spacing={2}>
+    <Stack marginBottom={3} spacing={3}>
+        <Box>
             {error && <Alert severity="error">{error}</Alert>}
-            {setupStatus === 'not-started' && <Button onClick={handleStartSetUp}>Set Up Payments</Button>}
-            {setupStatus === 'incomplete' && <Button onClick={handleContinueSetUp}>Set Up Payments</Button>}
-            {setupStatus === 'complete' && <Button onClick={handleDashboard}>Visit Dashboard</Button>}
+            {setupStatus === 'not-started' && <Button variant='contained' onClick={handleStartSetUp}>Set Up Payments</Button>}
+            {setupStatus === 'incomplete' && <Button variant='contained' onClick={handleContinueSetUp}>Set Up Payments</Button>}
+            {setupStatus === 'complete' && <Button variant='contained' onClick={handleDashboard}>Visit Dashboard</Button>}
+        </Box>
+        <StripePayments/>
+        <StripePayouts/>
+    </Stack>
+        <Grid container sx={{mb: 3}}>
+            <Grid xs={4} padding={3}>
+            <Stack spacing={2}>
             <InputLabel id="currency-label" sx={{ color: 'primary.main' }}>
                 Currency
             </InputLabel>
@@ -140,7 +149,7 @@ function Payments(props: any) {
             <InputLabel id="tax-label" sx={{ color: 'primary.main' }}>
                 Tax Rates
             </InputLabel>
-            {props.taxes?.taxes.map((tax: any, index: number) => (
+            {props.taxes?.taxes?.map((tax: any, index: number) => (
                 <Stack key={index} direction='row' spacing={2}>
                     <TextField
                         id="title"
@@ -172,12 +181,15 @@ function Payments(props: any) {
                 Add Tax Rate
             </Button>
             </Stack>
-        </Stack>
+            </Grid>
+        </Grid>
         <Stack direction={'row'} spacing={2} justifyContent='center'>
-                <Button variant="outlined" onClick={handleReload}>Cancel</Button>
-                <Button variant="contained" onClick={handleSave}>Save Changes</Button>
-            </Stack>
-    </Card>);
+            <Button variant="outlined" onClick={handleReload}>Cancel</Button>
+            <Button variant="contained" onClick={handleSave}>Save Changes</Button>
+        </Stack>
+    </Card>
+    </>
+    );
 }
 
 export default Payments;
