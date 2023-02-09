@@ -14,45 +14,47 @@ import {
   import * as React from 'react';
   import { AddressAutofill } from '@mapbox/search-js-react';
   import { useState } from 'react';
+import { inviteUser, updateUser } from '../../api/user.api';
   
   export default function EditEmployee(props: any) {
-    const [error] = useState(null);
-    const [loading] = useState(false);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
   
     const handleCancel = () => {
       props.onClose();
+      setError(null);
     };
-    // const handleSave = () => {
-    //   setLoading(true);
-    //   if (props.modalType === 'edit') {
-    //     // save value
-    //     updateUser({ ...props.employee, client: props.client }).then(
-    //       (res) => {
-    //         setLoading(false);
-    //         props.update(res);
-    //         props.success('Successfully updated employee');
-    //       },
-    //       (err) => {
-    //         setLoading(false);
-    //         setError(err.message);
-    //       }
-    //     );
-    //   }
-    //   if (props.modalType === 'new') {
-    //     // save value
-    //     createUser({ ...props.employee, client: props.client }).then(
-    //       (res) => {
-    //         setLoading(false);
-    //         props.create(res);
-    //         props.success('Successfully created employee');
-    //       },
-    //       (err) => {
-    //         setLoading(false);
-    //         setError(err.message);
-    //       }
-    //     );
-    //   }
-    // };
+    const handleSave = () => {
+      setLoading(true);
+      if (props.type === 'edit') {
+        // save value
+        updateUser({ ...props.employee }).then(
+          (res) => {
+            setLoading(false);
+            handleCancel();
+            props.success('Successfully updated employee');
+          },
+          (err) => {
+            setLoading(false);
+            setError(err.message);
+          }
+        );
+      }
+      if (props.type === 'new') {
+        // save value
+        inviteUser({ ...props.employee }).then(
+          (res) => {
+            setLoading(false);
+            handleCancel();
+            props.success('Successfully invited employee');
+          },
+          (err) => {
+            setLoading(false);
+            setError(err.message);
+          }
+        );
+      }
+    };
   
     const handleChange = (event: any) => {
       props.setEmployee({
@@ -62,23 +64,16 @@ import {
     };
 
     const handleCheck = (event: any) => {
-        let options = props.quote.options;
-        options
-          .find((op: any) => op === props.option)
-          .items.find((it: any) => it === props.item)[event.target.id] = event
-          .target.checked
-          ? 1
-          : 0;
-        props.setQuote({
-          quote: props.quote.quote,
-          options: options,
+        props.setEmployee({
+          ...props.employee,
+          role: event.target.checked ? 'admin' : 'staff',
         });
       };
   
     return (
       <Dialog onClose={handleCancel} open={props.open}>
         <DialogTitle align="center">
-          {props.modalType === 'edit' ? 'Edit Employee' : 'Create New Employee'}
+          {props.type === 'edit' ? 'Edit Employee' : 'Create New Employee'}
         </DialogTitle>
         <DialogContent>
           {loading && <LinearProgress />}
@@ -222,9 +217,16 @@ import {
           <Button onClick={handleCancel} variant="outlined">
             Cancel
           </Button>
-          {/* <Button onClick={handleSave} variant="contained">
-            Save Changes
-          </Button> */}
+          {props.type === 'edit' &&
+            <Button onClick={handleSave} variant="contained">
+              Save Employee
+            </Button>
+          }
+          {props.type === 'new' &&
+            <Button onClick={handleSave} variant="contained">
+              Invite Employee
+            </Button>
+          }
         </DialogActions>
         {error && <Alert severity="error">{error}</Alert>}
       </Dialog>

@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { getClient } from '../../api/client.api';
+import { currentUserClaims } from '../../auth/firebase';
 import EditContact from './EditContact';
 
 const StyledTypography = styled(Typography)<TypographyProps>(() => ({
@@ -65,6 +66,7 @@ function Contact(props: any) {
         justifyContent="space-between"
         marginBottom={3}
       >
+        <Stack direction={'row'} spacing={2} alignItems="center">
         <Avatar sx={{ width: 45, height: 45 }}>
           {contact?.first?.[0]}
           {contact?.last?.[0]}
@@ -72,9 +74,12 @@ function Contact(props: any) {
         <Typography fontWeight={600} fontSize={18}>
           {contact?.first} {contact?.last}
         </Typography>
+        </Stack>
+        {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
         <IconButton onClick={handleEditOpen} color="info">
           <CreateOutlined />
         </IconButton>
+        }
         <EditContact
           contact={contact}
           setContact={setContact}

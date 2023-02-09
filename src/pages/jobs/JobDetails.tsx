@@ -35,6 +35,7 @@ import { useNavigate } from 'react-router-dom';
 import { createInvoice, updateInvoice } from '../../api/invoice.api';
 import { updateJob } from '../../api/job.api';
 import { createTimeline } from '../../api/timeline.api';
+import { currentUserClaims } from '../../auth/firebase';
 import ConfirmDelete from '../../shared/ConfirmDelete';
 import Duplicate from '../../shared/Duplicate';
 import EmptyState from '../../shared/EmptyState';
@@ -313,6 +314,7 @@ function JobDetails(props: any) {
           <Typography variant="h6" fontWeight={600}>
             {`Job #${props.job.job.id}`}
           </Typography>
+          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
           <Stack direction={'row'} spacing={2}>
           {props.job.job.status === 'Active' &&
           <Button
@@ -371,6 +373,7 @@ function JobDetails(props: any) {
             </MenuList>
           </Menu>
           </Stack>
+          }
         </Stack>
         <Stack direction="row" justifyContent="space-between">
           <Stack spacing={2}>
@@ -449,6 +452,8 @@ function JobDetails(props: any) {
           <Typography variant="h6" fontWeight={600}>
             Job Details
           </Typography>
+          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+          <>
           {editting ? (
             <Stack direction="row" spacing={2}>
               <Button onClick={handleCancel} variant="outlined">
@@ -463,6 +468,8 @@ function JobDetails(props: any) {
               Edit Job
             </Button>
           )}
+          </>
+          }
         </Stack>
         <Divider sx={{ mt: 3, mb: 1 }} />
         {editting && (

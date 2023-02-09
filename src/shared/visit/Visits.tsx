@@ -31,6 +31,7 @@ import EditVisit from './EditVisit';
 import dayjs from 'dayjs';
 import ConfirmDelete from '../ConfirmDelete';
 import EmptyState from '../EmptyState';
+import { currentUserClaims } from '../../auth/firebase';
 
 const StyledVisitContainer = styled(ListItem)<ListItemProps>(({ theme }) => ({
   backgroundColor: theme.palette.info.light,
@@ -144,9 +145,11 @@ function Visits(props: any) {
         <Typography fontWeight={600} fontSize={18}>
           Visits
         </Typography>
+        {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
         <IconButton onClick={handleNewOpen} color="info">
           <AddCircleOutlineOutlined />
         </IconButton>
+        }
       </Stack>
       {loading && <Box textAlign='center'><CircularProgress /></Box>}
       {error && <Alert severity="error">{error}</Alert>}
@@ -224,12 +227,14 @@ function Visits(props: any) {
                   alignItems="flex-start"
                   justifyContent="flex-end"
                 >
+                  {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
                   <IconButton
                     onClick={(e) => openMenu(e, visit)}
                     color="primary"
                   >
                     <MoreVert />
                   </IconButton>
+                  }
                   <Menu
                     id="visit-menu"
                     anchorEl={anchorEl}

@@ -10,6 +10,8 @@ import {
   onAuthStateChanged,
   User,
   signInAnonymously,
+  updatePassword,
+  signInWithEmailLink
 } from "firebase/auth";
 import {
   getFirestore,
@@ -37,6 +39,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 var currentUser: User;
+var currentUserClaims: any;
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 
@@ -59,6 +62,20 @@ const signInWithGoogle = async () => {
     alert(err.message);
   }
 };
+
+const setNewPassword = (password: string) => {
+  console.log(password);
+  return updatePassword(currentUser, password)
+  .then(res => {
+    return res;
+  }, err => {
+    console.log(err);
+    return Promise.reject(new Error(ErrorTypes.UNKNOWNERROR));
+  }).catch(err => {
+    console.log(err);
+    return Promise.reject(new Error(ErrorTypes.UNKNOWNERROR));
+  })
+}
 
 const logInWithEmailAndPassword = async (email: string, password: string) => {
   try {
@@ -100,6 +117,27 @@ const loginAnonymously = async (client: string) => {
   }
 }
 
+const signInFromEmail = async (email: string, link: string) => {
+  try {
+    return getTenantForUser(email).then(res => {
+      let tenantId = res.company;
+      auth.tenantId = tenantId;
+      return signInWithEmailLink(auth, email, link)
+      .then((result) => {
+        console.log(result);
+        return result;
+      })
+      .catch((error) => {
+        return Promise.reject(error);
+      });
+    }).catch(err => {
+      return Promise.reject(err);
+    })
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}
+
 const registerWithEmailAndPassword = async (email: string, password: string) => {
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
@@ -118,33 +156,38 @@ const registerWithEmailAndPassword = async (email: string, password: string) => 
 const registerNewTenantUser = async (id: string, email: string, password: string) => {
   try {
     auth.tenantId = id;
-    const res = await createUserWithEmailAndPassword(auth, email, password);
-    const user = res.user;
-    await addUserToTenant(auth.tenantId, email, user.uid);
-    await addDoc(collection(db, "users"), {
-      uid: user.uid,
-      authProvider: "local",
-      email,
-    });
+    createUserWithEmailAndPassword(auth, email, password)
+    .then(res => {
+      const user = res.user;
+      // set user permissions
+      addUserToTenant(auth.tenantId as string, email, user.uid)
+      .then(_ => {
+        addDoc(collection(db, "users"), {
+          uid: user.uid,
+          authProvider: "local",
+          email,
+        }).then(_ => {
+          currentUser.getIdToken(true)
+          .then(res => {
+            // successfully created new user
+          }, err => {
+            console.error(err);
+          })
+        }, err => {
+          console.error(err);
+        })
+      }, err => {
+        console.error(err);
+      })
+    }, err => {
+      console.error(err);
+    })
+    
+    
   } catch (err: any) {
     console.error(err);
-    alert(err.message);
   }
 };
-
-// const inviteNewUser = async (name: string, email: string) => {
-//   try {
-//     // TODO: pass params to server and create user there so it doesn't login user
-//     const tmpPass = uuidv4();
-//     createUserWithEmailAndPassword(auth, email, tmpPass).then(userCred => {
-//       inviteUser(email, name, userCred.user.uid);
-//     }).catch(err => {
-//       console.error(err);
-//     })
-//   } catch {
-
-//   }
-// }
 
 const sendPasswordReset = async (email: string) => {
   try {
@@ -170,6 +213,14 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     auth.tenantId = user.tenantId;
     currentUser = user;
+    user.getIdTokenResult()
+    .then((idTokenResult) => {
+      currentUserClaims = idTokenResult.claims;
+      console.log(currentUserClaims);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
     console.log(currentUser);
   } else {
     console.log('not logged in');
@@ -182,6 +233,7 @@ export {
   auth,
   db,
   currentUser,
+  currentUserClaims,
   onAuthStateChanged,
   signInWithGoogle,
   logInWithEmailAndPassword,
@@ -189,6 +241,7 @@ export {
   sendPasswordReset,
   logout,
   registerNewTenantUser,
-  loginAnonymously
-  // inviteNewUser
+  loginAnonymously,
+  setNewPassword,
+  signInFromEmail
 };

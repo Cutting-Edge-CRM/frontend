@@ -46,6 +46,7 @@ import { useNavigate } from 'react-router-dom';
 import { createJob, updateJob } from '../../api/job.api';
 import { updateQuote } from '../../api/quote.api';
 import { createTimeline } from '../../api/timeline.api';
+import { currentUserClaims } from '../../auth/firebase';
 import ConfirmDelete from '../../shared/ConfirmDelete';
 import Duplicate from '../../shared/Duplicate';
 import EmptyState from '../../shared/EmptyState';
@@ -821,6 +822,7 @@ function QuoteDetails(props: any) {
           <Typography variant="h6" fontWeight={600}>
             {`Quote #${props.quote.quote.id}`}
           </Typography>
+          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
           <Stack direction={'row'} spacing={2}>
           {getActionButtons(props)}
           <IconButton onClick={openMenu} color="primary">
@@ -908,7 +910,9 @@ function QuoteDetails(props: any) {
             </MenuList>
           </Menu>
           </Stack>
+          }
         </Stack>
+        
         <Stack direction="row" justifyContent="space-between">
           <Stack spacing={2}>
             <Typography
@@ -982,6 +986,8 @@ function QuoteDetails(props: any) {
           <Typography variant="h6" fontWeight={600}>
             Quote Details
           </Typography>
+          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+          <>
           {editting ? (
             <Stack direction="row" spacing={2}>
               <Button onClick={handleCancel} variant="outlined">
@@ -1004,6 +1010,8 @@ function QuoteDetails(props: any) {
               Edit Quote
             </Button>
           )}
+          </>
+          }
         </Stack>
         {/* <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange}>

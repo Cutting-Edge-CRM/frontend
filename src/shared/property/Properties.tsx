@@ -28,6 +28,7 @@ import { listProperties } from '../../api/property.api';
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 import EmptyState from '../EmptyState';
 import ConfirmDelete from '../ConfirmDelete';
+import { currentUserClaims } from '../../auth/firebase';
 
 const geocodingClient = mbxGeocoding({ accessToken: mapboxgl.accessToken });
 
@@ -151,9 +152,11 @@ function Properties(props: any) {
       renderCell: (params: GridRenderCellParams<string>) => {
         return (
           <>
+          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
             <IconButton onClick={(e) => openMenu(e, params.row)}>
               <MoreVert color="primary" />
             </IconButton>
+            }
             <Menu
               id="visit-menu"
               anchorEl={anchorEl}
@@ -261,6 +264,7 @@ function Properties(props: any) {
         </Typography>
         {props.type === 'client' && (
           <>
+          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
             <Button
               variant="contained"
               color="primary"
@@ -269,6 +273,7 @@ function Properties(props: any) {
             >
               New Property
             </Button>
+          }
           </>
         )}
       </CardHeader>

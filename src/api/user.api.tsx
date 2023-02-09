@@ -2,35 +2,44 @@ import { auth, currentUser } from "../auth/firebase";
 
 async function addUserToTenant(tenantId: string, email: string, uid: string) {
     try {
+        var headers: HeadersInit = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+            'tenantId': auth.tenantId as string,
+            'userId': auth.currentUser?.uid as string
+        }
     var body = JSON.stringify({
         company: tenantId,
         email: email,
         id: uid
     })
-    var headers = {
-        'Content-Type': 'application/json',
-    }
     const requestOptions = {
         method: 'POST',
         headers: headers,
         body: body,
     };
-        let res = await fetch(`${process.env.REACT_APP_SERVER_URL}/users/add-user-to-tenant`, requestOptions);
-        return await res.json();
+        let url = `${process.env.REACT_APP_SERVER_URL}/users/add-user-to-tenant`;
+        return fetch(url, requestOptions)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            res.json().then(err => {
+                console.error(`Error adding user to tenant: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+            })
+            throw new Error(`Error adding user to tenant`);
+        })
     } catch (err) {
         console.error(err);
     }
 }
 
-async function inviteUser(email: string, name: string, uid: string) {
+async function inviteUser(user: any) {
     try {
-    var body = JSON.stringify({
-        name: name,
-        email: email,
-        uid: uid,
-    })
+    var body = JSON.stringify(user)
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
         'tenantId': auth.tenantId as string,
         'userId': auth.currentUser?.uid as string
     }
@@ -39,8 +48,17 @@ async function inviteUser(email: string, name: string, uid: string) {
         headers: headers,
         body: body,
     };
-        let res = await fetch(`${process.env.REACT_APP_SERVER_URL}/users/invite-user`, requestOptions);
-        return await res.json();
+        let url = `${process.env.REACT_APP_SERVER_URL}/users/invite-user`;
+        return fetch(url, requestOptions)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            res.json().then(err => {
+                console.error(`Error inviting user: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+            })
+            throw new Error(`Error inviting user`);
+        })
     } catch (err) {
         console.error(err);
     }

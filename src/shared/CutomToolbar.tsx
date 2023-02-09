@@ -24,6 +24,7 @@ import {
   FileUploadOutlined,
   ImportExport,
 } from '@mui/icons-material';
+import { currentUserClaims } from '../auth/firebase';
 
 type CustomToolbarProps = {
   title?: string;
@@ -78,6 +79,7 @@ export default function CustomToolbar(props: CustomToolbarProps) {
       <FilterContainer>
         <>
           <GridToolbarQuickFilter variant="outlined" size="small" />
+          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
           <Box justifyContent={'end'}>
           {props.type === 'Clients' && (
             <>
@@ -116,6 +118,7 @@ export default function CustomToolbar(props: CustomToolbarProps) {
             New {props.type.slice(0, -1)}
           </Button>
           </Box>
+          }
         </>
       </FilterContainer>
     </StyledGridToolbarContainer>

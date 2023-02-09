@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { getCompany } from '../../api/company.api';
 import { getSettings } from '../../api/settings.api';
 import { listTaxes } from '../../api/tax.api';
+import { currentUserClaims } from '../../auth/firebase';
 import Billing from './Billing';
 import CompanyInformation from './CompanyInformation';
 import EmailSmsSettings from './EmailSmsSettings';
@@ -123,20 +124,23 @@ function CompanySettings(props: any) {
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={value} onChange={handleChange}>
                         <Tab label="Personal Details" id="personalDetails" />
-                        <Tab label="Company Details" id="companyDetails" />
-                        <Tab label="Employees" id="employees" />
-                        <Tab label="Email & SMS" id="emailAndSms" />
-                        <Tab label="Payments" id="payments" />
-                        <Tab label="Billing" id="billing" />
+                        {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') && <Tab label="Company Details" id="companyDetails" />}
+                        {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') && <Tab label="Employees" id="employees" />}
+                        {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') && <Tab label="Email & SMS" id="emailAndSms" />}
+                        {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') && <Tab label="Payments" id="payments" />}
+                        {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') && <Tab label="Billing" id="billing" />}
                     </Tabs>
                 </Box>
             </Card>
             {value === 0 && <PersonalInformation success={props.success}/>}
+            {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+            <>
             {value === 1 && <CompanyInformation company={company} setCompany={setCompany} success={props.success} fileURLs={logoUrl} setFileURLs={setLogoUrl} />}
             {value === 2 && <Employees success={props.success}/>}
             {value === 3 && <EmailSmsSettings settings={settings} setSettings={setSettings} success={props.success}/>}
             {value === 4 && <Payments settings={settings} setSettings={setSettings} taxes={taxes} setTaxes={setTaxes} success={props.success} />}
             {value === 5 && <Billing success={props.success} subscription={props.subscription}/>}
+            </>}
         </Stack>
     )
 }

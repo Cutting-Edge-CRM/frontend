@@ -41,6 +41,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { updateInvoice } from '../../api/invoice.api';
 import { createTimeline } from '../../api/timeline.api';
+import { currentUserClaims } from '../../auth/firebase';
 import ConfirmDelete from '../../shared/ConfirmDelete';
 import EmptyState from '../../shared/EmptyState';
 import PaymentModal from '../../shared/PaymentModal';
@@ -382,6 +383,7 @@ function InvoiceDetails(props: any) {
           <Typography variant="h6" fontWeight={600}>
             {`Invoice #${props.invoice.invoice.id}`}
           </Typography>
+          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
           <Stack direction={'row'} spacing={2}>
           {getActionButtons(props)}
           <IconButton onClick={openMenu} color="primary">
@@ -439,6 +441,7 @@ function InvoiceDetails(props: any) {
             </MenuList>
           </Menu>
           </Stack>
+          }
         </Stack>
         <Stack direction="row" justifyContent="space-between">
           <Stack spacing={2}>
@@ -512,6 +515,8 @@ function InvoiceDetails(props: any) {
           <Typography variant="h6" fontWeight={600}>
             Invoice Details
           </Typography>
+          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+          <>
           {editting ? (
             <Stack direction="row" spacing={2}>
               <Button onClick={handleCancel} variant="outlined">
@@ -526,6 +531,8 @@ function InvoiceDetails(props: any) {
               Edit Invoice
             </Button>
           )}
+          </>
+          }
         </Stack>
         <Divider sx={{ mt: 3, mb: 1 }} />
         {editting && (

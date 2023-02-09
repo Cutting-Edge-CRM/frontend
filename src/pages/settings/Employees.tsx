@@ -13,18 +13,19 @@ function Employees(props: any) {
   const [errorListingEmployees, setErrorListingEmployees] = useState(null);
   const [newOpen, setNewOpen] = useState(false);
   const [employee, setEmployee] = useState(null);
-  // const [type, setType] = useState('');
+  const [type, setType] = useState('');
 
   const handleRowClick = (event: any) => {
-    // navigate(`/${props.type}/${event.id}`);
+    setType('edit');
   };
 
   const handleClose = () => {
     setNewOpen(false);
+    setEmployee(null);
   };
 
   const handleNewOpen = () => {
-    // setType('new');
+    setType('new');
     setNewOpen(true);
   };
 
@@ -102,6 +103,7 @@ function Employees(props: any) {
                 success={props.success}
                 employee={employee}
                 setEmployee={setEmployee}
+                type={type}
             />
             </Box>
             </Card>
