@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { getCompany } from '../../api/company.api';
 import { getSettings } from '../../api/settings.api';
 import { listTaxes } from '../../api/tax.api';
+import Billing from './Billing';
 import CompanyInformation from './CompanyInformation';
 import EmailSmsSettings from './EmailSmsSettings';
 import Employees from './Employees';
@@ -82,6 +83,7 @@ function CompanySettings(props: any) {
             {value === 2 && <Employees success={props.success}/>}
             {value === 3 && <EmailSmsSettings settings={settings} setSettings={setSettings} success={props.success}/>}
             {value === 4 && <Payments settings={settings} setSettings={setSettings} taxes={taxes} setTaxes={setTaxes} success={props.success} />}
+            {value === 5 && <Billing success={props.success} />}
         </Stack>
     )
 }

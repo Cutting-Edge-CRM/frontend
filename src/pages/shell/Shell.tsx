@@ -53,6 +53,7 @@ import Schedule from '../schedule/Schedule';
 import { useEffect } from 'react';
 import { getSettings } from '../../api/settings.api';
 import CompanySettings from '../settings/CompanySettings';
+import { getSubscription } from '../../api/subscriptions.api';
 
 const NavList = styled(List)<ListProps>(({ theme }) => ({
   padding: theme.spacing(0, 3),
@@ -139,6 +140,18 @@ function Shell() {
     );
   }, []);
 
+  useEffect(() => {
+    getSubscription().then(res => {
+      setSettings({
+        ...settings,
+        subscription: res
+      })
+    }, err => {
+      console.error(err.message);
+    })
+    // eslint-disable-next-line
+  }, [])
+
   const drawer = (
     <Stack height="100%">
       <Toolbar>
@@ -166,21 +179,6 @@ function Shell() {
           ))}
         </NavList>
         <NavList>
-          {/* {middleTabs.map((tab, index) => (
-            <ListItem key={tab.display} disablePadding>
-              <ListItemButton
-                component={Link}
-                to={middleTabs[index].slug}
-                selected={location.pathname.includes(middleTabs[index].slug)}
-              >
-                <ListItemIcon>{tab.icon}</ListItemIcon>
-                <ListItemText
-                  primary={tab.display}
-                  primaryTypographyProps={{ fontSize: '14px', fontWeight: 500 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))} */}
         </NavList>
         <NavList>
           {bottomTabs.map((tab, index) => (
@@ -372,24 +370,24 @@ function Shell() {
 
         {/* body */}
         <Routes>
-          <Route path="/dashboard" element={<Dashboard success={success} />} />
-          <Route path="/schedule" element={<Schedule success={success} />} />
-          <Route path="/clients" element={<Clients success={success} />} />
-          <Route path="/clients/:id" element={<Client success={success} />} />
-          <Route path="/quotes" element={<Quotes success={success} />} />
+          <Route path="/dashboard" element={<Dashboard success={success} settings={settings} />} />
+          <Route path="/schedule" element={<Schedule success={success} settings={settings} />} />
+          <Route path="/clients" element={<Clients success={success} settings={settings} />} />
+          <Route path="/clients/:id" element={<Client success={success} settings={settings} />} />
+          <Route path="/quotes" element={<Quotes success={success} settings={settings} />} />
           <Route
             path="/quotes/:id"
             element={<Quote success={success} settings={settings} />}
           />
-          <Route path="/jobs" element={<Jobs success={success} />} />
-          <Route path="/jobs/:id" element={<Job success={success} />} />
-          <Route path="/invoices" element={<Invoices success={success} />} />
+          <Route path="/jobs" element={<Jobs success={success} settings={settings} />} />
+          <Route path="/jobs/:id" element={<Job success={success} settings={settings} />} />
+          <Route path="/invoices" element={<Invoices success={success} settings={settings} />} />
           <Route
             path="/invoices/:id"
             element={<Invoice success={success} settings={settings} />}
           />
           <Route path="/settings" element={<CompanySettings success={success} />} />
-          <Route path="/" element={<Dashboard success={success} />} />
+          <Route path="/" element={<Dashboard success={success} settings={settings} />} />
         </Routes>
         <Snackbar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
