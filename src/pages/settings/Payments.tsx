@@ -2,7 +2,7 @@ import { AddCircleOutlineOutlined, DeleteOutline, Percent } from '@mui/icons-mat
 import { Alert, Box, Button, Card, CircularProgress, Grid, IconButton, InputLabel, ListItemText, MenuItem, Select, Stack, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { updateSettings } from '../../api/settings.api';
-import { retrieveAccount, startPaymentSetUp, continuePaymentSetUp } from '../../api/stripePayments.api';
+import { retrieveAccount, startPaymentSetUp, continuePaymentSetUp, createAccountSession } from '../../api/stripePayments.api';
 import { updateTaxes } from '../../api/tax.api';
 import StripePayments from './StripePayments'
 import StripePayouts from './StripePayouts';
@@ -14,6 +14,7 @@ function Payments(props: any) {
     const [loading, setLoading] = useState(false);
     const [loginLink, setLoginLink] = useState('');
     const [error, setError] = useState(null);
+    const [stripeLoaded, setStripeLoaded] = useState(false);
 
     const handleStartSetUp = () => {
         setLoading(true);
@@ -105,23 +106,52 @@ function Payments(props: any) {
         })
     }, [])
 
+    useEffect(() => {
+        (window as any).StripeConnect = (window as any).StripeConnect || {};
+          // Fetch the AccountSession client secret
+          createAccountSession()
+          .then((res) => {
+            let clientSecret = res.client_secret;
+            // Initialize StripeConnect after the window loads
+            if (stripeLoaded) return;
+            setStripeLoaded(true);
+            (window as any).StripeConnect.onLoad = () => {
+                (window as any).StripeConnect.init({
+                // This is a placeholder - it should be replaced with your publishable API key.
+                // Sign in to see your own test API key embedded in code samples.
+                // Don’t submit any personally identifiable information in requests made with this key.
+                publishableKey: "pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww",
+                clientSecret,
+                appearance: {
+                  colors: {
+                    primary: '#0C8BE7',
+                  },
+                },
+                uiConfig: {
+                  overlay: 'dialog',
+                }
+              });
+            };
+            setError(null);
+
+          }, (err: any) => {
+            setError(err);
+          })
+      }, [stripeLoaded]);
+
     if (loading) return (<Box textAlign='center'><CircularProgress /></Box>);
 
     return (
-    <>
-    <Card sx={{ py: 3 }}>
-    <Stack marginBottom={3} spacing={3}>
-        <Box>
+    <Stack spacing={2}>
+        <Card sx={{padding: 3}}>
+        <Box textAlign={'center'}>
             {error && <Alert severity="error">{error}</Alert>}
             {setupStatus === 'not-started' && <Button variant='contained' onClick={handleStartSetUp}>Set Up Payments</Button>}
             {setupStatus === 'incomplete' && <Button variant='contained' onClick={handleContinueSetUp}>Set Up Payments</Button>}
             {setupStatus === 'complete' && <Button variant='contained' onClick={handleDashboard}>Visit Dashboard</Button>}
         </Box>
-        <StripePayments/>
-        <StripePayouts/>
-    </Stack>
         <Grid container sx={{mb: 3}}>
-            <Grid xs={4} padding={3}>
+            <Grid item xs={4} padding={3}>
             <Stack spacing={2}>
             <InputLabel id="currency-label" sx={{ color: 'primary.main' }}>
                 Currency
@@ -187,8 +217,14 @@ function Payments(props: any) {
             <Button variant="outlined" onClick={handleReload}>Cancel</Button>
             <Button variant="contained" onClick={handleSave}>Save Changes</Button>
         </Stack>
-    </Card>
-    </>
+        </Card>
+        <Card sx={{padding: 3}}>
+            <StripePayments stripeLoaded={stripeLoaded} setStripeLoaded={setStripeLoaded} />
+        </Card>
+        <Card sx={{padding: 3}}>
+            <StripePayouts stripeLoaded={stripeLoaded} setStripeLoaded={setStripeLoaded} />
+        </Card>
+    </Stack>
     );
 }
 

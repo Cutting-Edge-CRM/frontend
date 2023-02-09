@@ -1,5 +1,6 @@
 import { Box, Card, CardHeader, Stack, Tab, Tabs } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { getCompany } from '../../api/company.api';
 import { getSettings } from '../../api/settings.api';
 import { listTaxes } from '../../api/tax.api';
@@ -17,10 +18,62 @@ function CompanySettings(props: any) {
     const [company, setCompany] = useState({} as any);
     const [logoUrl, setLogoUrl] = useState([] as any);
     const [taxes, setTaxes] = useState({} as any);
+    const location = useLocation();
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        let param = '';
+        switch (newValue) {
+            case 0:
+                param = "personal-details";
+                break;
+            case 1:
+                param = "company-info";
+                break;
+            case 2:
+                param = "employees";
+                break;
+            case 3:
+                param = "email-sms";
+                break;
+            case 4:
+                param = "payments";
+                break;
+            case 5:
+                param = "billing";
+                break;
+          }
+        window.history.replaceState(null, '', `?tab=${param}`);
         setValue(newValue);
       };
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const tab = queryParams.get('tab');
+        switch (tab) {
+            case "personal-details":
+                setValue(0);
+                break;
+            case "company-info":
+                setValue(1);
+                break;
+            case "employees":
+                setValue(2);
+                break;
+            case "email-sms":
+                setValue(3);
+                break;
+            case "payments":
+                setValue(4);
+                break;
+            case "billing":
+                setValue(5);
+                break;
+            default:
+                setValue(0);
+                break;
+          }
+
+    }, [location.search])
 
     useEffect(() => {
     getSettings()
@@ -83,7 +136,7 @@ function CompanySettings(props: any) {
             {value === 2 && <Employees success={props.success}/>}
             {value === 3 && <EmailSmsSettings settings={settings} setSettings={setSettings} success={props.success}/>}
             {value === 4 && <Payments settings={settings} setSettings={setSettings} taxes={taxes} setTaxes={setTaxes} success={props.success} />}
-            {value === 5 && <Billing success={props.success} />}
+            {value === 5 && <Billing success={props.success} subscription={props.subscription}/>}
         </Stack>
     )
 }

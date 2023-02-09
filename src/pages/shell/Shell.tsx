@@ -21,6 +21,9 @@ import {
   Search,
   ArrowDropDown,
   NotificationsNone,
+  WorkspacePremium,
+  Info,
+  Warning,
 } from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
@@ -54,6 +57,7 @@ import { useEffect } from 'react';
 import { getSettings } from '../../api/settings.api';
 import CompanySettings from '../settings/CompanySettings';
 import { getSubscription } from '../../api/subscriptions.api';
+import dayjs from 'dayjs';
 
 const NavList = styled(List)<ListProps>(({ theme }) => ({
   padding: theme.spacing(0, 3),
@@ -78,12 +82,12 @@ const NavList = styled(List)<ListProps>(({ theme }) => ({
 const drawerWidth = 270;
 const topTabs = [
   { display: 'Dashboard', slug: 'dashbaord', icon: <TrendingUpOutlined /> },
-  { display: 'Schedule', slug: 'schedule', icon: <CalendarMonthOutlined /> },
+  { display: 'Schedule', slug: 'schedule', icon: <CalendarMonthOutlined />, premium: true },
   { display: 'Clients', slug: 'clients', icon: <PeopleOutlineOutlined /> },
   { display: 'Quotes', slug: 'quotes', icon: <SellOutlined /> },
   { display: 'Jobs', slug: 'jobs', icon: <FormatPaintOutlined /> },
   { display: 'Invoices', slug: 'invoices', icon: <AttachMoney /> },
-  { display: 'Timesheets', slug: 'timesheets', icon: <AccessTimeOutlined /> },
+  { display: 'Timesheets', slug: 'timesheets', icon: <AccessTimeOutlined />, premium: true },
 ];
 // const middleTabs = [
 //   { display: 'Reports', slug: 'reports', icon: <SummarizeOutlined /> },
@@ -100,6 +104,7 @@ function Shell() {
   const [successMessage, setSuccessMessage] = useState('');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [settings, setSettings] = useState({} as any);
+  const [subscription, setSubscription] = useState({} as any);
   const location = useLocation();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -142,10 +147,10 @@ function Shell() {
 
   useEffect(() => {
     getSubscription().then(res => {
-      setSettings({
-        ...settings,
-        subscription: res
-      })
+      if (dayjs.unix(res.expiry).isBefore(dayjs().subtract(7, 'days'))) {
+        setSubscription({subscription: 'basic'});
+      }
+      setSubscription(res);
     }, err => {
       console.error(err.message);
     })
@@ -174,6 +179,7 @@ function Shell() {
                   primary={tab.display}
                   primaryTypographyProps={{ fontSize: '14px', fontWeight: 500 }}
                 />
+                {tab.premium && <ListItemIcon><WorkspacePremium sx={{color: 'yellow.dark'}}/></ListItemIcon>}
               </ListItemButton>
             </ListItem>
           ))}
@@ -366,7 +372,10 @@ function Shell() {
           width: { lg: `calc(100% - ${drawerWidth}px)` },
         }}
       >
-        <Toolbar />
+        <Toolbar>
+          {subscription.canceled && <Alert icon={<Info fontSize="inherit" sx={{color: 'blue.dark'}}/>} sx={{mt: 4, mb: 2, width: '100%', backgroundColor: 'blue.main'}}>You have cancelled your subscription. You will still have access to your plan for X days.</Alert>}
+          {dayjs.unix(subscription.expiry).isBefore(dayjs()) && dayjs.unix(subscription.expiry).isAfter(dayjs().subtract(7, 'days')) && <Alert icon={<Warning fontSize="inherit" sx={{color: 'yellow.dark'}}/>} sx={{mt: 4, mb: 2, width: '100%', backgroundColor: 'yellow.main'}}>Your subscription is past due. Add or update payment methods to continue using service.</Alert>}
+        </Toolbar>
 
         {/* body */}
         <Routes>
@@ -386,7 +395,7 @@ function Shell() {
             path="/invoices/:id"
             element={<Invoice success={success} settings={settings} />}
           />
-          <Route path="/settings" element={<CompanySettings success={success} />} />
+          <Route path="/settings" element={<CompanySettings success={success} subscription={subscription}/>} />
           <Route path="/" element={<Dashboard success={success} settings={settings} />} />
         </Routes>
         <Snackbar

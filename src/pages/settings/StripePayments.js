@@ -1,43 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { createAccountSession } from '../../api/stripePayments.api';
+import React, { useState } from 'react';
 import {Helmet} from "react-helmet-async";
 import { InputLabel } from '@mui/material';
 
 function StripePayments(props) {
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        window.StripeConnect = window.StripeConnect || {};
-          // Fetch the AccountSession client secret
-          createAccountSession()
-          .then((res) => {
-            console.log(res);
-            let clientSecret = res.client_secret;
-            // Initialize StripeConnect after the window loads
-            window.StripeConnect.onLoad = () => {
-                window.StripeConnect.init({
-                // This is a placeholder - it should be replaced with your publishable API key.
-                // Sign in to see your own test API key embedded in code samples.
-                // Don’t submit any personally identifiable information in requests made with this key.
-                publishableKey: "pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww",
-                clientSecret,
-                appearance: {
-                  colors: {
-                    primary: '#0C8BE7',
-                  },
-                },
-                uiConfig: {
-                  overlay: 'dialog',
-                }
-              });
-            };
-            setError(null);
-
-          }, (err) => {
-            setError(err);
-          })
-      }, []);
-
+    const [error] = useState(null);
 
     return (
     <>
