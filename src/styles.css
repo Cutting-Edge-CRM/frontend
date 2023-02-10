@@ -2,3 +2,11 @@ mapbox-search-listbox {
     z-index: 1301;
     position: relative;
 }
+
+html, body, #root {
+    height: 100%;
+  }
+
+.App {
+    height: 100%;
+  }

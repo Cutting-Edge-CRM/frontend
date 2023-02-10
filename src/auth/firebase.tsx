@@ -191,14 +191,17 @@ const registerNewTenantUser = async (id: string, email: string, password: string
 
 const sendPasswordReset = async (email: string) => {
   try {
-    getTenantForUser(email).then(res => {
+    return getTenantForUser(email).then(res => {
       let tenantId = res.company;
       auth.tenantId = tenantId;
-      sendPasswordResetEmail(auth, email);
+      return sendPasswordResetEmail(auth, email)
+      .then(_ => {
+      }, err => {
+        throw new Error("Error sending password reset email");
+      })
     }).catch(err => {
       console.error(err);
     })
-    alert("Password reset link sent!");
   } catch (err: any) {
     console.error(err);
     alert(err.message);

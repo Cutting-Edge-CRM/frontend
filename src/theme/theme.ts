@@ -47,6 +47,7 @@ declare module '@mui/material/styles' {
     green: Palette['primary'];
     gray: Palette['primary'];
     purple: Palette['primary'];
+    backgroundColor: Palette['primary'];
   }
 
   interface PaletteOptions {
@@ -57,6 +58,7 @@ declare module '@mui/material/styles' {
     green: Palette['primary'];
     gray: Palette['primary'];
     purple: Palette['primary'];
+    backgroundColor: Palette['primary'];
   }
 }
 

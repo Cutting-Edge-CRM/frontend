@@ -39,6 +39,12 @@ export const createPalette = (theme: Theme) => {
       dark: '#44444F',
       contrastText: '#fff',
     },
+    backgroundColor: {
+      main: '#D8D8D8',
+      dark: '#0C8BE78C',
+      light: '#E9EDEF',
+      contrastText: '',
+    },
     red: {
       main: '#FFC1E5',
       dark: '#DA001A',
