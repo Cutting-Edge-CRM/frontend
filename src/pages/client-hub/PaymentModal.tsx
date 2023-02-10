@@ -1,10 +1,10 @@
 import { Alert, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, InputLabel, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { createDeposit, createPayment } from '../../api/stripePayments.api';
 import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
 import CheckoutForm from './CheckoutForm';
 import { AttachMoney } from '@mui/icons-material';
+import { createDeposit, createPayment } from './api/clientPublic.api';
 
 export default function PaymentModal(props: any) {
     const [title, setTitle] = useState('');

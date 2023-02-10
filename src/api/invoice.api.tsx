@@ -22,8 +22,8 @@ async function createInvoice(invoice: any) {
             }
             res.json().then(err => {
                 console.error(`Error creating invoice: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error creating invoice: ${err.message}`);
             })
+            throw new Error(`Error creating invoice`);
         })
     } catch (err) {
         console.error(err);
@@ -81,8 +81,8 @@ async function updateInvoice(invoice: any) {
             }
             res.json().then(err => {
                 console.error(`Error updating invoice: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error updating invoice: ${err.message}`);
             })
+            throw new Error(`Error updating invoice`);
         })
     } catch (err) {
         console.error(err);
@@ -109,8 +109,8 @@ async function deleteInvoice(id: any) {
             }
             res.json().then(err => {
                 console.error(`Error deleting invoice: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error deleting invoice: ${err.message}`);
             })
+            throw new Error(`Error deleting invoice`);
         })
     } catch (err) {
         console.error(err);

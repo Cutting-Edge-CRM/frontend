@@ -1,7 +1,6 @@
 import { Alert, Button, Dialog, DialogActions, DialogContent, LinearProgress, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { updateQuote } from '../../api/quote.api';
-import { createTimeline } from '../../api/timeline.api';
+import { createTimeline, updateQuote } from './api/clientPublic.api';
 
 
 export default function ConfirmDelete(props: any) {

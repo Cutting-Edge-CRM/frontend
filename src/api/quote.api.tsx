@@ -22,8 +22,8 @@ async function createQuote(quote: any) {
             }
             res.json().then(err => {
                 console.error(`Error creating quote: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error creating quote: ${err.message}`);
             })
+            throw new Error(`Error creating quote`);
         })
     } catch (err) {
         console.error(err);
@@ -80,8 +80,8 @@ async function updateQuote(quote: any) {
             }
             res.json().then(err => {
                 console.error(`Error updating quote: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error updating quote: ${err.message}`);
             })
+            throw new Error(`Error updating quote`);
         })
     } catch (err) {
         console.error(err);
@@ -108,8 +108,8 @@ async function deleteQuote(id: any) {
             }
             res.json().then(err => {
                 console.error(`Error deleting quote: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error deleting quote: ${err.message}`);
             })
+            throw new Error(`Error deleting quote`);
         })
     } catch (err) {
         console.error(err);

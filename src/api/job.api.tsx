@@ -22,8 +22,8 @@ async function createJob(job: any) {
             }
             res.json().then(err => {
                 console.error(`Error creating job: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error creating job: ${err.message}`);
             })
+            throw new Error(`Error creating job`);
         })
     } catch (err) {
         console.error(err);
@@ -81,8 +81,8 @@ async function updateJob(job: any) {
             }
             res.json().then(err => {
                 console.error(`Error updating job: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error updating job: ${err.message}`);
             })
+            throw new Error(`Error updating job`);
         })
     } catch (err) {
         console.error(err);
@@ -109,8 +109,8 @@ async function deleteJob(id: any) {
             }
             res.json().then(err => {
                 console.error(`Error deleting job: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error deleting job: ${err.message}`);
             })
+            throw new Error(`Error deleting job`);
         })
     } catch (err) {
         console.error(err);

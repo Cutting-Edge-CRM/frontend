@@ -104,7 +104,7 @@ function QuoteItemSaved(props: any) {
               color="neutral.main"
               fontWeight={600}
             >
-              ${(+props.item.price).toFixed(2)}
+              ${(+props.item.price)?.toFixed(2)}
             </Typography>
           </Stack>
         </Grid>
@@ -403,7 +403,7 @@ function TabPanel(props: any) {
                       fontWeight={600}
                       color="neutral.main"
                     >
-                      ${subTotalAmount.toFixed(2)}
+                      ${subTotalAmount?.toFixed(2)}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -450,7 +450,7 @@ function TabPanel(props: any) {
                         fontWeight={600}
                         color="neutral.main"
                       >
-                        ${depositAmount.toFixed(2)}
+                        ${depositAmount?.toFixed(2)}
                       </Typography>
                     )}
                   </Grid>
@@ -500,7 +500,7 @@ function TabPanel(props: any) {
                         fontWeight={600}
                         color="neutral.main"
                       >
-                        {taxAmount.toFixed(2)}
+                        {taxAmount?.toFixed(2)}
                       </Typography>
                     )}
                   </Grid>
@@ -526,7 +526,7 @@ function TabPanel(props: any) {
                       fontWeight={600}
                       color="neutral.main"
                     >
-                      ${totalAmount.toFixed(2)}
+                      ${totalAmount?.toFixed(2)}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -648,7 +648,7 @@ function QuoteDetails(props: any) {
           (props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) +
             +props.taxes.find((t: any) => t.id === props.quote.options?.[0]?.tax)?.tax *
               props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))
-      : props.quote.options?.[0]?.deposit).toFixed(2)
+      : props.quote.options?.[0]?.deposit)?.toFixed(2)
     });
     setPaymentOpen(true);
   };
