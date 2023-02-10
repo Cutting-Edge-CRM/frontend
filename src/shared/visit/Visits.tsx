@@ -71,7 +71,7 @@ function Visits(props: any) {
   };
 
   const handleNewOpen = () => {
-    setVisit({ users: [], property: null, anytime: true });
+    setVisit({ users: [], property: '', anytime: true, type: "Estimate", notes: "" });
     setType('new');
     setOpen(true);
   };
@@ -168,10 +168,19 @@ function Visits(props: any) {
                       fontWeight={600}
                       sx={{ opacity: 0.7 }}
                     >
-                      {visit.name}
+                      {visit.type}
                     </Typography>
                     <Typography variant="caption">{visit.address}</Typography>
-
+                    {visit.unscheduled === (1 || true) ?
+                      <Typography
+                          color="primary"
+                          variant="caption"
+                          fontWeight={500}
+                        >
+                          Unscheduled
+                        </Typography>
+                    :
+                    <>
                     {dayjs(visit.start).diff(dayjs(visit.end), 'hours') < 24 &&
                     dayjs(visit.start).diff(dayjs(visit.end), 'hours') > -24 ? (
                       // if start and end within 1 day of eachother
@@ -206,7 +215,9 @@ function Visits(props: any) {
                         {dayjs(visit.start).format('MMM D')} -{' '}
                         {dayjs(visit.end).format('MMM D')}
                       </Typography>
-                    )}
+                    )}                    
+                    </>
+                    }
                     <Typography
                       variant="caption"
                       fontStyle="italic"

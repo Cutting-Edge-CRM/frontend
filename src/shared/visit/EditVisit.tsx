@@ -1,4 +1,3 @@
-import { PersonOutline } from '@mui/icons-material';
 import {
   Alert,
   Box,
@@ -10,7 +9,6 @@ import {
   DialogContent,
   DialogTitle,
   FormControlLabel,
-  InputAdornment,
   InputLabel,
   LinearProgress,
   ListItemText,
@@ -30,11 +28,12 @@ import { listProperties } from '../../api/property.api';
 import { createVisit, updateVisit } from '../../api/visit.api';
 import TimePicker from './TimePicker';
 
+const visitTypes = ['Estimate', 'Job', 'Task', 'Reminder'];
+
 export default function EditVisit(props: any) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [properties, setProperties] = useState([] as any[]);
-
   const handleCancel = () => {
     props.onClose();
   };
@@ -89,6 +88,10 @@ export default function EditVisit(props: any) {
     props.setVisit({ ...props.visit, [event.target.id]: event.target.checked });
   };
 
+  const handleUnscheduled = (event: any) => {
+    props.setVisit({ ...props.visit, [event.target.id]: event.target.checked });
+  };
+
   const handStartChange = (date: any) => {
     props.setVisit({ ...props.visit, start: date });
   };
@@ -103,6 +106,10 @@ export default function EditVisit(props: any) {
 
   const handleChangeProperty = (event: SelectChangeEvent<any>) => {
     props.setVisit({ ...props.visit, property: event.target.value.id });
+  };
+
+  const handleChangeType = (event: SelectChangeEvent<any>) => {
+    props.setVisit({ ...props.visit, type: event.target.value });
   };
 
   const handleStartTimeChange = (time: string) => {
@@ -142,11 +149,6 @@ export default function EditVisit(props: any) {
   useEffect(() => {
     listProperties(props.client).then(
       (result: any[]) => {
-        let none = {
-          id: null,
-          address: 'None',
-        };
-        result.unshift(none);
         setProperties(result);
       },
       (err) => {
@@ -163,32 +165,44 @@ export default function EditVisit(props: any) {
       <DialogContent>
         {loading && <LinearProgress />}
         <Stack spacing={1.5} mt={2}>
-          <TextField
-            id="name"
-            placeholder="eg. Pressure wash fence, Pickup cheque, Interior - 32 hours"
-            label="Title"
-            defaultValue={props.visit.name ? props.visit.name : undefined}
-            onChange={handleChange}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonOutline color="primary" />
-                </InputAdornment>
-              ),
-            }}
-          />
+          <InputLabel id="type-label" sx={{ color: 'primary.main' }}>
+              Visit type
+          </InputLabel>
+          <Select
+            labelId="type-label"
+            id="type"
+            value={props.visit?.type ?? "Estimate"}
+            onChange={handleChangeType}
+            renderValue={(selected) => (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                {selected}
+              </Box>
+            )}
+          >
+            {visitTypes.map((type: any) => (
+              <MenuItem key={type} value={type}>
+                <Checkbox checked={type === props.visit.type} />
+                <ListItemText primary={type} />
+              </MenuItem>
+            ))}
+          </Select>
           <InputLabel id="property-label" sx={{ color: 'primary.main' }}>
             Property
           </InputLabel>
           <Select
             labelId="property-label"
             id="property"
-            value={properties.find((p) => p.id === props.visit.property)}
+            value={properties.find((p) => p.id === props.visit.property) ?? ''}
+            displayEmpty={true}
             onChange={handleChangeProperty}
             renderValue={(selected) => (
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {selected.address}
+                {selected?.address}
+                {selected.length === 0 && (
+                  <Typography>None</Typography>
+                )}
               </Box>
+              
             )}
           >
             {properties.map((property: any) => (
@@ -235,9 +249,35 @@ export default function EditVisit(props: any) {
               </MenuItem>
             ))}
           </Select>
+          <InputLabel id="notes-label" sx={{ color: 'primary.main' }}>
+              Notes
+          </InputLabel>
+          <TextField
+              id="notes"
+              multiline
+              minRows={5}
+              value={
+              props.visit.notes ?? ""
+              }
+              onChange={handleChange}
+          />
+          <InputLabel id="schedule-label" sx={{ color: 'primary.main' }}>
+            Schedule
+          </InputLabel>
+          <FormControlLabel
+            control={
+              <Checkbox
+                id="unscheduled"
+                checked={+props.visit.unscheduled === (1 || true)}
+                onChange={handleUnscheduled}
+              />
+            }
+            label="Unscheduled"
+          />
           <Stack direction="row" justifyContent="space-between" width="100%">
             <DatePicker
               label="Start Date"
+              disabled={+props.visit.unscheduled === (1 || true)}
               value={props.visit.start}
               onChange={handStartChange}
               renderInput={(params) => <TextField {...params} />}
@@ -247,6 +287,7 @@ export default function EditVisit(props: any) {
             />
             <DatePicker
               label="End Date"
+              disabled={+props.visit.unscheduled === (1 || true)}
               value={props.visit.end}
               onChange={handEndChange}
               renderInput={(params) => <TextField {...params} />}
@@ -259,7 +300,7 @@ export default function EditVisit(props: any) {
             control={
               <Checkbox
                 id="anytime"
-                checked={+props.visit.anytime === (1 || true)}
+                checked={+props.visit.anytime === (1 || true) || +props.visit.unscheduled === (1 || true)}
                 onChange={handleAnytime}
               />
             }
@@ -268,13 +309,13 @@ export default function EditVisit(props: any) {
 
           <Stack direction="row" spacing={1}>
             <TimePicker
-              disabled={+props.visit.anytime === (1 || true)}
+              disabled={+props.visit.anytime === (1 || true) || +props.visit.unscheduled === (1 || true)}
               label="Start Time"
               value={props.startTime}
               onChange={handleStartTimeChange}
             />
             <TimePicker
-              disabled={+props.visit.anytime === (1 || true)}
+              disabled={+props.visit.anytime === (1 || true) || +props.visit.unscheduled === (1 || true)}
               label="End Time"
               value={props.endTime}
               onChange={handleEndTimeChange}
