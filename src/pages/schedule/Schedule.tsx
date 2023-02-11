@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+import interactionPlugin from '@fullcalendar/interaction'
 import { Box, Card, Divider, Grid, List, ListItem, ListItemProps, Stack, styled, Typography } from '@mui/material'
 import { ButtonTextCompoundInput, FormatterInput, ToolbarInput } from '@fullcalendar/core'
-import { listVisitsForCalendar } from '../../api/visit.api'
+import { listVisitsForCalendar, updateVisit } from '../../api/visit.api'
 import EmptyState from '../../shared/EmptyState'
 import dayjs from 'dayjs'
+
 
 const StyledUnscheduledVisitContainer = styled(ListItem)<ListItemProps>(({ theme }) => ({
     backgroundColor: theme.palette.blue.main,
@@ -52,9 +54,24 @@ export default function Schedule(props: any) {
     const title: FormatterInput = { month: 'long', day: 'numeric'}
     const buttons: ButtonTextCompoundInput = {month: 'Month', week: 'Week'}
 
+    const handleEventEdit = (info: any) => {
+        let visit = {
+            ...info.event.extendedProps,
+            start: dayjs(info.event.start).toISOString(),
+            end: dayjs(info.event.end).toISOString()
+        };
+        updateVisit(visit)
+        .then((_) => {},
+            (err) => {
+              setError(err.message);
+            }
+          );
+    }
+
     useEffect(() => {
         listVisitsForCalendar()
         .then(visits => {
+            console.log(visits);
             setScheduledEvents(visits.filter((v: any) => !v.unscheduled));
             setUnscheduledEvents(visits.filter((v: any) => v.unscheduled));
         }, err => {
@@ -78,13 +95,15 @@ export default function Schedule(props: any) {
                       },
                 }}>
                     <FullCalendar
-                    plugins={[ dayGridPlugin ]}
+                    plugins={[ dayGridPlugin, interactionPlugin ]}
                     initialView="dayGridMonth"
                     headerToolbar={toolbar}
                     titleFormat={title}
                     buttonText={buttons}
                     events={scheduledEvents}
                     eventContent={eventRender}
+                    eventDrop={handleEventEdit}
+                    eventResize={handleEventEdit}
                     />
                 </Box>
             </Grid>
