@@ -28,12 +28,14 @@ import { listProperties } from '../../api/property.api';
 import { createVisit, updateVisit } from '../../api/visit.api';
 import TimePicker from './TimePicker';
 
-const visitTypes = ['Estimate', 'Job', 'Task', 'Reminder'];
 
 export default function EditVisit(props: any) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [properties, setProperties] = useState([] as any[]);
+
+  const visitTypes = props.job ? ['Estimate', 'Job', 'Task', 'Reminder'] : ['Estimate', 'Task', 'Reminder'];
+
   const handleCancel = () => {
     props.onClose();
   };
@@ -44,6 +46,7 @@ export default function EditVisit(props: any) {
       // save value
       updateVisit({
         ...props.visit,
+        job: props.visit.type === 'Job' && !!props.job ? props.job.job?.id : props.visit.job,
         client: props.client,
         start: convertToDate('start'),
         end: convertToDate('end'),
@@ -63,6 +66,7 @@ export default function EditVisit(props: any) {
       // save value
       createVisit({
         ...props.visit,
+        job: props.visit.type === 'Job' && !!props.job ? props.job.job?.id : props.visit.job,
         client: props.client,
         start: convertToDate('start'),
         end: convertToDate('end'),

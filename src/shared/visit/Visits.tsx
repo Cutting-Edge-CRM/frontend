@@ -120,7 +120,7 @@ function Visits(props: any) {
   }, []);
 
   useEffect(() => {
-    listVisits(props.client).then(
+    listVisits(props.client, props.job?.job?.id).then(
       (result) => {
         setLoading(false);
         result = result.map((re: any) => {
@@ -291,6 +291,7 @@ function Visits(props: any) {
         setStartTime={setStartTime}
         setEndTime={setEndTime}
         success={props.success}
+        job={props.job}
       />
       <ConfirmDelete
         open={deleteOpen}

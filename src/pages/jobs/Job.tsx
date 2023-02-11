@@ -49,7 +49,7 @@ function Job(props: any) {
             <Grid xs={4}>
                 <Stack spacing={2}>
                     <Contact client={job?.job.client} success={props.success}/>
-                    <Visits client={job?.job.client} success={props.success}/>
+                    <Visits client={job?.job.client} job={job} success={props.success}/>
                     <Timeline client={job.job?.client} resourceType='job' resourceId={job.job?.id} />
                     <Notes client={job?.job.client} success={props.success}/>
                 </Stack>
