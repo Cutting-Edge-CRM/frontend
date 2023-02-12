@@ -55,6 +55,7 @@ function Visits(props: any) {
   const [endTime, setEndTime] = useState('');
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>, visit: any) => {
+    console.log(visit.start);
     setStartTime(visit.start?.split(' ')[1]);
     setEndTime(visit.end?.split(' ')[1]);
     setVisit(visit);

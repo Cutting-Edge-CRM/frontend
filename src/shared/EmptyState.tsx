@@ -77,6 +77,10 @@ export default function EmptyState(props: any) {
                 setLogo(<History sx={{ fontSize: 60, color: 'primary.main' }}/>);
                 setBody(`There is no history associated with this resource yet.`);
                 break;
+            case 'unscheduled':
+                setLogo(<EventAvailable sx={{ fontSize: 60, color: 'primary.main' }}/>);
+                setBody(`No unscheduled visits!`);
+                break;
             default:
                 break;
         }

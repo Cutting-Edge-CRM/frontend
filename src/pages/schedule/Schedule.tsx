@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react'
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction'
-import { Box, Card, Divider, Grid, List, Stack, Typography } from '@mui/material'
-import { ButtonTextCompoundInput, EventApi, FormatterInput, ToolbarInput } from '@fullcalendar/core'
+import { Box, Card, Divider, Grid, List, Popover, Stack, Typography } from '@mui/material'
+import { ButtonTextCompoundInput, EventApi, ToolbarInput } from '@fullcalendar/core'
 import { listVisitsForCalendar, updateVisit } from '../../api/visit.api'
 import EmptyState from '../../shared/EmptyState'
 import dayjs from 'dayjs'
 import { EventImpl } from '@fullcalendar/core/internal'
 import { theme } from '../../theme/theme'
-
+import VisitModal from './VisitModal'
+import { CalendarMonthOutlined } from '@mui/icons-material'
 
 const eventRender = (args: any) => {
 
@@ -41,6 +42,25 @@ export default function Schedule(props: any) {
     const [error, setError] = useState(null);
     const [update, setUpdate] = useState(false);
     let calendarRef = React.createRef<FullCalendar>();
+    const [open, setOpen] = useState(false);
+    const [visit, setVisit] = useState({} as any);
+    const [users, setUsers] = useState([] as any[]);
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
+    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+    const isOpen = Boolean(anchorEl);
+
+    const handleMouseEnter = (info: any) => {
+        setVisit(info.event.extendedProps);
+        let action: React.SetStateAction<HTMLElement | null> = info.el;
+        setAnchorEl(action);
+    }
+  
+    const handlePopoverClose = () => {
+      setAnchorEl(null);
+    };
+  
+    
 
     const toolbar: ToolbarInput = {
         start: "prev,next",
@@ -59,10 +79,11 @@ export default function Schedule(props: any) {
         }
     }
 
+    const handleClose = () => {
+        setOpen(false);
+      };
+
     const handleEventEdit = (info: any) => {
-
-
-        console.log(info.event);
         
         // create visit to save to db
         let visit = {
@@ -73,8 +94,6 @@ export default function Schedule(props: any) {
         delete visit._context;
         delete visit._def;
         delete visit._instance;
-
-        console.log(visit);
 
         // retrieve formatted event from calendars state to add to our react state
         let events = calendarRef.current?.getApi().getEvents() as EventApi[];
@@ -186,6 +205,16 @@ export default function Schedule(props: any) {
         }
     }
 
+    const handleEventClick = (info: any) => {
+        setVisit(info.event.extendedProps);
+        setUsers(info.event.extendedProps.users);
+        setStartTime(dayjs(info.event.extendedProps.start).format("hh:mm"));
+        setEndTime(dayjs(info.event.extendedProps.end).format("hh:mm"));
+        setOpen(true);
+    }
+
+
+
     useEffect(() => {
         listVisitsForCalendar()
         .then(visits => {
@@ -238,6 +267,9 @@ export default function Schedule(props: any) {
                     },
                     '.fc-button-primary:hover': {
                         backgroundColor: `${theme.palette.primary.main} !important`,
+                    },
+                    '.fc-button-primary:focus': {
+                        boxShadow: 'none !important'
                     }
                 }}>
                     <FullCalendar
@@ -257,8 +289,119 @@ export default function Schedule(props: any) {
                     dragRevertDuration={0}
                     editable={true}
                     ref={calendarRef}
+                    eventClick={handleEventClick}
+                    eventMouseEnter={handleMouseEnter}
+                    eventMouseLeave={handlePopoverClose}
                     />
                 </Box>
+                <Popover
+                    id="mouse-over-popover"
+                    sx={{
+                    pointerEvents: 'none',
+                    backgroundColor: 'transparent'
+                    }}
+                    open={isOpen}
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                    }}
+                    onClose={handlePopoverClose}
+                    disableRestoreFocus
+                    PaperProps={{sx: {
+                        backgroundColor: 'transparent',
+                        boxShadow: 'none'
+                    }}}
+                >
+                    <Box sx={{
+                        backgroundColor: theme.palette.info.light,
+                        borderRadius: '10px',
+                        mt: 1,
+                        py: 1,
+                        pl: 1,
+                        minWidth: '300px'
+                    }}>
+                    <Grid container spacing={2}>
+                        <Grid item={true} xs={2} alignSelf="center">
+                        <CalendarMonthOutlined color="primary" fontSize='large' />
+                        </Grid>
+                        <Grid item={true} xs={8}>
+                        <Stack>
+                            <Typography
+                            variant="body2"
+                            fontWeight={600}
+                            sx={{ opacity: 0.7 }}
+                            >
+                            {visit.type}
+                            </Typography>
+                            <Typography variant="caption">{visit.address}</Typography>
+                            {visit.unscheduled === (1 || true) ?
+                            <Typography
+                                color="primary"
+                                variant="caption"
+                                fontWeight={500}
+                                >
+                                Unscheduled
+                                </Typography>
+                            :
+                            <>
+                            {dayjs(visit.start).diff(dayjs(visit.end), 'hours') < 24 &&
+                            dayjs(visit.start).diff(dayjs(visit.end), 'hours') > -24 ? (
+                            // if start and end within 1 day of eachother
+                            visit.anytime === (1 || true) ? (
+                                // if anytime: Jan 13
+                                <Typography
+                                color="primary"
+                                variant="caption"
+                                fontWeight={500}
+                                >
+                                {dayjs(visit.start).format('MMM D')} - Anytime
+                                </Typography>
+                            ) : (
+                                // if not anytime: Jan 13 4:30pm - 6:00pm
+                                <Typography
+                                color="primary"
+                                variant="caption"
+                                fontWeight={500}
+                                >
+                                {dayjs(visit.start).format('MMM D')}{' '}
+                                {dayjs(visit.start).format('h:mma')} -{' '}
+                                {dayjs(visit.end).format('h:mma')}
+                                </Typography>
+                            )
+                            ) : (
+                            // if start and end not within 1 day of eachother: Jan 13 - Jan 16
+                            <Typography
+                                color="primary"
+                                variant="caption"
+                                fontWeight={500}
+                            >
+                                {dayjs(visit.start).format('MMM D')} -{' '}
+                                {dayjs(visit.end).format('MMM D')}
+                            </Typography>
+                            )}                    
+                            </>
+                            }
+                            <Typography
+                            variant="caption"
+                            fontStyle="italic"
+                            sx={{ opacity: 0.8 }}
+                            >
+                            {visit.users
+                                ?.map((user: any) =>
+                                user.name ? user.name : user.email
+                                )
+                                .join(', ')}
+                            </Typography>
+                        </Stack>
+                        </Grid>
+                    </Grid>
+                    </Box>
+                </Popover>
             </Grid>
             <Grid item xs={3} id="unscheduled-container">
                 <Typography fontSize={18} fontWeight={500} color="primary">Unscheduled</Typography>
@@ -281,12 +424,20 @@ export default function Schedule(props: any) {
                 </Box>
             ))}
             {unscheduledEvents.length === 0 && (
-                <EmptyState type="visits"/>
+                <EmptyState type="unscheduled"/>
             )}
             </List>
             </Grid>
         </Grid>
-
+        <VisitModal
+        visit={visit}
+        open={open}
+        onClose={handleClose}
+        users={users}
+        startTime={startTime}
+        endTime={endTime}
+        success={props.success}
+      />
     </Card>
     )
 }
