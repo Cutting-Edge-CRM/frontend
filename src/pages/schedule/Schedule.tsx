@@ -2,23 +2,14 @@ import React, { useEffect, useState } from 'react'
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction'
-import { Box, Card, Divider, Grid, List, ListItem, ListItemProps, Stack, styled, Typography } from '@mui/material'
+import { Box, Card, Divider, Grid, List, Stack, Typography } from '@mui/material'
 import { ButtonTextCompoundInput, EventApi, FormatterInput, ToolbarInput } from '@fullcalendar/core'
 import { listVisitsForCalendar, updateVisit } from '../../api/visit.api'
 import EmptyState from '../../shared/EmptyState'
 import dayjs from 'dayjs'
 import { EventImpl } from '@fullcalendar/core/internal'
+import { theme } from '../../theme/theme'
 
-
-const StyledUnscheduledVisitContainer = styled(ListItem)<ListItemProps>(({ theme }) => ({
-    backgroundColor: theme.palette.blue.main,
-    borderRadius: '10px',
-    marginTop: theme.spacing(2),
-    paddingRight: 0,
-    borderLeft: '6px solid',
-    borderColor: theme.palette.blue.dark,
-    cursor: 'pointer'
-  }));
 
 const eventRender = (args: any) => {
 
@@ -34,7 +25,7 @@ const eventRender = (args: any) => {
             <Stack direction={'row'} alignItems="center" spacing={1}>
                 <Typography className="fc-daygrid-event-dot" borderColor={args.event.textColor}></Typography>
                 <Stack spacing={-0.5}>
-                    <Typography fontWeight={500} fontSize={12} color={args.event.textColor}>{dayjs(args.event.start).format("H:MMA")}</Typography>
+                    <Typography fontWeight={500} fontSize={12} color={args.event.textColor}>{dayjs(args.event.start).format("h:mma")}</Typography>
                     <Typography fontWeight={400} fontSize={12} color="neutral.main">{args.event.extendedProps.clientName}</Typography>
                 </Stack>
             </Stack>
@@ -54,12 +45,24 @@ export default function Schedule(props: any) {
     const toolbar: ToolbarInput = {
         start: "prev,next",
         center: "title",
-        end: "dayGridWeek,dayGridMonth"
+        end: "dayGridWeek,dayGridYear"
     }
-    const title: FormatterInput = { month: 'long', day: 'numeric'}
-    const buttons: ButtonTextCompoundInput = {month: 'Month', week: 'Week'}
+    // const title: FormatterInput = { year: 'numeric' }
+    const buttons: ButtonTextCompoundInput = {year: 'Year', week: 'Week'}
+
+    const viewOptions = {
+        dayGridYear: {
+            titleFormat: { year: 'numeric' }
+          },
+        dayGridWeek: {
+            titleFormat: { year: 'numeric', month: 'short', day: 'numeric' }
+        }
+    }
 
     const handleEventEdit = (info: any) => {
+
+
+        console.log(info.event);
         
         // create visit to save to db
         let visit = {
@@ -71,9 +74,12 @@ export default function Schedule(props: any) {
         delete visit._def;
         delete visit._instance;
 
+        console.log(visit);
+
         // retrieve formatted event from calendars state to add to our react state
         let events = calendarRef.current?.getApi().getEvents() as EventApi[];
         let eventToAdd = events.find((ev: any) => ev.extendedProps.id === info.event.extendedProps.id) as EventImpl;
+        console.log(eventToAdd);
 
         // get index of event in our react state to remove
         let eventToRemove = scheduledEvents.find((ev: any) => ev.id === info.event.extendedProps.id);
@@ -95,12 +101,16 @@ export default function Schedule(props: any) {
 
     const handleReceiveEvent = (info: any) => {
 
+        console.log(info);
+
         // create visit to save to db
         let visit = {
             ...info.event.extendedProps,
             unscheduled: false,
+            anytime: true,
+            allDay: true,
             start: dayjs(info.event.start).toISOString(),
-            end: dayjs(info.event.start).toISOString() // event wont have end after dropped
+            end: dayjs(info.event.start).add(1, 'day').toISOString() // event wont have end after dropped
         };
         delete visit._context;
         delete visit._def;
@@ -110,6 +120,7 @@ export default function Schedule(props: any) {
         let events = calendarRef.current?.getApi().getEvents() as EventApi[];
         let event = events.find((ev: any) => ev.extendedProps.id === info.event.extendedProps.id) as EventImpl;
         event.setExtendedProp('unscheduled', false);
+        event.setExtendedProp('allDay', true);
 
         // add event to our react state
         setScheduledEvents(scheduledEvents.concat(event));
@@ -139,7 +150,10 @@ export default function Schedule(props: any) {
         let visit = {
             ...info.event.extendedProps,
             unscheduled: true,
-            display: 'block'
+            display: 'block',
+            backgroundColor: info.event.backgroundColor,
+            textColor: info.event.textColor,
+            borderColor: info.event.borderColor,
         };
         delete visit._context;
         delete visit._def;
@@ -157,6 +171,7 @@ export default function Schedule(props: any) {
 
 
             // add visit to unscheduled state
+            console.log(visit);
             setUnscheduledEvents(unscheduledEvents.concat(visit));
 
             // save to db
@@ -196,12 +211,13 @@ export default function Schedule(props: any) {
     }, [update])
 
     return (
-    <Card>
-        <Typography>Schedule</Typography>
-        <Divider/>
+    <Card sx={{py: 2}} >
+        <Typography fontSize={20} fontWeight={600} mb={2}>Schedule</Typography>
+        <Divider sx={{mb: 2}} />
         <Grid container spacing={2}>
             <Grid item xs={9}>
                 <Box sx={{
+                    fontFamily: "'Poppins', sans-serif",
                     '.fc-h-event': {
                         height: '40px',
                         borderWidth: '0px 0px 0px 6px',
@@ -209,13 +225,28 @@ export default function Schedule(props: any) {
                         alignItems: 'center',
                         overflow: 'scroll'
                       },
+                    '.fc-header-toolbar': {
+                        color: "neutral.main"
+                    },
+                    '.fc-button': {
+                        backgroundColor: 'white',
+                        color: `${theme.palette.primary.main}`,
+                        borderColor: `${theme.palette.primary.main} !important`,
+                    },
+                    '.fc-button-active': {
+                        backgroundColor: `${theme.palette.primary.main} !important`,
+                    },
+                    '.fc-button-primary:hover': {
+                        backgroundColor: `${theme.palette.primary.main} !important`,
+                    }
                 }}>
                     <FullCalendar
                     plugins={[ dayGridPlugin, interactionPlugin ]}
-                    initialView="dayGridMonth"
+                    initialView="dayGridYear"
                     headerToolbar={toolbar}
-                    titleFormat={title}
+                    // titleFormat={title}
                     buttonText={buttons}
+                    views={{viewOptions}}
                     events={scheduledEvents}
                     eventContent={eventRender}
                     eventDrop={handleEventEdit}
@@ -233,12 +264,21 @@ export default function Schedule(props: any) {
                 <Typography fontSize={18} fontWeight={500} color="primary">Unscheduled</Typography>
             <List>
             {unscheduledEvents.map((visit: any) => (
-                <StyledUnscheduledVisitContainer key={visit.id} className="draggable" id={visit.id}>
+                <Box key={visit.id} className="draggable" id={visit.id} sx={{
+                    backgroundColor: visit.backgroundColor,
+                    borderRadius: '10px',
+                    marginTop: 2,
+                    paddingRight: 0,
+                    paddingLeft: 2,
+                    borderLeft: '6px solid',
+                    borderColor: visit.textColor,
+                    cursor: 'pointer'
+                  }}>
                     <Stack spacing={0} my={0}>
-                        <Typography fontSize={18} fontWeight={500} color="blue.dark">{visit.type}</Typography>
+                        <Typography fontSize={18} fontWeight={500} color={visit.textColor}>{visit.type}</Typography>
                         <Typography>{visit.clientName}</Typography>
                     </Stack>
-                </StyledUnscheduledVisitContainer>
+                </Box>
             ))}
             {unscheduledEvents.length === 0 && (
                 <EmptyState type="visits"/>

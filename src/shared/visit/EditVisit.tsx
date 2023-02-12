@@ -18,6 +18,7 @@ import {
   SelectChangeEvent,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
@@ -141,6 +142,7 @@ export default function EditVisit(props: any) {
       let [hours, minutes] = props.endTime.split(':');
       if (hours && minutes) {
         return endDate
+          .add(1, 'day')
           .set('hour', +hours)
           .set('minute', +minutes)
           .toISOString();
@@ -283,6 +285,7 @@ export default function EditVisit(props: any) {
               label="Start Date"
               disabled={+props.visit.unscheduled === (1 || true)}
               value={props.visit.start}
+              maxDate={props.visit.end}
               onChange={handStartChange}
               renderInput={(params) => <TextField {...params} />}
               OpenPickerButtonProps={{
@@ -293,6 +296,7 @@ export default function EditVisit(props: any) {
               label="End Date"
               disabled={+props.visit.unscheduled === (1 || true)}
               value={props.visit.end}
+              minDate={props.visit.start}
               onChange={handEndChange}
               renderInput={(params) => <TextField {...params} />}
               OpenPickerButtonProps={{
@@ -300,26 +304,29 @@ export default function EditVisit(props: any) {
               }}
             />
           </Stack>
+          <Tooltip title={(dayjs(props.visit.end).diff(props.visit.start, 'days') >= 1) ? "Can't set time if event spans multiple days" : ""}>
           <FormControlLabel
             control={
               <Checkbox
                 id="anytime"
-                checked={+props.visit.anytime === (1 || true) || +props.visit.unscheduled === (1 || true)}
+                disabled={+props.visit.unscheduled === (1 || true) || (dayjs(props.visit.end).diff(props.visit.start, 'days') >= 1)}
+                checked={+props.visit.anytime === (1 || true) || +props.visit.unscheduled === (1 || true) || (dayjs(props.visit.end).diff(props.visit.start, 'days') >= 1)}
                 onChange={handleAnytime}
               />
             }
             label="Anytime"
           />
+          </Tooltip>
 
           <Stack direction="row" spacing={1}>
             <TimePicker
-              disabled={+props.visit.anytime === (1 || true) || +props.visit.unscheduled === (1 || true)}
+              disabled={+props.visit.anytime === (1 || true) || +props.visit.unscheduled === (1 || true) || (dayjs(props.visit.end).diff(props.visit.start, 'days') >= 1)}
               label="Start Time"
               value={props.startTime}
               onChange={handleStartTimeChange}
             />
             <TimePicker
-              disabled={+props.visit.anytime === (1 || true) || +props.visit.unscheduled === (1 || true)}
+              disabled={+props.visit.anytime === (1 || true) || +props.visit.unscheduled === (1 || true) || (dayjs(props.visit.end).diff(props.visit.start, 'days') >= 1)}
               label="End Time"
               value={props.endTime}
               onChange={handleEndTimeChange}
