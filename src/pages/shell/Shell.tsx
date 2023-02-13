@@ -58,6 +58,7 @@ import { getSettings } from '../../api/settings.api';
 import CompanySettings from '../settings/CompanySettings';
 import { getSubscription } from '../../api/subscriptions.api';
 import dayjs from 'dayjs';
+import Timesheets from '../timesheets/Timesheets';
 
 const NavList = styled(List)<ListProps>(({ theme }) => ({
   padding: theme.spacing(0, 3),
@@ -396,6 +397,7 @@ function Shell() {
             element={<Invoice success={success} settings={settings} />}
           />
           <Route path="/settings" element={<CompanySettings success={success} subscription={subscription}/>} />
+          <Route path="/timesheets" element={<Timesheets success={success} subscription={subscription}/>} />
           <Route path="/" element={<Dashboard success={success} settings={settings} />} />
         </Routes>
         <Snackbar
