@@ -1,30 +1,183 @@
-import { Button, Card, Divider, Grid, Stack, TextField, Typography } from '@mui/material';
+import { Close, Edit, Save } from '@mui/icons-material';
+import { Box, Button, Card, CircularProgress, Divider, Grid, IconButton, Popover, Stack, TextField, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
-import { clock, getClockStatus, listTimesheets } from '../../api/timesheet.api';
+import { clock, createTimesheet, getClockStatus, listTimesheets } from '../../api/timesheet.api';
 import { listUsers } from '../../api/user.api';
 
+function sumTimeForWeek(user: any, times: any) {
+    let userTimesheets = times.find((t: any) => t.user === user.id)?.times;
+    let sum = 0;
+    userTimesheets?.forEach((ut: any) => {
+        sum = sum + ut.time
+    });
+    return `${Math.floor(sum/60) < 10 ? 0 : ''}${Math.floor(sum/60)}:${sum%60 < 10 ? 0 : ''}${sum%60}`;
+}
+
 function Week(props: any) {
+    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+    const isOpen = Boolean(anchorEl);
+    const [editVisible, setEditVisible] = useState(-1);
+    const [editting, setEditting] = useState(-1);
+    const [toSave, setToSave] = useState(0);
+    const [saving, setSaving] = useState(-1);
+
+    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+      };
+  
+    const handlePopoverClose = () => {
+      setAnchorEl(null);
+    };
+
+    const handleSetVisible = (number: number) => {
+        setEditVisible(number);
+    }
+
+    const handleSetHidden = () => {
+        setEditVisible(-1);
+    }
+
+    const handleEditting = (number: number) => {
+        setEditting(number);
+    }
+
+    const handleSave = (number: number, date: any) => {
+        setEditting(-1);
+        setSaving(number);
+        let newTimesheet = {
+            user: props.user.id,
+            date: date,
+            time: Math.floor(toSave*60)
+        }
+        createTimesheet(newTimesheet)
+        .then(res => {
+            setSaving(-1);
+            props.reload();
+        }, err => {
+            console.log(err);
+        })
+    }
+
+    const handleCancel = () => {
+        setEditting(-1);
+    }
+
+    const handleChange = (event: any) => {
+        setToSave(event.target.value);
+    }
 
     let userTimesheets = props.times.find((t: any) => t.user === props.user.id);
-
     let week = props.week.map((w: any) => {
-
-        let day = userTimesheets?.times.find((ut: any) => ut.date === w.date);
-
+    let day = userTimesheets?.times.find((ut: any) => ut.date === w.date);
         return {
             ...w,
             time: day?.time ?? 0,
+            clocks: day?.clock ?? [],
         }
     })
 
     return (
         <>
         {week.map((weekDay: any) => (
-            <Grid item xs={1} display="flex" justifyContent={'center'} alignItems="center" sx={{backgroundColor:'#F3F5F8B2'}} borderRight="1px solid #E9EDEF" key={weekDay.number}>
-                {weekDay.time !== 0 && <Typography>{Math.floor(weekDay.time/60) < 10 ? 0 : ''}{Math.floor(weekDay.time/60)}:{weekDay.time%60 < 10 ? 0 : ''}{weekDay.time%60}</Typography>}
-                {weekDay.time === 0 && <Typography>-</Typography> }
+            <Grid 
+            onMouseEnter={() => handleSetVisible(weekDay.number)}
+            onMouseLeave={handleSetHidden}
+            item xs={1} display="flex" justifyContent={'center'} alignItems="center" sx={{backgroundColor:'#F3F5F8B2'}} borderRight="1px solid #E9EDEF" key={weekDay.number}>
+                {weekDay.time !== 0 && 
+                    <Stack width={'100%'} alignItems="center">
+                    {editting === weekDay.number &&
+                    <Box
+                    width={'100%'} display="flex" justifyContent={'right'}
+                    >
+                        <IconButton onClick={handleCancel}><Close color='primary' /></IconButton>
+                        <IconButton onClick={() => handleSave(weekDay.number, weekDay.date)}><Save color='primary' /></IconButton>
+                    </Box>
+                    }
+                    {editting !== weekDay.number && editVisible === weekDay.number &&
+                        <Box
+                        width={'100%'} display="flex" justifyContent={'right'}
+                        >
+                            <IconButton onClick={() => handleEditting(weekDay.number)}><Edit color='primary' /></IconButton>
+                        </Box>
+                    }
+                    {saving === weekDay.number &&
+                        <Box
+                        width={'100%'} display="flex" justifyContent={'right'}
+                        >
+                            <CircularProgress/>
+                        </Box>
+                    }
+                    {editting !== weekDay.number && 
+                        <Typography
+                        onMouseEnter={handlePopoverOpen}
+                        onMouseLeave={handlePopoverClose}
+                        >{Math.floor(weekDay.time/60) < 10 ? 0 : ''}{Math.floor(weekDay.time/60)}:{weekDay.time%60 < 10 ? 0 : ''}{weekDay.time%60}
+                        </Typography>
+                    }
+                    {editting === weekDay.number && <TextField onChange={handleChange} defaultValue={(weekDay.time/60).toFixed(2)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />}
+                    
+                    <Popover
+                        id="mouse-over-popover"
+                        sx={{
+                        pointerEvents: 'none',
+                        backgroundColor: 'transparent'
+                        }}
+                        open={isOpen}
+                        anchorEl={anchorEl}
+                        anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                        }}
+                        transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                        }}
+                        onClose={handlePopoverClose}
+                        disableRestoreFocus
+                    >
+                        <Box p={3}>
+                            {weekDay.overided ? <Typography>Overrided: {Math.floor(weekDay.time/60) < 10 ? 0 : ''}{Math.floor(weekDay.time/60)}:{weekDay.time%60 < 10 ? 0 : ''}{weekDay.time%60}</Typography> : null}
+                            {weekDay.clocks.map((clock: any) => (
+                                <Stack key={clock.time} direction={'row'} spacing={1}>
+                                    <Typography color={'primary'}>{clock.type === 'clock-in' ? 'Clocked in: ' : 'Clocked out: '}</Typography>
+                                    <Typography>{dayjs(clock.time).format("h:mma")}</Typography>
+                                </Stack>
+                            ))}
+                        </Box>
+                    </Popover>
+                    </Stack>
+                }
+                {weekDay.time === 0 && 
+                <Stack width={'100%'} alignItems="center">
+                    {editting === weekDay.number &&
+                    <Box
+                    width={'100%'} display="flex" justifyContent={'right'}
+                    >
+                        <IconButton onClick={handleCancel}><Close color='primary' /></IconButton>
+                        <IconButton onClick={() => handleSave(weekDay.number, weekDay.date)}><Save color='primary' /></IconButton>
+                    </Box>
+                    }
+                    {editting !== weekDay.number && editVisible === weekDay.number &&
+                        <Box
+                        width={'100%'} display="flex" justifyContent={'right'}
+                        >
+                            <IconButton onClick={() => handleEditting(weekDay.number)}><Edit color='primary' /></IconButton>
+                        </Box>
+                    }
+                    {saving === weekDay.number &&
+                        <Box
+                        width={'100%'} display="flex" justifyContent={'right'}
+                        >
+                            <CircularProgress/>
+                        </Box>
+                    }
+                    {editting !== weekDay.number && <Typography>-</Typography>}
+                    {editting === weekDay.number && <TextField onChange={handleChange} defaultValue={0}  sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />}
+                </Stack>
+                 }
+                
             </Grid>
         ))}
         </>
@@ -45,30 +198,7 @@ function Timesheets(props: any) {
     const [times, setTimes] = useState([] as any);
     const [clockedIn, setClockedIn] = useState(false);
     const [users, setUsers] = useState([] as any);
-
-    let demoTimes: any = [
-        {
-            user: 3,
-            times: [
-                {
-                    time: 6.3,
-                    date: '02/12/2023',
-                    id: 234567,
-                    overrided: false,
-                    clocks: [
-                        {
-                            type: 'start',
-                            time: '8:02'
-                        },
-                        {
-                            type: 'end',
-                            time: '3:55'
-                        },
-                    ]
-                },
-            ]
-        },
-    ];
+    const [reload, setReload] = useState(false);
 
     const handleDateChange = (event: any) => {
         setDate(event);
@@ -81,14 +211,12 @@ function Timesheets(props: any) {
             })
         })
         setWeek(weekList);
-        console.log(weekList);
     }
 
     const handleClockIn = () => {
         setClockedIn(true);
         clock({type: 'clock-in'})
-        .then(res => {
-            console.log(res);
+        .then(_ => {
         }, err => {
             console.log(err);
         })
@@ -97,11 +225,14 @@ function Timesheets(props: any) {
     const handleClockOut = () => {
         setClockedIn(false);
         clock({type: 'clock-out'})
-        .then(res => {
-            console.log(res);
+        .then(_ => {
         }, err => {
             console.log(err);
         })
+    }
+
+    const reloadTimes = () => {
+        setReload(!reload)
     }
 
     useEffect(() => {
@@ -116,22 +247,20 @@ function Timesheets(props: any) {
         }, err => {
             console.log(err);
         })
-    }, [clockedIn])
+    }, [])
 
     useEffect(() => {
         listTimesheets(dayjs(date).format("YYYY-MM-DD"))
         .then(res => {
-            console.log(res);
             setTimes(res)
         }, err => {
             console.log(err);
         })
-    }, [clockedIn])
+    }, [clockedIn, reload])
 
     useEffect(() => {
         listUsers()
         .then(res => {
-            console.log(res);
             setUsers(res)
         }, err => {
             console.log(err);
@@ -178,9 +307,9 @@ function Timesheets(props: any) {
                     <Grid container columns={8} borderTop="1px solid #E9EDEF" key={user.id}>
                         <Grid item xs={1} py={2}>
                             <Typography>{user.first}</Typography>
-                            <Typography color={'neutral.light'}>8:26</Typography>
+                            <Typography color={'neutral.light'}>{sumTimeForWeek(user, times)}</Typography>
                         </Grid>
-                        <Week week={week} user={user} times={times}/>
+                        <Week week={week} user={user} times={times} reload={reloadTimes} />
                     </Grid>
                 ))}
             </Stack>
