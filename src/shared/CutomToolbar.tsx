@@ -23,16 +23,10 @@ import {
   FileDownloadOutlined,
   FileUploadOutlined,
   ImportExport,
+  WorkspacePremium,
 } from '@mui/icons-material';
 import { currentUserClaims } from '../auth/firebase';
-
-type CustomToolbarProps = {
-  title?: string;
-  type: string;
-  handleNewOpen: () => void;
-  onImportClick?: () => void;
-  handleExportClients?: () => void;
-};
+import { useNavigate } from 'react-router-dom';
 
 const StyledGridToolbarContainer = styled(
   GridToolbarContainer
@@ -56,15 +50,20 @@ const FilterContainer = styled(Box)<BoxProps>(() => ({
   justifyContent: 'space-between',
 }));
 
-export default function CustomToolbar(props: CustomToolbarProps) {
+export default function CustomToolbar(props: any) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const closeMenu = () => {
     setAnchorEl(null);
   };
+  
+  const handleUpgrade = () => {
+    navigate('/settings?tab=billing');
+  }
 
   return (
     <StyledGridToolbarContainer>
@@ -109,14 +108,26 @@ export default function CustomToolbar(props: CustomToolbarProps) {
               </Menu>
             </>
           )}
-          <Button
+          {props.type === 'employees' && props.subscription.subscription === 'team' && props.employeeCount >= 5 ?
+            <Button
+            startIcon={<WorkspacePremium sx={{color: 'yellow.dark'}}/>}
+            variant="contained"
+            color="primary"
+            onClick={handleUpgrade}
+            >
+              Upgrade
+            </Button>
+            :
+            props.type !== 'Employees' &&
+            <Button
             onClick={props.handleNewOpen}
             startIcon={<AddCircleOutlineOutlined />}
             variant="contained"
             color="primary"
-          >
-            New {props.type.slice(0, -1)}
-          </Button>
+            >
+              New {props.type.slice(0, -1)}
+            </Button>
+          }
           </Box>
           }
         </>

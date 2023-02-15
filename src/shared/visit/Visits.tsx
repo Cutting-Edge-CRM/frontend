@@ -140,6 +140,17 @@ function Visits(props: any) {
     );
   }, [props, open, deleteOpen]);
 
+  if (props.subscription.subscription === 'basic' && !loading) {
+    return(
+      <Box borderRadius={'15px'} overflow={'hidden'}>
+        <a href="/settings?tab=billing">
+        <img src="https://res.cloudinary.com/dtjqpussy/image/upload/v1676492393/Visits_mgf9s5.png"
+        width={'100%'} alt="upgrade for visits"></img>
+        </a>
+      </Box>
+    );
+  }
+
   return (
     <Card sx={{ py: 2 }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">

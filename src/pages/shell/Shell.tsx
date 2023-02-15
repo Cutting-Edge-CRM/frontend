@@ -180,7 +180,7 @@ function Shell() {
                   primary={tab.display}
                   primaryTypographyProps={{ fontSize: '14px', fontWeight: 500 }}
                 />
-                {tab.premium && <ListItemIcon><WorkspacePremium sx={{color: 'yellow.dark'}}/></ListItemIcon>}
+                {tab.premium && subscription.subscription === 'basic' && <ListItemIcon><WorkspacePremium sx={{color: 'yellow.dark'}}/></ListItemIcon>}
               </ListItemButton>
             </ListItem>
           ))}
@@ -380,18 +380,18 @@ function Shell() {
 
         {/* body */}
         <Routes>
-          <Route path="/dashboard" element={<Dashboard success={success} settings={settings} />} />
-          <Route path="/schedule" element={<Schedule success={success} settings={settings} />} />
-          <Route path="/clients" element={<Clients success={success} settings={settings} />} />
-          <Route path="/clients/:id" element={<Client success={success} settings={settings} />} />
-          <Route path="/quotes" element={<Quotes success={success} settings={settings} />} />
+          <Route path="/dashboard" element={<Dashboard success={success} settings={settings} subscription={subscription} />} />
+          <Route path="/schedule" element={<Schedule success={success} settings={settings} subscription={subscription} />} />
+          <Route path="/clients" element={<Clients success={success} settings={settings} subscription={subscription} />} />
+          <Route path="/clients/:id" element={<Client success={success} settings={settings} subscription={subscription} />} />
+          <Route path="/quotes" element={<Quotes success={success} settings={settings} subscription={subscription} />} />
           <Route
             path="/quotes/:id"
             element={<Quote success={success} settings={settings} />}
           />
-          <Route path="/jobs" element={<Jobs success={success} settings={settings} />} />
-          <Route path="/jobs/:id" element={<Job success={success} settings={settings} />} />
-          <Route path="/invoices" element={<Invoices success={success} settings={settings} />} />
+          <Route path="/jobs" element={<Jobs success={success} settings={settings} subscription={subscription} />} />
+          <Route path="/jobs/:id" element={<Job success={success} settings={settings} subscription={subscription} />} />
+          <Route path="/invoices" element={<Invoices success={success} settings={settings} subscription={subscription} />} />
           <Route
             path="/invoices/:id"
             element={<Invoice success={success} settings={settings} />}

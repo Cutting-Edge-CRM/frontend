@@ -49,7 +49,7 @@ export default function Schedule(props: any) {
     const [endTime, setEndTime] = useState('');
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const isOpen = Boolean(anchorEl);
-
+    
     const handleMouseEnter = (info: any) => {
         setVisit(info.event.extendedProps);
         let action: React.SetStateAction<HTMLElement | null> = info.el;
@@ -238,6 +238,19 @@ export default function Schedule(props: any) {
             setError(err.message);
         })
     }, [update])
+
+    if (props.subscription.subscription === 'basic') {
+        return(
+        <Card sx={{padding: 5}}>
+          <Box borderRadius={'15px'} overflow={'hidden'}>
+            <a href="/settings?tab=billing">
+            <img src="https://res.cloudinary.com/dtjqpussy/image/upload/v1676493489/Effortlessly_Schedule_Jobs_and_Staff_l4s9gc.png"
+            width={'100%'} alt="upgrade for visits"></img>
+            </a>
+          </Box>
+          </Card>
+        );
+      }
 
     return (
     <Card sx={{py: 2}} >

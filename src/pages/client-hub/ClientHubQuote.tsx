@@ -8,6 +8,7 @@ import { listPayments } from '../../api/payment.api';
 import PaymentStatus from './PaymentStatus';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import { retrieveAccount } from '../../api/stripePayments.api';
 
 const stripePromise = loadStripe("pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww");
 
@@ -18,6 +19,7 @@ function ClientHubQuote(props: any) {
     const [taxes, setTaxes] = useState([] as any);
     const [payments, setPayments] = useState([] as any);
     const [reload, setReload] = useState(false);
+    const [paymentsEnabled, setPaymentsEnabled] = useState(false);
     let { quoteId } = useParams();
     let { clientId } = useParams();
 
@@ -57,6 +59,17 @@ function ClientHubQuote(props: any) {
         })
     }, [quote, clientId])
 
+    useEffect(() => {
+        retrieveAccount()
+        .then(res => {
+            if (res.stripeRes?.charges_enabled) {
+                setPaymentsEnabled(true);
+            }
+        }, err => {
+            setError(err.message);
+        })
+    }, [])
+
 
     if (error) {
         return (<Alert severity="error">{error}</Alert>);
@@ -68,7 +81,7 @@ function ClientHubQuote(props: any) {
     return (
         <Elements stripe={stripePromise}>
         <PaymentStatus/>
-        <ClientHubQuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload}/>
+        <ClientHubQuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload} paymentsEnabled={paymentsEnabled} />
         </Elements>
     )
 }

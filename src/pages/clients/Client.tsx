@@ -45,7 +45,7 @@ function Client(props: any) {
           <Contact client={id} success={props.success} />
         </Grid>
         <Grid xs={12}>
-          <Visits client={id} success={props.success} />
+          <Visits client={id} success={props.success} subscription={props.subscription} />
         </Grid>
         <Grid xs={12} sm={6} md={12}>
           <Timeline client={id}/>

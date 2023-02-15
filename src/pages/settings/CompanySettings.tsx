@@ -136,7 +136,7 @@ function CompanySettings(props: any) {
             {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
             <>
             {value === 1 && <CompanyInformation company={company} setCompany={setCompany} success={props.success} fileURLs={logoUrl} setFileURLs={setLogoUrl} />}
-            {value === 2 && <Employees success={props.success}/>}
+            {value === 2 && <Employees success={props.success} subscription={props.subscription}/>}
             {value === 3 && <EmailSmsSettings settings={settings} setSettings={setSettings} success={props.success}/>}
             {value === 4 && <Payments settings={settings} setSettings={setSettings} taxes={taxes} setTaxes={setTaxes} success={props.success} />}
             {value === 5 && <Billing success={props.success} subscription={props.subscription}/>}

@@ -446,7 +446,7 @@ import PaymentModal from './PaymentModal';
                 (props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) +
                     +props.taxes.find((t: any) => t.id === props.quote.options?.[0]?.tax)?.tax *
                     props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))
-            : props.quote.options?.[0]?.deposit)) &&
+            : props.quote.options?.[0]?.deposit)) && props.paymentsEnabled &&
             <>
                 <Button
                 sx={{margin: 5}}

@@ -68,6 +68,19 @@ function Employees(props: any) {
     })
   }, []);
 
+  if (props.subscription.subscription === 'basic') {
+    return(
+    <Card sx={{padding: 5}}>
+      <Box borderRadius={'15px'} overflow={'hidden'}>
+      <a href="/settings?tab=billing">
+        <img src="https://res.cloudinary.com/dtjqpussy/image/upload/v1676494117/Untitled_design_2_memg3f.png"
+        width={'100%'} alt="upgrade for timesheets"></img>
+        </a>
+      </Box>
+      </Card>
+    );
+  }
+
     return (
         <Box>
             <Card>
@@ -91,6 +104,8 @@ function Employees(props: any) {
                     handleNewOpen,
                     title: 'Employees',
                     type: 'employees',
+                    subscription: props.subscription,
+                    employeeCount: rows.length
                 },
                 ...props,
                 }}

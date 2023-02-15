@@ -203,7 +203,7 @@ function Timesheets(props: any) {
     const handleDateChange = (event: any) => {
         setDate(event);
         let weekList = [] as any[];
-        ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"].map((day, index) => {
+        ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"].forEach((day, index) => {
             weekList.push({
                 day: day,
                 number: dayjs(event).startOf('week').add(index, 'days').date(),
@@ -256,7 +256,7 @@ function Timesheets(props: any) {
         }, err => {
             console.log(err);
         })
-    }, [clockedIn, reload])
+    }, [clockedIn, reload, date])
 
     useEffect(() => {
         listUsers()
@@ -266,6 +266,19 @@ function Timesheets(props: any) {
             console.log(err);
         })
     }, [])
+
+    if (props.subscription.subscription === 'basic') {
+        return(
+        <Card sx={{padding: 5}}>
+          <Box borderRadius={'15px'} overflow={'hidden'}>
+          <a href="/settings?tab=billing">
+            <img src="https://res.cloudinary.com/dtjqpussy/image/upload/v1676493884/Untitled_design_1_zz1971.png"
+            width={'100%'} alt="upgrade for timesheets"></img>
+            </a>
+          </Box>
+          </Card>
+        );
+      }
 
 
     return (
