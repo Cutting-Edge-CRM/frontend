@@ -279,7 +279,7 @@ function Properties(props: any) {
       </CardHeader>
       <Box>
         {mapError && (
-          <Typography>Map not available for this property</Typography>
+          <EmptyState type="map" />
         )}
         {!mapError && (
           <div

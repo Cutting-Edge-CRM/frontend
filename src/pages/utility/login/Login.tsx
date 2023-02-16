@@ -3,14 +3,16 @@ import { auth, logInWithEmailAndPassword } from '../../../auth/firebase';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { ErrorTypes } from '../../../util/errors';
-import { Card, CardContent, TextField, Button, Stack, Typography, InputAdornment, Divider, Grid, Avatar } from '@mui/material';
+import { Card, CardContent, TextField, Button, Stack, Typography, InputAdornment, Grid, Alert } from '@mui/material';
 import { Email, Https } from '@mui/icons-material';
+import { emailValid } from '../../../util/tools';
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [user, loading] = useAuthState(auth);
+  const [error, setError] = useState(null);
 
   function loginUser() {
     logInWithEmailAndPassword(email, password)
@@ -20,12 +22,10 @@ function Login() {
     .catch(err => {
       console.error(err);
       if (err.message === ErrorTypes.NOTFOUND) {
-        // this.setState({userNotFound: true});
-        alert("show user not found error");
+        setError("No account exists with this email" as any);
       }
       if (err.message === ErrorTypes.INVALIDCREDENTIALS) {
-        // this.setState({userNotFound: true});
-        alert("show invalid credentials error");
+        setError("Incorrect email or password" as any);
       }
     })
   }
@@ -55,9 +55,9 @@ function Login() {
           <Stack>
             <Stack alignItems={'center'} spacing={4} my={4}>
               <Typography fontSize={20} fontWeight={600}>Log In</Typography>
-              <Button>Login with Google</Button>
+              {/* <Button>Login with Google</Button> */}
             </Stack>
-              <Divider sx={{
+              {/* <Divider sx={{
                     '&.MuiDivider-root': {
                         '&::before': {
                             borderTop: `2px solid white`
@@ -74,11 +74,12 @@ function Login() {
                 variant="middle"
                 >
                   <Avatar sx={{backgroundColor: "backgroundColor.dark", border: "2px solid white"}}>Or</Avatar>
-                </Divider>
+                </Divider> */}
             <TextField 
               name="email"
               type='email'
               placeholder="Email"
+              error={!(emailValid(email) || email.length < 1)}
               onChange={(e) => setEmail(e.target.value)}
               InputProps={{
                 startAdornment: (
@@ -109,16 +110,16 @@ function Login() {
                 >
                   Forgot password?
                 </Button>
-                <Stack alignItems={'center'} marginTop={5}>
+                <Stack alignItems={'center'} marginTop={2}>
                   <Button variant='contained' onClick={loginUser}>Login</Button>
                   <Stack direction='row' marginTop={2} alignItems="center" spacing={-2}>
                     <Typography>Don't have an account yet?</Typography>
                     <Button onClick={handleSignUp}>Sign Up</Button>
                   </Stack>
                 </Stack>
-            
           </Stack>
         </CardContent>
+        {error && <Alert severity="error">{error}</Alert>}
       </Card>
     </Grid>
   </Grid>

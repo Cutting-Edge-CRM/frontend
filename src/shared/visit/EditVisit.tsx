@@ -48,6 +48,7 @@ export default function EditVisit(props: any) {
       updateVisit({
         ...props.visit,
         job: props.visit.type === 'Job' && !!props.job ? props.job.job?.id : props.visit.job,
+        property: props.visit.property?.length > 0 ? props.visit.property : null,
         client: props.client,
         start: convertToDate('start'),
         end: convertToDate('end'),
@@ -68,6 +69,7 @@ export default function EditVisit(props: any) {
       createVisit({
         ...props.visit,
         job: props.visit.type === 'Job' && !!props.job ? props.job.job?.id : props.visit.job,
+        property: props.visit.property?.length > 0 ? props.visit.property : null,
         client: props.client,
         start: convertToDate('start'),
         end: convertToDate('end'),

@@ -1,8 +1,6 @@
 import { initializeApp } from "firebase/app";
 import {
-  GoogleAuthProvider,
   getAuth,
-  signInWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
@@ -11,14 +9,11 @@ import {
   User,
   signInAnonymously,
   updatePassword,
-  signInWithEmailLink
+  signInWithEmailLink,
 } from "firebase/auth";
 import {
   getFirestore,
-  query,
-  getDocs,
   collection,
-  where,
   addDoc,
 } from "firebase/firestore";
 import { getTenantForClient, getTenantForUser } from "../api/tenant.api";
@@ -41,27 +36,7 @@ const auth = getAuth(app);
 var currentUser: User;
 var currentUserClaims: any;
 const db = getFirestore(app);
-const googleProvider = new GoogleAuthProvider();
-
-const signInWithGoogle = async () => {
-  try {
-    const res = await signInWithPopup(auth, googleProvider);
-    const user = res.user;
-    const q = query(collection(db, "users"), where("uid", "==", user.uid));
-    const docs = await getDocs(q);
-    if (docs.docs.length === 0) {
-      await addDoc(collection(db, "users"), {
-        uid: user.uid,
-        name: user.displayName,
-        authProvider: "google",
-        email: user.email,
-      });
-    }
-  } catch (err: any) {
-    console.error(err);
-    alert(err.message);
-  }
-};
+// const googleProvider = new GoogleAuthProvider();
 
 const setNewPassword = (password: string) => {
   console.log(password);
@@ -95,6 +70,24 @@ const logInWithEmailAndPassword = async (email: string, password: string) => {
     return Promise.reject(err);
   }
 };
+
+// const logInWithGoogle = async () => {
+
+//   signInWithPopup(auth, googleProvider)
+//   .then((result) => {
+//     // This gives you a Google Access Token. You can use it to access the Google API.
+//     const credential = GoogleAuthProvider.credentialFromResult(result);
+//     const token = credential?.accessToken;
+//     // The signed-in user info.
+//     const user = result.user;
+//     // IdP data available using getAdditionalUserInfo(result)
+//     // ...
+//     console.log(user);
+//     console.log(token);
+//   }).catch((error) => {
+//     console.error(error);
+//   });
+// };
 
 const loginAnonymously = async (client: string) => {
   try {
@@ -238,7 +231,6 @@ export {
   currentUser,
   currentUserClaims,
   onAuthStateChanged,
-  signInWithGoogle,
   logInWithEmailAndPassword,
   registerWithEmailAndPassword,
   sendPasswordReset,

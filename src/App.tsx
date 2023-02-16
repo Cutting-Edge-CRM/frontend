@@ -37,8 +37,6 @@ function App() {
                 <Route path='/forgot-password' element={<ForgotPassword />}></Route>
                 <Route path='/set-password' element={<SetPassword />}></Route>
                 <Route path='/client-hub/:clientId/*' element={<GuardedRoute><ClientHub /></GuardedRoute>}></Route>
-                {/* <Route path="/subscribe" element={<GuardedRoute><Subscribe /></GuardedRoute>} /> */}
-                {/* <Route path="/portal" element={<GuardedRoute><Portal /></GuardedRoute>} /> */}
                 <Route path="*" element={<GuardedRoute><Shell /></GuardedRoute>} />
               </Routes>
             </div>

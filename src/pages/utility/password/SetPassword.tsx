@@ -1,17 +1,18 @@
 import { Https } from '@mui/icons-material';
-import { Box, Button, Card, CardContent, InputAdornment, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Card, CardContent, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { setNewPassword } from '../../../auth/firebase';
 
 function Register() {
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
   const changePassword = (password: string) => {
     setNewPassword(password)
     .then(res => {
       window.location.replace(process.env.REACT_APP_URL as string);
     }, err => {
-      console.log(err);
+      setError(err.message);
     })
   }
     
@@ -36,6 +37,7 @@ function Register() {
             <Button onClick={() => changePassword(password)}>Set Password</Button>
             </Stack>
           </CardContent>
+          {error && <Alert severity="error">{error}</Alert>}
         </Card>
       </Box>
     );

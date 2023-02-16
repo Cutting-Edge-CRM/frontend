@@ -98,7 +98,6 @@ export default function Schedule(props: any) {
         // retrieve formatted event from calendars state to add to our react state
         let events = calendarRef.current?.getApi().getEvents() as EventApi[];
         let eventToAdd = events.find((ev: any) => ev.extendedProps.id === info.event.extendedProps.id) as EventImpl;
-        console.log(eventToAdd);
 
         // get index of event in our react state to remove
         let eventToRemove = scheduledEvents.find((ev: any) => ev.id === info.event.extendedProps.id);
@@ -120,8 +119,6 @@ export default function Schedule(props: any) {
 
     const handleReceiveEvent = (info: any) => {
 
-        console.log(info);
-
         // create visit to save to db
         let visit = {
             ...info.event.extendedProps,
@@ -134,6 +131,16 @@ export default function Schedule(props: any) {
         delete visit._context;
         delete visit._def;
         delete visit._instance;
+
+        // save to db
+        updateVisit(visit)
+        .then((_) => {
+            // setUpdate(!update);
+        },
+            (err) => {
+                setError(err.message);
+            }
+            );
 
         // retrieve formatted event from calendars state to add to our react state
         let events = calendarRef.current?.getApi().getEvents() as EventApi[];
@@ -151,19 +158,11 @@ export default function Schedule(props: any) {
         // remove  our unscheduled state
         setUnscheduledEvents(unscheduledEvents.slice(undefined, eventIndex).concat(unscheduledEvents.slice(eventIndex + 1, undefined)));
 
-
-        // save to db
-        updateVisit(visit)
-        .then((_) => {
-            setUpdate(!update);
-        },
-            (err) => {
-              setError(err.message);
-            }
-          );
     }
 
     const handleEventDragStop = (info: any) => {
+
+        setAnchorEl(null);
         
         // create visit to save to db
         let visit = {
@@ -190,7 +189,6 @@ export default function Schedule(props: any) {
 
 
             // add visit to unscheduled state
-            console.log(visit);
             setUnscheduledEvents(unscheduledEvents.concat(visit));
 
             // save to db
@@ -314,7 +312,7 @@ export default function Schedule(props: any) {
                     backgroundColor: 'transparent'
                     }}
                     open={isOpen}
-                    anchorEl={anchorEl}
+                    anchorEl={anchorEl ?? undefined}
                     anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'left',
@@ -419,7 +417,7 @@ export default function Schedule(props: any) {
             <Grid item xs={3} id="unscheduled-container">
                 <Typography fontSize={18} fontWeight={500} color="primary">Unscheduled</Typography>
             <List>
-            {unscheduledEvents.map((visit: any) => (
+            {unscheduledEvents.map((visit: any, index: number) => (
                 <Box key={visit.id} className="draggable" id={visit.id} sx={{
                     backgroundColor: visit.backgroundColor,
                     borderRadius: '10px',

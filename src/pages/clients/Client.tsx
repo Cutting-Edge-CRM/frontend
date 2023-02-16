@@ -31,13 +31,15 @@ function Client(props: any) {
   return (
     <>
     <Grid container spacing={2}>
-      <Grid xs={12} md={8} container spacing={2}>
+      <Grid xs={12} md={8} spacing={2}>
+      <Grid container>
           <Grid xs={12}>
             <Properties type="client" client={id} success={props.success} />
           </Grid>
           <Grid xs={12}>
             <TabbedSummary client={id} success={props.success} />
           </Grid>
+        </Grid>
       </Grid>
       <Grid xs={12} md={4} spacing={2}>
       <Grid container>

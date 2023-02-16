@@ -17,6 +17,8 @@ function Employees(props: any) {
 
   const handleRowClick = (event: any) => {
     setType('edit');
+    setEmployee(event.row);
+    setNewOpen(true);
   };
 
   const handleClose = () => {

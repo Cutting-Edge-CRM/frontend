@@ -42,6 +42,37 @@ const clientColumns: GridColDef[] = [
     },
   ];
 
+const propertyColumns: GridColDef[] = [
+    {
+      field: 'address',
+      headerName: 'Address',
+      headerClassName: 'MuiDataGrid-columnHeader',
+      width: 200,
+      sortable: false,
+    },
+    {
+      field: 'city',
+      headerName: 'City',
+      headerClassName: 'MuiDataGrid-columnHeader',
+      width: 170,
+      sortable: false,
+    },
+    {
+      field: 'state',
+      headerName: 'State',
+      headerClassName: 'MuiDataGrid-columnHeader',
+      width: 170,
+      sortable: false,
+    },
+    {
+      field: 'zip',
+      headerName: 'Postal',
+      headerClassName: 'MuiDataGrid-columnHeader',
+      width: 170,
+      sortable: false,
+    },
+  ];
+
 const quoteColumns: GridColDef[] = [
     { 
       field: 'clientName',
@@ -192,5 +223,6 @@ export {
     jobColumns,
     invoiceColumns,
     quoteColumns,
-    employeeColumns
+    employeeColumns,
+    propertyColumns
 }

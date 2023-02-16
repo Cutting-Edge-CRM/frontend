@@ -5,12 +5,12 @@ import {
   Card,
   CardHeader,
   CircularProgress,
-  Typography,
 } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import mapboxgl from 'mapbox-gl';
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 import { getProperty } from '../../api/property.api';
+import EmptyState from '../EmptyState';
 
 mapboxgl.accessToken =
   'pk.eyJ1IjoiY3V0dGluZ2VkZ2Vjcm0iLCJhIjoiY2xjaHk1cWZrMmYzcDN3cDQ5bGRzYTY1bCJ9.0B4ntLJoCZzxQ0SUxqaQxg';
@@ -107,7 +107,12 @@ function Property(props: any) {
           return;
         }
         const feature = response.body.features[0];
-        setCoords(feature.center);
+        if (feature.relevance > 0.7) {
+          setCoords(feature.center);
+        } else {
+          setMapError('Not found' as any);
+          map.current = null;
+        }
       });
   }
 
@@ -115,7 +120,9 @@ function Property(props: any) {
     <Card sx={{ pb: 2.5 }}>
       <CardHeader title="Property" />
       <Box>
-        {mapError && <Typography>{mapError}</Typography>}
+        {mapError && 
+        <EmptyState type="map" />
+        }
         {!mapError && (
           <div
             style={{

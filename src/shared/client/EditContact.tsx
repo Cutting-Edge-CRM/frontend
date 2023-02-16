@@ -20,8 +20,8 @@ import {
 } from '@mui/material';
 import * as React from 'react';
 import { useState } from 'react';
-import RegexParser from 'regex-parser';
 import { updateClient } from '../../api/client.api';
+import { emailValid } from '../../util/tools';
 
 export default function EditContact(props: any) {
   const [error, setError] = useState(null);
@@ -132,13 +132,6 @@ export default function EditContact(props: any) {
     );
   };
 
-  const emailValid = (email: any) => {
-    // eslint-disable-next-line
-    let validEmail = RegexParser(
-      "/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$/."
-    );
-    return validEmail.test(email);
-  };
 
   let phoneNumbers: any = [];
   let emailAddresses: any = [];

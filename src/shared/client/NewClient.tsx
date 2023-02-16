@@ -27,9 +27,9 @@ import mapboxgl from 'mapbox-gl';
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import RegexParser from 'regex-parser';
 import { createClient } from '../../api/client.api';
 import { createProperty } from '../../api/property.api';
+import { emailValid } from '../../util/tools';
 
 mapboxgl.accessToken =
   'pk.eyJ1IjoiY3V0dGluZ2VkZ2Vjcm0iLCJhIjoiY2xjaHk1cWZrMmYzcDN3cDQ5bGRzYTY1bCJ9.0B4ntLJoCZzxQ0SUxqaQxg';
@@ -181,14 +181,6 @@ export default function NewClient(props: any) {
             !emailValid(email.content) && email.content.trim().length > 0
         ).length === 0
     );
-  };
-
-  const emailValid = (email: any) => {
-    // eslint-disable-next-line
-    let validEmail = RegexParser(
-      "/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$/."
-    );
-    return validEmail.test(email);
   };
 
   phoneNumbers = contact?.contacts

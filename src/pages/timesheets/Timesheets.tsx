@@ -1,5 +1,5 @@
 import { Close, Edit, Save } from '@mui/icons-material';
-import { Box, Button, Card, CircularProgress, Divider, Grid, IconButton, Popover, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Card, CircularProgress, Divider, Grid, IconButton, Popover, Stack, TextField, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
@@ -56,7 +56,7 @@ function Week(props: any) {
             setSaving(-1);
             props.reload();
         }, err => {
-            console.log(err);
+            props.setError(err.message);
         })
     }
 
@@ -116,7 +116,7 @@ function Week(props: any) {
                         >{Math.floor(weekDay.time/60) < 10 ? 0 : ''}{Math.floor(weekDay.time/60)}:{weekDay.time%60 < 10 ? 0 : ''}{weekDay.time%60}
                         </Typography>
                     }
-                    {editting === weekDay.number && <TextField onChange={handleChange} defaultValue={(weekDay.time/60).toFixed(2)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />}
+                    {editting === weekDay.number && <TextField type={'number'} onChange={handleChange} defaultValue={(weekDay.time/60).toFixed(2)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />}
                     
                     <Popover
                         id="mouse-over-popover"
@@ -174,7 +174,7 @@ function Week(props: any) {
                         </Box>
                     }
                     {editting !== weekDay.number && <Typography>-</Typography>}
-                    {editting === weekDay.number && <TextField onChange={handleChange} defaultValue={0}  sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />}
+                    {editting === weekDay.number && <TextField type={'number'} onChange={handleChange} defaultValue={0}  sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />}
                 </Stack>
                  }
                 
@@ -199,6 +199,7 @@ function Timesheets(props: any) {
     const [clockedIn, setClockedIn] = useState(false);
     const [users, setUsers] = useState([] as any);
     const [reload, setReload] = useState(false);
+    const [error, setError] = useState(null);
 
     const handleDateChange = (event: any) => {
         setDate(event);
@@ -218,7 +219,7 @@ function Timesheets(props: any) {
         clock({type: 'clock-in'})
         .then(_ => {
         }, err => {
-            console.log(err);
+            setError(err.message);
         })
     }
 
@@ -227,7 +228,7 @@ function Timesheets(props: any) {
         clock({type: 'clock-out'})
         .then(_ => {
         }, err => {
-            console.log(err);
+            setError(err.message);
         })
     }
 
@@ -252,7 +253,7 @@ function Timesheets(props: any) {
     useEffect(() => {
         listTimesheets(dayjs(date).format("YYYY-MM-DD"))
         .then(res => {
-            setTimes(res)
+            setTimes(res);
         }, err => {
             console.log(err);
         })
@@ -322,10 +323,11 @@ function Timesheets(props: any) {
                             <Typography>{user.first}</Typography>
                             <Typography color={'neutral.light'}>{sumTimeForWeek(user, times)}</Typography>
                         </Grid>
-                        <Week week={week} user={user} times={times} reload={reloadTimes} />
+                        <Week week={week} user={user} times={times} reload={reloadTimes} setError={setError} />
                     </Grid>
                 ))}
             </Stack>
+            {error && <Alert severity="error">{error}</Alert>}
         </Card>
     )
 }

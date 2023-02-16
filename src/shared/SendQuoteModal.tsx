@@ -5,7 +5,7 @@ import { getClient } from '../api/client.api';
 import { sendEmail } from '../api/email.api';
 import { sendSMS } from '../api/sms.api';
 import { currentUser } from '../auth/firebase';
-import RegexParser from 'regex-parser';
+import { emailValid } from '../util/tools';
 
 export default function SendQuoteModal(props: any) {
     const [value, setValue] = useState(0);
@@ -86,14 +86,6 @@ export default function SendQuoteModal(props: any) {
         let toList = emailMessage.toList.slice(undefined, itemIndex).concat(emailMessage.toList.slice(itemIndex+1, undefined));
         setEmailMessage({ ...emailMessage, toList});
     }
-
-    const emailValid = (email: any) => {
-        // eslint-disable-next-line
-        let validEmail = RegexParser(
-        "/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$/."
-        );
-        return validEmail.test(email);
-    };
 
     const handleEmailKeyDown = (event: any) => {
         if (event.keyCode === 13) {

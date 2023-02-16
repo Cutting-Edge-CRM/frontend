@@ -13,15 +13,12 @@ import {
   Grid,
   IconButton,
   List,
-  ListItem,
   ListItemIcon,
-  ListItemProps,
   ListItemText,
   Menu,
   MenuItem,
   MenuList,
   Stack,
-  styled,
   Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
@@ -32,13 +29,7 @@ import dayjs from 'dayjs';
 import ConfirmDelete from '../ConfirmDelete';
 import EmptyState from '../EmptyState';
 import { currentUserClaims } from '../../auth/firebase';
-
-const StyledVisitContainer = styled(ListItem)<ListItemProps>(({ theme }) => ({
-  backgroundColor: theme.palette.info.light,
-  borderRadius: '10px',
-  marginTop: theme.spacing(2),
-  paddingRight: 0,
-}));
+import { getBorderColor, getEventColor } from '../../theme/theme';
 
 function Visits(props: any) {
   const [rows, setRows] = useState([] as any);
@@ -55,7 +46,6 @@ function Visits(props: any) {
   const [endTime, setEndTime] = useState('');
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>, visit: any) => {
-    console.log(visit.start);
     setStartTime(visit.start?.split(' ')[1]);
     setEndTime(visit.end?.split(' ')[1]);
     setVisit(visit);
@@ -168,10 +158,16 @@ function Visits(props: any) {
       {!loading && !error && (
         <List>
           {rows.map((visit: any) => (
-            <StyledVisitContainer key={visit.id}>
-              <Grid container spacing={2}>
+            <Stack key={visit.id} sx={{
+              backgroundColor: getEventColor(visit.type),
+              borderColor: getBorderColor(visit.type),
+              borderRadius: '10px',
+              marginTop: 2,
+              paddingY: 2,
+            }}>
+              <Grid container spacing={2} sx={{marginLeft: 0, width: '100%'}} >
                 <Grid item={true} xs={2} alignSelf="center">
-                  <CalendarMonthOutlined color="primary" />
+                  <CalendarMonthOutlined sx={{color: getBorderColor(visit.type)}} />
                 </Grid>
                 <Grid item={true} xs={8}>
                   <Stack>
@@ -185,7 +181,7 @@ function Visits(props: any) {
                     <Typography variant="caption">{visit.address}</Typography>
                     {visit.unscheduled === (1 || true) ?
                       <Typography
-                          color="primary"
+                          sx={{color: getBorderColor(visit.type)}}
                           variant="caption"
                           fontWeight={500}
                         >
@@ -199,7 +195,7 @@ function Visits(props: any) {
                       visit.anytime === (1 || true) ? (
                         // if anytime: Jan 13
                         <Typography
-                          color="primary"
+                          sx={{color: getBorderColor(visit.type)}}
                           variant="caption"
                           fontWeight={500}
                         >
@@ -208,7 +204,7 @@ function Visits(props: any) {
                       ) : (
                         // if not anytime: Jan 13 4:30pm - 6:00pm
                         <Typography
-                          color="primary"
+                          sx={{color: getBorderColor(visit.type)}}
                           variant="caption"
                           fontWeight={500}
                         >
@@ -220,7 +216,7 @@ function Visits(props: any) {
                     ) : (
                       // if start and end not within 1 day of eachother: Jan 13 - Jan 16
                       <Typography
-                        color="primary"
+                        sx={{color: getBorderColor(visit.type)}}
                         variant="caption"
                         fontWeight={500}
                       >
@@ -281,7 +277,7 @@ function Visits(props: any) {
                   </Menu>
                 </Grid>
               </Grid>
-            </StyledVisitContainer>
+            </Stack>
           ))}
           {rows.length === 0 && (
             <EmptyState type="visits"/>

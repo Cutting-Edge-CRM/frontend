@@ -133,7 +133,7 @@ import { inviteUser, updateUser } from '../../api/user.api';
                     </InputLabel>
                     <Switch
                     id="admin"
-                    checked={props.employee?.admin === 1}
+                    checked={props.employee?.role === 'admin'}
                     onChange={handleCheck}
                     ></Switch>
                 </Stack>

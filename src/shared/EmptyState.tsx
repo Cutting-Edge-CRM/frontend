@@ -1,4 +1,4 @@
-import { AttachMoney, EventAvailable, FormatListBulleted, FormatPaint, History, MapsHomeWork, People, Sell } from '@mui/icons-material';
+import { AttachMoney, EventAvailable, FormatListBulleted, FormatPaint, History, Map, MapsHomeWork, People, Sell } from '@mui/icons-material';
 import { Avatar, Box, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
@@ -80,6 +80,10 @@ export default function EmptyState(props: any) {
             case 'unscheduled':
                 setLogo(<EventAvailable sx={{ fontSize: 60, color: 'primary.main' }}/>);
                 setBody(`No unscheduled visits!`);
+                break;
+            case 'map':
+                setLogo(<Map sx={{ fontSize: 60, color: 'primary.main' }}/>);
+                setBody(`Map is not available for this property`);
                 break;
             default:
                 break;

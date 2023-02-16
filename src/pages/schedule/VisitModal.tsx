@@ -2,7 +2,6 @@ import {
     Alert,
     Box,
     Button,
-    Card,
     Chip,
     Dialog,
     DialogActions,
@@ -19,6 +18,8 @@ import {
     Typography,
     TypographyProps,
   } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import dayjs from 'dayjs';
   import * as React from 'react';
   import { useEffect, useState } from 'react';
 import { getClient } from '../../api/client.api';
@@ -26,6 +27,7 @@ import { getJob } from '../../api/job.api';
   import { listProperties } from '../../api/property.api';
 import EmptyState from '../../shared/EmptyState';
 import { getChipColor } from '../../theme/theme';
+import { propertyColumns } from '../../util/columns';
 
   function add(accumulator: number, a: number) {
       return +accumulator + +a;
@@ -102,48 +104,68 @@ import { getChipColor } from '../../theme/theme';
             </Tabs>
             {value === 0 &&
                 <Stack spacing={1.5} mt={2}>
-                <InputLabel id="type-label" sx={{ color: 'primary.main' }}>
-                    Visit type
-                </InputLabel>
-                <Typography>{props.visit?.type}</Typography>
-                <InputLabel id="property-label" sx={{ color: 'primary.main' }}>
-                    Property
-                </InputLabel>
-                <Typography>{properties.find((p) => p.id === props.visit.property)?.address}</Typography>
-                <InputLabel id="assigned-label" sx={{ color: 'primary.main' }}>
-                    Assigned
-                </InputLabel>
-                <Typography>{props.visit.users?.map((u: any) => u.name ?? u.email)?.join(', ') ?? "No staff assigned"}</Typography>
-                <InputLabel id="notes-label" sx={{ color: 'primary.main' }}>
-                    Notes
-                </InputLabel>
-                <Typography>{props.visit.notes?.length > 0 ? props.visit.notes : "No notes"}</Typography>
-                <InputLabel id="schedule-label" sx={{ color: 'primary.main' }}>
-                    Schedule
-                </InputLabel>
-                {+props.visit.unscheduled === (1 || true)
-                ?
-                <Typography>Unscheduled</Typography>
-                :
-                <>
-                <Stack direction="row" justifyContent="space-between" width="100%">
-                    <Typography>{props.visit.start}</Typography>
-                    <Typography>{props.visit.end}</Typography>
-                </Stack>
-                <>
-                {+props.visit.anytime === (1 || true)
-                ?
-                <Typography>Anytime</Typography>
-                :
-                <Stack direction="row" spacing={1}>
-                    <Typography>{props.startTime}</Typography>
-                    <Typography>{props.endTime}</Typography>
-                </Stack>
-                }
-                </>
-                </>
-                }
-                <Stack direction="row"></Stack>
+                  <Stack direction={'row'} spacing={3} mt={2}>
+                    <Stack spacing={1.5}>
+                      <Typography id="type-label" sx={{ color: 'primary.main' }}>
+                        Visit type
+                      </Typography>
+                      <Typography id="property-label" sx={{ color: 'primary.main' }}>
+                        Property
+                      </Typography>
+                      <Typography id="assigned-label" sx={{ color: 'primary.main' }}>
+                        Assigned
+                      </Typography>
+                      <Typography id="schedule-label" sx={{ color: 'primary.main' }}>
+                        Schedule
+                      </Typography>
+                    </Stack>
+                    <Stack spacing={1.5} mt={2}>
+                      <Typography>{props.visit?.type}</Typography>
+                      <Typography>{properties.find((p) => p.id === props.visit.property)?.address ?? "No property"}</Typography>
+                      <Typography>{props.visit.users?.length > 0 ? props.visit.users?.map((u: any) => u.name ?? u.email)?.join(', ') : "No staff assigned"}</Typography>
+                            {props.visit.unscheduled === (1 || true) ?
+                            <Typography
+                              >
+                                Unscheduled
+                              </Typography>
+                          :
+                          <>
+                          {dayjs(props.visit.start).diff(dayjs(props.visit.end), 'hours') < 24 &&
+                          dayjs(props.visit.start).diff(dayjs(props.visit.end), 'hours') > -24 ? (
+                            // if start and end within 1 day of eachother
+                            props.visit.anytime === (1 || true) ? (
+                              // if anytime: Jan 13
+                              <Typography
+                              >
+                                {dayjs(props.visit.start).format('MMM D')} - Anytime
+                              </Typography>
+                            ) : (
+                              // if not anytime: Jan 13 4:30pm - 6:00pm
+                              <Typography
+                              >
+                                {dayjs(props.visit.start).format('MMM D')}{' '}
+                                {dayjs(props.visit.start).format('h:mma')} -{' '}
+                                {dayjs(props.visit.end).format('h:mma')}
+                              </Typography>
+                            )
+                          ) : (
+                            // if start and end not within 1 day of eachother: Jan 13 - Jan 16
+                            <Typography
+                            >
+                              {dayjs(props.visit.start).format('MMM D')} -{' '}
+                              {dayjs(props.visit.end).format('MMM D')}
+                            </Typography>
+                          )}                    
+                          </>
+                          }
+                    </Stack>
+                  </Stack>
+                  
+                  
+                  <InputLabel id="notes-label" sx={{ color: 'primary.main' }}>
+                      Notes
+                  </InputLabel>
+                  <Typography>{props.visit.notes?.length > 0 ? props.visit.notes : "No notes"}</Typography>
                 </Stack>
             }
             {value === 2 &&
@@ -274,8 +296,8 @@ import { getChipColor } from '../../theme/theme';
               <Stack
               direction="row"
               alignItems="center"
-              justifyContent="space-between"
-              marginBottom={3}
+              justifyContent="center"
+              marginY={3}
             >
               <Typography fontWeight={600} fontSize={18}>
                 {client?.first} {client?.last}
@@ -286,7 +308,7 @@ import { getChipColor } from '../../theme/theme';
                 {client?.contacts
                   ?.filter((c: any) => c.type === 'phone' && c.content !== '')
                   .map((phone: any, index: number) => (
-                    <Stack direction="row" spacing={2} key={index} justifyContent="space-evenly">
+                    <Stack direction="row" spacing={2} key={index}>
                       <StyledTypography color="primary" variant="body2">
                         Phone
                       </StyledTypography>
@@ -326,27 +348,20 @@ import { getChipColor } from '../../theme/theme';
                   </Stack>
                 )}
                 </Stack>
-                <Stack spacing={2}>
-                {properties?.map((property: any, index: number) => (
-                    <Stack direction="row" spacing={2} key={index}>
-                      <StyledTypography color="primary" variant="body2">
-                        Property
-                      </StyledTypography>
-                      <Stack>
-                        <StyledTypography variant="body2">{property.address}</StyledTypography>
-                        <StyledTypography variant="body2">{property.city ? (property.state ? `${property.city}, ${property.state}` : property.city) : (property.state ?? '')}</StyledTypography>
-                      </Stack>
-                    </Stack>
-                  ))}
-                {properties?.length === 0 && (
-                  <Stack direction="row" spacing={2}>
-                    <StyledTypography color="primary" variant="body2">
-                      Property
-                    </StyledTypography>
-                    <StyledTypography variant="body2">No properties</StyledTypography>
-                  </Stack>
-                )}
-              </Stack>
+                <StyledTypography color="primary" variant="body2">
+                  Properties
+                </StyledTypography>
+                <Box sx={{'& .MuiDataGrid-cell': {outline: 'none !important'}}}>
+                  <DataGrid
+                    error={error}
+                    autoHeight
+                    rows={properties}
+                    columns={propertyColumns}
+                    hideFooter
+                    rowHeight={70}
+                    disableColumnMenu
+                  />
+                </Box>
             </Stack>
             </>
             }

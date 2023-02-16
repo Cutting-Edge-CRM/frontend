@@ -1,9 +1,10 @@
 import { Email, Https, Store } from '@mui/icons-material';
-import { Button, Card, CardContent, Grid, InputAdornment, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Button, Card, CardContent, Grid, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerNewTenant } from '../../../api/tenant.api';
 import { registerNewTenantUser } from '../../../auth/firebase';
+import { emailValid } from '../../../util/tools';
 
 function Register() {
 
@@ -11,11 +12,14 @@ function Register() {
   const [password, setPassword] = useState("");
   const [company, setCompany] = useState("");
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
     
     function register() {
         registerNewTenant(company, email)
         .then(tenant => {
           registerNewTenantUser(tenant.tenantId, email, password);
+        }, err => {
+          setError(err.message);
         })
     }
 
@@ -49,6 +53,7 @@ function Register() {
                 name="email"
                 type='email'
                 placeholder="Email"
+                error={!(emailValid(email) || email.length < 1)}
                 onChange={(e) => setEmail(e.target.value)}
                 InputProps={{
                   startAdornment: (
@@ -59,6 +64,7 @@ function Register() {
                   }}
                   sx={{backgroundColor: "white", borderRadius: "20px", mt: 3}}
                   />
+              <Stack>
               <TextField 
                 name="password"
                 type='password'
@@ -73,8 +79,14 @@ function Register() {
                   }}
                   sx={{backgroundColor: "white", borderRadius: "20px", mt: 3}}
                   />
+                  <Typography fontSize={14} fontWeight={400} textAlign="center" color={'neutral.main'}>Password must be at least 8 characters</Typography>
+                  </Stack>
                   <Stack alignItems={'center'} marginTop={5}>
-                    <Button variant='contained' onClick={register}>Sign Up</Button>
+                    <Button 
+                    variant='contained'
+                     onClick={register}
+                     disabled={!emailValid(email) || company.length === 0 || (password.length < 8)}
+                     >Sign Up</Button>
                     <Stack direction='row' marginTop={2} alignItems="center" spacing={-2}>
                       <Typography>Already have an account?</Typography>
                       <Button onClick={handleLogIn}>Login</Button>
@@ -83,6 +95,7 @@ function Register() {
               
             </Stack>
           </CardContent>
+          {error && <Alert severity="error">{error}</Alert>}
         </Card>
       </Grid>
     </Grid>

@@ -14,6 +14,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { getClient } from '../../api/client.api';
 import { currentUserClaims } from '../../auth/firebase';
+import { getChipColor } from '../../theme/theme';
 import EditContact from './EditContact';
 
 const StyledTypography = styled(Typography)<TypographyProps>(() => ({
@@ -67,7 +68,7 @@ function Contact(props: any) {
         marginBottom={3}
       >
         <Stack direction={'row'} spacing={2} alignItems="center">
-        <Avatar sx={{ width: 45, height: 45 }}>
+        <Avatar sx={{ width: 45, height: 45, backgroundColor: `${getChipColor(contact.status as string)}.main`, color: `${getChipColor(contact.status as string)}.dark`}}>
           {contact?.first?.[0]}
           {contact?.last?.[0]}
         </Avatar>

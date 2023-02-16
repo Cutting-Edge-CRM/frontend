@@ -1,20 +1,23 @@
 import { Email, HttpsOutlined } from '@mui/icons-material';
-import { Button, Card, CardContent, Grid, InputAdornment, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Button, Card, CardContent, Grid, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sendPasswordReset } from '../../../auth/firebase';
+import { emailValid } from '../../../util/tools';
 
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
+
     
     function resetPassword() {
       sendPasswordReset(email)
       .then(_ => {
         // show success
       }, err => {
-        // show error
+        setError(err.message);
       })
     }
 
@@ -39,6 +42,7 @@ function ForgotPassword() {
               type='email'
               placeholder="Email"
               onChange={(e) => setEmail(e.target.value)}
+              error={!(emailValid(email) || email.length < 1)}
               InputProps={{
                 startAdornment: (
                 <InputAdornment position="start">
@@ -58,6 +62,7 @@ function ForgotPassword() {
             
           </Stack>
         </CardContent>
+        {error && <Alert severity="error">{error}</Alert>}
       </Card>
     </Grid>
   </Grid>

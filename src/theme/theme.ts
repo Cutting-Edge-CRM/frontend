@@ -37,6 +37,32 @@ export function getChipColor(status: string) {
   }
 }
 
+export function getEventColor(type: string) {
+  switch (type) {
+    case "Job":
+      return '#E0FFEF';
+    case "Estimate":
+      return '#BBBAFBE0';
+    case "Task":
+      return '#CCF3FF';
+    case "Reminder":
+      return '#FFC1E5';
+  }
+}
+
+export function getBorderColor(type: string) {
+  switch (type) {
+    case "Job":
+      return '#00AC4F';
+    case "Estimate":
+      return '#403DFC';
+    case "Task":
+      return '#0C8BE7';
+    case "Reminder":
+      return '#DA001A';
+  }
+}
+
 declare module '@mui/material/styles' {
 
   interface Palette {
