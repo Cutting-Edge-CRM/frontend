@@ -22,10 +22,10 @@ async function updateQuote(quote: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error updating quote: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error updating quote`);
             })
-            throw new Error(`Error updating quote`);
         })
     } catch (err) {
         console.error(err);
@@ -52,10 +52,10 @@ async function createDeposit(client: string, quote: string, paymentAmount: numbe
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating deposit: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating deposit`);
             })
-            throw new Error(`Error creating deposit`);
         })
     } catch (err) {
         console.error(err);
@@ -82,10 +82,10 @@ async function createPayment(client: string, invoice: string, paymentAmount: num
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating payment: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating payment`);
             })
-            throw new Error(`Error creating payment`);
         })
     } catch (err) {
         console.error(err);
@@ -112,10 +112,10 @@ async function createTimeline(timeline: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating timeline: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating timeline`);
             })
-            throw new Error(`Error creating timeline`);
         })
     } catch (err) {
         console.error(err);

@@ -21,9 +21,9 @@ async function sendSMS(sms: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error sending sms: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error sending sms: ${err.message}`);
+                throw new Error(`Error sending sms`);
             })
         })
     } catch (err) {

@@ -18,9 +18,9 @@ async function getCompany() {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error getting company: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error getting company: ${err.message}`);
+                throw new Error(`Error getting company`);
             })
         })
     } catch (err) {
@@ -48,10 +48,10 @@ async function updateCompany(company: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error updating company: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error updating company`);
             })
-            throw new Error(`Error updating company`);
         })
     } catch (err) {
         console.error(err);

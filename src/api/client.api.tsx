@@ -20,9 +20,9 @@ async function createClient(client: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating client: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error creating client: ${err.message}`);
+                throw new Error(`Error creating client`);
             })
         })
     } catch (err) {
@@ -48,9 +48,9 @@ async function getClient(id: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error getting client: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error getting client: ${err.message}`);
+                throw new Error(`Error getting client`);
             })
         })
     } catch (err) {
@@ -78,9 +78,9 @@ async function updateClient(client: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error updating client: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error updating client: ${err.message}`);
+                throw new Error(`Error updating client`);
             })
         })
     } catch (err) {
@@ -106,10 +106,10 @@ async function deleteClient(id: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error deleting client: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error deleting client`);
             })
-            throw new Error(`Error deleting client`);
         })
     } catch (err) {
         console.error(err);
@@ -137,10 +137,10 @@ async function listClients( query?: string, page?: number, pageSize?: number) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error listing clients: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error listing clients`);
             })
-            throw new Error(`Error listing clients`);
         })
     } catch (err) {
         console.error(err);
@@ -167,9 +167,9 @@ async function importClients(clients: any[]) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error importing clients: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error importing clients: ${err.message}`);
+                throw new Error(`Error importing clients`);
             })
         })
     } catch (err) {
@@ -195,10 +195,10 @@ async function exportClients() {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error exporting clients: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error exporting clients`);
             })
-            throw new Error(`Error exporting clients`);
         })
     } catch (err) {
         console.error(err);

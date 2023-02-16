@@ -24,10 +24,10 @@ async function addUserToTenant(tenantId: string, email: string, uid: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error adding user to tenant: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error adding user to tenant`);
             })
-            throw new Error(`Error adding user to tenant`);
         })
     } catch (err) {
         console.error(err);
@@ -54,10 +54,10 @@ async function inviteUser(user: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error inviting user: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error inviting user`);
             })
-            throw new Error(`Error inviting user`);
         })
     } catch (err) {
         console.error(err);
@@ -82,10 +82,10 @@ async function getUser(id?: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error getting user: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error getting user`);
             })
-            throw new Error(`Error getting user`);
         })
     } catch (err) {
         console.error(err);
@@ -112,10 +112,10 @@ async function updateUser(user: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error updating user: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error updating user`);
             })
-            throw new Error(`Error updating user`);
         })
     } catch (err) {
         console.error(err);
@@ -140,10 +140,10 @@ async function listUsers() {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error listing users: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error listing users`);
             })
-            throw new Error(`Error listing users`);
         })
     } catch (err) {
         console.error(err);

@@ -18,10 +18,10 @@ async function startPaymentSetUp() {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error starting payments setup: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error starting payments setup`);
             })
-            throw new Error(`Error starting payments setup`);
         })
     } catch (err) {
         console.error(err);
@@ -46,10 +46,10 @@ async function continuePaymentSetUp() {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error starting payments setup: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error starting payments setup`);
             })
-            throw new Error(`Error starting payments setup`);
         })
     } catch (err) {
         console.error(err);
@@ -74,10 +74,10 @@ async function createAccountSession() {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating account session: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating account session`);
             })
-            throw new Error(`Error creating account session`);
         })
     } catch (err) {
         console.error(err);
@@ -102,10 +102,10 @@ async function retrieveAccount() {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error retrieving account: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error retrieving account`);
             })
-            throw new Error(`Error retrieving account`);
         })
     } catch (err) {
         console.error(err);
@@ -132,10 +132,10 @@ async function createDeposit(client: string, quote: string, paymentAmount: numbe
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating deposit: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating deposit`);
             })
-            throw new Error(`Error creating deposit`);
         })
     } catch (err) {
         console.error(err);
@@ -162,10 +162,10 @@ async function createPayment(client: string, invoice: string, paymentAmount: num
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating payment: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating payment`);
             })
-            throw new Error(`Error creating payment`);
         })
     } catch (err) {
         console.error(err);

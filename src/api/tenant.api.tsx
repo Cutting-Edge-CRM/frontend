@@ -15,9 +15,21 @@ async function registerNewTenant(name: string, email: string) {
         body: body,
     };
     try {
-        let res = await fetch(`${process.env.REACT_APP_SERVER_URL}/tenants/register-tenant`, requestOptions);
-        return await res.json();
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/tenants/register-tenant`);
+        return fetch(url, requestOptions)
+        .then(res => {
+            console.log(res);
+            if (res.ok) {
+                return res.json();
+            }
+            return res.json().then(err => {
+                console.log(err);
+                console.error(`Error registering company: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error registering company`);
+            })
+        })
     } catch (err) {
+        console.log(err);
         console.error(err);
     }
 }

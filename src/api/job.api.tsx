@@ -20,10 +20,10 @@ async function createJob(job: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating job: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating job`);
             })
-            throw new Error(`Error creating job`);
         })
     } catch (err) {
         console.error(err);
@@ -49,10 +49,10 @@ async function getJob(id?: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error getting job: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error getting job`);
             })
-            throw new Error(`Error getting job`);
         })
     } catch (err) {
         console.error(err);
@@ -79,10 +79,10 @@ async function updateJob(job: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error updating job: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error updating job`);
             })
-            throw new Error(`Error updating job`);
         })
     } catch (err) {
         console.error(err);
@@ -107,10 +107,10 @@ async function deleteJob(id: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error deleting job: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error deleting job`);
             })
-            throw new Error(`Error deleting job`);
         })
     } catch (err) {
         console.error(err);
@@ -139,10 +139,10 @@ async function listJobs(client?: string, query?: string, page?: number, pageSize
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error listing jobs: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error listing jobs`);
             })
-            throw new Error(`Error listing jobs`);
         })
     } catch (err) {
         console.error(err);

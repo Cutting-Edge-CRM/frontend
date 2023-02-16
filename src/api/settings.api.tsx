@@ -19,9 +19,9 @@ async function getSettings() {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error getting settings: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error getting settings: ${err.message}`);
+                throw new Error(`Error getting settings`);
             })
         })
     } catch (err) {
@@ -49,10 +49,10 @@ async function updateSettings(settings: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error updating settings: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error updating settings`);
             })
-            throw new Error(`Error updating settings`);
         })
     } catch (err) {
         console.error(err);

@@ -60,10 +60,10 @@ async function saveImageCloudinary(image: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error uploading photos: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error uploading photos`);
             })
-            throw new Error(`Error uploading photos`);
         })
     } catch (err) {
         console.error(err);
@@ -90,7 +90,7 @@ async function saveImageCloudinary(image: string) {
 //             if (res.ok) {
 //                 return res.json();
 //             }
-//             res.json().then(err => {
+//             return res.json().then(err => {
 //                 console.error(`Error deleting images from cloudinary: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
 //             })
 //             throw new Error(`Error deleting images from cloudinary`);
@@ -121,7 +121,7 @@ async function saveImageCloudinary(image: string) {
 //             if (res.ok) {
 //                 return res.json();
 //             }
-//             res.json().then(err => {
+//             return res.json().then(err => {
 //                 console.error(`Error creating images: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
 //             })
 //             throw new Error(`Error creating images`);

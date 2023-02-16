@@ -20,10 +20,10 @@ async function createTax(tax: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating tax: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating tax`);
             })
-            throw new Error(`Error creating tax`);
         })
     } catch (err) {
         console.error(err);
@@ -49,10 +49,10 @@ async function getTax(id: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error getting tax: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error getting tax`);
             })
-            throw new Error(`Error getting tax`);
         })
     } catch (err) {
         console.error(err);
@@ -79,10 +79,10 @@ async function updateTax(tax: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error updating tax: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error updating tax`);
             })
-            throw new Error(`Error updating tax`);
         })
     } catch (err) {
         console.error(err);
@@ -109,10 +109,10 @@ async function updateTaxes(taxes: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error updating taxes: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error updating taxes`);
             })
-            throw new Error(`Error updating taxes`);
         })
     } catch (err) {
         console.error(err);
@@ -137,10 +137,10 @@ async function deleteTax(id: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error deleting tax: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error deleting tax`);
             })
-            throw new Error(`Error deleting tax`);
         })
     } catch (err) {
         console.error(err);
@@ -166,10 +166,10 @@ async function listTaxes(client?: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error listing taxes: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error listing taxes`);
             })
-            throw new Error(`Error listing taxes`);
         })
     } catch (err) {
         console.error(err);

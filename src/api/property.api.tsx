@@ -20,10 +20,10 @@ async function createProperty(property: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating property: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating property`);
             })
-            throw new Error(`Error creating property`);
         })
     } catch (err) {
         console.error(err);
@@ -49,10 +49,10 @@ async function getProperty(id: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error getting property: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error getting property`);
             })
-            throw new Error(`Error getting property`);
         })
     } catch (err) {
         console.error(err);
@@ -79,10 +79,10 @@ async function updateProperty(property: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error updating property: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error updating property`);
             })
-            throw new Error(`Error updating property`);
         })
     } catch (err) {
         console.error(err);
@@ -107,10 +107,10 @@ async function deleteProperty(id: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error deleting property: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error deleting property`);
             })
-            throw new Error(`Error deleting property`);
         })
     } catch (err) {
         console.error(err);
@@ -136,10 +136,10 @@ async function listProperties(client?: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error listing properties: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error listing properties`);
             })
-            throw new Error(`Error listing properties`);
         })
     } catch (err) {
         console.error(err);

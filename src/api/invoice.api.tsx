@@ -20,10 +20,10 @@ async function createInvoice(invoice: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating invoice: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating invoice`);
             })
-            throw new Error(`Error creating invoice`);
         })
     } catch (err) {
         console.error(err);
@@ -49,10 +49,10 @@ async function getInvoice(id?: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error getting invoice: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error getting invoice`);
             })
-            throw new Error(`Error getting invoice`);
         })
     } catch (err) {
         console.error(err);
@@ -79,10 +79,10 @@ async function updateInvoice(invoice: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error updating invoice: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error updating invoice`);
             })
-            throw new Error(`Error updating invoice`);
         })
     } catch (err) {
         console.error(err);
@@ -107,10 +107,10 @@ async function deleteInvoice(id: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error deleting invoice: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error deleting invoice`);
             })
-            throw new Error(`Error deleting invoice`);
         })
     } catch (err) {
         console.error(err);
@@ -139,10 +139,10 @@ async function listInvoices(client?: string, query?: string, page?: number, page
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error listing invoices: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error listing invoices`);
             })
-            throw new Error(`Error listing invoices`);
         })
     } catch (err) {
         console.error(err);

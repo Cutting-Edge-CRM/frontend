@@ -20,10 +20,10 @@ async function createTimesheet(timesheet: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating timesheet: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating timesheet`);
             })
-            throw new Error(`Error creating timesheet`);
         })
     } catch (err) {
         console.error(err);
@@ -50,10 +50,10 @@ async function clock(timeclock: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating timeclock: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating timeclock`);
             })
-            throw new Error(`Error creating timeclock`);
         })
     } catch (err) {
         console.error(err);
@@ -78,10 +78,10 @@ async function getClockStatus() {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error getting clock status: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error getting clock status`);
             })
-            throw new Error(`Error getting clock status`);
         })
     } catch (err) {
         console.error(err);
@@ -107,10 +107,10 @@ async function listTimesheets(date: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error listing timesheets: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error listing timesheets`);
             })
-            throw new Error(`Error listing timesheets`);
         })
     } catch (err) {
         console.error(err);

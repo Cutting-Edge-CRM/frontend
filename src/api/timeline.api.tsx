@@ -20,10 +20,10 @@ async function createTimeline(timeline: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating timeline: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating timeline`);
             })
-            throw new Error(`Error creating timeline`);
         })
     } catch (err) {
         console.error(err);
@@ -51,10 +51,10 @@ async function listTimeline(client?: string, resourceType?: string, resourceId?:
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error listing timelines: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error listing timelines`);
             })
-            throw new Error(`Error listing timelines`);
         })
     } catch (err) {
         console.error(err);

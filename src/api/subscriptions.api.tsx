@@ -20,9 +20,9 @@ async function getCheckoutSession(priceId: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error getting checkout session: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error getting checkout session: ${err.message}`);
+                throw new Error(`Error getting checkout session`);
             })
         })
     } catch (err) {
@@ -49,9 +49,9 @@ async function getPortalSession() {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error getting portal session: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error getting portal session: ${err.message}`);
+                throw new Error(`Error getting portal session`);
             })
         })
     } catch (err) {
@@ -77,9 +77,9 @@ async function getSubscription() {
                 if (res.ok) {
                     return res.json();
                 }
-                res.json().then(err => {
+                return res.json().then(err => {
                     console.error(`Error getting subscription: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                    throw new Error(`Error getting subscription: ${err.message}`);
+                    throw new Error(`Error getting subscription`);
                 })
             })
         } catch (err) {

@@ -20,10 +20,10 @@ async function createQuote(quote: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating quote: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating quote`);
             })
-            throw new Error(`Error creating quote`);
         })
     } catch (err) {
         console.error(err);
@@ -48,10 +48,10 @@ async function getQuote(id?: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error getting quote: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error getting quote`);
             })
-            throw new Error(`Error getting quote`);
         })
     } catch (err) {
         console.error(err);
@@ -78,10 +78,10 @@ async function updateQuote(quote: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error updating quote: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error updating quote`);
             })
-            throw new Error(`Error updating quote`);
         })
     } catch (err) {
         console.error(err);
@@ -106,10 +106,10 @@ async function deleteQuote(id: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error deleting quote: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error deleting quote`);
             })
-            throw new Error(`Error deleting quote`);
         })
     } catch (err) {
         console.error(err);
@@ -139,10 +139,10 @@ async function listQuotes(client?: string, query?: string, page?: number, pageSi
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error listing quotes: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error listing quotes`);
             })
-            throw new Error(`Error listing quotes`);
         })
     } catch (err) {
         console.error(err);

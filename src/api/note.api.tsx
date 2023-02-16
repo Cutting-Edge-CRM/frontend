@@ -20,10 +20,10 @@ async function createNote(note: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating note: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating note`);
             })
-            throw new Error(`Error creating note`);
         })
     } catch (err) {
         console.error(err);
@@ -48,10 +48,10 @@ async function getNote(id?: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error getting note: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error getting note`);
             })
-            throw new Error(`Error getting note`);
         })
     } catch (err) {
         console.error(err);
@@ -78,10 +78,10 @@ async function updateNote(note: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error updating note: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error updating note`);
             })
-            throw new Error(`Error updating note`);
         })
     } catch (err) {
         console.error(err);
@@ -106,10 +106,10 @@ async function deleteNote(id: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error deleting note: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error deleting note`);
             })
-            throw new Error(`Error deleting note`);
         })
     } catch (err) {
         console.error(err);
@@ -135,10 +135,10 @@ async function listNotes(client?: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error listing notes: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error listing notes`);
             })
-            throw new Error(`Error listing notes`);
         })
     } catch (err) {
         console.error(err);

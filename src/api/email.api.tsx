@@ -20,9 +20,9 @@ async function sendEmail(email: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error sending email: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
-                throw new Error(`Error sending email: ${err.message}`);
+                throw new Error(`Error sending email`);
             })
         })
     } catch (err) {

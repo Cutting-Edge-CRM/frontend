@@ -20,10 +20,10 @@ async function recordPayment(payment: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating payment: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating payment`);
             })
-            throw new Error(`Error creating payment`);
         })
     } catch (err) {
         console.error(err);
@@ -48,10 +48,10 @@ async function getPayment(id?: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error getting payment: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error getting payment`);
             })
-            throw new Error(`Error getting payment`);
         })
     } catch (err) {
         console.error(err);
@@ -78,10 +78,10 @@ async function updatePayment(payment: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error updating payment: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error updating payment`);
             })
-            throw new Error(`Error updating payment`);
         })
     } catch (err) {
         console.error(err);
@@ -105,10 +105,10 @@ async function deletePayment(id: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error deleting payment: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error deleting payment`);
             })
-            throw new Error(`Error deleting payment`);
         })
     } catch (err) {
         console.error(err);
@@ -135,10 +135,10 @@ async function listPayments(client?: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error listing payments: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error listing payments`);
             })
-            throw new Error(`Error listing payments`);
         })
     } catch (err) {
         console.error(err);

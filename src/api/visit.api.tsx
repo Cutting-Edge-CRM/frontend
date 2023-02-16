@@ -20,10 +20,10 @@ async function createVisit(visit: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error creating visit: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error creating visit`);
             })
-            throw new Error(`Error creating visit`);
         })
     } catch (err) {
         console.error(err);
@@ -48,10 +48,10 @@ async function getVisit(id?: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error getting visit: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error getting visit`);
             })
-            throw new Error(`Error getting visit`);
         })
     } catch (err) {
         console.error(err);
@@ -78,10 +78,10 @@ async function updateVisit(visit: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error updating visit: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error updating visit`);
             })
-            throw new Error(`Error updating visit`);
         })
     } catch (err) {
         console.error(err);
@@ -105,10 +105,10 @@ async function deleteVisit(id: any) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error deleting visit: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error deleting visit`);
             })
-            throw new Error(`Error deleting visit`);
         })
     } catch (err) {
         console.error(err);
@@ -136,10 +136,10 @@ async function listVisits(client?: string, job?: string) {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error listing visits: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error listing visits`);
             })
-            throw new Error(`Error listing visits`);
         })
     } catch (err) {
         console.error(err);
@@ -164,10 +164,10 @@ async function listVisitsForCalendar() {
             if (res.ok) {
                 return res.json();
             }
-            res.json().then(err => {
+            return res.json().then(err => {
                 console.error(`Error listing visits: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error listing visits`);
             })
-            throw new Error(`Error listing visits`);
         })
     } catch (err) {
         console.error(err);
