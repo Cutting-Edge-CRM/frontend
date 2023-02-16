@@ -152,7 +152,8 @@ const registerNewTenantUser = async (id: string, email: string, password: string
     createUserWithEmailAndPassword(auth, email, password)
     .then(res => {
       const user = res.user;
-      // set user permissions
+      // set user permissions. Won't be authed. Maybe check that user is only user on tenant to verify it's the first?
+
       addUserToTenant(auth.tenantId as string, email, user.uid)
       .then(_ => {
         addDoc(collection(db, "users"), {
@@ -162,7 +163,12 @@ const registerNewTenantUser = async (id: string, email: string, password: string
         }).then(_ => {
           currentUser.getIdToken(true)
           .then(res => {
-            // successfully created new user
+            currentUser.getIdToken(true)
+            .then(res => {
+              // successfully created new user
+            }, err => {
+              console.error(err);
+            })
           }, err => {
             console.error(err);
           })

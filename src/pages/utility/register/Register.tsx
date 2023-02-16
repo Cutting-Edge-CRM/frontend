@@ -18,7 +18,12 @@ function Register() {
         registerNewTenant(company, email)
         .then(tenant => {
           console.log(tenant);
-          registerNewTenantUser(tenant.tenantId, email, password);
+          registerNewTenantUser(tenant.id, email, password)
+          .then(res => {
+            navigate('/dashboard');
+          }, err => {
+            setError(err.message);
+          })
         }, err => {
           setError(err.message);
         })

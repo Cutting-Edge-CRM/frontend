@@ -18,7 +18,7 @@ async function addUserToTenant(tenantId: string, email: string, uid: string) {
         headers: headers,
         body: body,
     };
-        let url = `${process.env.REACT_APP_SERVER_URL}/users/add-user-to-tenant`;
+        let url = `${process.env.REACT_APP_SERVER_URL}/tenants/add-user-to-tenant`;
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {

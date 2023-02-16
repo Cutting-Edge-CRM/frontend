@@ -23,7 +23,6 @@ async function registerNewTenant(name: string, email: string) {
                 return res.json();
             }
             return res.json().then(err => {
-                console.log(err);
                 console.error(`Error registering company: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
                 throw new Error(`Error registering company`);
             })

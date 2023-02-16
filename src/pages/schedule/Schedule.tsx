@@ -231,7 +231,7 @@ export default function Schedule(props: any) {
                 });
             })
             let externalContainer = document.getElementById("unscheduled-container") as HTMLElement;
-            setExternalUI([externalContainer?.offsetTop, (externalContainer?.offsetLeft + externalContainer?.offsetWidth), externalContainer.offsetTop + externalContainer.offsetHeight, externalContainer.offsetLeft]);
+            setExternalUI([externalContainer?.offsetTop, (externalContainer?.offsetLeft + externalContainer?.offsetWidth), externalContainer?.offsetTop + externalContainer?.offsetHeight, externalContainer?.offsetLeft]);
         }, err => {
             setError(err.message);
         })

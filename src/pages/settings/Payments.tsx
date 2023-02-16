@@ -107,6 +107,7 @@ function Payments(props: any) {
     }, [])
 
     useEffect(() => {
+        if (setupStatus !== 'complete') return;
         (window as any).StripeConnect = (window as any).StripeConnect || {};
           // Fetch the AccountSession client secret
           createAccountSession()
@@ -218,12 +219,17 @@ function Payments(props: any) {
             <Button variant="contained" onClick={handleSave}>Save Changes</Button>
         </Stack>
         </Card>
-        <Card sx={{padding: 3}}>
+        {setupStatus === "complete" &&
+        <>
+            <Card sx={{padding: 3}}>
             <StripePayments stripeLoaded={stripeLoaded} setStripeLoaded={setStripeLoaded} />
-        </Card>
-        <Card sx={{padding: 3}}>
-            <StripePayouts stripeLoaded={stripeLoaded} setStripeLoaded={setStripeLoaded} />
-        </Card>
+            </Card>
+            <Card sx={{padding: 3}}>
+                <StripePayouts stripeLoaded={stripeLoaded} setStripeLoaded={setStripeLoaded} />
+            </Card>
+        </>
+        }
+        
     </Stack>
     );
 }
