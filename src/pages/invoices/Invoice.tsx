@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Unstable_Grid2'
-import { Stack } from '@mui/system';
 import Contact from '../../shared/client/Contact';
 import Notes from '../../shared/note/Notes';
 import InvoiceDetails from './InvoiceDetails';
@@ -64,21 +63,31 @@ function Invoice(props: any) {
         }
     
     return (
+        <>
         <Grid container spacing={2}>
-            <Grid xs={8}>
-                <Stack spacing={2}>
-                    <InvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload} settings={props.settings}/>
-                </Stack>
+          <Grid xs={12} md={8} spacing={2}>
+          <Grid container>
+              <Grid xs={12}>
+              <InvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload} settings={props.settings}/>
+              </Grid>
             </Grid>
-            <Grid xs={4}>
-                <Stack spacing={2}>
-                    <Contact client={invoice?.invoice.client} success={props.success}/>
-                    <Timeline client={invoice.invoice?.client} resourceType='invoice' resourceId={invoice.invoice?.id} />
-                    <Notes client={invoice?.invoice.client} success={props.success}/>
-                </Stack>
+          </Grid>
+          <Grid xs={12} md={4} spacing={2}>
+          <Grid container>
+              <Grid xs={12}>
+                <Contact client={invoice.invoice?.client} success={props.success}/>
+              </Grid>
+            <Grid xs={12} sm={6} md={12}>
+                <Notes client={invoice.invoice?.client} success={props.success}/>
             </Grid>
+            <Grid xs={12} sm={6} md={12}>
+                <Timeline client={invoice.invoice?.client} resourceType='invoice' resourceId={invoice.invoice?.id} />
+            </Grid>
+            </Grid>
+          </Grid>
         </Grid>
-    )
+      </>
+      );
 }
 
 export default Invoice;

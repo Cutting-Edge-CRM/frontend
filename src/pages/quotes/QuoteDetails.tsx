@@ -39,6 +39,7 @@ import {
   TextField,
   Tooltip,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
@@ -53,7 +54,7 @@ import EmptyState from '../../shared/EmptyState';
 import PaymentModal from '../../shared/PaymentModal';
 import RichText from '../../shared/richtext/RichText';
 import SendQuoteModal from '../../shared/SendQuoteModal';
-import { getChipColor } from '../../theme/theme';
+import { getChipColor, theme } from '../../theme/theme';
 
 function add(accumulator: any, a: any) {
   return +accumulator + +a;
@@ -333,7 +334,7 @@ function TabPanel(props: any) {
       role="tabpanel"
       hidden={props.value !== props.index}
       id={`option-${props.index}`}
-      paddingX={4}
+      paddingX={useMediaQuery(theme.breakpoints.down("sm")) ? 0 : 4}
       marginTop={3}
     >
       {props.value === props.index && (
@@ -386,7 +387,7 @@ function TabPanel(props: any) {
           )}
           <Stack mt={2.5} spacing={2}>
             <Grid container justifyContent="flex-end">
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <Grid container>
                   <Grid item xs={5}>
                     <Typography
@@ -410,7 +411,7 @@ function TabPanel(props: any) {
               </Grid>
             </Grid>
             <Grid container justifyContent="flex-end">
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <Grid container alignItems="center">
                   <Grid item xs={5}>
                     <Typography
@@ -458,7 +459,7 @@ function TabPanel(props: any) {
               </Grid>
             </Grid>
             <Grid container justifyContent="flex-end">
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <Grid container alignItems="center">
                   <Grid item xs={5}>
                     <Typography
@@ -508,12 +509,12 @@ function TabPanel(props: any) {
               </Grid>
             </Grid>
             <Grid container justifyContent="flex-end">
-              <Grid item xs={5}>
+              <Grid item xs={6}>
                 <Divider sx={{ width: '100%' }} />
               </Grid>
             </Grid>
             <Grid container justifyContent="flex-end">
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <Grid container>
                   <Grid item xs={5}>
                     <Typography variant="h6" color="primary" fontWeight={700}>
@@ -553,6 +554,7 @@ function QuoteDetails(props: any) {
   const [type, setType] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  let mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   // const handleChange = (event: React.SyntheticEvent, newValue: any) => {
   //   if (newValue === 'add') {
@@ -729,6 +731,12 @@ function QuoteDetails(props: any) {
   };
 
   function getActionButtons(props: any) {
+
+    if (mobile) {
+      return (
+        <Chip label={props.quote.quote.status}  sx={{backgroundColor: `${getChipColor(props.quote.quote.status as string)}.main`, color: `${getChipColor(props.quote.quote.status as string)}.dark`}}  />
+      )
+    }
 
     if (props.quote.quote.status === 'Draft') {
       return (
@@ -963,7 +971,8 @@ function QuoteDetails(props: any) {
               </Typography>
             )}
           </Stack>
-          <Stack spacing={1}>
+          {!mobile &&
+            <Stack spacing={1}>
             <Typography
               textAlign="center"
               variant="body2"
@@ -974,6 +983,7 @@ function QuoteDetails(props: any) {
             </Typography>
             <Chip label={props.quote.quote.status}  sx={{backgroundColor: `${getChipColor(props.quote.quote.status as string)}.main`, color: `${getChipColor(props.quote.quote.status as string)}.dark`}}  />
           </Stack>
+          }
         </Stack>
       </Card>
       <Card sx={{ py: 3 }}>
@@ -1046,7 +1056,7 @@ function QuoteDetails(props: any) {
                       onClick={(e) => handleEditDeposit(e, payment)}
                     >
                         <Grid container justifyContent="flex-end">
-                        <Grid item xs={4}>
+                        <Grid item xs={12}>
                           <Grid container alignItems="center">
                             <Grid item xs={8}>
                               <Typography

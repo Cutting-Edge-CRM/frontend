@@ -15,6 +15,7 @@ import {
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import * as React from 'react';
 import { useCallback, useState } from 'react';
@@ -24,6 +25,7 @@ import {
   updateImagesInCloudinary,
 } from '../../api/images.api';
 import { createNote, updateNote } from '../../api/note.api';
+import { theme } from '../../theme/theme';
 
 export default function EditNote(props: any) {
   const [loadingFiles, setLoadingFiles] = useState(false);
@@ -157,7 +159,7 @@ export default function EditNote(props: any) {
   };
 
   return (
-    <Dialog onClose={handleCancel} open={props.open} fullWidth>
+    <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))}  onClose={handleCancel} open={props.open} fullWidth>
       <DialogTitle align="center">{props.type} Note</DialogTitle>
       <DialogContent>
         {loading && <LinearProgress />}

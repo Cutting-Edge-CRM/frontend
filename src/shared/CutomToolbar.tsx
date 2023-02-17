@@ -5,13 +5,16 @@ import {
   Button,
   Divider,
   DividerProps,
+  IconButton,
   ListItemIcon,
   ListItemText,
   Menu,
   MenuItem,
   MenuList,
+  Stack,
   styled,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import {
   GridToolbarContainer,
@@ -27,6 +30,7 @@ import {
 } from '@mui/icons-material';
 import { currentUserClaims } from '../auth/firebase';
 import { useNavigate } from 'react-router-dom';
+import { theme } from '../theme/theme';
 
 const StyledGridToolbarContainer = styled(
   GridToolbarContainer
@@ -60,6 +64,7 @@ export default function CustomToolbar(props: any) {
   const closeMenu = () => {
     setAnchorEl(null);
   };
+  let mobile = useMediaQuery(theme.breakpoints.down("sm"));
   
   const handleUpgrade = () => {
     navigate('/settings?tab=billing');
@@ -76,15 +81,17 @@ export default function CustomToolbar(props: any) {
         </>
       )}
       <FilterContainer>
-        <>
+        <Stack direction={'row'} width="100%" justifyContent={"space-between"} alignItems="center" >
           <GridToolbarQuickFilter variant="outlined" size="small" />
           {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
           <Box justifyContent={'end'}>
           {props.type === 'Clients' && (
             <>
+            {!mobile &&
               <Button startIcon={<ImportExport />} onClick={openMenu}>
-                Import/Export
+              Import/Export
               </Button>
+            }
               <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
@@ -119,6 +126,12 @@ export default function CustomToolbar(props: any) {
             </Button>
             :
             props.type !== 'Employees' &&
+            <>
+            {mobile ?
+            <IconButton onClick={props.handleNewOpen}>
+              <AddCircleOutlineOutlined fontSize='large' color='primary' />
+            </IconButton>
+            :
             <Button
             onClick={props.handleNewOpen}
             startIcon={<AddCircleOutlineOutlined />}
@@ -127,10 +140,12 @@ export default function CustomToolbar(props: any) {
             >
               New {props.type.slice(0, -1)}
             </Button>
+            }
+            </>
           }
           </Box>
           }
-        </>
+        </Stack>
       </FilterContainer>
     </StyledGridToolbarContainer>
   );

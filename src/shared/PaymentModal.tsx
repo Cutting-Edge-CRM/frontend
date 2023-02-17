@@ -1,4 +1,4 @@
-import { AttachMoney } from '@mui/icons-material';
+import { AttachMoney, Close } from '@mui/icons-material';
 import {
   Alert,
   Box,
@@ -9,12 +9,14 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   InputAdornment,
   InputLabel,
   ListItemText,
   MenuItem,
   Select,
   TextField,
+  useMediaQuery,
 } from '@mui/material';
 import { Stack } from '@mui/system';
 import { DatePicker } from '@mui/x-date-pickers';
@@ -29,6 +31,7 @@ import {
 import { createDeposit, createPayment } from '../api/stripePayments.api';
 import { createTimeline } from '../api/timeline.api';
 import CheckoutForm from '../pages/client-hub/CheckoutForm';
+import { theme } from '../theme/theme';
 
 export default function PaymentModal(props: any) {
   const [loading, setLoading] = useState(false);
@@ -152,7 +155,10 @@ const getIntent = () => {
 }
 
   return (
-    <Dialog onClose={handleCancel} open={props.open}>
+    <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))} onClose={handleCancel} open={props.open}>
+      <IconButton sx={{ justifyContent: 'start' }} onClick={handleCancel} disableRipple>
+        <Close fontSize='large'/>
+      </IconButton>
       <DialogTitle align="center">Collect {props.paymentType}</DialogTitle>
       {error && <Alert severity="error">{error}</Alert>}
       {props.payment.method !== 'Credit Card' &&
@@ -227,15 +233,12 @@ const getIntent = () => {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCancel} variant="outlined">
-          Cancel
-        </Button>
         {props.type === 'edit' && (
           <Button onClick={handleDelete} color="error" variant="contained">
             Delete
           </Button>
         )}
-        <Button onClick={handleSaveAndReciept}>Save & Email Receipt</Button>
+        <Button onClick={handleSaveAndReciept} variant="outlined">Send Receipt</Button>
         <Button onClick={handleSave} disabled={!props.payment.amount || props.payment?.amount === '0'} variant="contained">
           Save
         </Button>

@@ -90,13 +90,15 @@ export default function Table(props: any) {
   return (
     <Box>
       {loading && <LinearProgress />}
-      <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'}}}>
+      <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'}, '& .MuiDataGrid-footerContainer': {display: 'none'}}}>
       <DataGrid
         error={props.errorListing}
         loading={props.loadingList}
         autoHeight
         rows={props.rows}
         columns={props.columns}
+        rowHeight={props.mobile ? 100 : 72}
+        headerHeight={props.mobile ? 0 : 52}
         components={{
           Toolbar: CustomToolbar,
           NoRowsOverlay: getEmptyState,
@@ -115,7 +117,6 @@ export default function Table(props: any) {
         }}
         disableSelectionOnClick
         onRowClick={handleRowClick}
-        rowHeight={72}
         disableColumnMenu
       />
       </Box>

@@ -78,6 +78,8 @@ export default function Table(props: any) {
         paginationMode="server"
         filterMode="server"
         onFilterModelChange={handleFilterChange}
+        rowHeight={props.mobile ? 100 : 52}
+        headerHeight={props.mobile ? 0 : 52}
         components={{
           Toolbar: CustomToolbar,
           NoRowsOverlay: getEmptyState,

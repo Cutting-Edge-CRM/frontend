@@ -17,10 +17,12 @@ import {
   LinearProgress,
   Stack,
   TextField,
+  useMediaQuery,
 } from '@mui/material';
 import * as React from 'react';
 import { useState } from 'react';
 import { updateClient } from '../../api/client.api';
+import { theme } from '../../theme/theme';
 import { emailValid } from '../../util/tools';
 
 export default function EditContact(props: any) {
@@ -190,12 +192,12 @@ export default function EditContact(props: any) {
     });
 
   return (
-    <Dialog onClose={handleCancel} open={props.open}>
+    <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))} onClose={handleCancel} open={props.open}>
       <DialogTitle align="center">Client Info</DialogTitle>
       <DialogContent>
         {loading && <LinearProgress />}
         <Stack spacing={2} mt={2}>
-          <Stack direction={'row'} spacing={2}>
+          <Stack direction={useMediaQuery(theme.breakpoints.down("sm")) ? 'column' : 'row'} spacing={2}>
             <TextField
               id="first"
               label="First name"

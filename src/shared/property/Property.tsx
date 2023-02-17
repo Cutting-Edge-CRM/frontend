@@ -5,12 +5,16 @@ import {
   Card,
   CardHeader,
   CircularProgress,
+  Stack,
+  Typography,
+  useMediaQuery,
 } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import mapboxgl from 'mapbox-gl';
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 import { getProperty } from '../../api/property.api';
 import EmptyState from '../EmptyState';
+import { theme } from '../../theme/theme';
 
 mapboxgl.accessToken =
   'pk.eyJ1IjoiY3V0dGluZ2VkZ2Vjcm0iLCJhIjoiY2xjaHk1cWZrMmYzcDN3cDQ5bGRzYTY1bCJ9.0B4ntLJoCZzxQ0SUxqaQxg';
@@ -27,24 +31,50 @@ function Property(props: any) {
 
   const columns: GridColDef[] = [
     {
+      field: 'mobile',
+      headerName: '',
+      flex: 1,
+      hide: !useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {  
+        return (
+          <Stack>
+            <Typography whiteSpace={'pre-wrap'} fontWeight={'500'}>{params.row.address}</Typography>
+            <Typography whiteSpace={'pre-wrap'} color={'neutral.light'} >{params.row.city}</Typography>
+          </Stack>
+        );
+      }
+    },
+    {
       field: 'address',
       headerName: 'Address',
-      width: 150,
+      headerClassName: 'MuiDataGrid-columnHeader',
+      width: 200,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+      sortable: false,
     },
     {
       field: 'city',
       headerName: 'City',
-      width: 150,
+      headerClassName: 'MuiDataGrid-columnHeader',
+      width: 170,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+      sortable: false,
     },
     {
       field: 'state',
       headerName: 'State',
-      width: 150,
+      headerClassName: 'MuiDataGrid-columnHeader',
+      width: 170,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+      sortable: false,
     },
     {
       field: 'zip',
       headerName: 'Postal',
-      width: 150,
+      headerClassName: 'MuiDataGrid-columnHeader',
+      width: 170,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+      sortable: false,
     },
   ];
 

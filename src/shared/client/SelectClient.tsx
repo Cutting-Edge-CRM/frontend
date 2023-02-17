@@ -1,4 +1,4 @@
-import { AddCircleOutlineOutlined } from '@mui/icons-material';
+import { AddCircleOutlineOutlined, Close } from '@mui/icons-material';
 import {
   Alert,
   Box,
@@ -8,8 +8,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   LinearProgress,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import {
   DataGrid,
@@ -22,6 +24,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { listClients } from '../../api/client.api';
 import { createInvoice, updateInvoice } from '../../api/invoice.api';
+import { theme } from '../../theme/theme';
 import CustomPagination from '../CustomPagination';
 import EmptyState from '../EmptyState';
 import NewClient from './NewClient';
@@ -135,27 +138,37 @@ export default function SelectClient(props: any) {
         sx={{ display: 'flex', justifyContent: 'space-between' }}
       >
         <GridToolbarQuickFilter variant="outlined" size="small" />
+        {!useMediaQuery(theme.breakpoints.down("sm")) ?
         <Button
-          onClick={handleNewClientOpen}
-          startIcon={<AddCircleOutlineOutlined />}
-          variant="contained"
-        >
-          Create New Client
-        </Button>
+        onClick={handleNewClientOpen}
+        startIcon={<AddCircleOutlineOutlined />}
+        variant="contained"
+      >
+        Create New Client
+      </Button>
+      :
+      <IconButton onClick={handleNewClientOpen}>
+        <AddCircleOutlineOutlined color='primary' fontSize='large' />
+      </IconButton>
+      }
       </GridToolbarContainer>
     );
   }
 
 
   return (
-    <Dialog onClose={handleCancel} open={props.open} fullWidth>
+    <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))} onClose={handleCancel} open={props.open} fullWidth>
+      <IconButton sx={{ justifyContent: 'start' }} onClick={handleCancel} disableRipple>
+        <Close fontSize='large'/>
+      </IconButton>
       <DialogTitle align="center">
         Select client for Invoice
       </DialogTitle>
       <DialogContent>
         {loading && <LinearProgress />}
-        <Box sx={{ height: 400, width: '100%', mt: 2, '& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'} }}>
+        <Box sx={{ width: '100%', mt: 2, '& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'} }}>
             <DataGrid
+                autoHeight
                 rows={clientRows}
                 columns={clientColumns}
                 pageSize={10}

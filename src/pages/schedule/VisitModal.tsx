@@ -18,7 +18,7 @@ import {
     Typography,
     TypographyProps,
   } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
   import * as React from 'react';
   import { useEffect, useState } from 'react';
@@ -27,7 +27,6 @@ import { getJob } from '../../api/job.api';
   import { listProperties } from '../../api/property.api';
 import EmptyState from '../../shared/EmptyState';
 import { getChipColor } from '../../theme/theme';
-import { propertyColumns } from '../../util/columns';
 
   function add(accumulator: number, a: number) {
       return +accumulator + +a;
@@ -89,6 +88,37 @@ import { propertyColumns } from '../../util/columns';
           }
         );
       }, [props.visit]);
+
+      const propertyColumns: GridColDef[] = [
+        {
+          field: 'address',
+          headerName: 'Address',
+          headerClassName: 'MuiDataGrid-columnHeader',
+          width: 200,
+          sortable: false,
+        },
+        {
+          field: 'city',
+          headerName: 'City',
+          headerClassName: 'MuiDataGrid-columnHeader',
+          width: 170,
+          sortable: false,
+        },
+        {
+          field: 'state',
+          headerName: 'State',
+          headerClassName: 'MuiDataGrid-columnHeader',
+          width: 170,
+          sortable: false,
+        },
+        {
+          field: 'zip',
+          headerName: 'Postal',
+          headerClassName: 'MuiDataGrid-columnHeader',
+          width: 170,
+          sortable: false,
+        },
+      ];
   
     return (
       <Dialog onClose={handleCancel} open={props.open}>

@@ -1,6 +1,7 @@
 import { AddressAutofill } from '@mapbox/search-js-react';
 import {
   AddCircleOutlineOutlined,
+  Close,
   DeleteOutline,
   EmailOutlined,
   PersonOutline,
@@ -22,6 +23,7 @@ import {
   StepLabel,
   Stepper,
   TextField,
+  useMediaQuery,
 } from '@mui/material';
 import mapboxgl from 'mapbox-gl';
 import * as React from 'react';
@@ -29,6 +31,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createClient } from '../../api/client.api';
 import { createProperty } from '../../api/property.api';
+import { theme } from '../../theme/theme';
 import { emailValid } from '../../util/tools';
 
 mapboxgl.accessToken =
@@ -238,7 +241,10 @@ export default function NewClient(props: any) {
     });
 
   return (
-    <Dialog onClose={handleCancel} open={props.open}>
+    <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))} onClose={handleCancel} open={props.open}>
+      <IconButton sx={{ justifyContent: 'start' }} onClick={handleCancel} disableRipple>
+        <Close fontSize='large'/>
+      </IconButton>
       <DialogTitle align="center">Create new client</DialogTitle>
       <DialogContent>
         {loading && <LinearProgress />}

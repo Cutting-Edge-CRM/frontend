@@ -8,11 +8,13 @@ import {
   LinearProgress,
   Stack,
   TextField,
+  useMediaQuery,
 } from '@mui/material';
 import * as React from 'react';
 import { AddressAutofill } from '@mapbox/search-js-react';
 import { createProperty, updateProperty } from '../../api/property.api';
 import { useState } from 'react';
+import { theme } from '../../theme/theme';
 
 export default function EditProperty(props: any) {
   const [error, setError] = useState(null);
@@ -62,7 +64,7 @@ export default function EditProperty(props: any) {
   };
 
   return (
-    <Dialog onClose={handleCancel} open={props.open}>
+    <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))}  onClose={handleCancel} open={props.open}>
       <DialogTitle align="center">
         {props.modalType === 'edit' ? 'Edit Property' : 'Create New Property'}
       </DialogTitle>

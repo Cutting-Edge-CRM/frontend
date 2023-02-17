@@ -12,8 +12,10 @@ import {
   Menu,
   MenuItem,
   MenuList,
+  Stack,
   styled,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import {
   AddCircleOutlineOutlined,
@@ -29,6 +31,7 @@ import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 import EmptyState from '../EmptyState';
 import ConfirmDelete from '../ConfirmDelete';
 import { currentUserClaims } from '../../auth/firebase';
+import { theme } from '../../theme/theme';
 
 const geocodingClient = mbxGeocoding({ accessToken: mapboxgl.accessToken });
 
@@ -115,10 +118,25 @@ function Properties(props: any) {
 
   const columns: GridColDef[] = [
     {
+      field: 'mobile',
+      headerName: '',
+      flex: 1,
+      hide: !useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {  
+        return (
+          <Stack>
+            <Typography whiteSpace={'pre-wrap'} fontWeight={'500'}>{params.row.address}</Typography>
+            <Typography whiteSpace={'pre-wrap'} color={'neutral.light'} >{params.row.city}</Typography>
+          </Stack>
+        );
+      }
+    },
+    {
       field: 'address',
       headerName: 'Address',
       headerClassName: 'MuiDataGrid-columnHeader',
       width: 200,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
       sortable: false,
     },
     {
@@ -126,6 +144,7 @@ function Properties(props: any) {
       headerName: 'City',
       headerClassName: 'MuiDataGrid-columnHeader',
       width: 170,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
       sortable: false,
     },
     {
@@ -133,6 +152,7 @@ function Properties(props: any) {
       headerName: 'State',
       headerClassName: 'MuiDataGrid-columnHeader',
       width: 170,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
       sortable: false,
     },
     {
@@ -140,6 +160,7 @@ function Properties(props: any) {
       headerName: 'Postal',
       headerClassName: 'MuiDataGrid-columnHeader',
       width: 170,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
       sortable: false,
     },
   ];
@@ -279,7 +300,9 @@ function Properties(props: any) {
       </CardHeader>
       <Box>
         {mapError && (
-          <EmptyState type="map" />
+          <Box height="290px">
+            <EmptyState type="map" />
+          </Box>
         )}
         {!mapError && (
           <div

@@ -174,6 +174,7 @@ function Shell() {
                 component={Link}
                 to={topTabs[index].slug}
                 selected={location.pathname.includes(topTabs[index].slug)}
+                onClick={handleDrawerToggle}
               >
                 <ListItemIcon>{tab.icon}</ListItemIcon>
                 <ListItemText
@@ -194,6 +195,7 @@ function Shell() {
                 component={Link}
                 to={bottomTabs[index].slug}
                 selected={location.pathname.includes(bottomTabs[index].slug)}
+                onClick={handleDrawerToggle}
               >
                 <ListItemIcon>{tab.icon}</ListItemIcon>
                 <ListItemText
@@ -367,11 +369,15 @@ function Shell() {
       </Box>
       <Box
         component="main"
-        sx={{
+        sx={(theme) => ({
           flexGrow: 1,
           p: 3,
-          width: { lg: `calc(100% - ${drawerWidth}px)` },
-        }}
+          [theme.breakpoints.down("sm")]: {
+            p: 0,
+          },
+          width: { lg: `calc(100% - ${drawerWidth}px)` }
+        })}
+        
       >
         <Toolbar>
           {subscription.canceled && <Alert icon={<Info fontSize="inherit" sx={{color: 'blue.dark'}}/>} sx={{mt: 4, mb: 2, width: '100%', backgroundColor: 'blue.main'}}>You have cancelled your subscription. You will still have access to your plan for X days.</Alert>}

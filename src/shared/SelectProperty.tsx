@@ -1,4 +1,4 @@
-import { AddCircleOutlineOutlined } from '@mui/icons-material';
+import { AddCircleOutlineOutlined, Close } from '@mui/icons-material';
 import {
   Alert,
   Box,
@@ -8,8 +8,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   LinearProgress,
   Stack,
+  useMediaQuery,
 } from '@mui/material';
 import {
   DataGrid,
@@ -23,6 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import { createJob, updateJob } from '../api/job.api';
 import { listProperties } from '../api/property.api';
 import { createQuote, updateQuote } from '../api/quote.api';
+import { theme } from '../theme/theme';
 import CustomPagination from './CustomPagination';
 import EmptyState from './EmptyState';
 import EditProperty from './property/EditProperty';
@@ -176,20 +179,29 @@ export default function SelectProperty(props: any) {
             size="small"
             sx={{ pb: 0 }}
           />
-          <Button
+          {!useMediaQuery(theme.breakpoints.down("sm")) ?
+            <Button
             onClick={handleNewPropertyOpen}
             startIcon={<AddCircleOutlineOutlined />}
             variant="contained"
-          >
+            >
             Create New Property
-          </Button>
+            </Button>
+            :
+            <IconButton onClick={handleNewPropertyOpen}>
+              <AddCircleOutlineOutlined color='primary' fontSize='large' />
+            </IconButton>
+        }
         </Stack>
       </GridToolbarContainer>
     );
   }
 
   return (
-    <Dialog onClose={handleCancel} open={props.open} fullWidth>
+    <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))} onClose={handleCancel} open={props.open} fullWidth>
+      <IconButton sx={{ justifyContent: 'start' }} onClick={handleCancel} disableRipple>
+        <Close fontSize='large'/>
+      </IconButton>
       <DialogTitle align="center">
         Select property for {props.type.slice(0, -1)}
       </DialogTitle>
@@ -198,7 +210,7 @@ export default function SelectProperty(props: any) {
         <Box sx={{ width: '100%' }}>
           {!propertyIsLoaded && <Box textAlign='center'><CircularProgress /></Box>}
           {propertyIsLoaded && (
-            <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'}}}>
+            <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'}, '& .MuiDataGrid-footerContainer': {display: 'none'}}}>
             <DataGrid
               autoHeight
               rows={propertyRows}

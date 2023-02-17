@@ -29,6 +29,7 @@ import {
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -40,7 +41,7 @@ import ConfirmDelete from '../../shared/ConfirmDelete';
 import Duplicate from '../../shared/Duplicate';
 import EmptyState from '../../shared/EmptyState';
 import RichText from '../../shared/richtext/RichText';
-import { getChipColor } from '../../theme/theme';
+import { getChipColor, theme } from '../../theme/theme';
 
 function add(accumulator: number, a: number) {
   return +accumulator + +a;
@@ -48,7 +49,7 @@ function add(accumulator: number, a: number) {
 
 function JobItemSaved(props: any) {
   return (
-    <Box sx={{ px: 4 }}>
+    <Box sx={{ px: useMediaQuery(theme.breakpoints.down("sm")) ? 0 : 4 }}>
       <Grid container spacing={2} marginTop={2}>
         <Grid item={true} xs={4}>
           <Stack spacing={1.5}>
@@ -191,6 +192,7 @@ function JobDetails(props: any) {
   const [duplicateOpen, setDuplicateOpen] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  let mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -316,7 +318,7 @@ function JobDetails(props: any) {
           </Typography>
           {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
           <Stack direction={'row'} spacing={2}>
-          {props.job.job.status === 'Active' &&
+          {props.job.job.status === 'Active' && !mobile &&
           <Button
           variant="contained"
           color="primary"
@@ -325,7 +327,7 @@ function JobDetails(props: any) {
             Mark as Complete
           </Button>
           }
-          {!props.job.job.invoice &&
+          {!props.job.job.invoice && !mobile &&
           <Button
           variant="contained"
           color="primary"
@@ -333,6 +335,9 @@ function JobDetails(props: any) {
           >
             Generate Invoice
           </Button>
+          }
+          {mobile &&
+            <Chip label={props.job.job.status}  sx={{backgroundColor: `${getChipColor(props.job.job.status as string)}.main`, color: `${getChipColor(props.job.job.status as string)}.dark`}}  />
           }
           <IconButton onClick={openMenu} color="primary">
             <MoreVert />
@@ -429,6 +434,7 @@ function JobDetails(props: any) {
               <Typography textAlign="center">-</Typography>
             )}
           </Stack>
+          {!mobile &&
           <Stack spacing={1}>
             <Typography
               textAlign="center"
@@ -440,6 +446,7 @@ function JobDetails(props: any) {
             </Typography>
             <Chip label={props.job.job.status}  sx={{backgroundColor: `${getChipColor(props.job.job.status as string)}.main`, color: `${getChipColor(props.job.job.status as string)}.dark`}}  />
           </Stack>
+          }
         </Stack>
       </Card>
       <Card sx={{ py: 3 }}>
@@ -496,9 +503,9 @@ function JobDetails(props: any) {
           </>
         )}
         <Grid container justifyContent="flex-end" mt={2.5}>
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <Grid container>
-              <Grid item xs={5}>
+              <Grid item xs={5} marginRight={3}>
                 <Typography variant="h6" color="primary" fontWeight={700}>
                   Subtotal
                 </Typography>

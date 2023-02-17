@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Unstable_Grid2'
-import { Stack } from '@mui/system';
 import Contact from '../../shared/client/Contact';
 import Notes from '../../shared/note/Notes';
 import QuoteDetails from './QuoteDetails';
@@ -65,22 +64,34 @@ function Quote(props: any) {
         }
 
     return (
+        <>
         <Grid container spacing={2}>
-            <Grid xs={8}>
-                <Stack spacing={2}>
-                    <QuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload}  settings={props.settings}/>
-                    <Property property={quote.quote?.property} success={props.success}/>
-                </Stack>
+          <Grid xs={12} md={8} spacing={2}>
+          <Grid container>
+              <Grid xs={12}>
+                <QuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload}  settings={props.settings}/>
+              </Grid>
+              <Grid xs={12}>
+                <Property property={quote.quote?.property} success={props.success}/>
+              </Grid>
             </Grid>
-            <Grid xs={4}>
-                <Stack spacing={2}>
-                    <Contact client={quote.quote?.client} success={props.success}/>
-                    <Timeline client={quote.quote?.client} resourceType='quote' resourceId={quote.quote?.id} />
-                    <Notes client={quote.quote?.client} success={props.success}/>
-                </Stack>
+          </Grid>
+          <Grid xs={12} md={4} spacing={2}>
+          <Grid container>
+              <Grid xs={12}>
+                <Contact client={quote.quote?.client} success={props.success}/>
+              </Grid>
+            <Grid xs={12} sm={6} md={12}>
+                <Notes client={quote.quote?.client} success={props.success}/>
             </Grid>
+            <Grid xs={12} sm={6} md={12}>
+                <Timeline client={quote.quote?.client} resourceType='quote' resourceId={quote.quote?.id} />
+            </Grid>
+            </Grid>
+          </Grid>
         </Grid>
-    )
+      </>
+      );
 }
 
 export default Quote;

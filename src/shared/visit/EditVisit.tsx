@@ -20,6 +20,7 @@ import {
   TextField,
   Tooltip,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
@@ -27,6 +28,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { listProperties } from '../../api/property.api';
 import { createVisit, updateVisit } from '../../api/visit.api';
+import { theme } from '../../theme/theme';
 import TimePicker from './TimePicker';
 
 
@@ -166,7 +168,7 @@ export default function EditVisit(props: any) {
   }, [props.client]);
 
   return (
-    <Dialog onClose={handleCancel} open={props.open}>
+    <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))}  onClose={handleCancel} open={props.open}>
       <DialogTitle align="center">
         {props.type === 'edit' ? 'Edit Visit' : 'Create New Visit'}
       </DialogTitle>

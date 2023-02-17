@@ -35,6 +35,7 @@ import {
   TextField,
   Tooltip,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
@@ -47,7 +48,7 @@ import EmptyState from '../../shared/EmptyState';
 import PaymentModal from '../../shared/PaymentModal';
 import RichText from '../../shared/richtext/RichText';
 import SendInvoiceModal from '../../shared/SendInvoiceModal';
-import { getChipColor } from '../../theme/theme';
+import { getChipColor, theme } from '../../theme/theme';
 
 function add(accumulator: number, a: number) {
   return +accumulator + +a;
@@ -55,7 +56,7 @@ function add(accumulator: number, a: number) {
 
 function InvoiceItemSaved(props: any) {
   return (
-    <Box sx={{ px: 4 }}>
+    <Box sx={{ px: useMediaQuery(theme.breakpoints.down("sm")) ? 0 : 4 }}>
       <Grid container spacing={2} marginTop={2}>
         <Grid item={true} xs={4}>
           <Stack spacing={1.5}>
@@ -200,6 +201,7 @@ function InvoiceDetails(props: any) {
   const [type, setType] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  let mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -318,6 +320,12 @@ function InvoiceDetails(props: any) {
   };
 
   function getActionButtons(props: any) {
+
+    if (mobile) {
+      return (
+        <Chip label={props.invoice.invoice.status}  sx={{backgroundColor: `${getChipColor(props.invoice.invoice.status as string)}.main`, color: `${getChipColor(props.invoice.invoice.status as string)}.dark`}}  />
+        )
+    }
 
     if (props.invoice.invoice.status === 'Draft') {
       return (
@@ -492,6 +500,7 @@ function InvoiceDetails(props: any) {
               </Typography>
             )}
           </Stack>
+          {!mobile &&          
           <Stack spacing={1}>
             <Typography
               textAlign="center"
@@ -503,6 +512,7 @@ function InvoiceDetails(props: any) {
             </Typography>
             <Chip label={props.invoice.invoice.status}  sx={{backgroundColor: `${getChipColor(props.invoice.invoice.status as string)}.main`, color: `${getChipColor(props.invoice.invoice.status as string)}.dark`}}  />
           </Stack>
+          }
         </Stack>
       </Card>
       <Card sx={{ py: 3 }}>
@@ -562,7 +572,7 @@ function InvoiceDetails(props: any) {
         )}
         <Stack mt={2.5} spacing={2}>
           <Grid container justifyContent="flex-end">
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <Grid container>
                 <Grid item xs={5}>
                   <Typography variant="body2" color="primary" fontWeight={600}>
@@ -585,7 +595,7 @@ function InvoiceDetails(props: any) {
             </Grid>
           </Grid>
           <Grid container justifyContent="flex-end">
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <Grid container alignItems="center">
                 <Grid item xs={5}>
                   <Typography
@@ -644,12 +654,12 @@ function InvoiceDetails(props: any) {
             </Grid>
           </Grid>
           <Grid container justifyContent="flex-end">
-              <Grid item xs={5}>
+              <Grid item xs={6}>
                 <Divider sx={{ width: '100%' }} />
               </Grid>
             </Grid>
           <Grid container justifyContent="flex-end">
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <Grid container>
                 <Grid item xs={5}>
                   <Typography variant="h6" color="primary" fontWeight={700}>
@@ -670,7 +680,7 @@ function InvoiceDetails(props: any) {
             </Grid>
           </Grid>
           <Grid container justifyContent="flex-end">
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <Grid container>
                 <Grid item xs={5}>
                   <Typography variant="body2" color="neutral.light" fontWeight={600}>
@@ -704,7 +714,7 @@ function InvoiceDetails(props: any) {
                       
                     >
                         <Grid container justifyContent="flex-end">
-                        <Grid item xs={4}>
+                        <Grid item xs={12}>
                           <Grid container alignItems="center">
                             <Grid item xs={8}>
                               <Typography

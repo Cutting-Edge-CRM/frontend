@@ -1,9 +1,12 @@
-import { Box } from '@mui/material';
+import { Box, Chip, Grid, IconButton, Stack, Typography, useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Table from '../../shared/Table';
 import ImportClients from '../../shared/client/ImportClients';
-import { clientColumns } from '../../util/columns';
 import { exportClients, listClients } from '../../api/client.api';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { getChipColor, theme } from '../../theme/theme';
+import dayjs from 'dayjs';
+import { ArrowCircleRightOutlined } from '@mui/icons-material';
 
 
 function Clients(props: any) {
@@ -60,9 +63,80 @@ function Clients(props: any) {
     })
   }, [page, pageSize, query]);
 
+ const clientColumns: GridColDef[] = [
+    { 
+        field: 'name',
+        headerName: 'Name',
+        flex: 1,
+        hide: useMediaQuery(theme.breakpoints.down("sm"))
+    },
+    {
+      field: 'address',
+      headerName: 'Address',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm"))
+    },
+    {
+      field: 'contact',
+      headerName: 'Contact',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm"))
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {    
+        return (
+          <Chip label={params.value} sx={{backgroundColor: `${getChipColor(params.value as string)}.main`, color: `${getChipColor(params.value as string)}.dark`}} />
+        );
+      }
+    },
+    {
+      field: 'created',
+      headerName: 'Created',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {    
+        return (
+          <Typography>{dayjs(params.value).format('MM/DD/YYYY')}</Typography>
+        );
+      }
+    },
+    {
+      field: 'mobile',
+      headerName: '',
+      flex: 1,
+      hide: !useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {  
+        return (
+          <Grid container >
+            <Grid item xs={7} >
+            <Stack>
+              <Typography whiteSpace={'pre-wrap'} fontWeight={'500'}>{params.row.name}</Typography>
+              <Typography whiteSpace={'pre-wrap'} color={'neutral.light'} >{params.row.contact}</Typography>
+            </Stack>
+            </Grid>
+            <Grid item xs={3} alignItems="center" display={'flex'}>
+              <Chip label={params.row.status} sx={{backgroundColor: `${getChipColor(params.row.status as string)}.main`, color: `${getChipColor(params.row.status as string)}.dark`}} />
+            </Grid>
+            <Grid item xs={2} justifyContent="right" display={'flex'}>
+              <IconButton sx={{padding: 0}} >
+                <ArrowCircleRightOutlined color='primary'/>
+              </IconButton>
+            </Grid>
+          </Grid>
+        );
+      }
+    },
+
+  ];
+
     return (
         <Box>
           <Table 
+          mobile={useMediaQuery(theme.breakpoints.down("sm"))}
           rows={rows} 
           columns={clientColumns} 
           onImportClick={handleClickOpen} 

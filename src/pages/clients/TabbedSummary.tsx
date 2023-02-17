@@ -1,10 +1,13 @@
-import { Box, Card, CardHeader, Tab, Tabs } from '@mui/material';
+import { Box, Card, CardHeader, Chip, Grid, IconButton, Stack, Tab, Tabs, Typography, useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { quoteColumns, jobColumns, invoiceColumns } from '../../util/columns';
 import { listQuotes } from '../../api/quote.api';
 import { listJobs } from '../../api/job.api';
 import { listInvoices } from '../../api/invoice.api';
 import TabbedTable from './TabbedTable';
+import dayjs from 'dayjs';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { getChipColor, theme } from '../../theme/theme';
+import { ArrowCircleRightOutlined } from '@mui/icons-material';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -38,6 +41,8 @@ function TabbedSummary(props: any) {
   const [invoiceRows, setInvoiceRows] = useState([]);
   const [invoicesAreLoading, setInvoicesAreLoading] = useState(true);
   const [invoicesError, setInvoicesError] = useState(null);
+
+  let mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     listQuotes(props.client).then(
@@ -76,6 +81,214 @@ function TabbedSummary(props: any) {
     setValue(newValue);
   };
 
+  const quoteColumns: GridColDef[] = [
+    { 
+      field: 'clientName',
+      headerName: 'Client',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+    },
+    {
+      field: 'address',
+      headerName: 'Address',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+    },
+    {
+      field: 'price',
+      headerName: 'Price',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {    
+        return (
+          <Chip label={params.value} color="success" sx={{backgroundColor: `${getChipColor(params.value as string)}.main`, color: `${getChipColor(params.value as string)}.dark`}} />
+        );
+      }
+    },
+    {
+      field: 'created',
+      headerName: 'Created',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {    
+        return (
+          <Typography>{dayjs(params.value).format('MM/DD/YYYY')}</Typography>
+        );
+      }
+    },
+    {
+      field: 'mobile',
+      headerName: '',
+      flex: 1,
+      hide: !useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {  
+        return (
+          <Grid container >
+            <Grid item xs={7} >
+            <Stack>
+              <Typography whiteSpace={'pre-wrap'} fontWeight={'500'}>{params.row.clientName}</Typography>
+              <Typography color={'neutral.light'} >{params.row.address}</Typography>
+            </Stack>
+            </Grid>
+            <Grid item xs={3} alignItems="center" display={'flex'}>
+              <Chip label={params.row.status} sx={{backgroundColor: `${getChipColor(params.row.status as string)}.main`, color: `${getChipColor(params.row.status as string)}.dark`}} />
+            </Grid>
+            <Grid item xs={2} justifyContent="right" display={'flex'}>
+              <IconButton sx={{padding: 0}} >
+                <ArrowCircleRightOutlined color='primary'/>
+              </IconButton>
+            </Grid>
+          </Grid>
+        );
+      }
+    },
+  ];
+
+  const jobColumns: GridColDef[] = [
+    { 
+      field: 'clientName',
+      headerName: 'Client',
+      flex: 1 ,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+    },
+    {
+      field: 'address',
+      headerName: 'Address',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+    },
+    {
+      field: 'price',
+      headerName: 'Price',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {    
+        return (
+          <Chip label={params.value} color="success" sx={{backgroundColor: `${getChipColor(params.value as string)}.main`, color: `${getChipColor(params.value as string)}.dark`}} />
+        );
+      }
+    },
+    {
+      field: 'created',
+      headerName: 'Created',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {    
+        return (
+          <Typography>{dayjs(params.value).format('MM/DD/YYYY')}</Typography>
+        );
+      }
+    },
+    {
+      field: 'mobile',
+      headerName: '',
+      flex: 1,
+      hide: !useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {  
+        return (
+          <Grid container >
+            <Grid item xs={7} >
+            <Stack>
+              <Typography whiteSpace={'pre-wrap'} fontWeight={'500'}>{params.row.clientName}</Typography>
+              <Typography whiteSpace={'pre-wrap'} color={'neutral.light'} >{params.row.address}</Typography>
+            </Stack>
+            </Grid>
+            <Grid item xs={3} alignItems="center" display={'flex'}>
+              <Chip label={params.row.status} sx={{backgroundColor: `${getChipColor(params.row.status as string)}.main`, color: `${getChipColor(params.row.status as string)}.dark`}} />
+            </Grid>
+            <Grid item xs={2} justifyContent="right" display={'flex'}>
+              <IconButton sx={{padding: 0}} >
+                <ArrowCircleRightOutlined color='primary'/>
+              </IconButton>
+            </Grid>
+          </Grid>
+        );
+      }
+    },
+  ];
+
+  const invoiceColumns: GridColDef[] = [
+    { 
+        field: 'clientName',
+        headerName: 'Client',
+        flex: 1 ,
+        hide: useMediaQuery(theme.breakpoints.down("sm")),
+      },
+    {
+      field: 'price',
+      headerName: 'Price',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+    },
+    {
+      field: 'balance',
+      headerName: 'Balance',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {    
+        return (
+          <Chip label={params.value} color="success" sx={{backgroundColor: `${getChipColor(params.value as string)}.main`, color: `${getChipColor(params.value as string)}.dark`}} />
+        );
+      }
+    },
+    {
+      field: 'created',
+      headerName: 'Created',
+      flex: 1,
+      hide: useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {    
+        return (
+          <Typography>{dayjs(params.value).format('MM/DD/YYYY')}</Typography>
+        );
+      }
+    },
+    {
+      field: 'mobile',
+      headerName: '',
+      flex: 1,
+      hide: !useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {  
+        return (
+          <Grid container >
+            <Grid item xs={7} >
+            <Stack>
+              <Typography whiteSpace={'pre-wrap'} fontWeight={'500'}>{params.row.clientName}</Typography>
+              <Typography whiteSpace={'pre-wrap'} color={'neutral.light'} >{params.row.price}</Typography>
+            </Stack>
+            </Grid>
+            <Grid item xs={3} alignItems="center" display={'flex'}>
+              <Chip label={params.row.status} sx={{backgroundColor: `${getChipColor(params.row.status as string)}.main`, color: `${getChipColor(params.row.status as string)}.dark`}} />
+            </Grid>
+            <Grid item xs={2} justifyContent="right" display={'flex'}>
+              <IconButton sx={{padding: 0}} >
+                <ArrowCircleRightOutlined color='primary'/>
+              </IconButton>
+            </Grid>
+          </Grid>
+        );
+      }
+    },
+  ];
+  
+
   return (
     <Card>
       <CardHeader title="Overview" />
@@ -88,6 +301,7 @@ function TabbedSummary(props: any) {
       </Box>
       <TabPanel value={value} index={0}>
         <TabbedTable
+          mobile={mobile}
           rows={quoteRows}
           columns={quoteColumns}
           type="Quotes"
@@ -100,6 +314,7 @@ function TabbedSummary(props: any) {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <TabbedTable
+          mobile={mobile}
           rows={jobRows}
           columns={jobColumns}
           type="Jobs"
@@ -112,6 +327,7 @@ function TabbedSummary(props: any) {
       </TabPanel>
       <TabPanel value={value} index={2}>
         <TabbedTable
+          mobile={mobile}
           rows={invoiceRows}
           columns={invoiceColumns}
           type="Invoices"

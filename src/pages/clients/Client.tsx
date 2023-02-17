@@ -6,9 +6,10 @@ import Contact from '../../shared/client/Contact';
 import Visits from '../../shared/visit/Visits';
 import Notes from '../../shared/note/Notes';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Button } from '@mui/material';
+import { Button, useMediaQuery } from '@mui/material';
 import ConfirmDelete from '../../shared/ConfirmDelete';
 import Timeline from '../../shared/timeline/Timeline';
+import { theme } from '../../theme/theme';
 
 function Client(props: any) {
   let { id } = useParams();
@@ -33,6 +34,11 @@ function Client(props: any) {
     <Grid container spacing={2}>
       <Grid xs={12} md={8} spacing={2}>
       <Grid container>
+          {useMediaQuery(theme.breakpoints.down("sm")) &&
+            <Grid xs={12}>
+            <Contact client={id} success={props.success} />
+            </Grid>
+          }
           <Grid xs={12}>
             <Properties type="client" client={id} success={props.success} />
           </Grid>
@@ -43,17 +49,19 @@ function Client(props: any) {
       </Grid>
       <Grid xs={12} md={4} spacing={2}>
       <Grid container>
-        <Grid xs={12}>
+        {!useMediaQuery(theme.breakpoints.down("sm")) &&
+          <Grid xs={12}>
           <Contact client={id} success={props.success} />
-        </Grid>
+          </Grid>
+        }
         <Grid xs={12}>
           <Visits client={id} success={props.success} subscription={props.subscription} />
         </Grid>
         <Grid xs={12} sm={6} md={12}>
-          <Timeline client={id}/>
+          <Notes client={id} success={props.success} />
         </Grid>
         <Grid xs={12} sm={6} md={12}>
-          <Notes client={id} success={props.success} />
+          <Timeline client={id}/>
         </Grid>
         </Grid>
       </Grid>

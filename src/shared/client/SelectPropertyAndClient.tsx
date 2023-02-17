@@ -1,4 +1,4 @@
-import { AddCircleOutlineOutlined } from '@mui/icons-material';
+import { AddCircleOutlineOutlined, Close } from '@mui/icons-material';
 import {
   Alert,
   Box,
@@ -8,11 +8,13 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   LinearProgress,
   Step,
   StepLabel,
   Stepper,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import {
   DataGrid,
@@ -27,6 +29,7 @@ import { listClients } from '../../api/client.api';
 import { createJob, updateJob } from '../../api/job.api';
 import { listProperties } from '../../api/property.api';
 import { createQuote, updateQuote } from '../../api/quote.api';
+import { theme } from '../../theme/theme';
 import CustomPagination from '../CustomPagination';
 import EmptyState from '../EmptyState';
 import EditProperty from '../property/EditProperty';
@@ -290,7 +293,7 @@ export default function SelectPropertyAndClient(props: any) {
               />
             </Box>
           ) : (
-            <Box>
+            <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'}, '& .MuiDataGrid-footerContainer': {display: 'none'}}}>
               <DataGrid
                 autoHeight
                 rows={propertyRows}
@@ -327,13 +330,20 @@ export default function SelectPropertyAndClient(props: any) {
         sx={{ display: 'flex', justifyContent: 'space-between' }}
       >
         <GridToolbarQuickFilter variant="outlined" size="small" />
+        {!useMediaQuery(theme.breakpoints.down("sm")) ?
         <Button
-          onClick={handleNewClientOpen}
-          startIcon={<AddCircleOutlineOutlined />}
-          variant="contained"
-        >
-          Create New Client
-        </Button>
+        onClick={handleNewClientOpen}
+        startIcon={<AddCircleOutlineOutlined />}
+        variant="contained"
+      >
+        Create New Client
+      </Button>
+      :
+      <IconButton onClick={handleNewClientOpen}>
+        <AddCircleOutlineOutlined color='primary' fontSize='large' />
+      </IconButton>
+      }
+        
       </GridToolbarContainer>
     );
   }
@@ -344,19 +354,28 @@ export default function SelectPropertyAndClient(props: any) {
         sx={{ display: 'flex', justifyContent: 'space-between' }}
       >
         <GridToolbarQuickFilter variant="outlined" size="small" />
-        <Button
+        {!useMediaQuery(theme.breakpoints.down("sm")) ?
+          <Button
           onClick={handleNewPropertyOpen}
           startIcon={<AddCircleOutlineOutlined />}
           variant="contained"
         >
           Create New Property
         </Button>
+        :
+        <IconButton onClick={handleNewPropertyOpen}>
+          <AddCircleOutlineOutlined color='primary' fontSize='large' />
+        </IconButton>
+      }
       </GridToolbarContainer>
     );
   }
 
   return (
-    <Dialog onClose={handleCancel} open={props.open} fullWidth>
+    <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))} onClose={handleCancel} open={props.open} fullWidth>
+      <IconButton sx={{ justifyContent: 'start' }} onClick={handleCancel} disableRipple>
+        <Close fontSize='large'/>
+      </IconButton>
       <DialogTitle align="center">
         Select client for {props.type.slice(0, -1)}
       </DialogTitle>
