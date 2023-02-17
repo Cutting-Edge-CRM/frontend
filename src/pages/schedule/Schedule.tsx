@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction'
-import { Box, Card, Divider, Grid, List, Popover, Stack, Typography } from '@mui/material'
+import { Alert, Box, Card, Divider, Grid, List, Popover, Stack, Typography } from '@mui/material'
 import { ButtonTextCompoundInput, EventApi, ToolbarInput } from '@fullcalendar/core'
 import { listVisitsForCalendar, updateVisit } from '../../api/visit.api'
 import EmptyState from '../../shared/EmptyState'
@@ -449,6 +449,7 @@ export default function Schedule(props: any) {
         endTime={endTime}
         success={props.success}
       />
+      {error && <Alert severity="error">{error}</Alert>}
     </Card>
     )
 }

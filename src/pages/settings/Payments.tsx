@@ -138,7 +138,7 @@ function Payments(props: any) {
           }, (err: any) => {
             setError(err);
           })
-      }, [stripeLoaded]);
+      }, [stripeLoaded, setupStatus]);
 
     if (loading) return (<Box textAlign='center'><CircularProgress /></Box>);
 
