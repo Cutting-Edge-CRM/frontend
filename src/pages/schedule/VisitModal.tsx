@@ -17,6 +17,7 @@ import {
     Tabs,
     Typography,
     TypographyProps,
+    useMediaQuery,
   } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
@@ -26,7 +27,7 @@ import { getClient } from '../../api/client.api';
 import { getJob } from '../../api/job.api';
   import { listProperties } from '../../api/property.api';
 import EmptyState from '../../shared/EmptyState';
-import { getChipColor } from '../../theme/theme';
+import { getChipColor, theme } from '../../theme/theme';
 
   function add(accumulator: number, a: number) {
       return +accumulator + +a;
@@ -121,7 +122,7 @@ import { getChipColor } from '../../theme/theme';
       ];
   
     return (
-      <Dialog onClose={handleCancel} open={props.open}>
+      <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))} onClose={handleCancel} open={props.open}>
         <DialogTitle align="center">
           View {props.visit?.type}
         </DialogTitle>

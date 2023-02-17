@@ -213,13 +213,14 @@ function Shell() {
   return (
     // toolbar
 
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', backgroundColor: "#f4f5f7" }}>
       <AppBar
         position="fixed"
         sx={{
           width: { lg: `calc(100% - ${drawerWidth}px)` },
           ml: { lg: `${drawerWidth}px` },
           boxShadow: 'none',
+          backgroundColor: "#f4f5f7"
         }}
         color="inherit"
       >
@@ -237,6 +238,7 @@ function Shell() {
           <TextField
             size="small"
             placeholder="Search"
+            sx={{backgroundColor: "white", borderRadius: '20px'}}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -322,6 +324,14 @@ function Shell() {
             </Stack>
           </Stack>
         </Toolbar>
+        <Divider sx={{
+          '&.MuiDivider-root': {
+            border: `2px solid white`,
+          },
+          }}
+          variant="middle"
+          >
+          </Divider>
       </AppBar>
 
       {/* sidebar */}

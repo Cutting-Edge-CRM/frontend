@@ -3,9 +3,10 @@ import { auth, logInWithEmailAndPassword } from '../../../auth/firebase';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { ErrorTypes } from '../../../util/errors';
-import { Card, CardContent, TextField, Button, Stack, Typography, InputAdornment, Grid, Alert } from '@mui/material';
+import { Card, CardContent, TextField, Button, Stack, Typography, InputAdornment, Grid, Alert, useMediaQuery } from '@mui/material';
 import { Email, Https } from '@mui/icons-material';
 import { emailValid } from '../../../util/tools';
+import { theme } from '../../../theme/theme';
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -49,7 +50,7 @@ function Login() {
 
   return (
     <Grid container justifyContent={'center'} height="100%" display={'flex'} alignItems="center" sx={{backgroundColor: "backgroundColor.dark"}}>
-      <Grid item xs={4}>
+      <Grid item xs={useMediaQuery(theme.breakpoints.down("sm")) ? 11 : 4}>
       <Card sx={{backgroundColor: "backgroundColor.light"}}>
         <CardContent>
           <Stack>
@@ -112,7 +113,7 @@ function Login() {
                 </Button>
                 <Stack alignItems={'center'} marginTop={2}>
                   <Button variant='contained' onClick={loginUser}>Login</Button>
-                  <Stack direction='row' marginTop={2} alignItems="center" spacing={-2}>
+                  <Stack direction={useMediaQuery(theme.breakpoints.down("sm")) ? 'column' : 'row'} marginTop={2} alignItems="center" spacing={-2}>
                     <Typography>Don't have an account yet?</Typography>
                     <Button onClick={handleSignUp}>Sign Up</Button>
                   </Stack>

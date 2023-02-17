@@ -9,4 +9,5 @@ html, body, #root {
 
 .App {
     height: 100%;
+    background-color: #f4f5f7;
   }

@@ -1,8 +1,9 @@
 import { Email, HttpsOutlined } from '@mui/icons-material';
-import { Alert, Button, Card, CardContent, Grid, InputAdornment, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Button, Card, CardContent, Grid, InputAdornment, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sendPasswordReset } from '../../../auth/firebase';
+import { theme } from '../../../theme/theme';
 import { emailValid } from '../../../util/tools';
 
 
@@ -28,7 +29,7 @@ function ForgotPassword() {
 
     return (
       <Grid container justifyContent={'center'} height="100%" display={'flex'} alignItems="center" sx={{backgroundColor: "backgroundColor.dark"}}>
-      <Grid item xs={4}>
+      <Grid item xs={useMediaQuery(theme.breakpoints.down("sm")) ? 11 : 4}>
       <Card sx={{backgroundColor: "backgroundColor.light"}}>
         <CardContent>
           <Stack>
@@ -54,7 +55,7 @@ function ForgotPassword() {
                 />
                 <Stack alignItems={'center'} marginTop={5}>
                   <Button variant='contained' onClick={resetPassword}>Reset</Button>
-                  <Stack direction='row' marginTop={2} alignItems="center" spacing={-2}>
+                  <Stack direction={useMediaQuery(theme.breakpoints.down("sm")) ? 'column' : 'row'} marginTop={2} alignItems="center" spacing={-2}>
                     <Typography>Already know your password?</Typography>
                     <Button onClick={handleLogIn}>Login</Button>
                   </Stack>

@@ -1,9 +1,10 @@
 import { Email, Https, Store } from '@mui/icons-material';
-import { Alert, Button, Card, CardContent, Grid, InputAdornment, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Button, Card, CardContent, Grid, InputAdornment, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerNewTenant } from '../../../api/tenant.api';
 import { registerNewTenantUser } from '../../../auth/firebase';
+import { theme } from '../../../theme/theme';
 import { emailValid } from '../../../util/tools';
 
 function Register() {
@@ -38,7 +39,7 @@ function Register() {
     
     return (
         <Grid container justifyContent={'center'} height="100%" display={'flex'} alignItems="center" sx={{backgroundColor: "backgroundColor.dark"}}>
-        <Grid item xs={4}>
+        <Grid item xs={useMediaQuery(theme.breakpoints.down("sm")) ? 11 : 4}>
         <Card sx={{backgroundColor: "backgroundColor.light"}}>
           <CardContent>
             <Stack>
@@ -96,7 +97,7 @@ function Register() {
                      onClick={register}
                      disabled={!emailValid(email) || company.length === 0 || (password.length < 8)}
                      >Sign Up</Button>
-                    <Stack direction='row' marginTop={2} alignItems="center" spacing={-2}>
+                    <Stack direction={useMediaQuery(theme.breakpoints.down("sm")) ? 'column' : 'row'} marginTop={2} alignItems="center" spacing={-2}>
                       <Typography>Already have an account?</Typography>
                       <Button onClick={handleLogIn}>Login</Button>
                     </Stack>
