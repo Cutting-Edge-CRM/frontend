@@ -169,7 +169,8 @@ function QuoteItemEdit(props: any) {
   return (
     <Card sx={{backgroundColor: '#F3F5F8', my: 3, py: 3, boxShadow: 'none'}}>
       <Grid container spacing={2}>
-        <Grid item={true} xs={4}>
+        <Grid item={true} xs={12} sm={4}>
+        <Stack>
           <InputLabel id="service-label" sx={{ color: 'primary.main' }}>
               Service
           </InputLabel>
@@ -187,8 +188,9 @@ function QuoteItemEdit(props: any) {
             onChange={handleChange}
             size="small"
           />
+          </Stack>
         </Grid>
-        <Grid item={true} xs={4}>
+        <Grid item={true} xs={12} sm={4} order={{ xs: 3, sm: 2 }}>
           {props.upsell && (
             <Stack alignItems="center">
               <InputLabel id="selected-label" sx={{ color: 'primary.main' }}>
@@ -202,7 +204,7 @@ function QuoteItemEdit(props: any) {
             </Stack>
           )}
         </Grid>
-        <Grid item={true} xs={4}>
+        <Grid item={true} xs={12} sm={4} order={{ xs: 2, sm: 3 }}>
           <Stack>
             <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
                 Price
@@ -368,6 +370,7 @@ function TabPanel(props: any) {
                   <Typography>Add Upsell</Typography>
                 </Button>
               </Stack>
+              <Divider/>
             </>
           )}
           {!props.editting && (
@@ -387,7 +390,7 @@ function TabPanel(props: any) {
           )}
           <Stack mt={2.5} spacing={2}>
             <Grid container justifyContent="flex-end">
-              <Grid item xs={6}>
+              <Grid item xs={8} sm={6}>
                 <Grid container>
                   <Grid item xs={5}>
                     <Typography
@@ -411,7 +414,7 @@ function TabPanel(props: any) {
               </Grid>
             </Grid>
             <Grid container justifyContent="flex-end">
-              <Grid item xs={6}>
+              <Grid item xs={8} sm={6}>
                 <Grid container alignItems="center">
                   <Grid item xs={5}>
                     <Typography
@@ -459,7 +462,7 @@ function TabPanel(props: any) {
               </Grid>
             </Grid>
             <Grid container justifyContent="flex-end">
-              <Grid item xs={6}>
+              <Grid item xs={8} sm={6}>
                 <Grid container alignItems="center">
                   <Grid item xs={5}>
                     <Typography
@@ -509,12 +512,12 @@ function TabPanel(props: any) {
               </Grid>
             </Grid>
             <Grid container justifyContent="flex-end">
-              <Grid item xs={6}>
+              <Grid item xs={8} sm={6}>
                 <Divider sx={{ width: '100%' }} />
               </Grid>
             </Grid>
             <Grid container justifyContent="flex-end">
-              <Grid item xs={6}>
+              <Grid item xs={8} sm={6}>
                 <Grid container>
                   <Grid item xs={5}>
                     <Typography variant="h6" color="primary" fontWeight={700}>
@@ -989,11 +992,11 @@ function QuoteDetails(props: any) {
       <Card sx={{ py: 3 }}>
         {loading && <LinearProgress />}
         <Stack
-          direction="row"
+          direction={mobile ? "column" : 'row'}
           alignItems="center"
           justifyContent="space-between"
         >
-          <Typography variant="h6" fontWeight={600}>
+          <Typography variant="h6" fontWeight={600} marginBottom={2}>
             Quote Details
           </Typography>
           {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&

@@ -116,7 +116,8 @@ function JobItemEdit(props: any) {
   return (
     <Card sx={{backgroundColor: '#F3F5F8', my: 3, py: 3, boxShadow: 'none'}}>
       <Grid container spacing={2} mt={1}>
-        <Grid item={true} xs={4}>
+        <Grid item={true} xs={12} sm={4}>
+          <Stack>
           <InputLabel id="service-label" sx={{ color: 'primary.main' }}>
             Service
           </InputLabel>
@@ -135,9 +136,10 @@ function JobItemEdit(props: any) {
             onChange={handleChange}
             size="small"
           />
+          </Stack>
         </Grid>
-        <Grid item={true} xs={4}></Grid>
-        <Grid item={true} xs={4}>
+        <Grid item={true} xs={12} sm={4}></Grid>
+        <Grid item={true} xs={12} sm={4}>
           <Stack>
             <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
               Price
@@ -452,11 +454,11 @@ function JobDetails(props: any) {
       <Card sx={{ py: 3 }}>
         {loading && <LinearProgress />}
         <Stack
-          direction="row"
+          direction={mobile ? "column" : 'row'}
           alignItems="center"
           justifyContent="space-between"
         >
-          <Typography variant="h6" fontWeight={600}>
+          <Typography variant="h6" fontWeight={600} marginBottom={2}>
             Job Details
           </Typography>
           {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
@@ -492,6 +494,7 @@ function JobDetails(props: any) {
                 <Typography>Add Item</Typography>
               </Button>
             </Stack>
+            <Divider/>
           </>
         )}
         {!editting && (
@@ -503,7 +506,7 @@ function JobDetails(props: any) {
           </>
         )}
         <Grid container justifyContent="flex-end" mt={2.5}>
-          <Grid item xs={6}>
+          <Grid item xs={8}  sm={6}>
             <Grid container>
               <Grid item xs={5} marginRight={3}>
                 <Typography variant="h6" color="primary" fontWeight={700}>
