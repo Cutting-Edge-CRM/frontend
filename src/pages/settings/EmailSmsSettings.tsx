@@ -1,8 +1,9 @@
-import { Accordion, AccordionDetails, AccordionSummary, Alert, Button, InputLabel, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Alert, Button, Grid, InputLabel, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { ExpandMore } from '@mui/icons-material';
 import { Stack } from '@mui/system';
 import { updateSettings } from '../../api/settings.api';
+import { AddressAutofill } from '@mapbox/search-js-react';
 
 
 function EmailSmsSettings(props: any) {
@@ -34,19 +35,27 @@ function EmailSmsSettings(props: any) {
             aria-controls="panel1a-content"
             id="panel1a-header"
             >
+            {/* for a very strange reason putting this making it style properly on mobile */}
+            <AddressAutofill accessToken=''>
+            <TextField sx={{display:'none'}} />
+            </AddressAutofill>
             <Typography
             color={'primary'}
             variant='h6'
             >Quote Email Template</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <Stack direction={'row'}>
-                    <Typography
-                    width="50%"
-                    variant="body2"
-                    color="neutral.dark"
-                    >Update how your email will look to clients when sending a quote via email.</Typography>
-                    <Stack spacing={2} width="50%">
+                <Grid container>
+                    <Grid item xs={12} sm={6} >
+                        <Typography
+                        width="100%"
+                        marginBottom={2}
+                        variant="body2"
+                        color="neutral.dark"
+                        >Update how your email will look to clients when sending a quote via email.</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6} >
+                    <Stack spacing={2} width="100%">
                         <InputLabel id="quote-email-subject-label" sx={{ color: 'primary.main' }}>
                             Email Subject
                         </InputLabel>
@@ -83,8 +92,9 @@ function EmailSmsSettings(props: any) {
                             <Button variant="outlined" onClick={handleReload}>Cancel</Button>
                             <Button variant="contained" onClick={handleSave}>Save Changes</Button>
                         </Stack>
-                    </Stack>
-                </Stack>
+                    </Stack>                        
+                    </Grid>
+                </Grid>
             </AccordionDetails>
         </Accordion>
         <Accordion sx={{ py: 3, px: 2, position: 'static'  }}>
@@ -99,13 +109,17 @@ function EmailSmsSettings(props: any) {
             >Invoice Email Template</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <Stack direction={'row'}>
+                <Grid container>
+                    <Grid item xs={12} sm={6} >
                     <Typography
-                    width="50%"
+                    width="100%"
+                    marginBottom={2}
                     variant="body2"
                     color="neutral.dark"
                     >Update how your email will look to clients when sending an invoice via email.</Typography>
-                    <Stack spacing={2} width="50%">
+                    </Grid>
+                    <Grid item xs={12} sm={6} >
+                    <Stack spacing={2} width="100%">
                         <InputLabel id="quote-email-subject-label" sx={{ color: 'primary.main' }}>
                             Email Subject
                         </InputLabel>
@@ -143,7 +157,8 @@ function EmailSmsSettings(props: any) {
                             <Button variant="contained" onClick={handleSave}>Save Changes</Button>
                         </Stack>
                     </Stack>
-                </Stack>
+                    </Grid>
+                </Grid>
             </AccordionDetails>
         </Accordion>
         <Accordion sx={{ py: 3, px: 2, position: 'static'  }}>
@@ -158,13 +173,17 @@ function EmailSmsSettings(props: any) {
             >Quote SMS Template</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <Stack direction={'row'}>
+                <Grid container>
+                    <Grid item xs={12} sm={6} >
                     <Typography
-                    width="50%"
+                    width="100%"
+                    marginBottom={2}
                     variant="body2"
                     color="neutral.dark"
                     >Update how your message will look to clients when sending a quote via text message.</Typography>
-                    <Stack spacing={2} width="50%">
+                    </Grid>
+                    <Grid item xs={12} sm={6} >
+                    <Stack spacing={2} width="100%">
                         <InputLabel id="quote-sms-body-label" sx={{ color: 'primary.main' }}>
                             Text Message
                         </InputLabel>
@@ -182,7 +201,8 @@ function EmailSmsSettings(props: any) {
                             <Button variant="contained" onClick={handleSave}>Save Changes</Button>
                         </Stack>
                     </Stack>
-                </Stack>
+                    </Grid>
+                </Grid>
             </AccordionDetails>
         </Accordion>
         <Accordion sx={{ py: 3, px: 2, position: 'static'  }}>
@@ -197,13 +217,17 @@ function EmailSmsSettings(props: any) {
             >Invoice SMS Template</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <Stack direction={'row'}>
+                <Grid container>
+                    <Grid item xs={12} sm={6} >
                     <Typography
-                    width="50%"
+                    width="100%"
+                    marginBottom={2}
                     variant="body2"
                     color="neutral.dark"
                     >Update how your message will look to clients when sending an invoice via text message.</Typography>
-                    <Stack spacing={2} width="50%">
+                    </Grid>
+                    <Grid item xs={12} sm={6} >
+                    <Stack spacing={2} width="100%">
                         <InputLabel id="invoice-sms-body-label" sx={{ color: 'primary.main' }}>
                             Text Message
                         </InputLabel>
@@ -221,7 +245,8 @@ function EmailSmsSettings(props: any) {
                             <Button variant="contained"  onClick={handleSave}>Save Changes</Button>
                         </Stack>
                     </Stack>
-                </Stack>
+                    </Grid>
+                </Grid>
             </AccordionDetails>
         </Accordion>
         </>

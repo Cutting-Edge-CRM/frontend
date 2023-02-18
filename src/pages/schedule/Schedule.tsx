@@ -15,8 +15,6 @@ import { ArrowCircleRight, CalendarMonthOutlined, EventBusy } from '@mui/icons-m
 
 const eventRender = (args: any) => {
 
-    console.log(args);
-
     if (args.event.display === 'block') {
         return (
             <Stack direction={'row'}>

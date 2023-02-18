@@ -1,6 +1,6 @@
 import { AddressAutofill } from '@mapbox/search-js-react';
 import { Email, Person, Phone, Place } from '@mui/icons-material';
-import { Alert, Button, Card, InputAdornment, InputLabel, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Card, Grid, InputAdornment, InputLabel, Stack, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { getUser, updateUser } from '../../api/user.api';
 
@@ -38,11 +38,10 @@ function PersonalInformation(props: any) {
         <>
         {error && <Alert severity="error">{error}</Alert>}
         <Card sx={{ py: 3 }}>
-            <Typography align='center'>Personal Information</Typography>
-            <Stack m={4} >
-                <Stack spacing={4} direction='row'>
-                        <Stack width={'50%'} spacing={1}>
-                        <InputLabel id="first-label" sx={{ color: 'primary.main' }}>
+            <Typography align='center' variant="h6" marginBottom={2}>Personal Information</Typography>
+                <Grid container paddingX={5} spacing={2}>
+                    <Grid item xs={12} sm={6} >
+                    <InputLabel id="first-label" sx={{ color: 'primary.main' }}>
                             First Name
                         </InputLabel>
                         <TextField
@@ -51,6 +50,7 @@ function PersonalInformation(props: any) {
                             user.first ? user.first : ''
                             }
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -59,6 +59,8 @@ function PersonalInformation(props: any) {
                                 ),
                                 }}
                         />
+                    </Grid>
+                    <Grid item xs={12} sm={6} >
                         <InputLabel id="phone-label" sx={{ color: 'primary.main' }}>
                             Phone
                         </InputLabel>
@@ -66,6 +68,7 @@ function PersonalInformation(props: any) {
                             id="phone"
                             value={user.phone ? user.phone : ''}
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -74,8 +77,8 @@ function PersonalInformation(props: any) {
                                 ),
                                 }}
                         />
-                        </Stack>
-                        <Stack width={'50%'}  spacing={1}>
+                    </Grid>
+                    <Grid item xs={12} sm={6} >
                         <InputLabel id="last-label" sx={{ color: 'primary.main' }}>
                             Last Name
                         </InputLabel>
@@ -85,6 +88,7 @@ function PersonalInformation(props: any) {
                             user.last ? user.last : ''
                             }
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -93,6 +97,8 @@ function PersonalInformation(props: any) {
                                 ),
                                 }}
                         />
+                    </Grid>
+                    <Grid item xs={12} sm={6} >
                         <InputLabel id="email-label" sx={{ color: 'primary.main' }}>
                             Email
                         </InputLabel>
@@ -102,6 +108,7 @@ function PersonalInformation(props: any) {
                             user.email ? user.email : ''
                             }
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -110,22 +117,20 @@ function PersonalInformation(props: any) {
                                 ),
                                 }}
                         />
-                        </Stack>
-                </Stack>
-            </Stack>
-            <Stack direction={'row'} spacing={2} justifyContent='center'>
+                    </Grid>
+                </Grid>
+            <Stack direction={'row'} spacing={2} marginTop={3} justifyContent='center'>
                 <Button variant="outlined" onClick={handleReload}>Cancel</Button>
                 <Button variant="contained" onClick={handleSave}>Save Changes</Button>
             </Stack>
         </Card>
         <Card sx={{ py: 3 }}>
-            <Typography align='center'>Address</Typography>
-            <Stack m={4} >
+            <Typography align='center' variant="h6" marginBottom={2}>Address</Typography>
             <form>
-              <AddressAutofill accessToken={process.env.REACT_APP_MAPBOX_TOKEN as string}>
-                <Stack spacing={4} direction='row'>
-                        <Stack width={'50%'} spacing={1}>
-                        <InputLabel id="address-label" sx={{ color: 'primary.main' }}>
+            <AddressAutofill accessToken={process.env.REACT_APP_MAPBOX_TOKEN as string} >
+            <Grid container paddingX={5} spacing={2}>
+                <Grid item xs={12} sm={6} >
+                    <InputLabel id="address-label" sx={{ color: 'primary.main' }}>
                             Address
                         </InputLabel>
                         <TextField
@@ -135,6 +140,7 @@ function PersonalInformation(props: any) {
                             user.address ? user.address : ''
                             }
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -143,41 +149,9 @@ function PersonalInformation(props: any) {
                                 ),
                                 }}
                         />
-                        <InputLabel id="city-label" sx={{ color: 'primary.main' }}>
-                            City
-                        </InputLabel>
-                        <TextField
-                            id="city"
-                            autoComplete="address-level2"
-                            value={user.city ? user.city : ''}
-                            onChange={handleChange}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Place color="primary" />
-                                    </InputAdornment>
-                                ),
-                                }}
-                        />
-                        <InputLabel id="zip-label" sx={{ color: 'primary.main' }}>
-                            Postal Code
-                        </InputLabel>
-                        <TextField
-                            id="zip"
-                            autoComplete="postal-code"
-                            value={user.zip ? user.zip : ''}
-                            onChange={handleChange}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Place color="primary" />
-                                    </InputAdornment>
-                                ),
-                                }}
-                        />
-                        </Stack>
-                        <Stack width={'50%'}  spacing={1}>
-                        <InputLabel id="unit-label" sx={{ color: 'primary.main' }}>
+                </Grid>
+                <Grid item xs={12} sm={6} >
+                    <InputLabel id="unit-label" sx={{ color: 'primary.main' }}>
                             Unit
                         </InputLabel>
                         <TextField
@@ -186,6 +160,7 @@ function PersonalInformation(props: any) {
                             user.address2 ? user.address2 : ''
                             }
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -194,7 +169,28 @@ function PersonalInformation(props: any) {
                                 ),
                                 }}
                         />
-                        <InputLabel id="state-label" sx={{ color: 'primary.main' }}>
+                </Grid>
+                <Grid item xs={12} sm={6} >
+                    <InputLabel id="city-label" sx={{ color: 'primary.main' }}>
+                            City
+                        </InputLabel>
+                        <TextField
+                            id="city"
+                            autoComplete="address-level2"
+                            value={user.city ? user.city : ''}
+                            onChange={handleChange}
+                            fullWidth
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Place color="primary" />
+                                    </InputAdornment>
+                                ),
+                                }}
+                        />
+                </Grid>
+                <Grid item xs={12} sm={6} >
+                    <InputLabel id="state-label" sx={{ color: 'primary.main' }}>
                             State/Province
                         </InputLabel>
                         <TextField
@@ -204,6 +200,7 @@ function PersonalInformation(props: any) {
                             user.state ? user.state : ''
                             }
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -212,7 +209,28 @@ function PersonalInformation(props: any) {
                                 ),
                                 }}
                         />
-                        <InputLabel id="country-label" sx={{ color: 'primary.main' }}>
+                </Grid>
+                <Grid item xs={12} sm={6} >
+                <InputLabel id="zip-label" sx={{ color: 'primary.main' }}>
+                            Postal Code
+                        </InputLabel>
+                        <TextField
+                            id="zip"
+                            autoComplete="postal-code"
+                            value={user.zip ? user.zip : ''}
+                            onChange={handleChange}
+                            fullWidth
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Place color="primary" />
+                                    </InputAdornment>
+                                ),
+                                }}
+                        />
+                </Grid>
+                <Grid item xs={12} sm={6} >
+                    <InputLabel id="country-label" sx={{ color: 'primary.main' }}>
                             Country
                         </InputLabel>
                         <TextField
@@ -222,6 +240,7 @@ function PersonalInformation(props: any) {
                             user.country ? user.country : ''
                             }
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -230,12 +249,11 @@ function PersonalInformation(props: any) {
                                 ),
                                 }}
                         />
-                        </Stack>
-                </Stack>
-              </AddressAutofill>
+                </Grid>
+            </Grid>
+            </AddressAutofill>
             </form>
-            </Stack>
-            <Stack direction={'row'} spacing={2} justifyContent='center'>
+            <Stack direction={'row'} spacing={2} marginTop={3} justifyContent='center'>
                 <Button variant="outlined" onClick={handleReload}>Cancel</Button>
                 <Button variant="contained" onClick={handleSave}>Save Changes</Button>
             </Stack>

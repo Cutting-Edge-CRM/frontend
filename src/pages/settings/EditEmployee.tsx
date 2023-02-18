@@ -10,11 +10,13 @@ import {
     Stack,
     Switch,
     TextField,
+    useMediaQuery,
   } from '@mui/material';
   import * as React from 'react';
   import { AddressAutofill } from '@mapbox/search-js-react';
   import { useState } from 'react';
 import { inviteUser, updateUser } from '../../api/user.api';
+import { theme } from '../../theme/theme';
   
   export default function EditEmployee(props: any) {
     const [error, setError] = useState(null);
@@ -71,7 +73,7 @@ import { inviteUser, updateUser } from '../../api/user.api';
       };
   
     return (
-      <Dialog onClose={handleCancel} open={props.open}>
+      <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))} onClose={handleCancel} open={props.open}>
         <DialogTitle align="center">
           {props.type === 'edit' ? 'Edit Employee' : 'Create New Employee'}
         </DialogTitle>

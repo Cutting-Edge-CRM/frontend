@@ -1,10 +1,11 @@
-import { Box, Card, CardHeader, Stack, Tab, Tabs } from '@mui/material';
+import { Box, Card, CardHeader, Grid, Stack, Tab, Tabs, useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { getCompany } from '../../api/company.api';
 import { getSettings } from '../../api/settings.api';
 import { listTaxes } from '../../api/tax.api';
 import { currentUserClaims } from '../../auth/firebase';
+import { theme } from '../../theme/theme';
 import Billing from './Billing';
 import CompanyInformation from './CompanyInformation';
 import EmailSmsSettings from './EmailSmsSettings';
@@ -20,6 +21,7 @@ function CompanySettings(props: any) {
     const [logoUrl, setLogoUrl] = useState([] as any);
     const [taxes, setTaxes] = useState({} as any);
     const location = useLocation();
+    let mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         let param = '';
@@ -119,10 +121,10 @@ function CompanySettings(props: any) {
 
     return (
         <Stack spacing={2}>
-            <Card sx={{ pb: 4, pt: 1 }}>
+            <Card sx={{ pb: 4, pt: 1, width: mobile ? "96vw" : '100%' }}>
                 <CardHeader title="Company Settings" />
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs value={value} onChange={handleChange}>
+                    <Tabs value={value} onChange={handleChange} sx={{'.MuiTabs-scroller': {overflowX: 'scroll !important', '::-webkit-scrollbar': {display: 'none'}}}} >
                         <Tab label="Personal Details" id="personalDetails" />
                         {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') && <Tab label="Company Details" id="companyDetails" />}
                         {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') && <Tab label="Employees" id="employees" />}

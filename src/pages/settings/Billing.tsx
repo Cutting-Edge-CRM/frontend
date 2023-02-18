@@ -1,5 +1,6 @@
+import { AddressAutofill } from '@mapbox/search-js-react';
 import { CheckCircleOutline } from '@mui/icons-material';
-import { Button, Card, CardContent, Chip, Grid, Typography } from '@mui/material';
+import { Button, Card, CardContent, Chip, Grid, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import React from 'react';
 import { getCheckoutSession, getPortalSession } from '../../api/subscriptions.api';
@@ -29,10 +30,14 @@ function Billing(props: any) {
 
     return (
         <Card sx={{ py: 3 }}>
+            {/* for a very strange reason putting this making it style properly on mobile */}
+            <AddressAutofill accessToken=''>
+            <TextField sx={{display:'none'}} />
+            </AddressAutofill>
             <Stack>
                 <Typography textAlign={'center'} my={8} color='neutral.main' fontWeight={600} fontSize={18} >Available Plans</Typography>
                 <Grid container spacing={3}>
-                <Grid item xs={4}>
+                <Grid item xs={12} sm={4} >
                         <Card sx={{height: '100%'}}>
                             <Stack direction={'row'} justifyContent={'space-between'} alignItems="center" mx='-20px' px="40px" py="14px" sx={{backgroundColor: '#9ED1F580'}}>
                                 <Typography fontWeight={600} fontSize={18}>Basic</Typography>
@@ -60,7 +65,7 @@ function Billing(props: any) {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={12} sm={4} >
                         <Card sx={{height: '100%'}}>
                             <Stack direction={'row'} justifyContent={'space-between'} alignItems="center" mx='-20px' px="40px" py="14px" sx={{backgroundColor: '#FFF5E1'}}>
                                 <Typography fontWeight={600} fontSize={18}>Team</Typography>
@@ -91,7 +96,7 @@ function Billing(props: any) {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={12} sm={4} >
                         <Card sx={{height: '100%'}}>
                             <Stack direction={'row'} justifyContent={'space-between'} alignItems="center" mx='-20px' px="40px" py="14px" sx={{backgroundColor: '#D9F3E5'}}>
                                 <Typography fontWeight={600} fontSize={18}>Enterprise</Typography>

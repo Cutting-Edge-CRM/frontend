@@ -116,14 +116,16 @@ export default function CustomToolbar(props: any) {
             </>
           )}
           {props.type === 'employees' && props.subscription.subscription === 'team' && props.employeeCount >= 5 ?
+            <>
             <Button
-            startIcon={<WorkspacePremium sx={{color: 'yellow.dark'}}/>}
+            startIcon={<WorkspacePremium sx={{color: 'yellow.dark'}} />}
+            sx={{marginLeft: 2}}
             variant="contained"
             color="primary"
             onClick={handleUpgrade}
             >
-              Upgrade
             </Button>
+            </>
             :
             props.type !== 'Employees' &&
             <>

@@ -1,6 +1,6 @@
 import { AddressAutofill } from '@mapbox/search-js-react';
 import { AddAPhoto, Close, Email, Language, MapsHomeWork, Phone, Place } from '@mui/icons-material';
-import { Alert, Box, Button, Card, Divider, IconButton, ImageListItem, InputAdornment, InputLabel, LinearProgress, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Card, Divider, Grid, IconButton, ImageListItem, InputAdornment, InputLabel, LinearProgress, Stack, TextField, Typography } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { updateCompany } from '../../api/company.api';
@@ -93,9 +93,9 @@ function CompanyInformation(props: any) {
         {error && <Alert severity="error">{error}</Alert>}
         <Card sx={{ py: 3 }}>
             <Stack>
-                <Typography align={'center'}>Company Information</Typography>
-                <Stack direction={'row'}>
-                    <Stack width='50%' margin={3} spacing={1}>
+                <Typography align={'center'} variant="h6" marginBottom={2}>Company Information</Typography>
+                <Grid container>
+                    <Grid xs={12} sm={6} paddingX={3}>
                         <InputLabel id="name-label" sx={{ color: 'primary.main' }}>
                             Company Name
                         </InputLabel>
@@ -103,6 +103,7 @@ function CompanyInformation(props: any) {
                             id="companyName"
                             value={props.company.companyName ? props.company.companyName : ''}
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -118,6 +119,7 @@ function CompanyInformation(props: any) {
                             id="phone"
                             defaultValue={props.company.phone ? props.company.phone : undefined}
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -133,6 +135,7 @@ function CompanyInformation(props: any) {
                             id="email"
                             defaultValue={props.company.email ? props.company.email : undefined}
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -148,6 +151,7 @@ function CompanyInformation(props: any) {
                             id="website"
                             defaultValue={props.company.website ? props.company.website : undefined}
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -156,8 +160,8 @@ function CompanyInformation(props: any) {
                             ),
                             }}
                         />
-                    </Stack>
-                    <Stack width='50%' margin={3} spacing={1}>
+                    </Grid>
+                    <Grid xs={12} sm={6} spacing={1} paddingX={3}>
                         <InputLabel id="logo-label" sx={{ color: 'primary.main' }}>
                             Logo
                         </InputLabel>
@@ -213,31 +217,31 @@ function CompanyInformation(props: any) {
                             </Box>
                             {loadingFiles && <LinearProgress />}
                         </Box>
-                    </Stack>
-                </Stack>
-                <Stack direction={'row'} justifyContent='center' spacing={2}>
+                    </Grid>
+                </Grid>
+                <Stack direction={'row'} justifyContent='center' spacing={2} marginTop={3}>
                     <Button variant="outlined" onClick={handleReload}>Cancel</Button>
                     <Button variant="contained" onClick={handleSave}>Save Changes</Button>
                 </Stack>
             </Stack>
         </Card>
         <Card sx={{ py: 3 }}>
-            <Typography align='center'>Address</Typography>
-            <Stack m={4} >
+            <Typography align='center' variant="h6" marginBottom={2}>Address</Typography>
             <form>
-              <AddressAutofill accessToken={process.env.REACT_APP_MAPBOX_TOKEN as string}>
-                <Stack spacing={4} direction='row'>
-                        <Stack width={'50%'} spacing={1}>
-                        <InputLabel id="address-label" sx={{ color: 'primary.main' }}>
+            <AddressAutofill accessToken={process.env.REACT_APP_MAPBOX_TOKEN as string}>
+            <Grid container paddingX={5} spacing={2}>
+                <Grid item xs={12} sm={6} >
+                    <InputLabel id="address-label" sx={{ color: 'primary.main' }}>
                             Address
                         </InputLabel>
                         <TextField
                             id="address"
                             autoComplete="street-address"
-                            defaultValue={
-                            props.company.address ? props.company.address : undefined
+                            value={
+                            props.company.address ? props.company.address : ''
                             }
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -246,14 +250,37 @@ function CompanyInformation(props: any) {
                                 ),
                                 }}
                         />
-                        <InputLabel id="city-label" sx={{ color: 'primary.main' }}>
+                </Grid>
+                <Grid item xs={12} sm={6} >
+                    <InputLabel id="unit-label" sx={{ color: 'primary.main' }}>
+                            Unit
+                        </InputLabel>
+                        <TextField
+                            id="address2"
+                            value={
+                            props.company.address2 ? props.company.address2 : ''
+                            }
+                            onChange={handleChange}
+                            fullWidth
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Place color="primary" />
+                                    </InputAdornment>
+                                ),
+                                }}
+                        />
+                </Grid>
+                <Grid item xs={12} sm={6} >
+                    <InputLabel id="city-label" sx={{ color: 'primary.main' }}>
                             City
                         </InputLabel>
                         <TextField
                             id="city"
                             autoComplete="address-level2"
-                            defaultValue={props.company.city ? props.company.city : undefined}
+                            value={props.company.city ? props.company.city : ''}
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -262,51 +289,19 @@ function CompanyInformation(props: any) {
                                 ),
                                 }}
                         />
-                        <InputLabel id="zip-label" sx={{ color: 'primary.main' }}>
-                            Postal Code
-                        </InputLabel>
-                        <TextField
-                            id="zip"
-                            autoComplete="postal-code"
-                            defaultValue={props.company.zip ? props.company.zip : undefined}
-                            onChange={handleChange}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Place color="primary" />
-                                    </InputAdornment>
-                                ),
-                                }}
-                        />
-                        </Stack>
-                        <Stack width={'50%'}  spacing={1}>
-                        <InputLabel id="unit-label" sx={{ color: 'primary.main' }}>
-                            Unit
-                        </InputLabel>
-                        <TextField
-                            id="address2"
-                            defaultValue={
-                            props.company.address2 ? props.company.address2 : undefined
-                            }
-                            onChange={handleChange}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Place color="primary" />
-                                    </InputAdornment>
-                                ),
-                                }}
-                        />
-                        <InputLabel id="state-label" sx={{ color: 'primary.main' }}>
+                </Grid>
+                <Grid item xs={12} sm={6} >
+                    <InputLabel id="state-label" sx={{ color: 'primary.main' }}>
                             State/Province
                         </InputLabel>
                         <TextField
                             id="state"
                             autoComplete="address-level1"
-                            defaultValue={
-                            props.company.state ? props.company.state : undefined
+                            value={
+                            props.company.state ? props.company.state : ''
                             }
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -315,16 +310,38 @@ function CompanyInformation(props: any) {
                                 ),
                                 }}
                         />
-                        <InputLabel id="country-label" sx={{ color: 'primary.main' }}>
+                </Grid>
+                <Grid item xs={12} sm={6} >
+                <InputLabel id="zip-label" sx={{ color: 'primary.main' }}>
+                            Postal Code
+                        </InputLabel>
+                        <TextField
+                            id="zip"
+                            autoComplete="postal-code"
+                            value={props.company.zip ? props.company.zip : ''}
+                            onChange={handleChange}
+                            fullWidth
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Place color="primary" />
+                                    </InputAdornment>
+                                ),
+                                }}
+                        />
+                </Grid>
+                <Grid item xs={12} sm={6} >
+                    <InputLabel id="country-label" sx={{ color: 'primary.main' }}>
                             Country
                         </InputLabel>
                         <TextField
                             id="country"
                             autoComplete="country-name"
-                            defaultValue={
-                            props.company.country ? props.company.country : undefined
+                            value={
+                            props.company.country ? props.company.country : ''
                             }
                             onChange={handleChange}
+                            fullWidth
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -333,12 +350,11 @@ function CompanyInformation(props: any) {
                                 ),
                                 }}
                         />
-                        </Stack>
-                </Stack>
-              </AddressAutofill>
+                </Grid>
+            </Grid>
+            </AddressAutofill>
             </form>
-            </Stack>
-            <Stack direction={'row'} spacing={2} justifyContent='center'>
+            <Stack direction={'row'} spacing={2} justifyContent='center' marginTop={3}>
                 <Button variant="outlined" onClick={handleReload}>Cancel</Button>
                 <Button variant="contained" onClick={handleSave}>Save Changes</Button>
             </Stack>

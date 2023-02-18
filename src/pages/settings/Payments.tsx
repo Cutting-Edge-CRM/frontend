@@ -1,3 +1,4 @@
+import { AddressAutofill } from '@mapbox/search-js-react';
 import { AddCircleOutlineOutlined, DeleteOutline, Percent } from '@mui/icons-material';
 import { Alert, Box, Button, Card, CircularProgress, Grid, IconButton, InputLabel, ListItemText, MenuItem, Select, Stack, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
@@ -145,6 +146,10 @@ function Payments(props: any) {
     return (
     <Stack spacing={2}>
         <Card sx={{padding: 3}}>
+            {/* for a very strange reason putting this making it style properly on mobile */}
+            <AddressAutofill accessToken=''>
+            <TextField sx={{display:'none'}} />
+            </AddressAutofill>
         <Box textAlign={'center'}>
             {error && <Alert severity="error">{error}</Alert>}
             {setupStatus === 'not-started' && <Button variant='contained' onClick={handleStartSetUp}>Set Up Payments</Button>}
@@ -152,14 +157,14 @@ function Payments(props: any) {
             {setupStatus === 'complete' && <Button variant='contained' onClick={handleDashboard}>Visit Dashboard</Button>}
         </Box>
         <Grid container sx={{mb: 3}}>
-            <Grid item xs={4} padding={3}>
-            <Stack spacing={2}>
+            <Grid item xs={12} sm={6} padding={3}>
             <InputLabel id="currency-label" sx={{ color: 'primary.main' }}>
                 Currency
             </InputLabel>
             <Select
                 labelId="currency-label"
                 id="currency"
+                sx={{width: "80%"}}
                 value={props.settings.currency ? props.settings.currency : 'usd'}
                 onChange={handleChangeCurrency}
                 renderValue={(selected) => (
@@ -177,6 +182,9 @@ function Payments(props: any) {
                 </MenuItem>
                 ))}
             </Select>
+            </Grid>
+            <Grid item xs={12} sm={6} padding={3}>
+            <Stack spacing={2}>
             <InputLabel id="tax-label" sx={{ color: 'primary.main' }}>
                 Tax Rates
             </InputLabel>
