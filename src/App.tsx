@@ -16,10 +16,10 @@ import { ThemeProvider } from '@mui/material';
 import { theme } from './theme/theme';
 import ClientHub from './pages/client-hub/ClientHub';
 import { auth, loginAnonymously, signInFromEmail } from "./auth/firebase";
-import { createTimeline } from './api/timeline.api';
 import CryptoJS from 'crypto-js';
 import {HelmetProvider} from "react-helmet-async";
 import { isSignInWithEmailLink } from 'firebase/auth';
+import { createTimeline } from './pages/client-hub/api/clientPublic.api';
 
 function App() {
 
