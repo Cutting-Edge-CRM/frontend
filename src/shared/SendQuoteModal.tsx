@@ -15,6 +15,13 @@ export default function SendQuoteModal(props: any) {
     const [loading, setLoading] = useState(false);
     const [emailsInvalid, setEmailsInvalid] = useState(false);
 
+    function addVariables(text: string, client: any) {
+        return text
+        .replace('{{{client_first}}}', client.first)
+        .replace('{{{client_last}}}', client.last)
+        .replace('{{{total}}}', props.quote.quote.price)
+    }
+
     const handleCancel = () => {
         props.onClose();
       };
@@ -115,25 +122,19 @@ export default function SendQuoteModal(props: any) {
     }
 
     useEffect(() => {
-        getClient(props.quote.quote.client)
-        .then(client => {
-            let phones = client?.contacts?.filter((contact: any) => contact.type === 'phone')?.map((phone: any) => phone.content);
-            let emails = client?.contacts?.filter((contact: any) => contact.type === 'email')?.map((email: any) => email.content);
-            setEmailMessage({...emailMessage, toList: emails});
-            setSMSMessage({...smsMessage, toList: phones});
-        }, err => {
-            setError(err.message);
-        })
-        // eslint-disable-next-line
-    }, [props.quote.quote.client])
-
-    useEffect(() => {
         let replyToQuoteEmail = props.settings?.replyToQuoteEmailEmail ? props.settings?.replyToQuoteEmailEmail : currentUser.email;
         let emailSubject = props.settings?.sendQuoteEmailSubject ? props.settings?.sendQuoteEmailSubject : 'Quote';
         let emailBody = props.settings?.sendQuoteEmailBody ? props.settings?.sendQuoteEmailBody : `Thank you for your recent business. Your invoice is linked below.`;
         let smsBody = props.settings?.sendQuoteSMSBody ? props.settings?.sendQuoteSMSBody : `Thank you for your recent business. Your invoice is linked below.`;
-        setEmailMessage({...emailMessage, replyToQuoteEmail: replyToQuoteEmail, subject: emailSubject, body: emailBody})
-        setSMSMessage({...smsMessage, body: smsBody})
+        getClient(props.quote.quote.client)
+        .then(client => {
+            let phones = client?.contacts?.filter((contact: any) => contact.type === 'phone')?.map((phone: any) => phone.content);
+            let emails = client?.contacts?.filter((contact: any) => contact.type === 'email')?.map((email: any) => email.content);
+            setEmailMessage({...emailMessage, replyToQuoteEmail: replyToQuoteEmail, subject: emailSubject, body: addVariables(emailBody, client), toList: emails})
+            setSMSMessage({...smsMessage, body: addVariables(smsBody, client), toList: phones})
+        }, err => {
+            setError(err.message);
+        })
         // eslint-disable-next-line
     }, [props])
     

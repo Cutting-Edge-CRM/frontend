@@ -16,6 +16,13 @@ export default function SendInvoiceModal(props: any) {
     const [loading, setLoading] = useState(false);
     const [emailsInvalid, setEmailsInvalid] = useState(false);
 
+    function addVariables(text: string, client: any) {
+        return text
+        .replace('{{{client_first}}}', client.first)
+        .replace('{{{client_last}}}', client.last)
+        .replace('{{{total}}}', props.invoice.invoice.price)
+    }
+
     const handleCancel = () => {
         props.onClose();
       };
@@ -113,25 +120,19 @@ export default function SendInvoiceModal(props: any) {
     }
 
     useEffect(() => {
-        getClient(props.invoice.invoice.client)
-        .then(client => {
-            let phones = client?.contacts?.filter((contact: any) => contact.type === 'phone')?.map((phone: any) => phone.content);
-            let emails = client?.contacts?.filter((contact: any) => contact.type === 'email')?.map((email: any) => email.content);
-            setEmailMessage({...emailMessage, toList: emails});
-            setSMSMessage({...smsMessage, toList: phones});
-        }, err => {
-            setError(err.message);
-        })
-        // eslint-disable-next-line
-    }, [props.invoice.invoice.client])
-
-    useEffect(() => {
         let replyToInvoiceEmail = props.settings?.replyToInvoiceEmailEmail ? props.settings?.replyToInvoiceEmailEmail : currentUser.email;
         let emailSubject = props.settings?.sendInvoiceEmailSubject ? props.settings?.sendInvoiceEmailSubject : 'Invoice';
         let emailBody = props.settings?.sendInvoiceEmailBody ? props.settings?.sendInvoiceEmailBody : `Thank you for your recent business. Your invoice is linked below.`;
         let smsBody = props.settings?.sendInvoiceSMSBody ? props.settings?.sendInvoiceSMSBody : `Thank you for your recent business. Your invoice is linked below.`;
-        setEmailMessage({...emailMessage, replyToInvoiceEmail: replyToInvoiceEmail, subject: emailSubject, body: emailBody})
-        setSMSMessage({...smsMessage, body: smsBody})
+        getClient(props.invoice.invoice.client)
+        .then(client => {
+            let phones = client?.contacts?.filter((contact: any) => contact.type === 'phone')?.map((phone: any) => phone.content);
+            let emails = client?.contacts?.filter((contact: any) => contact.type === 'email')?.map((email: any) => email.content);
+            setEmailMessage({...emailMessage, replyToInvoiceEmail: replyToInvoiceEmail, subject: emailSubject, body: addVariables(emailBody, client), toList: emails})
+            setSMSMessage({...smsMessage, body: addVariables(smsBody, client), toList: phones})
+        }, err => {
+            setError(err.message);
+        })
         // eslint-disable-next-line
     }, [props])
     
