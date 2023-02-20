@@ -14,9 +14,10 @@ function Jobs(props: any) {
   const [rowCount, setRowCount] = useState(0);
   const [jobsAreLoading, setJobsAreLoading] = useState(true);
   const [errorListingJobs, setErrorListingJobs] = useState(null);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
-    listJobs(undefined, undefined, page, pageSize)
+    listJobs(undefined, query, page, pageSize)
     .then((result) => {
       setJobsAreLoading(false);
       setRows(result?.rows);
@@ -25,7 +26,7 @@ function Jobs(props: any) {
       setJobsAreLoading(false);
       setErrorListingJobs(err.message)
     })
-  }, [page, pageSize])
+  }, [page, pageSize, query])
 
   const jobColumns: GridColDef[] = [
     { 
@@ -113,6 +114,7 @@ function Jobs(props: any) {
           success={props.success}
           errorListing={errorListingJobs}
           listLoading={jobsAreLoading}
+          setQuery={setQuery}
           ></Table>
       </Box>
     )

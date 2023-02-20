@@ -35,6 +35,7 @@ import {
   ListItemButton,
   Menu,
   MenuItem,
+  MenuList,
   Snackbar,
   Stack,
   styled,
@@ -42,7 +43,7 @@ import {
 } from '@mui/material';
 import { Logout } from '@mui/icons-material';
 import Dashboard from '../dashboard/Dashboard';
-import { Link, Route, Routes, useLocation } from 'react-router-dom';
+import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import Clients from '../clients/Clients';
 import Quotes from '../quotes/Quotes';
 import Jobs from '../jobs/Jobs';
@@ -59,6 +60,10 @@ import CompanySettings from '../settings/CompanySettings';
 import { getSubscription } from '../../api/subscriptions.api';
 import dayjs from 'dayjs';
 import Timesheets from '../timesheets/Timesheets';
+import { listClients } from '../../api/client.api';
+import { listQuotes } from '../../api/quote.api';
+import { listJobs } from '../../api/job.api';
+import { listInvoices } from '../../api/invoice.api';
 
 const NavList = styled(List)<ListProps>(({ theme }) => ({
   padding: theme.spacing(0, 3),
@@ -107,6 +112,10 @@ function Shell() {
   const [settings, setSettings] = useState({} as any);
   const [subscription, setSubscription] = useState({} as any);
   const location = useLocation();
+  const [searchItems, setSearchItems] = useState([] as any);
+  const [anchorElSearch, setAnchorElSearch] = React.useState<null | HTMLElement>(null);
+  const isOpen = Boolean(anchorElSearch);
+  const navigate = useNavigate();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -134,6 +143,63 @@ function Shell() {
 
     setSuccessOpen(false);
   };
+
+  const handleSearch = (event: any) => {
+    let query = event.target.value;
+    Promise.all([listClients(query, 0, 10), listQuotes(undefined, query, 0, 10), listJobs(undefined, query, 0, 10), listInvoices(undefined, query, 0, 10)])
+    .then(([clients, quotes, jobs, invoices]) => {
+      setAnchorElSearch(event.target);
+      let results: any[] = [];
+      results = results.concat(clients.rows.map((client: any) => {
+        return {
+          id: client.id,
+          type: 'clients',
+          row1: client.name,
+          row2: client.contact,
+          icon: (<PeopleOutlineOutlined color='primary' />)
+        }
+      }))
+      results = results.concat(quotes.rows.map((quote: any) => {
+        return {
+          id: quote.id,
+          type: 'quotes',
+          row1: quote.clientName,
+          row2: `$${quote.price}`,
+          icon: (<SellOutlined color='primary' />)
+        }
+      }))
+      results = results.concat(jobs.rows.map((job: any) => {
+        return {
+          id: job.id,
+          type: 'jobs',
+          row1: job.clientName,
+          row2: `$${job.price}`,
+          icon: (<FormatPaintOutlined color='primary' />)
+        }
+      }))
+      results = results.concat(invoices.rows.map((invoice: any) => {
+        return {
+          id: invoice.id,
+          type: 'invoices',
+          row1: invoice.clientName,
+          row2: `$${invoice.price}`,
+          icon: (<AttachMoney color='primary' />)
+        }
+      }))
+      results = results.slice(0,10);
+      setSearchItems(results);
+    }, (err) => {
+    })
+  }
+
+  const closeMenu = () => {
+    setAnchorElSearch(null);
+  };
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    setAnchorElSearch(null);
+  }
 
   useEffect(() => {
     getSettings().then(
@@ -238,6 +304,7 @@ function Shell() {
           <TextField
             size="small"
             placeholder="Search"
+            onChange={handleSearch}
             sx={{backgroundColor: "white", borderRadius: '20px'}}
             InputProps={{
               startAdornment: (
@@ -247,6 +314,27 @@ function Shell() {
               ),
             }}
           />
+          <Menu
+            id="search-menu"
+            anchorEl={anchorElSearch}
+            open={isOpen}
+            onClose={closeMenu}
+            sx={{".MuiList-root": {outline: "none"}}}
+          >
+            <MenuList>
+              {searchItems.map((row: any, index: any) => (
+                <ListItemButton key={index} onClick={() => handleNavigate(`/${row.type}/${row.id}`)}>
+                  <ListItemIcon>
+                    {row.icon}
+                  </ListItemIcon>
+                  <Stack>
+                    <Typography>{row.row1}</Typography>
+                    <Typography color={'neutral.light'}>{row.row2}</Typography>
+                  </Stack>
+                </ListItemButton>
+              ))}
+            </MenuList>
+          </Menu>
           <Stack direction="row" alignItems="center" spacing={3}>
             <IconButton sx={{ borderRadius: '50%' }}>
               <NotificationsNone color="primary" />
