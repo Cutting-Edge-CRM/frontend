@@ -147,12 +147,12 @@ export default function SendInvoiceModal(props: any) {
             {value === 0 && 
             <Box>
                 <Stack spacing={2}>
+                <Typography variant="body2" color="primary">To</Typography>
                 <TextField
                 id="to" 
                 value={emailMessage.to}
                 error={emailsInvalid}
                 onChange={handleEmailChange}
-                label="To"
                 onKeyDown={handleEmailKeyDown}
                 InputProps={{
                     startAdornment: (
@@ -167,15 +167,15 @@ export default function SendInvoiceModal(props: any) {
                     ),
                 }}
                 />
+                <Typography variant="body2" color="primary">Reply To</Typography>
                 <TextField
                 id="replyToInvoiceEmail"
-                label="Reply To"
                 value={emailMessage.replyToInvoiceEmail}
                 onChange={handleEmailChange}
                 />
+                <Typography variant="body2" color="primary">Email Subject</Typography>
                 <TextField
                 id="subject" 
-                label="Email Subject"
                 value={emailMessage.subject}
                 onChange={handleEmailChange}
                 />
@@ -193,11 +193,11 @@ export default function SendInvoiceModal(props: any) {
             {value === 1 && 
             <Box>
                 <Stack spacing={2}>
+                <Typography variant="body2" color="primary">To</Typography>
                 <TextField
                 id="to" 
                 value={smsMessage.to}
                 onChange={handleSMSChange}
-                label="To"
                 onKeyDown={handleSMSKeyDown}
                 InputProps={{
                     startAdornment: (

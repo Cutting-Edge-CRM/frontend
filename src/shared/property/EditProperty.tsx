@@ -5,6 +5,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  InputLabel,
   LinearProgress,
   Stack,
   TextField,
@@ -74,58 +75,82 @@ export default function EditProperty(props: any) {
           <form>
               <AddressAutofill accessToken={process.env.REACT_APP_MAPBOX_TOKEN as string}>
                 <Stack spacing={2}>
+                  <Stack>
+                  <InputLabel id="address-label" sx={{ color: 'primary.main' }}>
+                    Address
+                  </InputLabel>
                   <TextField
                     id="address"
-                    label="Address"
                     autoComplete="street-address"
                     defaultValue={
                       props.property.address ? props.property.address : undefined
                     }
                     onChange={handleChange}
                   />
+                  </Stack>
+                  <Stack>
+                  <InputLabel id="unit-label" sx={{ color: 'primary.main' }}>
+                    Unit
+                  </InputLabel>
                   <TextField
                     id="address2"
-                    label="Unit"
                     defaultValue={
                       props.property.address2 ? props.property.address2 : undefined
                     }
                     onChange={handleChange}
                   />
+                  </Stack>
                   <Stack direction="row" spacing={2}>
+                    <Stack>
+                    <InputLabel id="city-label" sx={{ color: 'primary.main' }}>
+                      City
+                    </InputLabel>
                     <TextField
                       id="city"
-                      label="City"
                       autoComplete="address-level2"
                       defaultValue={props.property.city ? props.property.city : undefined}
                       onChange={handleChange}
                     />
+                    </Stack>
+                    <Stack>
+                    <InputLabel id="state-label" sx={{ color: 'primary.main' }}>
+                      State
+                    </InputLabel>
                     <TextField
                       id="state"
-                      label="State/Province"
                       autoComplete="address-level1"
                       defaultValue={
                         props.property.state ? props.property.state : undefined
                       }
                       onChange={handleChange}
                     />
+                    </Stack>
                   </Stack>
                   <Stack direction="row" spacing={2}>
+                    <Stack>
+                    <InputLabel id="postal-label" sx={{ color: 'primary.main' }}>
+                      Postal
+                    </InputLabel>
                     <TextField
                       id="zip"
-                      label="Postal"
                       autoComplete="postal-code"
                       defaultValue={props.property.zip ? props.property.zip : undefined}
                       onChange={handleChange}
                     />
+                    </Stack>
+                    <Stack>
+                    <InputLabel id="country-label" sx={{ color: 'primary.main' }}>
+                      Country
+                    </InputLabel>
                     <TextField
                       id="country"
-                      label="Country"
                       autoComplete="country-name"
                       defaultValue={
                         props.property.country ? props.property.country : undefined
                       }
                       onChange={handleChange}
                     />
+                    </Stack>
                   </Stack>
                 </Stack>
               </AddressAutofill>

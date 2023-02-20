@@ -11,6 +11,7 @@ import {
   IconButton,
   ImageList,
   ImageListItem,
+  InputLabel,
   LinearProgress,
   Stack,
   TextField,
@@ -164,17 +165,21 @@ export default function EditNote(props: any) {
       <DialogContent>
         {loading && <LinearProgress />}
         <Stack spacing={2} mt={2}>
+          <InputLabel id="title-label" sx={{ color: 'primary.main' }}>
+            Title
+          </InputLabel>
           <TextField
             id="title"
-            label="Title"
             defaultValue={props.note.title ? props.note.title : undefined}
             onChange={handleChange}
           />
+          <InputLabel id="content-label" sx={{ color: 'primary.main' }}>
+            Content
+          </InputLabel>
           <TextField
             multiline
             minRows={5}
             id="content"
-            label="Content"
             defaultValue={props.note.content ? props.note.content : undefined}
             onChange={handleChange}
           />

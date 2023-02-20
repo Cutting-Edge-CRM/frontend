@@ -14,6 +14,7 @@ import {
   DialogTitle,
   IconButton,
   InputAdornment,
+  InputLabel,
   LinearProgress,
   Stack,
   TextField,
@@ -142,9 +143,11 @@ export default function EditContact(props: any) {
     ?.filter((c: any) => c.type === 'phone')
     ?.map((phone: any, index: any) => {
       return (
+        <Stack key={index}>
+        <InputLabel id="phone-label" sx={{ color: 'primary.main' }}>
+        Phone
+        </InputLabel>
         <TextField
-          key={index}
-          label="Phone"
           type={'tel'}
           value={phone.content}
           onChange={(e) => handleChangePhone(e, index)}
@@ -161,6 +164,7 @@ export default function EditContact(props: any) {
             ),
           }}
         />
+        </Stack>
       );
     });
 
@@ -168,9 +172,11 @@ export default function EditContact(props: any) {
     ?.filter((c: any) => c.type === 'email')
     ?.map((email: any, index: any) => {
       return (
+        <Stack key={index}>
+        <InputLabel id="email-label" sx={{ color: 'primary.main' }}>
+            Email
+        </InputLabel>
         <TextField
-          key={index}
-          label="Email"
           type={'email'}
           value={email.content}
           error={!(emailValid(email.content) || email.content.length < 1)}
@@ -188,6 +194,7 @@ export default function EditContact(props: any) {
             ),
           }}
         />
+        </Stack>
       );
     });
 
@@ -198,9 +205,12 @@ export default function EditContact(props: any) {
         {loading && <LinearProgress />}
         <Stack spacing={2} mt={2}>
           <Stack direction={useMediaQuery(theme.breakpoints.down("sm")) ? 'column' : 'row'} spacing={2}>
+            <Stack>
+            <InputLabel id="first-label" sx={{ color: 'primary.main' }}>
+                First name
+            </InputLabel>
             <TextField
               id="first"
-              label="First name"
               defaultValue={
                 props.contact?.first ? props.contact.first : undefined
               }
@@ -213,9 +223,13 @@ export default function EditContact(props: any) {
                 ),
               }}
             />
+            </Stack>
+            <Stack>
+            <InputLabel id="last-label" sx={{ color: 'primary.main' }}>
+                Last Name
+            </InputLabel>
             <TextField
               id="last"
-              label="Last name"
               defaultValue={
                 props.contact?.last ? props.contact.last : undefined
               }
@@ -228,6 +242,7 @@ export default function EditContact(props: any) {
                 ),
               }}
             />
+            </Stack>
           </Stack>
           {phoneNumbers}
           <Button
