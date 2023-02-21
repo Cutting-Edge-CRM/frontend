@@ -270,6 +270,7 @@ export default function SelectPropertyAndClient(props: any) {
               <DataGrid
                 autoHeight
                 rows={clientRows}
+                disableColumnMenu
                 columns={clientColumns}
                 pageSize={10}
                 rowsPerPageOptions={[10, 20, 50]}
@@ -299,6 +300,7 @@ export default function SelectPropertyAndClient(props: any) {
                 rows={propertyRows}
                 columns={propertyColumns}
                 pageSize={10}
+                disableColumnMenu
                 rowsPerPageOptions={[10, 20, 50]}
                 loading={propertiesAreLoading}
                 error={errorListingProperties}

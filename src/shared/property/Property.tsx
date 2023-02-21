@@ -171,6 +171,7 @@ function Property(props: any) {
           <DataGrid
             disableSelectionOnClick
             autoHeight
+            disableColumnMenu
             rows={rows}
             columns={columns}
             hideFooter

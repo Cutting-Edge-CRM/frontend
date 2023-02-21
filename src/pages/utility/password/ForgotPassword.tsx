@@ -11,12 +11,14 @@ function ForgotPassword() {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+  const [done, setDone] = useState(false);
+  let mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     
     function resetPassword() {
       sendPasswordReset(email)
       .then(_ => {
-        // show success
+        setDone(true);
       }, err => {
         setError(err.message);
       })
@@ -29,10 +31,16 @@ function ForgotPassword() {
 
     return (
       <Grid container justifyContent={'center'} height="100%" display={'flex'} alignItems="center" sx={{backgroundColor: "backgroundColor.dark"}}>
-      <Grid item xs={useMediaQuery(theme.breakpoints.down("sm")) ? 11 : 4}>
+      <Grid item xs={mobile ? 11 : 4}>
       <Card sx={{backgroundColor: "backgroundColor.light"}}>
         <CardContent>
-          <Stack>
+          {done &&
+          <Stack alignItems={'center'} spacing={2} my={4}>
+            <Typography fontSize={20} fontWeight={600}>Check your email</Typography>
+        `</Stack>
+          }
+          {!done &&
+            <Stack>
             <Stack alignItems={'center'} spacing={2} my={4}>
               <HttpsOutlined color='primary' sx={{fontSize: "72px"}}/>
               <Typography fontSize={20} fontWeight={600}>Trouble logging in?</Typography>
@@ -55,13 +63,14 @@ function ForgotPassword() {
                 />
                 <Stack alignItems={'center'} marginTop={5}>
                   <Button variant='contained' onClick={resetPassword}>Reset</Button>
-                  <Stack direction={useMediaQuery(theme.breakpoints.down("sm")) ? 'column' : 'row'} marginTop={2} alignItems="center" spacing={-2}>
+                  <Stack direction={mobile ? 'column' : 'row'} marginTop={2} alignItems="center" spacing={-2}>
                     <Typography>Already know your password?</Typography>
                     <Button onClick={handleLogIn}>Login</Button>
                   </Stack>
                 </Stack>
             
           </Stack>
+          }
         </CardContent>
         {error && <Alert severity="error">{error}</Alert>}
       </Card>

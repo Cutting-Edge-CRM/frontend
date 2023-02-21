@@ -1,4 +1,4 @@
-import { Box, Card, Chip, CircularProgress, Grid, IconButton, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
+import { Box, Card, CircularProgress, Grid, IconButton, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { listUsers } from '../../api/user.api';
 import EmptyState from '../../shared/EmptyState';
@@ -8,7 +8,7 @@ import EditEmployee from './EditEmployee';
 import { AddressAutofill } from '@mapbox/search-js-react';
 import dayjs from 'dayjs';
 import { ArrowCircleRightOutlined } from '@mui/icons-material';
-import { theme, getChipColor } from '../../theme/theme';
+import { theme } from '../../theme/theme';
 
 function Employees(props: any) {
   const [rows, setRows] = useState([]);
@@ -182,6 +182,7 @@ function Employees(props: any) {
                 ...props,
                 }}
                 disableSelectionOnClick
+                disableColumnMenu
                 onRowClick={handleRowClick}
             />
             <EditEmployee

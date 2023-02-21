@@ -70,6 +70,7 @@ export default function Table(props: any) {
         columns={props.columns}
         pagination
         page={props.page}
+        disableColumnMenu
         pageSize={props.pageSize}
         rowsPerPageOptions={[10, 20, 50]}
         rowCount={props.rowCount}

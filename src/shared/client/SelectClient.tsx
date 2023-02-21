@@ -172,6 +172,7 @@ export default function SelectClient(props: any) {
                 rows={clientRows}
                 columns={clientColumns}
                 pageSize={10}
+                disableColumnMenu
                 rowsPerPageOptions={[10, 20, 50]}
                 components={{
                 Toolbar: ClientToolbar,

@@ -229,6 +229,7 @@ export default function SelectProperty(props: any) {
                 },
                 ...props,
               }}
+              disableColumnMenu
               onRowClick={handlePropertyRowClick}
             />
             </Box>

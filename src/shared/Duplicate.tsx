@@ -252,6 +252,7 @@ export default function SelectClient(props: any) {
                     },
                     ...props,
                   }}
+                  disableColumnMenu
                   onRowClick={handleClientRowClick}
                 />
                 </Box>
@@ -279,6 +280,7 @@ export default function SelectClient(props: any) {
                     },
                     ...props,
                   }}
+                  disableColumnMenu
                   onRowClick={handlePropertyRowClick}
                 />
               )}

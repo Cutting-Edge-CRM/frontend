@@ -1,5 +1,5 @@
 import { Email, Https, Store } from '@mui/icons-material';
-import { Alert, Button, Card, CardContent, Grid, InputAdornment, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
+import { Alert, Box, Button, Card, CardContent, CircularProgress, Grid, InputAdornment, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerNewTenant } from '../../../api/tenant.api';
@@ -14,21 +14,26 @@ function Register() {
   const [company, setCompany] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+  const [registering, setRegistering] = useState(false);
     
     function register() {
+      setRegistering(true);
         registerNewTenant(company, email)
         .then(tenant => {
-          console.log(tenant);
           registerNewTenantUser(tenant.id, email, password)
           .then(res => {
+            setRegistering(false);
             navigate('/dashboard');
           }, err => {
+            setRegistering(false);
             setError(err.message);
           })
         }, err => {
+          setRegistering(false);
           setError(err.message);
         })
         .catch(err => {
+          setRegistering(false);
           setError(err.message);
         })
     }
@@ -42,6 +47,7 @@ function Register() {
         <Grid item xs={useMediaQuery(theme.breakpoints.down("sm")) ? 11 : 4}>
         <Card sx={{backgroundColor: "backgroundColor.light"}}>
           <CardContent>
+          {registering && <Box marginTop={2} textAlign='center'><CircularProgress /></Box>}
             <Stack>
               <Stack alignItems={'center'} spacing={4} my={4}>
                 <Typography fontSize={20} fontWeight={600}>Sign Up</Typography>

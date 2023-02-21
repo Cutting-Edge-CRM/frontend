@@ -23,6 +23,10 @@ async function registerNewTenant(name: string, email: string) {
                 return res.json();
             }
             return res.json().then(err => {
+                if (err.kind === "already-exists") {
+                    console.error(`User already exists: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                    throw new Error(`A user already exists with that email`);
+                }
                 console.error(`Error registering company: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
                 throw new Error(`Error registering company`);
             })
