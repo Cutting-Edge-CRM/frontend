@@ -6,9 +6,10 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { AttachMoney, SellOutlined } from '@mui/icons-material';
+import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Alert, Avatar, ListItemButton, Snackbar, Stack, styled } from '@mui/material';
+import { Alert, AppBar, Avatar, IconButton, ListItemButton, Snackbar, Stack, styled } from '@mui/material';
 import { Link, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import ClientHubQuotes from './ClientHubQuotes';
 import Login from '../utility/login/Login';
@@ -97,7 +98,31 @@ function ClientHub() {
 
   return (
 
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', width: "100vw"}}>
+
+        <AppBar
+        position="fixed"
+        sx={{
+          width: { lg: `calc(100% - ${drawerWidth}px)` },
+          ml: { lg: `${drawerWidth}px` },
+          boxShadow: 'none',
+          backgroundColor: "#f4f5f7"
+        }}
+        color="inherit"
+      >
+        <Toolbar
+          sx={{ display: 'flex', justifyContent: 'space-between', mx: '8px' }}
+        >
+          <IconButton
+            color="inherit"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { lg: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
     
         <Box
             component="nav"
@@ -147,18 +172,18 @@ function ClientHub() {
         <Toolbar />
   
         {/* body */}
-          <Routes>
-            <Route path="/quotes" element={<ClientHubQuotes success={success} />} />
-            <Route path="/quotes/:quoteId" element={<ClientHubQuote success={success} />} />
-            <Route path="/invoices" element={<ClientHubInvoices success={success} />} />
-            <Route path="/invoices/:invoiceId" element={<ClientHubInvoice success={success} />} />
-            <Route path="*" element={<Login />} />
-          </Routes>
-          <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} open={successOpen} autoHideDuration={4000} onClose={handleSuccessClose}>
-              <Alert onClose={handleSuccessClose} severity="success" sx={{ width: '100%' }}>
-                {successMessage}
-              </Alert>
-          </Snackbar>
+            <Routes>
+              <Route path="/quotes" element={<ClientHubQuotes success={success} />} />
+              <Route path="/quotes/:quoteId" element={<ClientHubQuote success={success} />} />
+              <Route path="/invoices" element={<ClientHubInvoices success={success} />} />
+              <Route path="/invoices/:invoiceId" element={<ClientHubInvoice success={success} />} />
+              <Route path="*" element={<Login />} />
+            </Routes>
+            <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} open={successOpen} autoHideDuration={4000} onClose={handleSuccessClose}>
+                <Alert onClose={handleSuccessClose} severity="success" sx={{ width: '100%' }}>
+                  {successMessage}
+                </Alert>
+            </Snackbar>
       </Box>
       </Box>
   );

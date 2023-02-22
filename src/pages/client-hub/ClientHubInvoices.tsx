@@ -70,7 +70,7 @@ function ClientHubInvoices(props: any) {
                 {loading && (<Box textAlign='center'><CircularProgress /></Box>)}
                 {error && (<Alert severity="error">{error}</Alert>)}
                 {!loading && !error && rows?.filter((invoice: any) => invoice.status === status)?.map((invoice: any) => (
-                    <Grid item xs={4} key={invoice.id}>
+                    <Grid item xs={12} md={6} lg={4} key={invoice.id}>
                         <Card>
                             <ListItemButton onClick={() => handleClick(invoice.id)}>
                                 <Stack width={'100%'} spacing={2}>

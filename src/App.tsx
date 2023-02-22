@@ -17,7 +17,7 @@ import { theme } from './theme/theme';
 import ClientHub from './pages/client-hub/ClientHub';
 import { auth, loginAnonymously, signInFromEmail } from "./auth/firebase";
 import CryptoJS from 'crypto-js';
-import {HelmetProvider} from "react-helmet-async";
+import {Helmet, HelmetProvider} from "react-helmet-async";
 import { isSignInWithEmailLink } from 'firebase/auth';
 import { createTimeline } from './pages/client-hub/api/clientPublic.api';
 
@@ -27,6 +27,9 @@ function App() {
 
   const children = (
   <HelmetProvider>
+    <Helmet>
+        <title>Cutting Edge</title>
+    </Helmet>
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Router>

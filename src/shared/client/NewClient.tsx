@@ -17,6 +17,7 @@ import {
   DialogTitle,
   IconButton,
   InputAdornment,
+  InputLabel,
   LinearProgress,
   Stack,
   Step,
@@ -190,9 +191,12 @@ export default function NewClient(props: any) {
     ?.filter((c: any) => c.type === 'phone')
     ?.map((phone: any, index: any) => {
       return (
+        <Stack>
+        <InputLabel id="phone-label" sx={{ color: 'primary.main' }}>
+            Phone
+        </InputLabel>
         <TextField
           key={index}
-          label="Phone"
           type={'tel'}
           value={phone.content}
           error={!(phone.content.length > 4 || phone.content.length < 1)}
@@ -210,6 +214,7 @@ export default function NewClient(props: any) {
             ),
           }}
         />
+        </Stack>
       );
     });
 
@@ -217,9 +222,12 @@ export default function NewClient(props: any) {
     ?.filter((c: any) => c.type === 'email')
     ?.map((email: any, index: any) => {
       return (
+        <Stack>
+          <InputLabel id="email-label" sx={{ color: 'primary.main' }}>
+              Email
+          </InputLabel>
         <TextField
           key={index}
-          label="Email"
           type={'email'}
           value={email.content}
           onChange={(e) => handleChangeEmail(e, index)}
@@ -237,6 +245,7 @@ export default function NewClient(props: any) {
             ),
           }}
         />
+        </Stack>
       );
     });
 
@@ -247,7 +256,7 @@ export default function NewClient(props: any) {
       </IconButton>
       <DialogTitle align="center">Create new client</DialogTitle>
       <DialogContent>
-        {loading && <LinearProgress />}
+        {loading && <LinearProgress sx={{marginTop: 2}} />}
         <Box sx={{ width: '100%' }}>
           <Stepper activeStep={activeStep}>
             <Step>
@@ -261,9 +270,12 @@ export default function NewClient(props: any) {
             {activeStep === 0 ? (
               <Stack spacing={2}>
                 <Stack direction={'row'} spacing={2}>
+                  <Stack>
+                  <InputLabel id="first-label" sx={{ color: 'primary.main' }}>
+                      First name
+                  </InputLabel>
                   <TextField
                     id="first"
-                    label="First name"
                     defaultValue={contact.first ? contact.first : undefined}
                     onChange={handleChange}
                     InputProps={{
@@ -274,9 +286,13 @@ export default function NewClient(props: any) {
                       ),
                     }}
                   />
+                  </Stack>
+                  <Stack>
+                    <InputLabel id="last-label" sx={{ color: 'primary.main' }}>
+                        Last name
+                    </InputLabel>
                   <TextField
                     id="last"
-                    label="Last name"
                     defaultValue={contact.last ? contact.last : undefined}
                     onChange={handleChange}
                     InputProps={{
@@ -287,6 +303,7 @@ export default function NewClient(props: any) {
                       ),
                     }}
                   />
+                  </Stack>
                 </Stack>
                 {phoneNumbers}
                 <Button
@@ -309,24 +326,36 @@ export default function NewClient(props: any) {
               <form>
                 <AddressAutofill accessToken={mapboxgl.accessToken}>
                   <Stack spacing={2}>
+                  <Stack>
+                    <InputLabel id="address-label" sx={{ color: 'primary.main' }}>
+                        Address
+                    </InputLabel>
                     <TextField
                       id="address"
-                      label="Address"
                       autoComplete="street-address"
                       defaultValue={
                         property.address ? property.address : undefined
                       }
                       onChange={handleChangeProperty}
                     />
+                    </Stack>
+                    <Stack>
+                    <InputLabel id="unit-label" sx={{ color: 'primary.main' }}>
+                        Unit
+                    </InputLabel>
                     <TextField
                       id="address2"
-                      label="Unit"
                       defaultValue={
                         property.address2 ? property.address2 : undefined
                       }
                       onChange={handleChangeProperty}
                     />
+                    </Stack>
                     <Stack direction="row" spacing={2}>
+                    <Stack>
+                      <InputLabel id="city-label" sx={{ color: 'primary.main' }}>
+                          City
+                      </InputLabel>
                       <TextField
                         id="city"
                         label="City"
@@ -334,6 +363,11 @@ export default function NewClient(props: any) {
                         defaultValue={property.city ? property.city : undefined}
                         onChange={handleChangeProperty}
                       />
+                      </Stack>
+                      <Stack>
+                      <InputLabel id="state-label" sx={{ color: 'primary.main' }}>
+                          State
+                      </InputLabel>
                       <TextField
                         id="state"
                         label="State/Province"
@@ -343,15 +377,24 @@ export default function NewClient(props: any) {
                         }
                         onChange={handleChangeProperty}
                       />
+                      </Stack>
                     </Stack>
                     <Stack direction="row" spacing={2}>
+                    <Stack>
+                      <InputLabel id="postal-label" sx={{ color: 'primary.main' }}>
+                          Postal
+                      </InputLabel>
                       <TextField
                         id="zip"
-                        label="Postal"
                         autoComplete="postal-code"
                         defaultValue={property.zip ? property.zip : undefined}
                         onChange={handleChangeProperty}
                       />
+                      </Stack>
+                      <Stack>
+                        <InputLabel id="country-label" sx={{ color: 'primary.main' }}>
+                            Country
+                        </InputLabel>
                       <TextField
                         id="country"
                         label="Country"
@@ -361,6 +404,7 @@ export default function NewClient(props: any) {
                         }
                         onChange={handleChangeProperty}
                       />
+                      </Stack>
                     </Stack>
                   </Stack>
                 </AddressAutofill>

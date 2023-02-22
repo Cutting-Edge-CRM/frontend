@@ -1,10 +1,11 @@
-import { Alert, Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress, Tab, Tabs, TextField, Typography, useMediaQuery } from '@mui/material';
 import { Stack } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { getClient } from '../api/client.api';
 import { sendEmail } from '../api/email.api';
 import { sendSMS } from '../api/sms.api';
 import { currentUser } from '../auth/firebase';
+import { theme } from '../theme/theme';
 import { emailValid } from '../util/tools';
 
 export default function SendQuoteModal(props: any) {
@@ -136,10 +137,10 @@ export default function SendQuoteModal(props: any) {
             setError(err.message);
         })
         // eslint-disable-next-line
-    }, [props])
+    }, [])
     
     return (
-    <Dialog onClose={handleCancel} open={props.open} fullWidth maxWidth="sm">
+        <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))} onClose={handleCancel} open={props.open} fullWidth>
         <DialogTitle align="center">Send Quote</DialogTitle>
         {loading && <LinearProgress />}
         <DialogContent>
@@ -162,6 +163,7 @@ export default function SendQuoteModal(props: any) {
                     <>
                     {emailMessage.toList.map((to: string, index: number) => (
                         <Chip
+                        sx={{backgroundColor: "blue.main", color: "blue.dark"}}
                         onDelete={() => handleEmailDelete(to)}
                         key={index}
                         label={to}/>
@@ -208,6 +210,7 @@ export default function SendQuoteModal(props: any) {
                     {smsMessage.toList.map((to: string, index: number) => (
                         <Chip
                         onDelete={() => handleSMSDelete(to)}
+                        sx={{backgroundColor: "blue.main", color: "blue.dark"}}
                         key={index}
                         label={to}/>
                     ))}

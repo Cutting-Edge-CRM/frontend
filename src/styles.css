@@ -5,6 +5,7 @@ mapbox-search-listbox {
 
 html, body, #root {
     height: 100%;
+    overflow : scroll;
   }
 
 .App {

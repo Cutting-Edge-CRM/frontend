@@ -2,7 +2,6 @@ import {
   AddCircleOutlineOutlined,
   AttachMoney,
   DeleteOutline,
-  FileDownloadOutlined,
   FormatPaintOutlined,
   MarkEmailReadOutlined,
   MoneyOffOutlined,
@@ -436,12 +435,12 @@ function InvoiceDetails(props: any) {
                 </ListItemIcon>
                 <ListItemText>Send</ListItemText>
               </MenuItem>
-              <MenuItem>
+              {/* <MenuItem>
                 <ListItemIcon>
                   <FileDownloadOutlined />
                 </ListItemIcon>
                 <ListItemText>Download PDF</ListItemText>
-              </MenuItem>
+              </MenuItem> */}
               <MenuItem onClick={handleDeleteOpen}>
                 <ListItemIcon>
                   <DeleteOutline />
@@ -627,6 +626,9 @@ function InvoiceDetails(props: any) {
                       )}
                       size="small"
                     >
+                      <MenuItem key={'goto-tax'} onClick={() => navigate('/settings?tab=payments')}>
+                          <ListItemText primary={'Add Tax'} />
+                      </MenuItem>
                       {props.taxes.map((tax: any) => (
                         <MenuItem key={tax.id} value={tax}>
                           <Checkbox

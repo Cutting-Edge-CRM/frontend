@@ -5,7 +5,6 @@ import {
   Check,
   ContentCopyOutlined,
   DeleteOutline,
-  FileDownloadOutlined,
   FormatPaintOutlined,
   MarkEmailReadOutlined,
   MoreVert,
@@ -256,6 +255,7 @@ function TabPanel(props: any) {
   const [taxAmount, setTaxAmount] = useState(0);
   const [subTotalAmount, setSubtotalAmount] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
+  const navigate = useNavigate();
 
   const handleChangeDeposit = (event: any) => {
     let options = props.quote.options;
@@ -491,6 +491,9 @@ function TabPanel(props: any) {
                         )}
                         size="small"
                       >
+                        <MenuItem key={'goto-tax'} onClick={() => navigate('/settings?tab=payments')}>
+                            <ListItemText primary={'Add Tax'} />
+                        </MenuItem>
                         {props.taxes.map((tax: any) => (
                           <MenuItem key={tax.id} value={tax}>
                             <Checkbox checked={tax.id === props.option.tax} />
@@ -753,7 +756,7 @@ function QuoteDetails(props: any) {
         </Button>
         <Button
         variant="contained"
-        color="primary"
+        sx={{backgroundColor: 'yellow.main', color: 'yellow.dark'}}
         onClick={() => markQuoteAs('Pending')}
         >
           Mark as Pending
@@ -765,7 +768,7 @@ function QuoteDetails(props: any) {
       return (
         <Button
         variant="contained"
-        color="primary"
+        sx={{backgroundColor: 'green.main', color: 'green.dark'}}
         onClick={() => markQuoteAs('Approved')}
         >
           Approve
@@ -898,12 +901,12 @@ function QuoteDetails(props: any) {
                 </ListItemIcon>
                 <ListItemText>Send</ListItemText>
               </MenuItem>
-              <MenuItem>
+              {/* <MenuItem>
                 <ListItemIcon>
                   <FileDownloadOutlined />
                 </ListItemIcon>
                 <ListItemText>Download PDF</ListItemText>
-              </MenuItem>
+              </MenuItem> */}
               {props.quote.quote.status !== ('Converted' || 'Archived') && (
                 <MenuItem onClick={() => markQuoteAs('Archived')}>
                   <ListItemIcon>

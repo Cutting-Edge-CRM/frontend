@@ -58,7 +58,7 @@ function ClientHubQuotes(props: any) {
             <Card sx={{marginBottom: 4, pt: 2}}>
             <Typography variant="h6" fontWeight={600}>Your Quotes</Typography>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={value} onChange={handleChange}>
+            <Tabs value={value} onChange={handleChange} sx={{width: "70vw", '.MuiTabs-scroller': {overflowX: 'scroll !important', '::-webkit-scrollbar': {display: 'none'}}}} >
                 <Tab label="Pending" id="pending" />
                 <Tab label="Approved" id="approved" />
                 <Tab label="Rejected" id="rejected" />
@@ -72,7 +72,7 @@ function ClientHubQuotes(props: any) {
                 {loading && (<Box textAlign='center'><CircularProgress /></Box>)}
                 {error && (<Alert severity="error">{error}</Alert>)}
                 {!loading && !error && rows?.filter((quote: any) => quote.status === status)?.map((quote: any) => (
-                    <Grid item xs={4} key={quote.id}>
+                    <Grid item xs={12} md={6} lg={4} key={quote.id}>
                         <Card>
                             <ListItemButton onClick={() => handleClick(quote.id)}>
                                 <Stack width={'100%'} spacing={2}>
@@ -109,7 +109,6 @@ function ClientHubQuotes(props: any) {
                             </Card>
                     </Grid>))}
                 </Grid>
-                {/* {rows?.filter((quote: any) => quote.status === status)?.length === 0 && <Typography>{`No ${status} Quotes`}</Typography>} */}
                 </TabPanel>
             ))}
             </>

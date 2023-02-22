@@ -16,19 +16,21 @@ import {
   MenuItem,
   Select,
   TextField,
+  Typography,
   useMediaQuery,
 } from '@mui/material';
 import { Stack } from '@mui/system';
 import { DatePicker } from '@mui/x-date-pickers';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   deletePayment,
   recordPayment,
   updatePayment,
 } from '../api/payment.api';
-import { createDeposit, createPayment } from '../api/stripePayments.api';
+import { createDeposit, createPayment, retrieveAccount } from '../api/stripePayments.api';
 import { createTimeline } from '../api/timeline.api';
 import CheckoutForm from '../pages/client-hub/CheckoutForm';
 import { theme } from '../theme/theme';
@@ -39,6 +41,8 @@ export default function PaymentModal(props: any) {
   const [stripePromise, setStripePromise] = useState(null as any);
   const [error, setError] = useState(null);
   const [step, setStep] = useState(0);
+  const [paymentsSetup, setPaymentsSetup] = useState(false);
+  const navigate = useNavigate();
 
   const paymentMethods = [
     'Cash',
@@ -154,6 +158,17 @@ const getIntent = () => {
     }
 }
 
+useEffect(() => {
+  retrieveAccount()
+  .then(res => {
+      if (res.stripeRes?.charges_enabled) {
+        setPaymentsSetup(true);
+      }
+  }, err => {
+      setError(err.message);
+  })
+}, [])
+
   return (
     <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))} onClose={handleCancel} open={props.open}>
       <IconButton sx={{ justifyContent: 'start' }} onClick={handleCancel} disableRipple>
@@ -247,7 +262,7 @@ const getIntent = () => {
       {props.payment.method === 'Credit Card' &&
         <DialogContent>
           <Stack spacing={2}>
-          {step === 0 &&
+          {step === 0 && paymentsSetup &&
           <>
           <Stack spacing={1}>
           <InputLabel id="method-label" sx={{ color: 'primary.main' }}>
@@ -295,6 +310,38 @@ const getIntent = () => {
               <Button variant='outlined' onClick={handleCancel}>Cancel</Button>
               <Button variant='contained' onClick={handleChangeStep} disabled={!props.payment.amount || props.payment?.amount === '0'}>Continue</Button>
           </DialogActions>
+          </>
+          }
+          {step === 0 && !paymentsSetup && 
+          <>
+            <Stack spacing={1}>
+            <InputLabel id="method-label" sx={{ color: 'primary.main' }}>
+              Payment Method
+            </InputLabel>
+            <Select
+              labelId="method-label"
+              id="method"
+              value={props.payment.method}
+              onChange={handleChangeMethod}
+              renderValue={(selected) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selected}
+                </Box>
+              )}
+            >
+              {paymentMethods.map((method: any) => (
+                <MenuItem key={method} value={method}>
+                  <Checkbox checked={method === props.payment.method} />
+                  <ListItemText primary={method} />
+                </MenuItem>
+              ))}
+            </Select>
+            </Stack>
+          <Stack alignItems={'center'} spacing={2} my={4}>
+            <Typography fontSize={20} fontWeight={600}>Get paid faster!</Typography>
+            <Typography fontSize={14} fontWeight={500}>Allow your customers to pay via credit card and have it directly deposited in your bank account.</Typography>
+            <Button variant='contained' onClick={() => navigate('/settings?tab=payments')}>Set Up</Button>
+          </Stack>
           </>
           }
           {loading && <Box textAlign='center'><CircularProgress /></Box>}

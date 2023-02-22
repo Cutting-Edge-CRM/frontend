@@ -13,7 +13,6 @@ import {
   FormatPaintOutlined,
   PeopleOutlineOutlined,
   CalendarMonthOutlined,
-  TrendingUpOutlined,
   SellOutlined,
   AccessTimeOutlined,
   SettingsOutlined,
@@ -86,7 +85,7 @@ const NavList = styled(List)<ListProps>(({ theme }) => ({
 
 const drawerWidth = 270;
 const topTabs = [
-  { display: 'Dashboard', slug: 'dashbaord', icon: <TrendingUpOutlined /> },
+  // { display: 'Dashboard', slug: 'dashbaord', icon: <TrendingUpOutlined /> },
   { display: 'Schedule', slug: 'schedule', icon: <CalendarMonthOutlined />, premium: true },
   { display: 'Clients', slug: 'clients', icon: <PeopleOutlineOutlined /> },
   { display: 'Quotes', slug: 'quotes', icon: <SellOutlined /> },
@@ -226,9 +225,10 @@ function Shell() {
   const drawer = (
     <Stack height="100%">
       <Toolbar>
-        <Avatar sx={{ mr: 1, bgcolor: 'primary.main' }}>CE</Avatar>
+        <Avatar sx={{ mr: 1 }} src="https://res.cloudinary.com/dtjqpussy/image/upload/v1677000634/Untitled_design_3_ngtu7h.png" sizes='small'>
+        </Avatar>
         <Typography variant="h6" noWrap component="div" fontWeight={600}>
-          CuttingEdge CRM
+          Cutting Edge
         </Typography>
       </Toolbar>
       <Stack justifyContent="space-around" height="100%">
@@ -501,7 +501,7 @@ function Shell() {
           />
           <Route path="/settings" element={<CompanySettings success={success} subscription={subscription}/>} />
           <Route path="/timesheets" element={<Timesheets success={success} subscription={subscription}/>} />
-          <Route path="/" element={<Dashboard success={success} settings={settings} />} />
+          <Route path="/" element={<Clients success={success} settings={settings} subscription={subscription} />} />
         </Routes>
         <Snackbar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
