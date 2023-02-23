@@ -6,7 +6,8 @@ export const Card = (theme: Theme) => {
       styleOverrides: {
         root: {
           borderRadius: '15px',
-          padding: `0px ${theme.spacing(2.5)}`
+          padding: `0px ${theme.spacing(2.5)}`,
+          boxShadow: 'none'
         },
       },
     },

@@ -3,7 +3,7 @@ import { Alert, Box, Button, Card, CardContent, CircularProgress, Grid, InputAdo
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerNewTenant } from '../../../api/tenant.api';
-import { registerNewTenantUser } from '../../../auth/firebase';
+import { logInWithEmailAndPassword, logout, registerNewTenantUser } from '../../../auth/firebase';
 import { theme } from '../../../theme/theme';
 import { emailValid } from '../../../util/tools';
 
@@ -22,8 +22,17 @@ function Register() {
         .then(tenant => {
           registerNewTenantUser(tenant.id, email, password)
           .then(res => {
-            setRegistering(false);
-            navigate('/dashboard');
+            logout()
+            .then(_ => {
+              logInWithEmailAndPassword(email, password)
+              .then(user => {
+                setRegistering(false);
+                navigate('/clients');
+              }, err => {
+                setRegistering(false);
+                setError(err.message);
+              })
+            })
           }, err => {
             setRegistering(false);
             setError(err.message);

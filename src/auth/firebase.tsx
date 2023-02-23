@@ -91,18 +91,22 @@ const logInWithEmailAndPassword = async (email: string, password: string) => {
 
 const loginAnonymously = async (client: string) => {
   try {
-    return getTenantForClient(client).then(res => {
-      let tenantId = res.company;
-      auth.tenantId = tenantId;
-      return signInAnonymously(auth)
-      .then((result) => {
-        console.log(result);
-        return result;
+    return signOut(auth).then(so => {
+      return getTenantForClient(client).then(res => {
+        let tenantId = res.company;
+        auth.tenantId = tenantId;
+        return signInAnonymously(auth)
+        .then((result) => {
+          console.log(result);
+          return result;
+        })
+        .catch((error) => {
+          return Promise.reject(error);
+        });
+      }).catch(err => {
+        return Promise.reject(err);
       })
-      .catch((error) => {
-        return Promise.reject(error);
-      });
-    }).catch(err => {
+    }, err => {
       return Promise.reject(err);
     })
   } catch (err) {
@@ -149,29 +153,14 @@ const registerWithEmailAndPassword = async (email: string, password: string) => 
 const registerNewTenantUser = async (id: string, email: string, password: string) => {
   try {
     auth.tenantId = id;
-    createUserWithEmailAndPassword(auth, email, password)
+    return createUserWithEmailAndPassword(auth, email, password)
     .then(res => {
       const user = res.user;
-      // set user permissions. Won't be authed. Maybe check that user is only user on tenant to verify it's the first?
-
-      addUserToTenant(auth.tenantId as string, email, user.uid)
+      return addUserToTenant(auth.tenantId as string, email, user.uid)
       .then(_ => {
-        addDoc(collection(db, "users"), {
-          uid: user.uid,
-          authProvider: "local",
-          email,
-        }).then(_ => {
-          currentUser.getIdToken(true)
-          .then(res => {
-            currentUser.getIdToken(true)
-            .then(res => {
-              // successfully created new user
-            }, err => {
-              console.error(err);
-            })
-          }, err => {
-            console.error(err);
-          })
+        return currentUser.getIdToken(true)
+        .then(res => {
+          return; // successfully created new user
         }, err => {
           console.error(err);
         })
@@ -207,8 +196,8 @@ const sendPasswordReset = async (email: string) => {
   }
 };
 
-const logout = () => {
-  signOut(auth);
+const logout = async () => {
+  return signOut(auth);
 };
 
 onAuthStateChanged(auth, (user) => {

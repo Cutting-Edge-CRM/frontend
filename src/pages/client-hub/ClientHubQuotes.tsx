@@ -62,11 +62,12 @@ function ClientHubQuotes(props: any) {
                 <Tab label="Pending" id="pending" />
                 <Tab label="Approved" id="approved" />
                 <Tab label="Rejected" id="rejected" />
+                <Tab label="Converted" id="converted" />
                 <Tab label="Archived" id="archived" />
             </Tabs>
             </Box>
             </Card>
-            {(['Pending', 'Approved', 'Rejected', 'Archived']).map((status, index) => (
+            {(['Pending', 'Approved', 'Rejected', 'Converted', 'Archived']).map((status, index) => (
                 <TabPanel value={value} index={index} key={index}>
                 <Grid container spacing={2}>
                 {loading && (<Box textAlign='center'><CircularProgress /></Box>)}

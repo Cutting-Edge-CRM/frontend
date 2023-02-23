@@ -1,4 +1,4 @@
-import { CreateOutlined } from '@mui/icons-material';
+import { CreateOutlined, OpenInNew } from '@mui/icons-material';
 import {
   Alert,
   Avatar,
@@ -12,6 +12,7 @@ import {
   TypographyProps,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getClient } from '../../api/client.api';
 import { currentUserClaims } from '../../auth/firebase';
 import { getChipColor } from '../../theme/theme';
@@ -26,6 +27,7 @@ function Contact(props: any) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
   const [contact, setContact] = useState({} as any);
+  const navigate = useNavigate();
 
   const handleEditOpen = () => {
     setOpen(true);
@@ -38,6 +40,10 @@ function Contact(props: any) {
   const handleUpdate = (value: string) => {
     setOpen(false);
   };
+
+  const handleGoToClient = () => {
+    navigate(`/clients/${props.client}`);
+  }
 
   useEffect(() => {
     getClient(props.client).then(
@@ -71,6 +77,7 @@ function Contact(props: any) {
       </Avatar>
       <Typography fontWeight={600} fontSize={18}>
         {contact?.first} {contact?.last}
+        <IconButton onClick={handleGoToClient}><OpenInNew/></IconButton>
       </Typography>
       </Stack>
       {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&

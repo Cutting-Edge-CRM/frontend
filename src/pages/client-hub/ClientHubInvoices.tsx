@@ -100,7 +100,7 @@ function ClientHubInvoices(props: any) {
                                 <Divider/>
                                 <Stack direction={'row'} spacing={1} justifyContent='end'>
                                     <Typography variant="h6" color="primary" fontWeight={700}>Balance</Typography>
-                                    <Typography variant="h6" fontWeight={700}>{`$${invoice.price}`}</Typography>
+                                    <Typography variant="h6" fontWeight={700}>{`$${Math.max(invoice.price - invoice.paymentSum, 0)}`}</Typography>
                                 </Stack>
                                 </Stack>
                                 </ListItemButton>

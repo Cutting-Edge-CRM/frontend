@@ -191,12 +191,11 @@ export default function NewClient(props: any) {
     ?.filter((c: any) => c.type === 'phone')
     ?.map((phone: any, index: any) => {
       return (
-        <Stack>
+        <Stack key={index}>
         <InputLabel id="phone-label" sx={{ color: 'primary.main' }}>
             Phone
         </InputLabel>
         <TextField
-          key={index}
           type={'tel'}
           value={phone.content}
           error={!(phone.content.length > 4 || phone.content.length < 1)}
@@ -209,7 +208,7 @@ export default function NewClient(props: any) {
             ),
             endAdornment: (
               <IconButton onClick={(e) => handleRemovePhone(e, index)}>
-                <DeleteOutline />
+                <DeleteOutline color="error" />
               </IconButton>
             ),
           }}
@@ -222,12 +221,11 @@ export default function NewClient(props: any) {
     ?.filter((c: any) => c.type === 'email')
     ?.map((email: any, index: any) => {
       return (
-        <Stack>
+        <Stack key={index}>
           <InputLabel id="email-label" sx={{ color: 'primary.main' }}>
               Email
           </InputLabel>
         <TextField
-          key={index}
           type={'email'}
           value={email.content}
           onChange={(e) => handleChangeEmail(e, index)}
@@ -240,7 +238,7 @@ export default function NewClient(props: any) {
             ),
             endAdornment: (
               <IconButton onClick={(e) => handleRemoveEmail(e, index)}>
-                <DeleteOutline />
+                <DeleteOutline color="error" />
               </IconButton>
             ),
           }}
@@ -256,7 +254,7 @@ export default function NewClient(props: any) {
       </IconButton>
       <DialogTitle align="center">Create new client</DialogTitle>
       <DialogContent>
-        {loading && <LinearProgress sx={{marginTop: 2}} />}
+        {loading && <LinearProgress sx={{marginBottom: 2}} />}
         <Box sx={{ width: '100%' }}>
           <Stepper activeStep={activeStep}>
             <Step>
@@ -358,7 +356,6 @@ export default function NewClient(props: any) {
                       </InputLabel>
                       <TextField
                         id="city"
-                        label="City"
                         autoComplete="address-level2"
                         defaultValue={property.city ? property.city : undefined}
                         onChange={handleChangeProperty}
@@ -370,7 +367,6 @@ export default function NewClient(props: any) {
                       </InputLabel>
                       <TextField
                         id="state"
-                        label="State/Province"
                         autoComplete="address-level1"
                         defaultValue={
                           property.state ? property.state : undefined
@@ -397,7 +393,6 @@ export default function NewClient(props: any) {
                         </InputLabel>
                       <TextField
                         id="country"
-                        label="Country"
                         autoComplete="country-name"
                         defaultValue={
                           property.country ? property.country : undefined

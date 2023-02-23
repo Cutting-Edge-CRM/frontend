@@ -173,7 +173,7 @@ function JobItemEdit(props: any) {
         {props.job.items.length > 1 && 
           <Button
           onClick={handleDeleteItem}
-          startIcon={<DeleteOutline />}
+          startIcon={<DeleteOutline color="error" />}
           color="error"
           sx={{ alignSelf: 'flex-end' }}
         >
@@ -373,7 +373,7 @@ function JobDetails(props: any) {
               </MenuItem>
               <MenuItem onClick={handleDeleteOpen}>
                 <ListItemIcon>
-                  <DeleteOutline />
+                  <DeleteOutline color="error" />
                 </ListItemIcon>
                 <ListItemText>Delete Job</ListItemText>
               </MenuItem>

@@ -1,4 +1,4 @@
-import { Alert, Button, Dialog, DialogActions, DialogContent, LinearProgress, Typography } from '@mui/material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, LinearProgress, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { createTimeline, updateQuote } from './api/clientPublic.api';
 
@@ -51,17 +51,44 @@ export default function ConfirmDelete(props: any) {
     }, [props.type, props.price])  
     
     return (
-    <Dialog onClose={handleCancel} open={props.open}>
-        <DialogContent>
+    // <Dialog onClose={handleCancel} open={props.open}>
+    //     <DialogContent>
+    //         {loading && <LinearProgress />}
+    //         <Typography>{title}</Typography>
+    //         <Typography>{body}</Typography>
+    //     </DialogContent>
+    //     <DialogActions>
+    //         <Button onClick={handleCancel}>Cancel</Button>
+    //         <Button onClick={handleConfirm}>{title}</Button>
+    //     </DialogActions>
+    //     {error && <Alert severity="error">{error}</Alert>}
+    //   </Dialog>
+          <Dialog onClose={handleCancel} open={props.open}>
+          <DialogContent>
             {loading && <LinearProgress />}
-            <Typography>{title}</Typography>
-            <Typography>{body}</Typography>
-        </DialogContent>
-        <DialogActions>
-            <Button onClick={handleCancel}>Cancel</Button>
-            <Button onClick={handleConfirm}>{title}</Button>
-        </DialogActions>
-        {error && <Alert severity="error">{error}</Alert>}
-      </Dialog>
+            <Stack
+              spacing={2}
+              justifyContent="center"
+              alignItems="center"
+              maxWidth={400}
+            >
+              <Typography fontWeight={600} variant="h6" color="primary">
+                {title}
+              </Typography>
+              <Typography textAlign="center" variant="body1" color="neutral.main">
+                {body}
+              </Typography>
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCancel} variant="outlined">
+              Cancel
+            </Button>
+            <Button onClick={handleConfirm} variant="contained" color="primary">
+              {title}
+            </Button>
+          </DialogActions>
+          {error && <Alert severity="error">{error}</Alert>}
+        </Dialog>
     );
   }

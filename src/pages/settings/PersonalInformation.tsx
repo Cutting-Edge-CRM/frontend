@@ -1,6 +1,6 @@
 import { AddressAutofill } from '@mapbox/search-js-react';
 import { Email, Person, Phone, Place } from '@mui/icons-material';
-import { Alert, Box, Button, Card, Grid, InputAdornment, InputLabel, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Button, Card, Grid, InputAdornment, InputLabel, Stack, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { getUser, updateUser } from '../../api/user.api';
 

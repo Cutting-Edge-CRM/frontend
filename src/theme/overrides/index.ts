@@ -20,6 +20,6 @@ export const componentsOverrides = (theme: Theme) => {
     ...IconButton(theme),
     ...Chip(theme),
     ...Dialog(theme),
-    ...Accordion(theme)
+    ...Accordion(theme),
   };
 };

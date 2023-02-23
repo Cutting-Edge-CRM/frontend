@@ -170,7 +170,7 @@ useEffect(() => {
 }, [])
 
   return (
-    <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))} onClose={handleCancel} open={props.open}>
+    <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))} onClose={handleCancel} open={props.open} fullWidth>
       <IconButton sx={{ justifyContent: 'start' }} onClick={handleCancel} disableRipple>
         <Close fontSize='large'/>
       </IconButton>

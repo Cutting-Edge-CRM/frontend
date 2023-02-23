@@ -42,10 +42,15 @@ function Invoices(props: any) {
       hide: useMediaQuery(theme.breakpoints.down("sm")),
     },
     {
-      field: 'balance',
+      field: 'paymentSum',
       headerName: 'Balance',
       flex: 1,
       hide: useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {    
+        return (
+          <Typography>{Math.max(params.row.price - params.row.paymentSum, 0)}</Typography>
+        );
+      }
     },
     {
       field: 'status',

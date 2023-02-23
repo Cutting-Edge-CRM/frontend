@@ -217,7 +217,7 @@ function Notes(props: any) {
                       </MenuItem>
                       <MenuItem onClick={handleDeleteOpen}>
                         <ListItemIcon>
-                          <DeleteOutline />
+                          <DeleteOutline color="error" />
                         </ListItemIcon>
                         <ListItemText>Delete Note</ListItemText>
                       </MenuItem>

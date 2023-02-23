@@ -178,7 +178,7 @@ function InvoiceItemEdit(props: any) {
         {props.invoice.items.length > 1 && 
           <Button
           onClick={handleDeleteItem}
-          startIcon={<DeleteOutline />}
+          startIcon={<DeleteOutline color="error" />}
           color="error"
           sx={{ alignSelf: 'flex-end' }}
         >
@@ -443,7 +443,7 @@ function InvoiceDetails(props: any) {
               </MenuItem> */}
               <MenuItem onClick={handleDeleteOpen}>
                 <ListItemIcon>
-                  <DeleteOutline />
+                  <DeleteOutline color="error" />
                 </ListItemIcon>
                 <ListItemText>Delete invoice</ListItemText>
               </MenuItem>
@@ -463,7 +463,7 @@ function InvoiceDetails(props: any) {
               Created
             </Typography>
             <Typography textAlign="center" variant="body2">
-              11/27/2022
+            {dayjs(props.invoice.invoice.created).format("MM/DD/YYYY")}
             </Typography>
           </Stack>
           <Stack spacing={2}>
@@ -476,7 +476,7 @@ function InvoiceDetails(props: any) {
               Opened
             </Typography>
             <Typography textAlign="center" variant="body2">
-              11/27/2022
+            {dayjs(props.opened).format("MM/DD/YYYY")}
             </Typography>
           </Stack>
           <Stack spacing={2}>

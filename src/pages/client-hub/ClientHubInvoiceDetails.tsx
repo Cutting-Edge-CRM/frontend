@@ -88,7 +88,7 @@ function ClientHubInvoiceDetails(props: any) {
                   Client
                 </Typography>
                 <Typography textAlign="center" variant="body2">
-                  Jim Halpert
+                {props.client.first} {props.client.last}
                 </Typography>
               </Stack>
               <Stack spacing={2}>
@@ -101,8 +101,8 @@ function ClientHubInvoiceDetails(props: any) {
                   Sent
                 </Typography>
                 <Typography textAlign="center" variant="body2">
-                  11/27/2022
-                </Typography>
+                {dayjs(props.sent).format("MM/DD/YYYY")}
+              </Typography>
               </Stack>
               <Stack spacing={2}>
                 <Typography
@@ -113,9 +113,9 @@ function ClientHubInvoiceDetails(props: any) {
                 >
                   Opened
                 </Typography>
-                  <Typography textAlign="center" variant="body2">
-                  11/27/2022
-                  </Typography>
+                <Typography textAlign="center" variant="body2">
+                {dayjs(props.opened).format("MM/DD/YYYY")}
+              </Typography>
               </Stack>
               <Stack spacing={1}>
                 <Typography

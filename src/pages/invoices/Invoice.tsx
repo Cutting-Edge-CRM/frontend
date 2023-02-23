@@ -9,6 +9,7 @@ import { Alert, Box, CircularProgress } from '@mui/material';
 import { listTaxes } from '../../api/tax.api';
 import { listPayments } from '../../api/payment.api';
 import Timeline from '../../shared/timeline/Timeline';
+import { listTimeline } from '../../api/timeline.api';
 
 function Invoice(props: any) {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -18,6 +19,8 @@ function Invoice(props: any) {
     const [taxes, setTaxes] = useState([] as any);
     const [payments, setPayments] = useState([] as any);
     const [reload, setReload] = useState(false);
+    const [opened, setOpened] = useState([]);
+
 
     useEffect(() => {
         getInvoice(id)
@@ -46,6 +49,15 @@ function Invoice(props: any) {
     }, [id])
 
     useEffect(() => {
+        listTimeline(invoice.invoice?.client as string, "invoice", id)
+        .then(result => {
+            setOpened(result.filter((r: any) => r.resourceAction === 'opened')?.[0]?.created)
+        }, err => {
+            setError(err.message);
+        })
+    }, [invoice, id])
+
+    useEffect(() => {
         listPayments(invoice.invoice?.client)
         .then(res => {
             setPayments(res.filter((p: any) => (p.type === 'payment' && p.typeId === invoice.invoice?.id) || (p.type === 'deposit' && p.typeId === invoice.invoice?.quote)));
@@ -68,7 +80,7 @@ function Invoice(props: any) {
           <Grid xs={12} md={8} spacing={2}>
           <Grid container>
               <Grid xs={12}>
-              <InvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload} settings={props.settings}/>
+              <InvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload} settings={props.settings} opened={opened} />
               </Grid>
             </Grid>
           </Grid>

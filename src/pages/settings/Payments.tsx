@@ -1,6 +1,6 @@
 import { AddressAutofill } from '@mapbox/search-js-react';
-import { AddCircleOutlineOutlined, DeleteOutline, Percent } from '@mui/icons-material';
-import { Alert, Box, Button, Card, CircularProgress, Grid, IconButton, InputLabel, ListItemText, MenuItem, Select, Stack, TextField } from '@mui/material';
+import { AddCircleOutlineOutlined, DeleteOutline, OpenInNew, Percent } from '@mui/icons-material';
+import { Alert, Box, Button, Card, CircularProgress, Grid, IconButton, InputLabel, ListItemText, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { updateSettings } from '../../api/settings.api';
 import { retrieveAccount, startPaymentSetUp, continuePaymentSetUp, createAccountSession } from '../../api/stripePayments.api';
@@ -21,9 +21,9 @@ function Payments(props: any) {
         setLoading(true);
         startPaymentSetUp()
         .then(res => {
-            setLoading(false);
-            console.log(res);
             window.location.replace(res.url);
+            setLoading(false);
+
         }, err => {
             setLoading(false);
             console.error(err);
@@ -35,7 +35,6 @@ function Payments(props: any) {
         continuePaymentSetUp()
         .then(res => {
             setLoading(false);
-            console.log(res);
             window.location.replace(res.url);
         }, err => {
             setLoading(false);
@@ -93,10 +92,13 @@ function Payments(props: any) {
         setLoading(true);
         retrieveAccount()
         .then(res => {
+            console.log(res);
             setLoading(false);
-            if (res.stripeRes?.id === null) {
+            if (!res?.id) {
+                console.log('not started');
                 setSetupStatus('not-started');
-            } else if (!res.stripeRes?.charges_enabled) {
+            } else if (!res?.charges_enabled) {
+                console.log('incomplete');
                 setSetupStatus('incomplete');
             } else {
                 setSetupStatus('complete');
@@ -150,14 +152,9 @@ function Payments(props: any) {
             <AddressAutofill accessToken=''>
             <TextField sx={{display:'none'}} />
             </AddressAutofill>
-        <Box textAlign={'center'}>
-            {error && <Alert severity="error">{error}</Alert>}
-            {setupStatus === 'not-started' && <Button variant='contained' onClick={handleStartSetUp}>Set Up Payments</Button>}
-            {setupStatus === 'incomplete' && <Button variant='contained' onClick={handleContinueSetUp}>Set Up Payments</Button>}
-            {setupStatus === 'complete' && <Button variant='contained' onClick={handleDashboard}>Visit Dashboard</Button>}
-        </Box>
         <Grid container sx={{mb: 3}}>
             <Grid item xs={12} sm={6} padding={3}>
+            <Stack spacing={2}>
             <InputLabel id="currency-label" sx={{ color: 'primary.main' }}>
                 Currency
             </InputLabel>
@@ -182,9 +179,6 @@ function Payments(props: any) {
                 </MenuItem>
                 ))}
             </Select>
-            </Grid>
-            <Grid item xs={12} sm={6} padding={3}>
-            <Stack spacing={2}>
             <InputLabel id="tax-label" sx={{ color: 'primary.main' }}>
                 Tax Rates
             </InputLabel>
@@ -208,7 +202,7 @@ function Payments(props: any) {
                           }}
                     />
                     <IconButton onClick={(e) => handleRemoveTax(e, index)}>
-                        <DeleteOutline />
+                        <DeleteOutline color="error" />
                     </IconButton>
                 </Stack>
             ))}
@@ -220,6 +214,58 @@ function Payments(props: any) {
                 Add Tax Rate
             </Button>
             </Stack>
+            </Grid>
+            <Grid item xs={12} sm={6} padding={3}>
+            <Box
+            sx={{
+                backgroundColor: 'default.light',
+                borderRadius: '10px',
+                p: 2,
+                cursor: 'pointer',
+                borderColor: 'default.main',
+                border: "1px solid",
+                justifyContent: 'center',
+                height: "100%"
+            }}
+            >
+            
+            <Box alignItems={'center'} display={'flex'} flexDirection={'column'}>
+                {error && <Alert severity="error">{error}</Alert>}
+                {setupStatus === 'not-started' && 
+                <>
+                <IconButton onClick={handleStartSetUp}>
+                    <OpenInNew fontSize='large' color='primary'/>
+                </IconButton>
+                <Typography variant="body2" color="default.main" width={"60%"} textAlign={"center"} marginBottom={2}>
+                    Get paid faster! Set up payments in the payment portal to allow customers to pay via credit card and have the money deposited straight to your account.
+                </Typography>
+                <Button variant='contained' onClick={handleStartSetUp}>Set Up Payments</Button>
+                </>
+                }
+                {setupStatus === 'incomplete' && 
+                <>
+                <IconButton onClick={handleContinueSetUp}>
+                    <OpenInNew fontSize='large' color='primary'/>
+                </IconButton>
+                <Typography variant="body2" color="default.main" width={"60%"} textAlign={"center"} marginBottom={2}>
+                    Get paid faster! Set up payments in the payment portal to allow customers to pay via credit card and have the money deposited straight to your account.
+                </Typography>
+                <Button variant='contained' onClick={handleContinueSetUp}>Set Up Payments</Button>
+                </>
+                }
+                {setupStatus === 'complete' && 
+                <>
+                <IconButton onClick={handleDashboard}>
+                    <OpenInNew fontSize='large' color='primary'/>
+                </IconButton>
+                <Typography variant="body2" color="default.main" width={"60%"} textAlign={"center"} marginBottom={2}>
+                    Visit the dashboard to view analytics, change your bank account settings, get instant payouts, and more!
+                </Typography>
+                <Button variant='contained' onClick={handleDashboard}>Visit Dashboard</Button>
+                </>
+                }
+            </Box>
+            </Box>
             </Grid>
         </Grid>
         <Stack direction={'row'} spacing={2} justifyContent='center'>

@@ -269,7 +269,7 @@ function Visits(props: any) {
                       </MenuItem>
                       <MenuItem onClick={handleDeleteOpen}>
                         <ListItemIcon>
-                          <DeleteOutline />
+                          <DeleteOutline color="error" />
                         </ListItemIcon>
                         <ListItemText>Delete Visit</ListItemText>
                       </MenuItem>

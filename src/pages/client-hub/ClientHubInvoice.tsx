@@ -9,6 +9,8 @@ import { Elements } from '@stripe/react-stripe-js';
 import PaymentStatus from './PaymentStatus';
 import { loadStripe } from '@stripe/stripe-js';
 import { retrieveAccount } from '../../api/stripePayments.api';
+import { getClient } from '../../api/client.api';
+import { listTimeline } from '../../api/timeline.api';
 
 const stripePromise = loadStripe("pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww");
 
@@ -17,6 +19,9 @@ function ClientHubInvoice(props: any) {
     const [error, setError] = useState(null);
     const [invoice, setInvoice] = useState({} as any);
     const [taxes, setTaxes] = useState([] as any);
+    const [opened, setOpened] = useState([]);
+    const [sent, setSent] = useState([]);
+    const [client, setClient] = useState({} as any);
     const [payments, setPayments] = useState([] as any);
     const [reload, setReload] = useState(false);
     const [paymentsEnabled, setPaymentsEnabled] = useState(false);
@@ -34,6 +39,25 @@ function ClientHubInvoice(props: any) {
             setIsLoaded(true);
         })
     }, [invoiceId])
+
+    useEffect(() => {
+        getClient(clientId as string)
+        .then(result => {
+            setClient(result);
+        }, err => {
+            setError(err.message);
+        })
+    }, [clientId])
+
+    useEffect(() => {
+        listTimeline(clientId as string, "invoice", invoiceId)
+        .then(result => {
+            setOpened(result.filter((r: any) => r.resourceAction === 'opened')?.[0]?.created)
+            setSent(result.filter((r: any) => r.resourceAction === 'sent')?.[0]?.created)
+        }, err => {
+            setError(err.message);
+        })
+    }, [clientId, invoiceId])
 
     useEffect(() => {
         listTaxes()
@@ -81,7 +105,7 @@ function ClientHubInvoice(props: any) {
     return (
         <Elements stripe={stripePromise}>
         <PaymentStatus/>
-        <ClientHubInvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload} paymentsEnabled={paymentsEnabled} />
+        <ClientHubInvoiceDetails invoice={invoice} setInvoice={setInvoice} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload} paymentsEnabled={paymentsEnabled} client={client} opened={opened} sent={sent} />
         </Elements>
     )
 }

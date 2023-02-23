@@ -159,7 +159,7 @@ export default function EditContact(props: any) {
             ),
             endAdornment: (
               <IconButton onClick={(e) => handleRemovePhone(e, index)}>
-                <DeleteOutline />
+                <DeleteOutline color="error" />
               </IconButton>
             ),
           }}
@@ -189,7 +189,7 @@ export default function EditContact(props: any) {
             ),
             endAdornment: (
               <IconButton onClick={(e) => handleRemoveEmail(e, index)}>
-                <DeleteOutline />
+                <DeleteOutline color="error" />
               </IconButton>
             ),
           }}

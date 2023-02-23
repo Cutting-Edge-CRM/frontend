@@ -10,6 +10,7 @@ import { Alert, Box, CircularProgress } from '@mui/material';
 import { listTaxes } from '../../api/tax.api';
 import { listPayments } from '../../api/payment.api';
 import Timeline from '../../shared/timeline/Timeline';
+import { listTimeline } from '../../api/timeline.api';
 
 function Quote(props: any) {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -19,6 +20,7 @@ function Quote(props: any) {
     const [taxes, setTaxes] = useState([] as any);
     const [payments, setPayments] = useState([] as any);
     const [reload, setReload] = useState(false);
+    const [opened, setOpened] = useState([]);
 
     useEffect(() => {
         getQuote(id)
@@ -30,6 +32,15 @@ function Quote(props: any) {
             setIsLoaded(true);
         })
     }, [id, reload])
+
+    useEffect(() => {
+        listTimeline(quote.quote?.client as string, "quote", id)
+        .then(result => {
+            setOpened(result.filter((r: any) => r.resourceAction === 'opened')?.[0]?.created)
+        }, err => {
+            setError(err.message);
+        })
+    }, [quote, id])
 
     useEffect(() => {
         listTaxes()
@@ -69,7 +80,7 @@ function Quote(props: any) {
           <Grid xs={12} md={8} spacing={2}>
           <Grid container>
               <Grid xs={12}>
-                <QuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload}  settings={props.settings}/>
+                <QuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload}  settings={props.settings} opened={opened} />
               </Grid>
               <Grid xs={12}>
                 <Property property={quote.quote?.property} success={props.success}/>

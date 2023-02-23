@@ -5,7 +5,6 @@ import {
     Chip,
     Divider,
     Grid,
-    Link,
     List,
     MenuItem,
     Select,
@@ -309,7 +308,7 @@ import PaymentModal from './PaymentModal';
                 Client
               </Typography>
               <Typography textAlign="center" variant="body2">
-                Jim Halpert
+                {props.client.first} {props.client.last}
               </Typography>
             </Stack>
             <Stack spacing={2}>
@@ -322,7 +321,7 @@ import PaymentModal from './PaymentModal';
                 Sent
               </Typography>
               <Typography textAlign="center" variant="body2">
-                11/27/2022
+                {dayjs(props.sent).format("MM/DD/YYYY")}
               </Typography>
             </Stack>
             <Stack spacing={2}>
@@ -334,13 +333,9 @@ import PaymentModal from './PaymentModal';
               >
                 Opened
               </Typography>
-                <Link
-                  color="primary"
-                  sx={{ textAlign: 'center' }}
-                  href={`/jobs/${props.quote.quote.job}`}
-                >
-                  11/27/2022
-                </Link>
+              <Typography textAlign="center" variant="body2">
+                {dayjs(props.opened).format("MM/DD/YYYY")}
+              </Typography>
             </Stack>
             <Stack spacing={1}>
               <Typography

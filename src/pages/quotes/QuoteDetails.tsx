@@ -238,7 +238,7 @@ function QuoteItemEdit(props: any) {
         {props.option.items.length > 1 && 
           <Button
           onClick={handleDeleteItem}
-          startIcon={<DeleteOutline />}
+          startIcon={<DeleteOutline color="error" />}
           color="error"
           sx={{ alignSelf: 'flex-end' }}
         >
@@ -917,7 +917,7 @@ function QuoteDetails(props: any) {
               )}
               <MenuItem onClick={handleDeleteOpen}>
                 <ListItemIcon>
-                  <DeleteOutline />
+                  <DeleteOutline color="error" />
                 </ListItemIcon>
                 <ListItemText>Delete quote</ListItemText>
               </MenuItem>
@@ -951,7 +951,7 @@ function QuoteDetails(props: any) {
               Opened by client
             </Typography>
             <Typography textAlign="center" variant="body2">
-              11/27/2022
+              {dayjs(props.opened).format("MM/DD/YYYY")}
             </Typography>
           </Stack>
           <Stack spacing={2}>
