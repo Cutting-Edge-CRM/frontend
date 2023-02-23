@@ -75,7 +75,7 @@ function TabbedSummary(props: any) {
         setInvoicesError(err.message);
       }
     );
-  }, [props.client]);
+  }, [props.client, props.reload]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);

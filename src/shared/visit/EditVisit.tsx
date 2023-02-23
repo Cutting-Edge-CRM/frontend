@@ -165,7 +165,7 @@ export default function EditVisit(props: any) {
         setError(err.message);
       }
     );
-  }, [props.client]);
+  }, [props.client, props.reload]);
 
   return (
     <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))}  onClose={handleCancel} open={props.open}>

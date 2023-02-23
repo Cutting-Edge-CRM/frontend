@@ -75,6 +75,7 @@ export default function NewClient(props: any) {
             (propRes) => {
               setLoading(false);
               navigate(`/clients/${res.id}`);
+              props.onClose();
               props.success('Client created successfully');
             },
             (propErr) => {
@@ -85,6 +86,7 @@ export default function NewClient(props: any) {
         } else {
           setLoading(false);
           navigate(`/clients/${res.id}`);
+          props.onClose();
           props.success('Client created successfully');
         }
       },

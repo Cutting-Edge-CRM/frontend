@@ -128,7 +128,7 @@ function Visits(props: any) {
         setError(err.message);
       }
     );
-  }, [props, open, deleteOpen]);
+  }, [props, open, deleteOpen, props.reload]);
 
   if (props.subscription.subscription === 'basic' && !loading) {
     return(
@@ -300,6 +300,8 @@ function Visits(props: any) {
         setEndTime={setEndTime}
         success={props.success}
         job={props.job}
+        reload={props.reload}
+        setReload={props.setReload}
       />
       <ConfirmDelete
         open={deleteOpen}

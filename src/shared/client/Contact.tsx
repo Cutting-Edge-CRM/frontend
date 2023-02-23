@@ -56,7 +56,7 @@ function Contact(props: any) {
         setError(err.message);
       }
     );
-  }, [props, open]);
+  }, [props, open, props.reload]);
 
   return (
     <Card sx={{ py: 2 }}>

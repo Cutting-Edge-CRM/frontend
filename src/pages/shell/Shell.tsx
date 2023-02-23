@@ -22,6 +22,7 @@ import {
   WorkspacePremium,
   Info,
   Warning,
+  AddCircleOutline,
 } from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
@@ -62,6 +63,9 @@ import { listClients } from '../../api/client.api';
 import { listQuotes } from '../../api/quote.api';
 import { listJobs } from '../../api/job.api';
 import { listInvoices } from '../../api/invoice.api';
+import NewClient from '../../shared/client/NewClient';
+import SelectPropertyAndClient from '../../shared/client/SelectPropertyAndClient';
+import SelectClient from '../../shared/client/SelectClient';
 
 const NavList = styled(List)<ListProps>(({ theme }) => ({
   padding: theme.spacing(0, 3),
@@ -113,6 +117,8 @@ function Shell() {
   const [searchItems, setSearchItems] = useState([] as any);
   const [anchorElSearch, setAnchorElSearch] = React.useState<null | HTMLElement>(null);
   const isOpen = Boolean(anchorElSearch);
+  const [quickCreateOpen, setQuickCreateOpen] = useState(false);
+  const [quickCreateAnchor, setQuickCreateAnchor] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -199,6 +205,44 @@ function Shell() {
     setAnchorElSearch(null);
   }
 
+  const handleQuickCreate = (e: any) => {
+    setQuickCreateAnchor(e.target);
+    setQuickCreateOpen(!quickCreateOpen);
+  }
+
+  const [newClientOpen, setNewClientOpen] = useState(false);
+  const handleNewClient = () => {
+    setNewClientOpen(true);
+    setQuickCreateOpen(false);
+  }
+  const handleCloseClient = () => {
+    setNewClientOpen(false);
+  }
+  const [newQuoteOpen, setNewQuoteOpen] = useState(false);
+  const handleNewQuote = () => {
+    setNewQuoteOpen(true);
+    setQuickCreateOpen(false);
+  }
+  const handleCloseQuote = () => {
+    setNewQuoteOpen(false);
+  }
+  const [newJobOpen, setNewJobOpen] = useState(false);
+  const handleNewJob = () => {
+    setNewJobOpen(true);
+    setQuickCreateOpen(false);
+  }
+  const handleCloseJob = () => {
+    setNewJobOpen(false);
+  }
+  const [newInvoiceOpen, setNewInvoiceOpen] = useState(false);
+  const handleNewInvoice = () => {
+    setNewInvoiceOpen(true);
+    setQuickCreateOpen(false);
+  }
+  const handleCloseInvoice = () => {
+    setNewInvoiceOpen(false);
+  }
+
   useEffect(() => {
     getSettings().then(
       (res) => {
@@ -233,6 +277,58 @@ function Shell() {
       </Toolbar>
       <Stack justifyContent="space-around" height="100%">
         <NavList>
+          <ListItem disablePadding>
+              <ListItemButton
+                selected={quickCreateOpen}
+                onClick={handleQuickCreate}
+              >
+                <ListItemIcon><AddCircleOutline/></ListItemIcon>
+                <ListItemText
+                  primary="Create"
+                  primaryTypographyProps={{ fontSize: '14px', fontWeight: 500 }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <Menu
+            open={quickCreateOpen}
+            anchorEl={quickCreateAnchor}
+            onClose={handleQuickCreate}
+            anchorOrigin={{
+              vertical: 'center',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'center',
+              horizontal: 'left',
+            }}
+            >
+              <Stack direction={'row'}>
+                <MenuItem onClick={handleNewClient}>
+                  <Stack alignItems={'center'}>
+                    <PeopleOutlineOutlined color='primary'/>
+                    <Typography>Client</Typography>
+                  </Stack>
+                </MenuItem>
+                <MenuItem onClick={handleNewQuote}>
+                  <Stack alignItems={'center'}>
+                    <SellOutlined color='primary'/>
+                    <Typography>Quote</Typography>
+                  </Stack>
+                </MenuItem>
+                <MenuItem onClick={handleNewJob}>
+                  <Stack alignItems={'center'}>
+                    <FormatPaintOutlined color='primary'/>
+                    <Typography>Job</Typography>
+                  </Stack>
+                </MenuItem>
+                <MenuItem onClick={handleNewInvoice}>
+                  <Stack alignItems={'center'}>
+                    <AttachMoney color='primary'/>
+                    <Typography>Invoice</Typography>
+                  </Stack>
+                </MenuItem>
+              </Stack>
+            </Menu>
           {topTabs.map((tab, index) => (
             <ListItem key={tab.display} disablePadding>
               <ListItemButton
@@ -518,6 +614,22 @@ function Shell() {
           </Alert>
         </Snackbar>
       </Box>
+      <NewClient
+        open={newClientOpen}
+        onClose={handleCloseClient}
+        success={success}
+      />
+      <SelectPropertyAndClient
+        open={newQuoteOpen || newJobOpen}
+        onClose={newQuoteOpen ? handleCloseQuote: handleCloseJob}
+        type={newQuoteOpen ? "Quotes" : "Jobs"}
+        success={success}
+      />
+      <SelectClient
+        open={newInvoiceOpen}
+        onClose={handleCloseInvoice}
+        success={success}
+      />
     </Box>
   );
 }

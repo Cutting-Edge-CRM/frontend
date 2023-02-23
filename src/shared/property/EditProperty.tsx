@@ -33,6 +33,7 @@ export default function EditProperty(props: any) {
           setLoading(false);
           props.update(res);
           props.success('Successfully updated property');
+          props.setReload(!props.reload);
         },
         (err) => {
           setLoading(false);
@@ -48,6 +49,7 @@ export default function EditProperty(props: any) {
           setLoading(false);
           props.create(res);
           props.success('Successfully created property');
+          props.setReload(!props.reload);
         },
         (err) => {
           setLoading(false);

@@ -86,7 +86,6 @@ function Properties(props: any) {
   };
 
   const handleCreate = (res: any) => {
-    // set selected property
     setOpen(false);
   };
 
@@ -240,7 +239,7 @@ function Properties(props: any) {
         setError(err.message);
       }
     );
-  }, [props, open, deleteOpen]);
+  }, [props, open, props.reload]);
 
   function getCoords(address: any) {
     let query = [
@@ -274,6 +273,7 @@ function Properties(props: any) {
   }
 
   const onDelete = () => {
+    props.setReload(!props.reload);
     return;
   };
 
@@ -344,6 +344,8 @@ function Properties(props: any) {
         modalType={modalType}
         token={process.env.REACT_APP_MAPBOX_TOKEN}
         success={props.success}
+        reload={props.reload} 
+        setReload={props.setReload}
         {...props}
       />
       <ConfirmDelete

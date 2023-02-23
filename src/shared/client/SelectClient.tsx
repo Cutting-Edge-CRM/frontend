@@ -73,6 +73,7 @@ export default function SelectClient(props: any) {
             (_) => {
               setLoading(false);
               navigate(`/invoices/${res.id}`);
+              props.onClose();
               props.success('Successfully created new invoice');
             },
             (err) => {

@@ -15,6 +15,7 @@ function Client(props: any) {
   let { id } = useParams();
   const [deleteOpen, setDeleteOpen] = useState(false);
   const navigate = useNavigate();
+  const [reload, setReload] = useState(false);
 
   const handleDeleteOpen = () => {
     setDeleteOpen(true);
@@ -40,10 +41,10 @@ function Client(props: any) {
             </Grid>
           }
           <Grid xs={12}>
-            <Properties type="client" client={id} success={props.success} />
+            <Properties type="client" client={id} success={props.success} reload={reload} setReload={setReload} />
           </Grid>
           <Grid xs={12}>
-            <TabbedSummary client={id} success={props.success} />
+            <TabbedSummary client={id} success={props.success} reload={reload} setReload={setReload}/>
           </Grid>
         </Grid>
       </Grid>
@@ -51,11 +52,11 @@ function Client(props: any) {
       <Grid container>
         {!useMediaQuery(theme.breakpoints.down("sm")) &&
           <Grid xs={12}>
-          <Contact client={id} success={props.success} />
+          <Contact client={id} success={props.success} reload={reload} setReload={setReload}/>
           </Grid>
         }
         <Grid xs={12}>
-          <Visits client={id} success={props.success} subscription={props.subscription} />
+          <Visits client={id} success={props.success} subscription={props.subscription} reload={reload} setReload={setReload}/>
         </Grid>
         <Grid xs={12} sm={6} md={12}>
           <Notes client={id} success={props.success} />

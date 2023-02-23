@@ -111,6 +111,7 @@ export default function SelectPropertyAndClient(props: any) {
               (_) => {
                 setLoading(false);
                 navigate(`/jobs/${res.id}`);
+                props.onClose();
                 props.success('Successfully created new job');
               },
               (err) => {
@@ -382,7 +383,7 @@ export default function SelectPropertyAndClient(props: any) {
         Select client for {props.type.slice(0, -1)}
       </DialogTitle>
       <DialogContent>
-        {loading && <LinearProgress />}
+        {loading && <LinearProgress sx={{marginBottom: 2}} />}
         <Box sx={{ width: '100%' }}>
           <SelectStepper props={props} />
         </Box>
