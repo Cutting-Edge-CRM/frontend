@@ -32,6 +32,32 @@ import { getChipColor, theme } from '../../theme/theme';
   function add(accumulator: number, a: number) {
       return +accumulator + +a;
     }
+
+    function getEventColor(type: string) {
+      switch (type) {
+        case "Job":
+          return '#E0FFEF';
+        case "Estimate":
+          return '#BBBAFBE0';
+        case "Task":
+          return '#CCF3FF';
+        case "Reminder":
+          return '#FFC1E5';
+      }
+    }
+    
+    function getBorderColor(type: string) {
+      switch (type) {
+        case "Job":
+          return '#00AC4F';
+        case "Estimate":
+          return '#403DFC';
+        case "Task":
+          return '#0C8BE7';
+        case "Reminder":
+          return '#DA001A';
+      }
+    }
     
   const StyledTypography = styled(Typography)<TypographyProps>(() => ({
     minWidth: 74,
@@ -105,20 +131,6 @@ import { getChipColor, theme } from '../../theme/theme';
           width: 170,
           sortable: false,
         },
-        {
-          field: 'state',
-          headerName: 'State',
-          headerClassName: 'MuiDataGrid-columnHeader',
-          width: 170,
-          sortable: false,
-        },
-        {
-          field: 'zip',
-          headerName: 'Postal',
-          headerClassName: 'MuiDataGrid-columnHeader',
-          width: 170,
-          sortable: false,
-        },
       ];
   
     return (
@@ -134,7 +146,7 @@ import { getChipColor, theme } from '../../theme/theme';
                 {props.visit.job && <Tab label="Job" id="job" />}
             </Tabs>
             {value === 0 &&
-                <Stack spacing={1.5} mt={2}>
+                <Stack spacing={1.5} mt={2} ml={4}>
                   <Stack direction={'row'} spacing={3} mt={2}>
                     <Stack spacing={1.5}>
                       <Typography id="type-label" sx={{ color: 'primary.main' }}>
@@ -151,7 +163,7 @@ import { getChipColor, theme } from '../../theme/theme';
                       </Typography>
                     </Stack>
                     <Stack spacing={1.5} mt={2}>
-                      <Typography>{props.visit?.type}</Typography>
+                      <Chip sx={{backgroundColor: getEventColor(props.visit?.type), color: getBorderColor(props.visit?.type), fontSize: "16px"}} label={props.visit?.type} />
                       <Typography>{properties.find((p) => p.id === props.visit.property)?.address ?? "No property"}</Typography>
                       <Typography>{props.visit.users?.length > 0 ? props.visit.users?.map((u: any) => u.name ?? u.email)?.join(', ') : "No staff assigned"}</Typography>
                             {props.visit.unscheduled === (1 || true) ?
@@ -334,7 +346,7 @@ import { getChipColor, theme } from '../../theme/theme';
                 {client?.first} {client?.last}
               </Typography>
             </Stack>
-            <Stack spacing={4}>
+            <Stack spacing={4} mx={4}>
               <Stack spacing={2}>
                 {client?.contacts
                   ?.filter((c: any) => c.type === 'phone' && c.content !== '')

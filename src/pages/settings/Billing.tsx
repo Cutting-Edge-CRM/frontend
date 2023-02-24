@@ -19,7 +19,6 @@ function Billing(props: any) {
     }
 
     const handlePortal = () => {
-        console.log('portal');
         getPortalSession().then(res => {
             console.log(res);
             window.location.replace(res.url);

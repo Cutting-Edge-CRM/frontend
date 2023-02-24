@@ -94,10 +94,10 @@ function Payments(props: any) {
         .then(res => {
             console.log(res);
             setLoading(false);
-            if (!res?.id) {
+            if (!res.stripeRes?.id) {
                 console.log('not started');
                 setSetupStatus('not-started');
-            } else if (!res?.charges_enabled) {
+            } else if (!res.stripeRes?.charges_enabled) {
                 console.log('incomplete');
                 setSetupStatus('incomplete');
             } else {

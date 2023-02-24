@@ -236,7 +236,7 @@ export default function Schedule(props: any) {
             setUnscheduledEvents(unscheduled);
             let els = Array.from(document.getElementsByClassName("draggable"));
             els.forEach(d => {
-                new Draggable((d as HTMLElement), {
+                let draggable = new Draggable((d as HTMLElement), {
                     eventData: function(el) {
                         let event = unscheduled.find((event: any) => +event.id === +d.id);
                         return {
@@ -244,6 +244,7 @@ export default function Schedule(props: any) {
                         }
                     }
                 });
+                console.log(draggable);
             })
             let externalContainer = document.getElementById("unscheduled-container") as HTMLElement;
             setExternalUI([externalContainer?.offsetTop, (externalContainer?.offsetLeft + externalContainer?.offsetWidth), externalContainer?.offsetTop + externalContainer?.offsetHeight, externalContainer?.offsetLeft]);
