@@ -39,7 +39,6 @@ const db = getFirestore(app);
 // const googleProvider = new GoogleAuthProvider();
 
 const setNewPassword = (password: string) => {
-  console.log(password);
   return updatePassword(currentUser, password)
   .then(res => {
     return res;

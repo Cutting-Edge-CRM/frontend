@@ -64,6 +64,36 @@ async function inviteUser(user: any) {
     }
 }
 
+async function resendInvite(user: any) {
+    try {
+    var body = JSON.stringify(user)
+    var headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+        'tenantId': auth.tenantId as string,
+        'userId': auth.currentUser?.uid as string
+    }
+    const requestOptions: RequestInit = {
+        method: 'POST',
+        headers: headers,
+        body: body,
+    };
+        let url = `${process.env.REACT_APP_SERVER_URL}/users/reinvite-user`;
+        return fetch(url, requestOptions)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+            return res.json().then(err => {
+                console.error(`Error re-inviting user: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error re-inviting user`);
+            })
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 async function getUser(id?: string) {
     try {
     var headers: HeadersInit = {
@@ -156,5 +186,6 @@ export {
     inviteUser,
     listUsers,
     getUser,
-    updateUser
+    updateUser,
+    resendInvite
   };

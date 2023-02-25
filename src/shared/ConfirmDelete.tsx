@@ -52,6 +52,9 @@ export default function ConfirmDelete(props: any) {
       case 'notes':
         response = deleteNote(deleteable);
         break;
+      case 'employee':
+        // response = deleteEmployee(deleteable);
+        break;
       default:
         break;
     }
@@ -94,6 +97,12 @@ export default function ConfirmDelete(props: any) {
         setTitle('Delete Property');
         setBody(
           `Are you sure you want to delete this property? This is will delete any quotes, jobs & visits associated to this property.`
+        );
+        break;
+      case 'employee':
+        setTitle('Delete Employee');
+        setBody(
+          `Are you sure you want to delete this employee? This is will delete any info associated to them.`
         );
         break;
       case 'clients':

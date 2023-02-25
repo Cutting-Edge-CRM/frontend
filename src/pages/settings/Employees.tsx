@@ -1,38 +1,73 @@
-import { Box, Card, CircularProgress, Grid, IconButton, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
+import { Box, Card, CircularProgress, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { listUsers } from '../../api/user.api';
+import { listUsers, resendInvite } from '../../api/user.api';
 import EmptyState from '../../shared/EmptyState';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import CustomToolbar from '../../shared/CutomToolbar';
 import EditEmployee from './EditEmployee';
 import { AddressAutofill } from '@mapbox/search-js-react';
 import dayjs from 'dayjs';
-import { ArrowCircleRightOutlined } from '@mui/icons-material';
+import { ArrowCircleRightOutlined, CreateOutlined, DeleteOutline, EmailOutlined, MoreVert } from '@mui/icons-material';
 import { theme } from '../../theme/theme';
+import ConfirmDelete from '../../shared/ConfirmDelete';
 
 function Employees(props: any) {
   const [rows, setRows] = useState([]);
   const [employeesAreLoading, setEmployeesAreLoading] = useState(true);
   const [errorListingEmployees, setErrorListingEmployees] = useState(null);
   const [newOpen, setNewOpen] = useState(false);
-  const [employee, setEmployee] = useState(null);
+  const [employee, setEmployee] = useState(null as any);
   const [type, setType] = useState('');
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const isOpen = Boolean(anchorEl);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const handleRowClick = (event: any) => {
+  const openMenu = (event: React.MouseEvent<HTMLButtonElement>, row: any) => {
+    setEmployee(row);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const closeMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleEditOpen = () => {
     setType('edit');
-    setEmployee(event.row);
     setNewOpen(true);
   };
 
   const handleClose = () => {
     setNewOpen(false);
     setEmployee(null);
+    closeMenu();
   };
 
   const handleNewOpen = () => {
     setType('new');
     setNewOpen(true);
   };
+
+  const handleDeleteOpen = () => {
+    setDeleteOpen(true);
+  };
+
+  const handleDeleteClose = (value: string) => {
+    setDeleteOpen(false);
+    closeMenu();
+  };
+
+  const onDelete = () => {
+    return;
+  }
+
+  const handleResendInvite = () => {
+    resendInvite(employee)
+    .then(res => {
+      props.success("Successfully sent invite");
+    }, err => {
+      
+    })
+  }
 
   const getEmptyState = () => {
     return (
@@ -110,6 +145,47 @@ function Employees(props: any) {
       }
     },
     {
+      field: 'options',
+      headerName: '',
+      width: 50,
+      renderCell: (params: GridRenderCellParams<string>) => {
+        return (
+          <>
+            <IconButton onClick={(e) => openMenu(e, params.row)}>
+              <MoreVert color="primary" />
+            </IconButton>
+            <Menu
+              id="visit-menu"
+              anchorEl={anchorEl}
+              open={isOpen}
+              onClose={closeMenu}
+            >
+              <MenuList>
+                <MenuItem onClick={handleEditOpen}>
+                  <ListItemIcon>
+                    <CreateOutlined />
+                  </ListItemIcon>
+                  <ListItemText>Edit Employee</ListItemText>
+                </MenuItem>
+                <MenuItem onClick={handleResendInvite}>
+                  <ListItemIcon>
+                    <EmailOutlined />
+                  </ListItemIcon>
+                  <ListItemText>Resend Invite</ListItemText>
+                </MenuItem>
+                <MenuItem onClick={handleDeleteOpen}>
+                  <ListItemIcon>
+                    <DeleteOutline color="error" />
+                  </ListItemIcon>
+                  <ListItemText>Delete Employee</ListItemText>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </>
+        );
+      },
+    },
+    {
       field: 'mobile',
       headerName: '',
       flex: 1,
@@ -183,7 +259,6 @@ function Employees(props: any) {
                 }}
                 disableSelectionOnClick
                 disableColumnMenu
-                onRowClick={handleRowClick}
             />
             <EditEmployee
                 open={newOpen}
@@ -193,6 +268,14 @@ function Employees(props: any) {
                 setEmployee={setEmployee}
                 type={type}
             />
+              <ConfirmDelete
+                open={deleteOpen}
+                onClose={handleDeleteClose}
+                type={'employee'}
+                deleteId={employee?.id}
+                onDelete={onDelete}
+                success={props.success}
+              />
             </Box>
             </Card>
         </Box>

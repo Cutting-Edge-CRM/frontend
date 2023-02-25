@@ -1,5 +1,5 @@
 import { Close, Edit, Save } from '@mui/icons-material';
-import { Alert, Box, Button, Card, Checkbox, CircularProgress, Divider, Grid, IconButton, ListItemText, MenuItem, Popover, Select, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
+import { Alert, Box, Button, Card, Checkbox, CircularProgress, Dialog, Divider, Grid, IconButton, ListItemText, MenuItem, Popover, Select, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
@@ -54,8 +54,10 @@ function Week(props: any) {
     const [editting, setEditting] = useState(-1);
     const [toSave, setToSave] = useState(0);
     const [saving, setSaving] = useState(-1);
+    const [currentDay, setCurrentDay] = useState({} as any);
 
-    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>, weekDay: any) => {
+        setCurrentDay(weekDay);
         setAnchorEl(event.currentTarget);
       };
   
@@ -107,6 +109,7 @@ function Week(props: any) {
             ...w,
             time: day?.time ?? 0,
             clocks: day?.clock ?? [],
+            overrided: day?.overrided
         }
     })
 
@@ -141,9 +144,9 @@ function Week(props: any) {
                             <CircularProgress/>
                         </Box>
                     }
-                    {editting !== weekDay.number && 
+                    {editting !== weekDay.number &&
                         <Typography
-                        onMouseEnter={handlePopoverOpen}
+                        onMouseEnter={(e) => handlePopoverOpen(e, weekDay)}
                         onMouseLeave={handlePopoverClose}
                         >{Math.floor(weekDay.time/60) < 10 ? 0 : ''}{Math.floor(weekDay.time/60)}:{weekDay.time%60 < 10 ? 0 : ''}{weekDay.time%60}
                         </Typography>
@@ -151,7 +154,6 @@ function Week(props: any) {
                     {editting === weekDay.number && <TextField type={'number'} onChange={handleChange} defaultValue={(weekDay.time/60).toFixed(2)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />}
                     
                     <Popover
-                        id="mouse-over-popover"
                         sx={{
                         pointerEvents: 'none',
                         backgroundColor: 'transparent'
@@ -170,12 +172,16 @@ function Week(props: any) {
                         disableRestoreFocus
                     >
                         <Box p={3}>
-                            {weekDay.overided ? <Typography>Overrided: {Math.floor(weekDay.time/60) < 10 ? 0 : ''}{Math.floor(weekDay.time/60)}:{weekDay.time%60 < 10 ? 0 : ''}{weekDay.time%60}</Typography> : null}
-                            {weekDay.clocks.map((clock: any) => (
-                                <Stack key={clock.time} direction={'row'} spacing={1}>
-                                    <Typography color={'primary'}>{clock.type === 'clock-in' ? 'Clocked in: ' : 'Clocked out: '}</Typography>
-                                    <Typography>{dayjs(clock.time).format("h:mma")}</Typography>
-                                </Stack>
+                            {currentDay?.overrided ? <Typography color={'error'}>Overrided: {Math.floor(currentDay?.time/60) < 10 ? 0 : ''}{Math.floor(currentDay?.time/60)}:{currentDay?.time%60 < 10 ? 0 : ''}{currentDay?.time%60}</Typography> : null}
+                            {currentDay?.clocks?.map((clock: any) => (
+                                <Grid container key={clock.time} spacing={1}>
+                                    <Grid item xs={8}>
+                                        <Typography color={'primary'}>{clock.type === 'clock-in' ? 'Clocked in: ' : 'Clocked out: '}</Typography>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Typography>{dayjs(clock.time).format("h:mma")}</Typography>
+                                    </Grid>
+                                </Grid>
                             ))}
                         </Box>
                     </Popover>
@@ -220,6 +226,8 @@ function SingleUserWeek(props: any) {
     const [editting, setEditting] = useState(-1);
     const [toSave, setToSave] = useState(0);
     const [saving, setSaving] = useState(-1);
+    const [currentDay, setCurrentDay] = useState({} as any);
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleEditting = (number: number) => {
         setEditting(number);
@@ -250,6 +258,15 @@ function SingleUserWeek(props: any) {
         setToSave(event.target.value);
     }
 
+    const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>, weekDay: any) => {
+        setCurrentDay(weekDay);
+        setIsOpen(true);
+      };
+  
+    const handlePopoverClose = () => {
+        setIsOpen(false);
+    };
+
     let userTimesheets = props.times.find((t: any) => t.user === props.user.id);
     let week = props.week.map((w: any) => {
     let day = userTimesheets?.times.find((ut: any) => ut.date === w.date);
@@ -257,6 +274,7 @@ function SingleUserWeek(props: any) {
             ...w,
             time: day?.time ?? 0,
             clocks: day?.clock ?? [],
+            overrided: day?.overrided
         }
     })
     return (
@@ -299,9 +317,30 @@ function SingleUserWeek(props: any) {
                         </Box>
                     }
                     {editting !== weekDay.number && 
-                        <Typography
+                    <>
+                    <Typography
+                        onClick={(e) => handlePopoverOpen(e, weekDay)}
                         >{Math.floor(weekDay.time/60) < 10 ? 0 : ''}{Math.floor(weekDay.time/60)}:{weekDay.time%60 < 10 ? 0 : ''}{weekDay.time%60}
-                        </Typography>
+                    </Typography>
+                    <Dialog fullScreen={true} onClose={handlePopoverClose} open={isOpen} fullWidth>
+                        <IconButton sx={{ justifyContent: 'start' }} onClick={handlePopoverClose} disableRipple>
+                            <Close fontSize='large'/>
+                        </IconButton>
+                        <Box p={3}>
+                            {currentDay?.overrided ? <Typography color={'error'}>Overrided: {Math.floor(currentDay?.time/60) < 10 ? 0 : ''}{Math.floor(currentDay?.time/60)}:{currentDay?.time%60 < 10 ? 0 : ''}{currentDay?.time%60}</Typography> : null}
+                            {currentDay?.clocks?.map((clock: any) => (
+                                <Grid container key={clock.time} spacing={1}>
+                                    <Grid item xs={8}>
+                                        <Typography color={'primary'}>{clock.type === 'clock-in' ? 'Clocked in: ' : 'Clocked out: '}</Typography>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <Typography>{dayjs(clock.time).format("h:mma")}</Typography>
+                                    </Grid>
+                                </Grid>
+                            ))}
+                        </Box>
+                    </Dialog>
+                    </>
                     }
                     {editting === weekDay.number && <TextField type={'number'} onChange={handleChange} defaultValue={(weekDay.time/60).toFixed(2)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />}
                     </Stack>

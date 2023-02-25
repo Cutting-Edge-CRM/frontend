@@ -15,10 +15,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { ThemeProvider } from '@mui/material';
 import { theme } from './theme/theme';
 import ClientHub from './pages/client-hub/ClientHub';
-import { auth, loginAnonymously, signInFromEmail } from "./auth/firebase";
+import { loginAnonymously, logInWithEmailAndPassword } from "./auth/firebase";
 import CryptoJS from 'crypto-js';
 import {Helmet, HelmetProvider} from "react-helmet-async";
-import { isSignInWithEmailLink } from 'firebase/auth';
 import { createTimeline } from './pages/client-hub/api/clientPublic.api';
 
 function App() {
@@ -49,7 +48,7 @@ function App() {
       </HelmetProvider>
   );
 
-if (!window.location.href.includes('anonymous') && ! isSignInWithEmailLink(auth, window.location.href)) {
+if (!window.location.href.includes('anonymous') && !window.location.href.includes('inituser')) {
   loading = false;
   return children;
 }
@@ -82,14 +81,13 @@ if (window.location.href.includes('anonymous')) {
     })
   }
 
-  if (isSignInWithEmailLink(auth, window.location.href)) {
+  if (window.location.href.includes('inituser')) {
     let link = window.location.href;
-    let baseLink = window.location.href.split('?')[0];
     const url = new URL(link);
-    console.log(link);
-    let email = CryptoJS.AES.decrypt(url.searchParams.get('user') as string, process.env.REACT_APP_ENCRYPT_KEY as string).toString(CryptoJS.enc.Utf8);
-    console.log(email);
-    signInFromEmail(email as string, link)
+    let baseLink = window.location.href.split('?')[0];
+    let pass = url.searchParams.get('inituser');
+    let decrypt = CryptoJS.AES.decrypt(pass as string, process.env.REACT_APP_ENCRYPT_KEY as string).toString(CryptoJS.enc.Utf8);
+    logInWithEmailAndPassword(decrypt as string, pass as string)
       .then((result) => {
         window.location.replace(baseLink);
         loading = false;
@@ -99,7 +97,7 @@ if (window.location.href.includes('anonymous')) {
       .catch((error) => {
         console.log(error);
       });
-  }
+    }
 
   if (loading) {
     return (<></>);
