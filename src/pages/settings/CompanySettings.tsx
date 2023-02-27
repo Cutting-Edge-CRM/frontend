@@ -1,4 +1,4 @@
-import { Box, Card, CardHeader, Grid, Stack, Tab, Tabs, useMediaQuery } from '@mui/material';
+import { Box, Card, CardHeader, Stack, Tab, Tabs, useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { getCompany } from '../../api/company.api';
@@ -121,7 +121,7 @@ function CompanySettings(props: any) {
 
     return (
         <Stack spacing={2}>
-            <Card sx={{ pb: 4, pt: 1, width: mobile ? "96vw" : '100%' }}>
+            <Card sx={{ pb: 4, pt: 1, width: mobile ? "100vw" : '100%' }}>
                 <CardHeader title="Company Settings" />
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={value} onChange={handleChange} sx={{'.MuiTabs-scroller': {overflowX: 'scroll !important', '::-webkit-scrollbar': {display: 'none'}}}} >

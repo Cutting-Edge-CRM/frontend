@@ -1,8 +1,8 @@
-import { Box, Button, Card, Chip, Divider, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Chip, Divider, Grid, Stack, Typography, useMediaQuery } from '@mui/material';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import EmptyState from '../../shared/EmptyState';
-import { getChipColor } from '../../theme/theme';
+import { getChipColor, theme } from '../../theme/theme';
 import PaymentModal from './PaymentModal';
 
 function add(accumulator: number, a: number) {
@@ -10,8 +10,10 @@ function add(accumulator: number, a: number) {
   }
 
 function InvoiceItemSaved(props: any) {
+  let mobile = useMediaQuery(theme.breakpoints.down("sm"));
+
     return (
-        <Box sx={{ px: 4 }}>
+        <Box sx={{ px: mobile ? 1 : 4 }}>
           <Grid container spacing={2} marginTop={2}>
             <Grid item={true} xs={4}>
               <Stack spacing={1.5}>
@@ -55,6 +57,7 @@ function ClientHubInvoiceDetails(props: any) {
     // const [error, setError] = useState(null);
     // const [loading, setLoading] = useState(false);
     const [paymentOpen, setPaymentOpen] = useState(false);
+    let mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     const handlePaymentClose = (value: string) => {
         setPaymentOpen(false);
@@ -76,6 +79,7 @@ function ClientHubInvoiceDetails(props: any) {
               <Typography variant="h6" fontWeight={600}>
                 {`Invoice #${props.invoice.invoice.id}`}
               </Typography>
+              {mobile && <Chip label={props.invoice.invoice.status}  sx={{backgroundColor: `${getChipColor(props.invoice.invoice.status as string)}.main`, color: `${getChipColor(props.invoice.invoice.status as string)}.dark`}}  />}
             </Stack>
             <Stack direction="row" justifyContent="space-between">
               <Stack spacing={2}>
@@ -117,6 +121,7 @@ function ClientHubInvoiceDetails(props: any) {
                 {dayjs(props.opened).format("MM/DD/YYYY")}
               </Typography>
               </Stack>
+              {!mobile &&
               <Stack spacing={1}>
                 <Typography
                   textAlign="center"
@@ -128,6 +133,7 @@ function ClientHubInvoiceDetails(props: any) {
                 </Typography>
                 <Chip label={props.invoice.invoice.status} sx={{backgroundColor: `${getChipColor(props.invoice.invoice.status as string)}.main`, color: `${getChipColor(props.invoice.invoice.status as string)}.dark`}} />
               </Stack>
+              }
             </Stack>
           </Card>
           <Card sx={{ py: 3 }}>
@@ -149,14 +155,14 @@ function ClientHubInvoiceDetails(props: any) {
                 )}
             <Stack mt={2.5} spacing={2}>
               <Grid container justifyContent="flex-end">
-                <Grid item xs={4}>
+                <Grid item xs={8} sm={4}>
                   <Grid container>
-                    <Grid item xs={5}>
+                    <Grid item xs={6}>
                       <Typography variant="body2" color="primary" fontWeight={600}>
                         Subtotal
                       </Typography>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={6}>
                       <Typography
                         variant="body2"
                         fontWeight={600}
@@ -172,9 +178,9 @@ function ClientHubInvoiceDetails(props: any) {
                 </Grid>
               </Grid>
               <Grid container justifyContent="flex-end">
-                <Grid item xs={4}>
+                <Grid item xs={8} sm={4}>
                   <Grid container alignItems="center">
-                    <Grid item xs={5}>
+                    <Grid item xs={6}>
                       <Typography
                         variant="body2"
                         color="neutral.light"
@@ -183,7 +189,7 @@ function ClientHubInvoiceDetails(props: any) {
                         Taxes
                       </Typography>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={6}>
                         <Typography
                           variant="body2"
                           fontWeight={600}
@@ -203,19 +209,19 @@ function ClientHubInvoiceDetails(props: any) {
                 </Grid>
               </Grid>
               <Grid container justifyContent="flex-end">
-                  <Grid item xs={5}>
+                  <Grid item xs={8} sm={4}>
                     <Divider sx={{ width: '100%' }} />
                   </Grid>
                 </Grid>
               <Grid container justifyContent="flex-end">
-                <Grid item xs={4}>
+                <Grid item xs={8} sm={4}>
                   <Grid container>
-                    <Grid item xs={5}>
+                    <Grid item xs={6}>
                       <Typography variant="h6" color="primary" fontWeight={700}>
                         Total
                       </Typography>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={6}>
                       <Typography
                         variant="h6"
                         fontWeight={600}
@@ -229,14 +235,14 @@ function ClientHubInvoiceDetails(props: any) {
                 </Grid>
               </Grid>
               <Grid container justifyContent="flex-end">
-                <Grid item xs={4}>
+                <Grid item xs={8} sm={4}>
                   <Grid container>
-                    <Grid item xs={5}>
+                    <Grid item xs={6}>
                       <Typography variant="body2" color="neutral.light" fontWeight={600}>
                         Balance
                       </Typography>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={6}>
                       <Typography
                         variant="body2"
                         fontWeight={600}
@@ -256,15 +262,16 @@ function ClientHubInvoiceDetails(props: any) {
                   <Stack mt={2.5} spacing={2}>
                       {props.payments.map((payment: any) => (
                             <Grid key={payment.id} container justifyContent="flex-end">
-                            <Grid item xs={4}>
-                              <Grid container alignItems="center">
+                            <Grid item xs={8} sm={4}>
+                              <Grid container alignItems="center" spacing={2}>
                                 <Grid item xs={8}>
                                   <Typography
                                     variant="body2"
                                     color="neutral.light"
                                     fontWeight={500}
+                                    textAlign={'right'}
                                   >
-                                    {`${payment.type} collected ${dayjs(payment.transDate).format('MMM D')}`}
+                                    {`${payment.type} ${dayjs(payment.transDate).format('MMM D')}`}
                                   </Typography>
                                 </Grid>
     

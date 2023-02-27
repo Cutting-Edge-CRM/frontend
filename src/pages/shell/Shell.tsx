@@ -39,6 +39,7 @@ import {
   Stack,
   styled,
   TextField,
+  useMediaQuery,
 } from '@mui/material';
 import { Logout } from '@mui/icons-material';
 import Dashboard from '../dashboard/Dashboard';
@@ -66,6 +67,7 @@ import { listInvoices } from '../../api/invoice.api';
 import NewClient from '../../shared/client/NewClient';
 import SelectPropertyAndClient from '../../shared/client/SelectPropertyAndClient';
 import SelectClient from '../../shared/client/SelectClient';
+import { theme } from '../../theme/theme';
 
 const NavList = styled(List)<ListProps>(({ theme }) => ({
   padding: theme.spacing(0, 3),
@@ -87,24 +89,6 @@ const NavList = styled(List)<ListProps>(({ theme }) => ({
   },
 }));
 
-const drawerWidth = 270;
-const topTabs = [
-  // { display: 'Dashboard', slug: 'dashbaord', icon: <TrendingUpOutlined /> },
-  { display: 'Schedule', slug: 'schedule', icon: <CalendarMonthOutlined />, premium: true },
-  { display: 'Clients', slug: 'clients', icon: <PeopleOutlineOutlined /> },
-  { display: 'Quotes', slug: 'quotes', icon: <SellOutlined /> },
-  { display: 'Jobs', slug: 'jobs', icon: <FormatPaintOutlined /> },
-  { display: 'Invoices', slug: 'invoices', icon: <AttachMoney /> },
-  { display: 'Timesheets', slug: 'timesheets', icon: <AccessTimeOutlined />, premium: true },
-];
-// const middleTabs = [
-//   { display: 'Reports', slug: 'reports', icon: <SummarizeOutlined /> },
-// ];
-const bottomTabs = [
-  { display: 'Settings', slug: 'settings', icon: <SettingsOutlined /> },
-  { display: 'Log out', slug: 'dashbaord', icon: <Logout /> }]
-  ;
-
 function Shell() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -120,6 +104,7 @@ function Shell() {
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
   const [quickCreateAnchor, setQuickCreateAnchor] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  let mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -243,6 +228,29 @@ function Shell() {
     setNewInvoiceOpen(false);
   }
 
+const drawerWidth = 270;
+const topTabs = [
+  // { display: 'Dashboard', slug: 'dashbaord', icon: <TrendingUpOutlined /> },
+  { display: 'Schedule', slug: 'schedule', icon: <CalendarMonthOutlined />, premium: true },
+  { display: 'Clients', slug: 'clients', icon: <PeopleOutlineOutlined /> },
+  { display: 'Quotes', slug: 'quotes', icon: <SellOutlined /> },
+  { display: 'Jobs', slug: 'jobs', icon: <FormatPaintOutlined /> },
+  { display: 'Invoices', slug: 'invoices', icon: <AttachMoney /> },
+  { display: 'Timesheets', slug: 'timesheets', icon: <AccessTimeOutlined />, premium: true },
+];
+
+const quickCreateTabs = [
+  { display: 'Client', function: handleNewClient, icon: <PeopleOutlineOutlined color='primary' /> },
+  { display: 'Quote', function: handleNewQuote, icon: <SellOutlined color='primary' /> },
+  { display: 'Job', function: handleNewJob, icon: <FormatPaintOutlined color='primary' /> },
+  { display: 'Invoice', function: handleNewInvoice, icon: <AttachMoney color='primary' /> },
+]
+
+const bottomTabs = [
+  { display: 'Settings', slug: 'settings', icon: <SettingsOutlined /> },
+  { display: 'Log out', slug: 'dashbaord', icon: <Logout /> }
+];
+
   useEffect(() => {
     getSettings().then(
       (res) => {
@@ -289,6 +297,7 @@ function Shell() {
                 />
               </ListItemButton>
             </ListItem>
+            {!mobile &&
             <Menu
             open={quickCreateOpen}
             anchorEl={quickCreateAnchor}
@@ -329,6 +338,21 @@ function Shell() {
                 </MenuItem>
               </Stack>
             </Menu>
+            }
+          {mobile && quickCreateOpen && quickCreateTabs.map((tab, index) => (
+            <ListItem key={tab.display} disablePadding>
+              <ListItemButton
+                onClick={tab.function}
+                sx={{paddingLeft: 5}}
+              >
+                <ListItemIcon>{tab.icon}</ListItemIcon>
+                <ListItemText
+                  primary={tab.display}
+                  primaryTypographyProps={{ fontSize: '14px', fontWeight: 500 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
           {topTabs.map((tab, index) => (
             <ListItem key={tab.display} disablePadding>
               <ListItemButton

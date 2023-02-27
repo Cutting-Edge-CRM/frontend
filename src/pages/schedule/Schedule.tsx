@@ -327,6 +327,11 @@ export default function Schedule(props: any) {
                     },
                     '.fc-list-event': {
                         display: 'block'
+                    },
+                    '.fc-daygrid-month-start': {
+                        fontSize: '0.8rem',
+                        textAlign: 'end',
+                        overflowWrap: 'anywhere'
                     }
                 }}>
                     <FullCalendar

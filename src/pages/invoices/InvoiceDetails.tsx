@@ -796,15 +796,15 @@ function InvoiceDetails(props: any) {
                       
                     >
                         <Grid container justifyContent="flex-end">
-                        <Grid item xs={12}>
-                          <Grid container alignItems="center">
-                            <Grid item xs={8}>
+                        <Grid item xs={8} sm={6}>
+                          <Grid container alignItems="center" spacing={2}>
+                            <Grid item xs={5}>
                               <Typography
                                 variant="body2"
                                 color="neutral.light"
                                 fontWeight={500}
                               >
-                                {`${payment.type} collected ${dayjs(payment.transDate).format('MMM D')}`}
+                                {`${payment.type} ${dayjs(payment.transDate).format('MMM D')}`}
                               </Typography>
                             </Grid>
 

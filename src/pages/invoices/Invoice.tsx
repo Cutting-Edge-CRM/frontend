@@ -76,7 +76,7 @@ function Invoice(props: any) {
     
     return (
         <>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{width: "100%", margin: 0}}>
           <Grid xs={12} md={8} spacing={2}>
           <Grid container>
               <Grid xs={12}>

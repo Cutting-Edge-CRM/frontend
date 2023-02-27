@@ -12,11 +12,12 @@ import {
     Switch,
     TextField,
     Typography,
+    useMediaQuery,
   } from '@mui/material';
   import dayjs from 'dayjs';
   import React, { useEffect, useState } from 'react';
   import EmptyState from '../../shared/EmptyState';
-import { getChipColor } from '../../theme/theme';
+import { getChipColor, theme } from '../../theme/theme';
 import ConfirmChangeStatus from './ConfirmChangeStatus';
 import PaymentModal from './PaymentModal';
   
@@ -108,6 +109,7 @@ import PaymentModal from './PaymentModal';
     const [taxAmount, setTaxAmount] = useState(0);
     const [subTotalAmount, setSubtotalAmount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
+    let mobile = useMediaQuery(theme.breakpoints.down("sm"));
   
   
     useEffect(() => {
@@ -139,7 +141,7 @@ import PaymentModal from './PaymentModal';
         role="tabpanel"
         hidden={props.value !== props.index}
         id={`option-${props.index}`}
-        paddingX={4}
+        paddingX={mobile ? 1 : 4}
         marginTop={3}
       >
         {props.value === props.index && (
@@ -159,9 +161,9 @@ import PaymentModal from './PaymentModal';
               </>
             <Stack mt={2.5} spacing={2}>
               <Grid container justifyContent="flex-end">
-                <Grid item xs={4}>
+                <Grid item xs={8} sm={4}>
                   <Grid container>
-                    <Grid item xs={5}>
+                    <Grid item xs={6}>
                       <Typography
                         variant="body2"
                         color="primary"
@@ -170,7 +172,7 @@ import PaymentModal from './PaymentModal';
                         Subtotal
                       </Typography>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={6}>
                       <Typography
                         variant="body2"
                         fontWeight={600}
@@ -183,9 +185,9 @@ import PaymentModal from './PaymentModal';
                 </Grid>
               </Grid>
               <Grid container justifyContent="flex-end">
-                <Grid item xs={4}>
+                <Grid item xs={8} sm={4}>
                   <Grid container alignItems="center">
-                    <Grid item xs={5}>
+                    <Grid item xs={6}>
                       <Typography
                         variant="body2"
                         color="neutral.light"
@@ -195,7 +197,7 @@ import PaymentModal from './PaymentModal';
                       </Typography>
                     </Grid>
   
-                    <Grid item xs={4}>
+                    <Grid item xs={6}>
                         <Typography
                           variant="body2"
                           fontWeight={600}
@@ -208,9 +210,9 @@ import PaymentModal from './PaymentModal';
                 </Grid>
               </Grid>
               <Grid container justifyContent="flex-end">
-                <Grid item xs={4}>
+                <Grid item xs={8} sm={4}>
                   <Grid container alignItems="center">
-                    <Grid item xs={5}>
+                    <Grid item xs={6}>
                       <Typography
                         variant="body2"
                         color="neutral.light"
@@ -219,7 +221,7 @@ import PaymentModal from './PaymentModal';
                         Taxes
                       </Typography>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={6}>
                         <Typography
                           variant="body2"
                           fontWeight={600}
@@ -232,19 +234,19 @@ import PaymentModal from './PaymentModal';
                 </Grid>
               </Grid>
               <Grid container justifyContent="flex-end">
-                <Grid item xs={5}>
+                <Grid item xs={8} sm={4}>
                   <Divider sx={{ width: '100%' }} />
                 </Grid>
               </Grid>
               <Grid container justifyContent="flex-end">
-                <Grid item xs={4}>
+                <Grid item xs={8} sm={4}>
                   <Grid container>
-                    <Grid item xs={5}>
+                    <Grid item xs={6}>
                       <Typography variant="h6" color="primary" fontWeight={700}>
                         Total
                       </Typography>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={6}>
                       <Typography
                         variant="h6"
                         fontWeight={600}
@@ -267,6 +269,7 @@ import PaymentModal from './PaymentModal';
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [confirmType, setConfirmType] = useState('');
     const [paymentOpen, setPaymentOpen] = useState(false);
+    let mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     const handleConfirmOpen = (status: string) => {
         setConfirmType(status);
@@ -296,6 +299,7 @@ import PaymentModal from './PaymentModal';
             <Typography variant="h6" fontWeight={600}>
               {`Quote #${props.quote.quote.id}`}
             </Typography>
+            {mobile && <Chip label={props.quote.quote.status}  sx={{backgroundColor: `${getChipColor(props.quote.quote.status as string)}.main`, color: `${getChipColor(props.quote.quote.status as string)}.dark`}}  />}
           </Stack>
           <Stack direction="row" justifyContent="space-between">
             <Stack spacing={2}>
@@ -337,17 +341,19 @@ import PaymentModal from './PaymentModal';
                 {dayjs(props.opened).format("MM/DD/YYYY")}
               </Typography>
             </Stack>
-            <Stack spacing={1}>
-              <Typography
-                textAlign="center"
-                variant="body2"
-                fontWeight={500}
-                color="neutral.light"
-              >
-                Status
-              </Typography>
-              <Chip label={props.quote.quote.status} sx={{backgroundColor: `${getChipColor(props.quote.quote.status as string)}.main`, color: `${getChipColor(props.quote.quote.status as string)}.dark`}} />
-            </Stack>
+            {!mobile &&
+              <Stack spacing={1}>
+                <Typography
+                  textAlign="center"
+                  variant="body2"
+                  fontWeight={500}
+                  color="neutral.light"
+                >
+                  Status
+                </Typography>
+                <Chip label={props.quote.quote.status} sx={{backgroundColor: `${getChipColor(props.quote.quote.status as string)}.main`, color: `${getChipColor(props.quote.quote.status as string)}.dark`}} />
+              </Stack>
+            }
           </Stack>
         </Card>
         <Card sx={{ py: 3 }}>
@@ -369,15 +375,16 @@ import PaymentModal from './PaymentModal';
                   <List>
                     {props.payments.map((payment: any) => (
                           <Grid container justifyContent="flex-end" key={payment.id}>
-                          <Grid item xs={4}>
-                            <Grid container alignItems="center">
+                          <Grid item xs={8} sm={4}>
+                            <Grid container alignItems="center" spacing={2}>
                               <Grid item xs={8}>
                                 <Typography
                                   variant="body2"
                                   color="neutral.light"
                                   fontWeight={500}
+                                  textAlign={'right'}
                                 >
-                                  Deposit collected{' '}{dayjs(payment.transDate).format('MMM D')}
+                                  Deposit{' '}{dayjs(payment.transDate).format('MMM D')}
                                 </Typography>
                               </Grid>
   
