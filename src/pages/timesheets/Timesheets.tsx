@@ -1,5 +1,5 @@
 import { Close, Edit, Save } from '@mui/icons-material';
-import { Alert, Box, Button, Card, Checkbox, CircularProgress, Dialog, Divider, Grid, IconButton, ListItemText, MenuItem, Popover, Select, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
+import { Alert, Box, Button, Card, Checkbox, CircularProgress, Dialog, DialogContent, Divider, Grid, IconButton, ListItemText, MenuItem, Popover, Select, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
@@ -326,6 +326,7 @@ function SingleUserWeek(props: any) {
                         <IconButton sx={{ justifyContent: 'start' }} onClick={handlePopoverClose} disableRipple>
                             <Close fontSize='large'/>
                         </IconButton>
+                        <DialogContent>
                         <Box p={3}>
                             {currentDay?.overrided ? <Typography color={'error'}>Overrided: {Math.floor(currentDay?.time/60) < 10 ? 0 : ''}{Math.floor(currentDay?.time/60)}:{currentDay?.time%60 < 10 ? 0 : ''}{currentDay?.time%60}</Typography> : null}
                             {currentDay?.clocks?.map((clock: any) => (
@@ -339,6 +340,7 @@ function SingleUserWeek(props: any) {
                                 </Grid>
                             ))}
                         </Box>
+                        </DialogContent>
                     </Dialog>
                     </>
                     }

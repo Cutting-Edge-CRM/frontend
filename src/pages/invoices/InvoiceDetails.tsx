@@ -6,6 +6,7 @@ import {
   MarkEmailReadOutlined,
   MoneyOffOutlined,
   MoreVert,
+  Numbers,
   SendOutlined,
 } from '@mui/icons-material';
 import {
@@ -56,8 +57,8 @@ function add(accumulator: number, a: number) {
 function InvoiceItemSaved(props: any) {
   return (
     <Box sx={{ px: useMediaQuery(theme.breakpoints.down("sm")) ? 0 : 4 }}>
-      <Grid container spacing={2} marginTop={2}>
-        <Grid item={true} xs={4}>
+      <Grid container spacing={2} marginTop={2} columns={10}>
+        <Grid item={true} xs={2}>
           <Stack spacing={1.5}>
             <Typography variant="body2" color="neutral.light" fontWeight={500}>
               Service
@@ -67,11 +68,31 @@ function InvoiceItemSaved(props: any) {
             </Typography>
           </Stack>
         </Grid>
-        <Grid item={true} xs={4}></Grid>
-        <Grid item={true} xs={4}>
+        <Grid item={true} xs={2}></Grid>
+        <Grid item={true} xs={2}>
           <Stack spacing={1.5} alignItems="flex-end">
             <Typography variant="body2" color="neutral.light" fontWeight={500}>
-              Total
+              Unit $
+            </Typography>
+            <Typography variant="body2" color="neutral.main" fontWeight={600}>
+            ${(+props.item.unit)?.toFixed(2)}
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item={true} xs={2}>
+          <Stack spacing={1.5} alignItems="flex-end">
+            <Typography variant="body2" color="neutral.light" fontWeight={500}>
+              Qty
+            </Typography>
+            <Typography variant="body2" color="neutral.main" fontWeight={600}>
+            {(+props.item.quantity)?.toFixed(2)}
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item={true} xs={2}>
+          <Stack spacing={1.5} alignItems="flex-end">
+            <Typography variant="body2" color="neutral.light" fontWeight={500}>
+              Price
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
               ${(+props.item.price)?.toFixed(2)}
@@ -99,6 +120,20 @@ function InvoiceItemEdit(props: any) {
     let items = props.invoice.items;
     items.find((it: any) => it === props.item)[event.target.id] =
       event.target.value;
+
+    if (event.target.id === 'quantity') {
+      items.find((it: any) => it === props.item)['price'] =
+      event.target.value * items.find((it: any) => it === props.item)['unit']
+    }
+    if (event.target.id === 'unit') {
+      items.find((it: any) => it === props.item)['price'] =
+      event.target.value * items.find((it: any) => it === props.item)['quantity']
+    }
+    if (event.target.id === 'price') {
+      items.find((it: any) => it === props.item)['unit'] =
+      event.target.value / items.find((it: any) => it === props.item)['quantity']
+    }
+
     props.setInvoice({
       ...props.invoice,
       items: items,
@@ -120,8 +155,8 @@ function InvoiceItemEdit(props: any) {
 
   return (
     <Card sx={{backgroundColor: '#F3F5F8', my: 3, py: 3, boxShadow: 'none'}}>
-      <Grid container spacing={2} mt={1}>
-        <Grid item={true} xs={12} sm={4}>
+      <Grid container spacing={2} mt={1} columns={11}>
+        <Grid item={true} xs={12} sm={3}>
           <Stack>
           <InputLabel id="service-label" sx={{ color: 'primary.main' }}>
             Service
@@ -143,8 +178,50 @@ function InvoiceItemEdit(props: any) {
           />
           </Stack>
         </Grid>
-        <Grid item={true} xs={12} sm={4}></Grid>
-        <Grid item={true} xs={12} sm={4}>
+        <Grid item={true} xs={12} sm={2}></Grid>
+        <Grid item={true} xs={12} sm={2}>
+          <Stack>
+            <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
+              Unit $
+            </InputLabel>
+            <TextField
+              id="unit"
+              type="number"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                     <AttachMoney color='primary' />
+                  </InputAdornment>
+                ),
+              }}
+              value={props.item.unit ? props.item.unit : ''}
+              onChange={handleChange}
+              size="small"
+            />
+          </Stack>
+        </Grid>
+        <Grid item={true} xs={12} sm={2}>
+          <Stack>
+            <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
+              Qty
+            </InputLabel>
+            <TextField
+              id="quantity"
+              type="number"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                     <Numbers color='primary' />
+                  </InputAdornment>
+                ),
+              }}
+              value={props.item.quantity ? props.item.quantity : ''}
+              onChange={handleChange}
+              size="small"
+            />
+          </Stack>
+        </Grid>
+        <Grid item={true} xs={12} sm={2}>
           <Stack>
             <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
               Price
@@ -235,7 +312,7 @@ function InvoiceDetails(props: any) {
 
   const handleAddItem = () => {
     let items = props.invoice.items;
-    items.push({ price: 0 });
+    items.push({ price: 0, unit: 0, quantity: 1 });
     props.setInvoice({
       ...props.invoice,
       items: items,

@@ -8,6 +8,7 @@ import {
   FormatPaintOutlined,
   MarkEmailReadOutlined,
   MoreVert,
+  Numbers,
   SendOutlined,
   ThumbDownAltOutlined,
 } from '@mui/icons-material';
@@ -62,8 +63,8 @@ function add(accumulator: any, a: any) {
 function QuoteItemSaved(props: any) {
   return (
     <>
-      <Grid container spacing={2} marginTop={2}>
-        <Grid item={true} xs={4}>
+      <Grid container spacing={2} marginTop={2} columns={10}>
+        <Grid item={true} xs={2}>
           <Stack spacing={1.5}>
             <Typography variant="body2" color="neutral.light" fontWeight={500}>
               Service
@@ -73,7 +74,7 @@ function QuoteItemSaved(props: any) {
             </Typography>
           </Stack>
         </Grid>
-        <Grid item={true} xs={4}>
+        <Grid item={true} xs={2}>
           {props.upsell && (
             <Stack alignItems="center">
               <Typography
@@ -88,7 +89,47 @@ function QuoteItemSaved(props: any) {
             </Stack>
           )}
         </Grid>
-        <Grid item={true} xs={4}>
+        <Grid item={true} xs={2}>
+          <Stack spacing={1.5} alignItems="center">
+            <Typography
+              variant="body2"
+              textAlign="center"
+              color="neutral.light"
+              fontWeight={500}
+            >
+              Unit $
+            </Typography>
+            <Typography
+              variant="body2"
+              textAlign="center"
+              color="neutral.main"
+              fontWeight={600}
+            >
+              ${(+props.item.unit)?.toFixed(2)}
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item={true} xs={2}>
+          <Stack spacing={1.5} alignItems="center">
+            <Typography
+              variant="body2"
+              textAlign="center"
+              color="neutral.light"
+              fontWeight={500}
+            >
+              Qty
+            </Typography>
+            <Typography
+              variant="body2"
+              textAlign="center"
+              color="neutral.main"
+              fontWeight={600}
+            >
+              {(+props.item.quantity)?.toFixed(2)}
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item={true} xs={2}>
           <Stack spacing={1.5} alignItems="flex-end">
             <Typography
               variant="body2"
@@ -96,7 +137,7 @@ function QuoteItemSaved(props: any) {
               color="neutral.light"
               fontWeight={500}
             >
-              Total
+              Price
             </Typography>
             <Typography
               variant="body2"
@@ -131,6 +172,30 @@ function QuoteItemEdit(props: any) {
       .find((op: any) => op === props.option)
       .items.find((it: any) => it === props.item)[event.target.id] =
       event.target.value;
+    if (event.target.id === 'quantity') {
+      options
+        .find((op: any) => op === props.option)
+        .items.find((it: any) => it === props.item)['price'] =
+        event.target.value * options
+        .find((op: any) => op === props.option)
+        .items.find((it: any) => it === props.item)['unit'];
+    }
+    if (event.target.id === 'unit') {
+      options
+        .find((op: any) => op === props.option)
+        .items.find((it: any) => it === props.item)['price'] =
+        event.target.value * options
+        .find((op: any) => op === props.option)
+        .items.find((it: any) => it === props.item)['quantity'];
+    }
+    if (event.target.id === 'price') {
+      options
+        .find((op: any) => op === props.option)
+        .items.find((it: any) => it === props.item)['unit'] =
+        event.target.value / options
+        .find((op: any) => op === props.option)
+        .items.find((it: any) => it === props.item)['quantity'];
+    }
     props.setQuote({
       quote: props.quote.quote,
       options: options,
@@ -167,9 +232,9 @@ function QuoteItemEdit(props: any) {
 
   return (
     <Card sx={{backgroundColor: '#F3F5F8', my: 3, py: 3, boxShadow: 'none'}}>
-      <Grid container spacing={2}>
-        <Grid item={true} xs={12} sm={4}>
-        <Stack>
+      <Grid container spacing={2} columns={11}>
+        <Grid item={true} xs={12} sm={3}>
+        <Stack alignItems="center">
           <InputLabel id="service-label" sx={{ color: 'primary.main' }}>
               Service
           </InputLabel>
@@ -189,7 +254,7 @@ function QuoteItemEdit(props: any) {
           />
           </Stack>
         </Grid>
-        <Grid item={true} xs={12} sm={4} order={{ xs: 3, sm: 2 }}>
+        <Grid item={true} xs={12} sm={2} order={{ xs: 3, sm: 2 }}>
           {props.upsell && (
             <Stack alignItems="center">
               <InputLabel id="selected-label" sx={{ color: 'primary.main' }}>
@@ -203,8 +268,52 @@ function QuoteItemEdit(props: any) {
             </Stack>
           )}
         </Grid>
-        <Grid item={true} xs={12} sm={4} order={{ xs: 2, sm: 3 }}>
-          <Stack>
+        <Grid item={true} xs={12} sm={2} order={{ xs: 2, sm: 3 }}>
+          <Stack alignItems="center">
+            <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
+                Unit $
+            </InputLabel>
+            <TextField
+              id="unit"
+              type="number"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AttachMoney color='primary' />
+                  </InputAdornment>
+                ),
+              }}
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              value={props.item.unit ? props.item.unit : ''}
+              onChange={handleChange}
+              size="small"
+            />
+          </Stack>
+        </Grid>
+        <Grid item={true} xs={12} sm={2} order={{ xs: 2, sm: 3 }}>
+          <Stack alignItems="center">
+            <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
+                Qty
+            </InputLabel>
+            <TextField
+              id="quantity"
+              type="number"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Numbers color='primary' />
+                  </InputAdornment>
+                ),
+              }}
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              value={props.item.quantity ? props.item.quantity : ''}
+              onChange={handleChange}
+              size="small"
+            />
+          </Stack>
+        </Grid>
+        <Grid item={true} xs={12} sm={2} order={{ xs: 2, sm: 3 }}>
+          <Stack alignItems="center">
             <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
                 Price
             </InputLabel>
@@ -312,7 +421,7 @@ function TabPanel(props: any) {
   const handleAddItem = () => {
     let options = props.quote.options;
     let items = props.option.items;
-    items.push({ price: 0 });
+    items.push({ price: 0, unit: 0, quantity: 1 });
     options.find((op: any) => op === props.option).items = items;
     props.setQuote({
       quote: props.quote.quote,
@@ -323,7 +432,7 @@ function TabPanel(props: any) {
   const handleAddUpsell = () => {
     let options = props.quote.options;
     let items = props.option.items;
-    items.push({ price: 0, addon: 1 });
+    items.push({ price: 0, addon: 1, unit: 0, quantity: 1 });
     options.find((op: any) => op === props.option).items = items;
     props.setQuote({
       quote: props.quote.quote,
