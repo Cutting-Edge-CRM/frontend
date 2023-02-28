@@ -372,6 +372,11 @@ import PaymentModal from './PaymentModal';
             />
           {props.payments.length > 0 && (
                 <Stack mt={2.5} spacing={2}>
+                  <Grid container justifyContent={'end'}>
+                    <Grid item xs={8} sm={6} >
+                    <Typography>Payments</Typography>
+                    </Grid>
+                  </Grid>
                   <List>
                     {props.payments.map((payment: any) => (
                           <Grid container justifyContent="flex-end" key={payment.id}>

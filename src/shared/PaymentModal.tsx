@@ -70,6 +70,7 @@ export default function PaymentModal(props: any) {
           createTimeline(timeline_event);
           props.onClose();
           props.success('Successfully recorded payment');
+          props.setReload(!props.reload);
         },
         (err) => {}
       );
@@ -79,6 +80,7 @@ export default function PaymentModal(props: any) {
         (res) => {
           props.onClose();
           props.success('Successfully updated payment record');
+          props.setReload(!props.reload);
         },
         (err) => {}
       );
@@ -130,6 +132,7 @@ const getIntent = () => {
                 setStripePromise(loadStripe);
                 setIntent(intent);
                 setLoading(false);
+                props.setReload(!props.reload);
               }, err => {
                 setError(err.message);
                 setLoading(false);
@@ -146,6 +149,7 @@ const getIntent = () => {
                 setStripePromise(loadStripe);
                 setIntent(intent);
                 setLoading(false);
+                props.setReload(!props.reload);
               }, err => {
                 setError(err.message);
                 setLoading(false);

@@ -865,7 +865,6 @@ function QuoteDetails(props: any) {
         </Button>
         <Button
         variant="contained"
-        sx={{backgroundColor: 'yellow.main', color: 'yellow.dark'}}
         onClick={() => markQuoteAs('Pending')}
         >
           Mark as Pending
@@ -877,7 +876,6 @@ function QuoteDetails(props: any) {
       return (
         <Button
         variant="contained"
-        sx={{backgroundColor: 'green.main', color: 'green.dark'}}
         onClick={() => markQuoteAs('Approved')}
         >
           Approve
@@ -990,7 +988,7 @@ function QuoteDetails(props: any) {
                 <ListItemText>Collect Deposit</ListItemText>
               </MenuItem>
               )}
-              {props.quote.quote.status === 'Approved' && (
+              {(props.quote.quote.status === 'Approved' || props.quote.quote.status === 'Converted') && (
                 <MenuItem onClick={handleConvertToJob}>
                   <ListItemIcon>
                     <FormatPaintOutlined />
@@ -1163,6 +1161,11 @@ function QuoteDetails(props: any) {
         {props.payments.length > 0 && (
           <>
               <Stack mt={2.5} spacing={2}>
+                <Grid container justifyContent={'end'}>
+                  <Grid item xs={8} sm={6} >
+                  <Typography>Payments</Typography>
+                  </Grid>
+                </Grid>
                 <List>
                   {props.payments.map((payment: any) => (
                     <Tooltip key={payment.id} title={payment.method === 'Credit Card' ? "Cannot edit credit card payments": ''}>
@@ -1256,6 +1259,8 @@ function QuoteDetails(props: any) {
           type={type}
           success={props.success}
           quote={props.quote}
+          reload={props.reload}
+          setReload={props.setReload}
         />
       </Card>
     </Stack>

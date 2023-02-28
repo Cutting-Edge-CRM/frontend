@@ -151,6 +151,7 @@ export default function SelectPropertyAndClient(props: any) {
               (_) => {
                 setLoading(false);
                 navigate(`/quotes/${res.id}`);
+                props.onClose();
                 props.success('Successfully created new quote');
               },
               (err) => {

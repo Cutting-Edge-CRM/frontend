@@ -64,7 +64,7 @@ function Quote(props: any) {
         }, (err) => {
             setError(err.message);
         })
-    }, [quote])
+    }, [quote, reload])
 
 
     if (error) {

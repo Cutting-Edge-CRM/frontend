@@ -1,10 +1,11 @@
-import { Alert, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, InputLabel, TextField } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, InputLabel, TextField, useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
 import CheckoutForm from './CheckoutForm';
 import { AttachMoney } from '@mui/icons-material';
 import { createDeposit, createPayment } from './api/clientPublic.api';
+import { theme } from '../../theme/theme';
 
 export default function PaymentModal(props: any) {
     const [title, setTitle] = useState('');
@@ -85,7 +86,7 @@ export default function PaymentModal(props: any) {
 
     
     return (
-    <Dialog onClose={handleCancel} open={props.open}>
+    <Dialog onClose={handleCancel} open={props.open} fullScreen={useMediaQuery(theme.breakpoints.down("sm"))}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
             {step === 0 &&

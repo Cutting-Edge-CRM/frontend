@@ -64,7 +64,7 @@ function Invoice(props: any) {
         }, (err) => {
             setError(err.message);
         })
-    }, [invoice])
+    }, [invoice, reload])
 
 
     if (error) {

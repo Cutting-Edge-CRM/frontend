@@ -3,6 +3,7 @@ import { Alert, Box, Card, Chip, CircularProgress, Divider, Grid, ListItemButton
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { listInvoices } from '../../api/invoice.api';
+import EmptyState from '../../shared/EmptyState';
 import { getChipColor } from '../../theme/theme';
 
 function TabPanel(props: any) {
@@ -66,7 +67,7 @@ function ClientHubInvoices(props: any) {
             </Card>
             {(['Awaiting Payment', 'Paid']).map((status, index) => (
                 <TabPanel value={value} index={index} key={index}>
-                <Grid container spacing={2}>
+                <Grid container spacing={2} justifyContent="center">
                 {loading && (<Box textAlign='center'><CircularProgress /></Box>)}
                 {error && (<Alert severity="error">{error}</Alert>)}
                 {!loading && !error && rows?.filter((invoice: any) => invoice.status === status)?.map((invoice: any) => (
@@ -106,6 +107,9 @@ function ClientHubInvoices(props: any) {
                                 </ListItemButton>
                             </Card>
                     </Grid>))}
+                    {!loading && !error && rows?.filter((invoice: any) => invoice.status === status).length === 0 &&
+                    <EmptyState type={`clienthub-${status}`}></EmptyState>
+                    }
                 </Grid>
                 {/* {rows?.filter((invoice: any) => invoice.status === status)?.length === 0 && <Typography>{`No ${status} Invoices`}</Typography>} */}
                 </TabPanel>

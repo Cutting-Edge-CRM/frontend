@@ -3,6 +3,7 @@ import { Alert, Box, Card, Chip, CircularProgress, Divider, Grid, ListItemButton
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { listQuotes } from '../../api/quote.api';
+import EmptyState from '../../shared/EmptyState';
 import { getChipColor } from '../../theme/theme';
 
 function TabPanel(props: any) {
@@ -69,7 +70,7 @@ function ClientHubQuotes(props: any) {
             </Card>
             {(['Pending', 'Approved', 'Rejected', 'Converted', 'Archived']).map((status, index) => (
                 <TabPanel value={value} index={index} key={index}>
-                <Grid container spacing={2}>
+                <Grid container spacing={2} justifyContent="center">
                 {loading && (<Box textAlign='center'><CircularProgress /></Box>)}
                 {error && (<Alert severity="error">{error}</Alert>)}
                 {!loading && !error && rows?.filter((quote: any) => quote.status === status)?.map((quote: any) => (
@@ -109,6 +110,9 @@ function ClientHubQuotes(props: any) {
                                 </ListItemButton>
                             </Card>
                     </Grid>))}
+                    {!loading && !error && rows?.filter((quote: any) => quote.status === status).length === 0 &&
+                    <EmptyState type={`clienthub-${status}`}></EmptyState>
+                    }
                 </Grid>
                 </TabPanel>
             ))}

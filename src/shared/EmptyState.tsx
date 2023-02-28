@@ -85,6 +85,34 @@ export default function EmptyState(props: any) {
                 setLogo(<Map sx={{ fontSize: 60, color: 'primary.main' }}/>);
                 setBody(`Map is not available for this property`);
                 break;
+            case 'clienthub-Pending':
+                setLogo(<Sell sx={{ fontSize: 60, color: 'primary.main' }}/>);
+                setBody(`You have no pending quotes.`);
+                break;
+            case 'clienthub-Approved':
+                setLogo(<Sell sx={{ fontSize: 60, color: 'primary.main' }}/>);
+                setBody(`You have no approved quotes.`);
+                break;
+            case 'clienthub-Rejected':
+                setLogo(<Sell sx={{ fontSize: 60, color: 'primary.main' }}/>);
+                setBody(`You have no rejected quotes.`);
+                break;
+            case 'clienthub-Converted':
+                setLogo(<Sell sx={{ fontSize: 60, color: 'primary.main' }}/>);
+                setBody(`You have no converted quotes.`);
+                break;
+            case 'clienthub-Archived':
+                setLogo(<Sell sx={{ fontSize: 60, color: 'primary.main' }}/>);
+                setBody(`You have no archived quotes.`);
+                break;
+            case 'clienthub-Awaiting Payment':
+                setLogo(<AttachMoney sx={{ fontSize: 60, color: 'primary.main' }}/>);
+                setBody(`You have no invoices awaiting payment.`);
+                break;
+            case 'clienthub-Paid':
+                setLogo(<AttachMoney sx={{ fontSize: 60, color: 'primary.main' }}/>);
+                setBody(`You have no paid invoices.`);
+                break;
             default:
                 break;
         }

@@ -454,12 +454,11 @@ const bottomTabs = [
               ))}
             </MenuList>
           </Menu>
-          <Stack direction="row" alignItems="center" spacing={3}>
+          <Stack direction="row" alignItems="center" spacing={3} ml={1}>
             {/* <IconButton sx={{ borderRadius: '50%' }}>
               <NotificationsNone color="primary" />
             </IconButton>
             <Divider orientation="vertical" flexItem /> */}
-            <Stack direction="row" alignItems="center" spacing={1}>
               <Avatar
                 sx={{ width: '40px', height: '40px', bgcolor: 'primary.main' }}
               >
@@ -529,7 +528,6 @@ const bottomTabs = [
                 </MenuItem>
               </Menu>
             </Stack>
-          </Stack>
         </Toolbar>
         <Divider sx={{
           '&.MuiDivider-root': {

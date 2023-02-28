@@ -260,6 +260,11 @@ function ClientHubInvoiceDetails(props: any) {
             {props.payments.length > 0 && (
               <>
                   <Stack mt={2.5} spacing={2}>
+                    <Grid container justifyContent={'end'}>
+                      <Grid item xs={8} sm={6} >
+                      <Typography>Payments</Typography>
+                      </Grid>
+                    </Grid>
                       {props.payments.map((payment: any) => (
                             <Grid key={payment.id} container justifyContent="flex-end">
                             <Grid item xs={8} sm={4}>

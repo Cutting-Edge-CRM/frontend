@@ -363,7 +363,7 @@ export default function Schedule(props: any) {
                     pointerEvents: 'none',
                     backgroundColor: 'transparent'
                     }}
-                    open={isOpen}
+                    open={isOpen && !mobile}
                     anchorEl={anchorEl ?? undefined}
                     anchorOrigin={{
                     vertical: 'bottom',

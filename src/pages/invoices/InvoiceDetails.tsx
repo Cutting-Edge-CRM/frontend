@@ -787,6 +787,11 @@ function InvoiceDetails(props: any) {
         {props.payments.length > 0 && (
           <>
               <Stack mt={2.5} spacing={2}>
+                <Grid container justifyContent={'end'}>
+                  <Grid item xs={8} sm={6} >
+                  <Typography>Payments</Typography>
+                  </Grid>
+                </Grid>
                 <List>
                   {props.payments.map((payment: any) => (
                     <Tooltip key={payment.id} title={payment.method === 'Credit Card' ? "Cannot edit credit card payments": ''}>
@@ -874,6 +879,8 @@ function InvoiceDetails(props: any) {
           type={type}
           success={props.success}
           invoice={props.invoice}
+          reload={props.reload}
+          setReload={props.setReload}
         />
       </Card>
     </Stack>
