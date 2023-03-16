@@ -113,6 +113,7 @@ function Visits(props: any) {
   useEffect(() => {
     listVisits(props.client, props.job?.job?.id).then(
       (result) => {
+        console.log(result);
         setLoading(false);
         result = result.map((re: any) => {
           return {

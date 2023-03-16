@@ -142,7 +142,7 @@ export default function Schedule(props: any) {
         // save to db
         updateVisit(visit)
         .then((_) => {
-            // setUpdate(!update);
+            setUpdate(!update);
         },
             (err) => {
                 setError(err.message);
@@ -412,8 +412,8 @@ export default function Schedule(props: any) {
                                 </Typography>
                             :
                             <>
-                            {dayjs(visit.start).diff(dayjs(visit.end), 'hours') < 24 &&
-                            dayjs(visit.start).diff(dayjs(visit.end), 'hours') > -24 ? (
+                            {dayjs(visit.start).diff(dayjs(visit.displayEnd), 'hours') < 24 &&
+                            dayjs(visit.start).diff(dayjs(visit.displayEnd), 'hours') > -24 ? (
                             // if start and end within 1 day of eachother
                             visit.anytime === (1 || true) ? (
                                 // if anytime: Jan 13
@@ -433,7 +433,7 @@ export default function Schedule(props: any) {
                                 >
                                 {dayjs(visit.start).format('MMM D')}{' '}
                                 {dayjs(visit.start).format('h:mma')} -{' '}
-                                {dayjs(visit.end).format('h:mma')}
+                                {dayjs(visit.displayEnd).format('h:mma')}
                                 </Typography>
                             )
                             ) : (
@@ -444,7 +444,7 @@ export default function Schedule(props: any) {
                                 fontWeight={500}
                             >
                                 {dayjs(visit.start).format('MMM D')} -{' '}
-                                {dayjs(visit.end).format('MMM D')}
+                                {dayjs(visit.displayEnd).format('MMM D')}
                             </Typography>
                             )}                    
                             </>
@@ -497,6 +497,7 @@ export default function Schedule(props: any) {
         </Grid>
         <VisitModal
         visit={visit}
+        setVisit={setVisit}
         open={open}
         onClose={handleClose}
         users={users}

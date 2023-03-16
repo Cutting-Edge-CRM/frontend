@@ -1,11 +1,13 @@
 import { AddressAutofill } from '@mapbox/search-js-react';
-import { CheckCircleOutline } from '@mui/icons-material';
+import { CheckCircleOutline, PeopleOutlineOutlined } from '@mui/icons-material';
 import { Button, Card, CardContent, Chip, Grid, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import React from 'react';
 import { getCheckoutSession, getPortalSession } from '../../api/subscriptions.api';
 
-const basicFeatures = ["Lorem ipsum ergo fortei herts", "Lorem ipsum ergo fortei herts", "Lorem ipsum ergo fortei herts", "Lorem ipsum ergo fortei herts", "Lorem ipsum ergo fortei herts"] 
+const basicFeatures = ["Client Manager", "Quoting & Estimating", "Invoicing", "Client Portal", "Email & Text Message", "Credit Card Processing", "Dashboard & Analytics"] 
+const teamFeatures = ["Job Scheduling", "Appointments & Reminders", "Employee Login", "Time Tracking"] 
+
 
 function Billing(props: any) {
 
@@ -40,14 +42,14 @@ function Billing(props: any) {
                         <Card sx={{height: '100%'}}>
                             <Stack direction={'row'} justifyContent={'space-between'} alignItems="center" mx='-20px' px="40px" py="14px" sx={{backgroundColor: '#9ED1F580'}}>
                                 <Typography fontWeight={600} fontSize={18}>Basic</Typography>
-                                {props.subscription.subscription === 'basic' && <Chip label="Active" />}
+                                {props.subscription.subscription === 'basic' && <Chip label="Active" sx={{backgroundColor: "blue.dark"}} />}
                             </Stack>
                             <CardContent>
                                 <Stack spacing={5}>
                                     <Stack direction={'row'}>
                                         <Typography fontWeight={600} fontSize={30}>Free</Typography>
                                     </Stack>
-                                    <Stack spacing={2}>
+                                    <Stack spacing={2} height="380px">
                                         {basicFeatures.map((feature: string, index: number) => (
                                             <Grid container key={index}>
                                             <Grid item xs={1}>
@@ -58,6 +60,22 @@ function Billing(props: any) {
                                             </Grid>
                                             </Grid>
                                         ))}
+                                        <Grid container>
+                                            <Grid item xs={1}>
+                                                <CheckCircleOutline/>
+                                            </Grid>
+                                            <Grid item xs={11}>
+                                                <Typography>4.9% Credit Card Fee</Typography>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid container>
+                                            <Grid item xs={1}>
+                                                <PeopleOutlineOutlined />
+                                            </Grid>
+                                            <Grid item xs={11}>
+                                                <Typography fontStyle={'italic'}>Max 1 user</Typography>
+                                            </Grid>
+                                        </Grid>
                                     </Stack>
                                     {props.subscription.subscription !== 'basic' && <Button variant='contained' onClick={handlePortal}>Downgrade</Button>}
                                 </Stack>
@@ -68,7 +86,7 @@ function Billing(props: any) {
                         <Card sx={{height: '100%'}}>
                             <Stack direction={'row'} justifyContent={'space-between'} alignItems="center" mx='-20px' px="40px" py="14px" sx={{backgroundColor: '#FFF5E1'}}>
                                 <Typography fontWeight={600} fontSize={18}>Team</Typography>
-                                {props.subscription.subscription === 'team' && <Chip label="Active" />}
+                                {props.subscription.subscription === 'team' && <Chip label="Active" sx={{backgroundColor: "yellow.dark"}} />}
                             </Stack>
                             <CardContent>
                                 <Stack spacing={5}>
@@ -76,8 +94,16 @@ function Billing(props: any) {
                                         <Typography fontWeight={600} fontSize={30}>$99</Typography>
                                         <Typography fontWeight={500} fontSize={14}>per month</Typography>
                                     </Stack>
-                                    <Stack spacing={2}>
-                                        {basicFeatures.map((feature: string, index: number) => (
+                                    <Stack spacing={2} height="380px">
+                                        <Grid container>
+                                            <Grid item xs={1}>
+                                                <CheckCircleOutline color="primary" />
+                                            </Grid>
+                                            <Grid item xs={11}>
+                                                <Typography fontStyle={'italic'} color="primary">Everything in basic, plus</Typography>
+                                            </Grid>
+                                        </Grid>
+                                        {teamFeatures.map((feature: string, index: number) => (
                                             <Grid container key={index}>
                                             <Grid item xs={1}>
                                                 <CheckCircleOutline/>
@@ -87,6 +113,22 @@ function Billing(props: any) {
                                             </Grid>
                                             </Grid>
                                         ))}
+                                        <Grid container>
+                                            <Grid item xs={1}>
+                                                <CheckCircleOutline/>
+                                            </Grid>
+                                            <Grid item xs={11}>
+                                                <Typography>2.9% Credit Card Fee</Typography>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid container>
+                                            <Grid item xs={1}>
+                                                <PeopleOutlineOutlined />
+                                            </Grid>
+                                            <Grid item xs={11}>
+                                                <Typography fontStyle={'italic'}>Up to 5 Users</Typography>
+                                            </Grid>
+                                        </Grid>
                                     </Stack>
                                     {props.subscription.subscription === 'basic' && <Button variant='contained' onClick={() => handleCheckout("price_1MJLW5Keym0SOuzyP4lkwwuI")}>Upgrade</Button>}
                                     {props.subscription.subscription === 'team' && <Button variant='outlined' onClick={handlePortal}>Manage</Button>}
@@ -99,7 +141,7 @@ function Billing(props: any) {
                         <Card sx={{height: '100%'}}>
                             <Stack direction={'row'} justifyContent={'space-between'} alignItems="center" mx='-20px' px="40px" py="14px" sx={{backgroundColor: '#D9F3E5'}}>
                                 <Typography fontWeight={600} fontSize={18}>Enterprise</Typography>
-                                {props.subscription.subscription === 'enterprise' && <Chip label="Active" />}
+                                {props.subscription.subscription === 'enterprise' && <Chip label="Active" sx={{backgroundColor: "green.dark"}} />}
                             </Stack>
                             <CardContent>
                                 <Stack spacing={5}>
@@ -107,17 +149,31 @@ function Billing(props: any) {
                                         <Typography fontWeight={600} fontSize={30}>$249</Typography>
                                         <Typography fontWeight={500} fontSize={14}>per month</Typography>
                                     </Stack>
-                                    <Stack spacing={2}>
-                                        {basicFeatures.map((feature: string, index: number) => (
-                                            <Grid container key={index}>
+                                    <Stack spacing={2} height="380px">
+                                        <Grid container>
+                                            <Grid item xs={1}>
+                                                <CheckCircleOutline color="primary" />
+                                            </Grid>
+                                            <Grid item xs={11}>
+                                                <Typography fontStyle={'italic'} color="primary">Everything in team, plus</Typography>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid container>
                                             <Grid item xs={1}>
                                                 <CheckCircleOutline/>
                                             </Grid>
                                             <Grid item xs={11}>
-                                                <Typography>{feature}</Typography>
+                                                <Typography>2.9% Credit Card Fee</Typography>
                                             </Grid>
+                                        </Grid>
+                                        <Grid container>
+                                            <Grid item xs={1}>
+                                                <PeopleOutlineOutlined />
                                             </Grid>
-                                        ))}
+                                            <Grid item xs={11}>
+                                                <Typography fontStyle={'italic'}>Unlimited Users</Typography>
+                                            </Grid>
+                                        </Grid>
                                     </Stack>
                                     {props.subscription.subscription === 'basic' && <Button variant='contained' onClick={() => handleCheckout("price_1MJLZaKeym0SOuzyq8CIDUOK")}>Upgrade</Button>}
                                     {props.subscription.subscription === 'team' && <Button variant='contained' onClick={handlePortal}>Upgrade</Button>}

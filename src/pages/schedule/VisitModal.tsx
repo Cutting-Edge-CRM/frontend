@@ -9,6 +9,7 @@ import {
     DialogTitle,
     Divider,
     Grid,
+    IconButton,
     InputLabel,
     Link,
     Stack,
@@ -26,8 +27,11 @@ import dayjs from 'dayjs';
 import { getClient } from '../../api/client.api';
 import { getJob } from '../../api/job.api';
   import { listProperties } from '../../api/property.api';
+import { listUsers } from '../../api/user.api';
 import EmptyState from '../../shared/EmptyState';
 import { getChipColor, theme } from '../../theme/theme';
+import EditVisit from '../../shared/visit/EditVisit';
+import { Directions } from '@mui/icons-material';
 
   function add(accumulator: number, a: number) {
       return +accumulator + +a;
@@ -65,12 +69,18 @@ import { getChipColor, theme } from '../../theme/theme';
     fontSize: 16
   }));
   
-  export default function EditVisit(props: any) {
+  export default function VisitModal(props: any) {
     const [error, setError] = useState(null);
     const [properties, setProperties] = useState([] as any[]);
     const [value, setValue] = useState(0);
     const [client, setClient] = useState({} as any);
     const [job, setJob] = useState({} as any);
+    const [users, setUsers] = useState([] as any[]);
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
+    const [editVisitOpen, setEditVisitOpen] = useState(false);
+
+    let property = properties.find((p) => p.id === props.visit.property);
     
     const handleCancel = () => {
       props.onClose();
@@ -79,6 +89,18 @@ import { getChipColor, theme } from '../../theme/theme';
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
       };
+
+    const handleEditVisit = () => {
+      setEditVisitOpen(true);
+    }
+
+    const handleCloseEditVisit = () => {
+      setEditVisitOpen(false);
+    }
+
+    const handleUpdate = (value: string) => {
+      setEditVisitOpen(false);
+    };
   
     useEffect(() => {
         if (!props.visit.client) return;
@@ -115,6 +137,17 @@ import { getChipColor, theme } from '../../theme/theme';
           }
         );
       }, [props.visit]);
+    
+      useEffect(() => {
+        listUsers().then(
+          (result: any) => {
+            setUsers(result);
+          },
+          (err) => {
+            setError(err.message);
+          }
+        );
+      }, []);
 
       const propertyColumns: GridColDef[] = [
         {
@@ -134,12 +167,12 @@ import { getChipColor, theme } from '../../theme/theme';
       ];
   
     return (
-      <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))} onClose={handleCancel} open={props.open}>
+      <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))} onClose={handleCancel} open={props.open} fullWidth>
         <DialogTitle align="center">
           View {props.visit?.type}
         </DialogTitle>
         <DialogContent>
-          <Box width={'500px'}>
+          <Box sx={{".MuiTabs-flexContainer": {justifyContent: "center"}}}>
             <Tabs value={value} onChange={handleChange}>
                 <Tab label="Visit" id="visit" />
                 <Tab label="Client" id="client" />
@@ -147,34 +180,59 @@ import { getChipColor, theme } from '../../theme/theme';
             </Tabs>
             {value === 0 &&
                 <Stack spacing={1.5} mt={2} ml={4}>
-                  <Stack direction={'row'} spacing={3} mt={2}>
-                    <Stack spacing={1.5}>
-                      <Typography id="type-label" sx={{ color: 'primary.main' }}>
+                  <Grid container>
+                    <Grid item xs={3}>
+                      <Typography id="type-label" sx={{ color: 'primary.main', height: "32px" }}>
                         Visit type
                       </Typography>
+                    </Grid>
+                    <Grid item xs={9} justifyContent="start">
+                      <Chip sx={{backgroundColor: getEventColor(props.visit?.type), color: getBorderColor(props.visit?.type), fontSize: "16px"}} label={props.visit?.type} />
+                    </Grid>
+                  </Grid>
+                  <Grid container>
+                    <Grid item xs={3}>
                       <Typography id="property-label" sx={{ color: 'primary.main' }}>
                         Property
                       </Typography>
-                      <Typography id="assigned-label" sx={{ color: 'primary.main' }}>
+                    </Grid>
+                    <Grid item xs={9} justifyContent="start">
+                      <Typography>{property?.address ?
+                      <Stack direction={'row'}>
+                        <Typography>{property?.address}</Typography>
+                        <IconButton href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                          `${property?.address ?? ""}, ${property?.address2 ?? ""}, ${property?.city ?? ""}, ${property?.state ?? ""}`
+                        )}`} target="_blank" sx={{paddingTop: 0}}><Directions color='primary'/></IconButton>
+                      </Stack>
+                      : "No property"}</Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid container>
+                    <Grid item xs={3}>
+                      <Typography id="type-label" sx={{ color: 'primary.main', height: "32px" }}>
                         Assigned
                       </Typography>
-                      <Typography id="schedule-label" sx={{ color: 'primary.main' }}>
+                    </Grid>
+                    <Grid item xs={9} justifyContent="start">
+                      <Typography>{props.visit.users?.length > 0 ? props.visit.users?.map((u: any) => u.name ?? u.email)?.join(', ') : "No staff assigned"}</Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid container>
+                    <Grid item xs={3}>
+                      <Typography id="type-label" sx={{ color: 'primary.main', height: "32px" }}>
                         Schedule
                       </Typography>
-                    </Stack>
-                    <Stack spacing={1.5} mt={2}>
-                      <Chip sx={{backgroundColor: getEventColor(props.visit?.type), color: getBorderColor(props.visit?.type), fontSize: "16px"}} label={props.visit?.type} />
-                      <Typography>{properties.find((p) => p.id === props.visit.property)?.address ?? "No property"}</Typography>
-                      <Typography>{props.visit.users?.length > 0 ? props.visit.users?.map((u: any) => u.name ?? u.email)?.join(', ') : "No staff assigned"}</Typography>
-                            {props.visit.unscheduled === (1 || true) ?
+                    </Grid>
+                    <Grid item xs={9} justifyContent="start">
+                    {props.visit.unscheduled === (1 || true) ?
                             <Typography
                               >
                                 Unscheduled
                               </Typography>
                           :
                           <>
-                          {dayjs(props.visit.start).diff(dayjs(props.visit.end), 'hours') < 24 &&
-                          dayjs(props.visit.start).diff(dayjs(props.visit.end), 'hours') > -24 ? (
+                          {dayjs(props.visit.start).diff(dayjs(props.visit.displayEnd), 'hours') < 24 &&
+                          dayjs(props.visit.start).diff(dayjs(props.visit.displayEnd), 'hours') > -24 ? (
                             // if start and end within 1 day of eachother
                             props.visit.anytime === (1 || true) ? (
                               // if anytime: Jan 13
@@ -188,7 +246,7 @@ import { getChipColor, theme } from '../../theme/theme';
                               >
                                 {dayjs(props.visit.start).format('MMM D')}{' '}
                                 {dayjs(props.visit.start).format('h:mma')} -{' '}
-                                {dayjs(props.visit.end).format('h:mma')}
+                                {dayjs(props.visit.displayEnd).format('h:mma')}
                               </Typography>
                             )
                           ) : (
@@ -196,15 +254,13 @@ import { getChipColor, theme } from '../../theme/theme';
                             <Typography
                             >
                               {dayjs(props.visit.start).format('MMM D')} -{' '}
-                              {dayjs(props.visit.end).format('MMM D')}
+                              {dayjs(props.visit.displayEnd).format('MMM D')}
                             </Typography>
                           )}                    
                           </>
                           }
-                    </Stack>
-                  </Stack>
-                  
-                  
+                    </Grid>
+                  </Grid>
                   <InputLabel id="notes-label" sx={{ color: 'primary.main' }}>
                       Notes
                   </InputLabel>
@@ -321,7 +377,7 @@ import { getChipColor, theme } from '../../theme/theme';
                     ))}
                     {job?.items?.length === 0 && <EmptyState type="job-items" />}
                   <Grid container justifyContent="flex-end" mt={2.5}>
-                        <Grid item xs={3}>
+                        <Grid item xs={4} sm={2}>
                           <Typography variant="h6" color="primary" fontWeight={700}>
                             Subtotal
                           </Typography>
@@ -415,7 +471,7 @@ import { getChipColor, theme } from '../../theme/theme';
             Cancel
           </Button>
           {value === 0 &&
-            <Button variant="contained">
+            <Button variant="contained" onClick={handleEditVisit}>
               Edit Visit
             </Button>
           }
@@ -432,6 +488,24 @@ import { getChipColor, theme } from '../../theme/theme';
           
         </DialogActions>
         {error && <Alert severity="error">{error}</Alert>}
+        <EditVisit
+        visit={props.visit}
+        setVisit={props.setVisit}
+        open={editVisitOpen}
+        onClose={handleCloseEditVisit}
+        update={handleUpdate}
+        type={'edit'}
+        users={users}
+        client={props.visit.client}
+        startTime={startTime}
+        endTime={endTime}
+        setStartTime={setStartTime}
+        setEndTime={setEndTime}
+        success={props.success}
+        job={props.visit.job}
+        reload={props.reload}
+        setReload={props.setReload}
+      />
       </Dialog>
     );
   }
