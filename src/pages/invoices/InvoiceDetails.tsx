@@ -49,6 +49,8 @@ import PaymentModal from '../../shared/PaymentModal';
 import RichText from '../../shared/richtext/RichText';
 import SendInvoiceModal from '../../shared/SendInvoiceModal';
 import { getChipColor, theme } from '../../theme/theme';
+import TaxModal from '../../shared/TaxModal';
+
 
 function add(accumulator: number, a: number) {
   return +accumulator + +a;
@@ -61,7 +63,7 @@ function InvoiceItemSaved(props: any) {
         <Grid item={true} xs={2}>
           <Stack spacing={1.5}>
             <Typography variant="body2" color="neutral.light" fontWeight={500}>
-              Service
+              Title
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
               {props.item.title}
@@ -158,8 +160,8 @@ function InvoiceItemEdit(props: any) {
       <Grid container spacing={2} mt={1} columns={11}>
         <Grid item={true} xs={12} sm={3}>
           <Stack>
-          <InputLabel id="service-label" sx={{ color: 'primary.main' }}>
-            Service
+          <InputLabel id="Title-label" sx={{ color: 'primary.main', width: "100%" }}>
+            Title
           </InputLabel>
           <TextField
             id="title"
@@ -280,12 +282,22 @@ function InvoiceDetails(props: any) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   let mobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [taxOpen, setTaxOpen] = useState(false);
+
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const closeMenu = () => {
     setAnchorEl(null);
+  };
+
+  const handleTaxClose = () => {
+    setTaxOpen(false);
+  };
+
+  const handleTaxOpen = () => {
+    setTaxOpen(true);
   };
 
   const handleEditting = () => {
@@ -632,6 +644,7 @@ function InvoiceDetails(props: any) {
               <Button
                 onClick={handleAddItem}
                 startIcon={<AddCircleOutlineOutlined />}
+                variant="contained"
               >
                 <Typography>Add Item</Typography>
               </Button>
@@ -703,7 +716,7 @@ function InvoiceDetails(props: any) {
                       )}
                       size="small"
                     >
-                      <MenuItem key={'goto-tax'} onClick={() => navigate('/settings?tab=payments')}>
+                      <MenuItem key={'goto-tax'} onClick={handleTaxOpen}>
                           <ListItemText primary={'Add Tax'} />
                       </MenuItem>
                       {props.taxes.map((tax: any) => (
@@ -881,6 +894,11 @@ function InvoiceDetails(props: any) {
           invoice={props.invoice}
           reload={props.reload}
           setReload={props.setReload}
+        />
+        <TaxModal
+          open={taxOpen}
+          onClose={handleTaxClose}
+          success={props.success}
         />
       </Card>
     </Stack>

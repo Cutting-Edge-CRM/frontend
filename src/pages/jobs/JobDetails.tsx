@@ -55,7 +55,7 @@ function JobItemSaved(props: any) {
         <Grid item={true} xs={2}>
           <Stack spacing={1.5}>
             <Typography variant="body2" color="neutral.light" fontWeight={500}>
-              Service
+              Title
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
               {props.item.title}
@@ -153,8 +153,8 @@ function JobItemEdit(props: any) {
       <Grid container spacing={2} mt={1} columns={11}>
         <Grid item={true} xs={12} sm={3}>
           <Stack>
-          <InputLabel id="service-label" sx={{ color: 'primary.main' }}>
-            Service
+          <InputLabel id="Title-label" sx={{ color: 'primary.main', width: "100%" }}>
+            Title
           </InputLabel>
           <TextField
             id="title"
@@ -567,6 +567,7 @@ function JobDetails(props: any) {
               <Button
                 onClick={handleAddItem}
                 startIcon={<AddCircleOutlineOutlined />}
+                variant="contained"
               >
                 <Typography>Add Item</Typography>
               </Button>

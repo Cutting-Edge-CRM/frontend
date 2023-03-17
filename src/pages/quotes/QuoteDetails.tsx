@@ -54,6 +54,7 @@ import EmptyState from '../../shared/EmptyState';
 import PaymentModal from '../../shared/PaymentModal';
 import RichText from '../../shared/richtext/RichText';
 import SendQuoteModal from '../../shared/SendQuoteModal';
+import TaxModal from '../../shared/TaxModal';
 import { getChipColor, theme } from '../../theme/theme';
 
 function add(accumulator: any, a: any) {
@@ -67,7 +68,7 @@ function QuoteItemSaved(props: any) {
         <Grid item={true} xs={2}>
           <Stack spacing={1.5}>
             <Typography variant="body2" color="neutral.light" fontWeight={500}>
-              Service
+              Title
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
               {props.item.title}
@@ -235,8 +236,8 @@ function QuoteItemEdit(props: any) {
       <Grid container spacing={2} columns={11}>
         <Grid item={true} xs={12} sm={3}>
         <Stack alignItems="center">
-          <InputLabel id="service-label" sx={{ color: 'primary.main' }}>
-              Service
+          <InputLabel id="Title-label" sx={{ color: 'primary.main', width: "100%" }}>
+              Title
           </InputLabel>
           <TextField
             id="title"
@@ -364,7 +365,7 @@ function TabPanel(props: any) {
   const [taxAmount, setTaxAmount] = useState(0);
   const [subTotalAmount, setSubtotalAmount] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
-  const navigate = useNavigate();
+  const [taxOpen, setTaxOpen] = useState(false);
 
   const handleChangeDeposit = (event: any) => {
     let options = props.quote.options;
@@ -393,6 +394,14 @@ function TabPanel(props: any) {
       quote: props.quote.quote,
       options: options,
     });
+  };
+
+  const handleTaxClose = () => {
+    setTaxOpen(false);
+  };
+
+  const handleTaxOpen = () => {
+    setTaxOpen(true);
   };
 
   useEffect(() => {
@@ -469,15 +478,19 @@ function TabPanel(props: any) {
                 <Button
                   onClick={handleAddItem}
                   startIcon={<AddCircleOutlineOutlined />}
+                  variant="contained"
                 >
                   <Typography>Add Item</Typography>
                 </Button>
-                <Button
-                  onClick={handleAddUpsell}
-                  startIcon={<AddCircleOutlineOutlined />}
-                >
-                  <Typography>Add Upsell</Typography>
-                </Button>
+                <Tooltip title='Optional items allow clients to select or unselect the line item'>
+                  <Button
+                    onClick={handleAddUpsell}
+                    startIcon={<AddCircleOutlineOutlined />}
+                    variant="contained"
+                  >
+                    <Typography>Add Optional Item</Typography>
+                  </Button>
+                </Tooltip>
               </Stack>
               <Divider/>
             </>
@@ -600,7 +613,7 @@ function TabPanel(props: any) {
                         )}
                         size="small"
                       >
-                        <MenuItem key={'goto-tax'} onClick={() => navigate('/settings?tab=payments')}>
+                        <MenuItem key={'goto-tax'} onClick={handleTaxOpen}>
                             <ListItemText primary={'Add Tax'} />
                         </MenuItem>
                         {props.taxes.map((tax: any) => (
@@ -651,6 +664,11 @@ function TabPanel(props: any) {
           </Stack>
         </>
       )}
+      <TaxModal
+          open={taxOpen}
+          onClose={handleTaxClose}
+          success={props.success}
+        />
     </Box>
   );
 }

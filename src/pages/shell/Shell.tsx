@@ -68,6 +68,8 @@ import NewClient from '../../shared/client/NewClient';
 import SelectPropertyAndClient from '../../shared/client/SelectPropertyAndClient';
 import SelectClient from '../../shared/client/SelectClient';
 import { theme } from '../../theme/theme';
+import { getCompany } from '../../api/company.api';
+import { getUser } from '../../api/user.api';
 
 const NavList = styled(List)<ListProps>(({ theme }) => ({
   padding: theme.spacing(0, 3),
@@ -105,6 +107,9 @@ function Shell() {
   const [quickCreateAnchor, setQuickCreateAnchor] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   let mobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [company, setCompany] = useState({} as any);
+  const [user, setUser] = useState({} as any);
+
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -132,6 +137,24 @@ function Shell() {
 
     setSuccessOpen(false);
   };
+
+  useEffect(() => {
+    getCompany()
+    .then((result) => {
+        setCompany(result);
+    }, (err) => {
+        // setLoading(false);
+        // setError(err.message);
+    })
+    }, []);
+
+    useEffect(() => {
+      getUser()
+      .then((result) => {
+          setUser(result);
+      }, (err) => {
+      })
+      }, []);
 
   const handleSearch = (event: any) => {
     let query = event.target.value;
@@ -462,7 +485,14 @@ const bottomTabs = [
               <Avatar
                 sx={{ width: '40px', height: '40px', bgcolor: 'primary.main' }}
               >
-                NW
+                {user.first && user.last ?
+                  <>
+                {user?.first?.[0]}
+                {user?.last?.[0]}
+                </>
+                :
+                company.companyName?.[0]
+              }
               </Avatar>
               <Typography
                 variant="body2"
@@ -470,7 +500,7 @@ const bottomTabs = [
                 component="div"
                 sx={{ display: { xs: 'none', lg: 'block' } }}
               >
-                White Mountain Painting
+                {company.companyName}
               </Typography>
               <IconButton onClick={handleClick} size="small">
                 <ArrowDropDown color="primary" />
@@ -510,11 +540,22 @@ const bottomTabs = [
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               >
-                <MenuItem>
-                  <Avatar /> Profile
+                <MenuItem onClick={() => handleNavigate(`/settings?tab=personal-details`)}>
+                  <Avatar
+                  sx={{ width: '40px', height: '40px', bgcolor: 'primary.main' }}
+                >
+                  {user.first && user.last ?
+                    <>
+                  {user?.first?.[0]}
+                  {user?.last?.[0]}
+                  </>
+                  :
+                  company.companyName?.[0]
+                }
+                </Avatar> Profile
                 </MenuItem>
                 <Divider />
-                <MenuItem>
+                <MenuItem onClick={() => handleNavigate(`/settings`)}>
                   <ListItemIcon>
                     <SettingsIcon fontSize="small" />
                   </ListItemIcon>
