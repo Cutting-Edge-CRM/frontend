@@ -27,7 +27,7 @@ function App() {
   const children = (
   <HelmetProvider>
     <Helmet>
-        <title>Cutting Edge</title>
+        <title>Cutting Edge CRM</title>
     </Helmet>
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>

@@ -277,7 +277,7 @@ const bottomTabs = [
   const drawer = (
     <Stack height="100%">
       <Toolbar>
-        <Avatar sx={{ mr: 1 }} src="https://res.cloudinary.com/dtjqpussy/image/upload/v1677000634/Untitled_design_3_ngtu7h.png" sizes='small'>
+        <Avatar sx={{ mr: 1 }} src="https://res.cloudinary.com/dtjqpussy/image/upload/v1679078662/Untitled_136_136_px_1_wz09on.png" sizes='small'>
         </Avatar>
         <Typography variant="h6" noWrap component="div" fontWeight={600}>
           Cutting Edge

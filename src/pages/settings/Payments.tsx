@@ -3,10 +3,10 @@ import { AddCircleOutlineOutlined, DeleteOutline, OpenInNew, Percent } from '@mu
 import { Alert, Box, Button, Card, CircularProgress, Grid, IconButton, InputLabel, ListItemText, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { updateSettings } from '../../api/settings.api';
-import { retrieveAccount, startPaymentSetUp, continuePaymentSetUp, createAccountSession } from '../../api/stripePayments.api';
+import { retrieveAccount, startPaymentSetUp, continuePaymentSetUp } from '../../api/stripePayments.api';
 import { updateTaxes } from '../../api/tax.api';
-import StripePayments from './StripePayments'
-import StripePayouts from './StripePayouts';
+// import StripePayments from './StripePayments'
+// import StripePayouts from './StripePayouts';
 
 const currencies = [{id: 'cad', display: 'CAD'}, {id: 'usd', display: 'USD'}];
 
@@ -15,7 +15,7 @@ function Payments(props: any) {
     const [loading, setLoading] = useState(false);
     const [loginLink, setLoginLink] = useState('');
     const [error, setError] = useState(null);
-    const [stripeLoaded, setStripeLoaded] = useState(false);
+    // const [stripeLoaded, setStripeLoaded] = useState(false);
 
     const handleStartSetUp = () => {
         setLoading(true);
@@ -109,39 +109,39 @@ function Payments(props: any) {
         })
     }, [])
 
-    useEffect(() => {
-        if (setupStatus !== 'complete') return;
-        (window as any).StripeConnect = (window as any).StripeConnect || {};
-          // Fetch the AccountSession client secret
-          createAccountSession()
-          .then((res) => {
-            let clientSecret = res.client_secret;
-            // Initialize StripeConnect after the window loads
-            if (stripeLoaded) return;
-            setStripeLoaded(true);
-            (window as any).StripeConnect.onLoad = () => {
-                (window as any).StripeConnect.init({
-                // This is a placeholder - it should be replaced with your publishable API key.
-                // Sign in to see your own test API key embedded in code samples.
-                // Don’t submit any personally identifiable information in requests made with this key.
-                publishableKey: "pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww",
-                clientSecret,
-                appearance: {
-                  colors: {
-                    primary: '#0C8BE7',
-                  },
-                },
-                uiConfig: {
-                  overlay: 'dialog',
-                }
-              });
-            };
-            setError(null);
+    // useEffect(() => {
+    //     if (setupStatus !== 'complete') return;
+    //     (window as any).StripeConnect = (window as any).StripeConnect || {};
+    //       // Fetch the AccountSession client secret
+    //       createAccountSession()
+    //       .then((res) => {
+    //         let clientSecret = res.client_secret;
+    //         // Initialize StripeConnect after the window loads
+    //         if (stripeLoaded) return;
+    //         setStripeLoaded(true);
+    //         (window as any).StripeConnect.onLoad = () => {
+    //             (window as any).StripeConnect.init({
+    //             // This is a placeholder - it should be replaced with your publishable API key.
+    //             // Sign in to see your own test API key embedded in code samples.
+    //             // Don’t submit any personally identifiable information in requests made with this key.
+    //             publishableKey: "pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww",
+    //             clientSecret,
+    //             appearance: {
+    //               colors: {
+    //                 primary: '#0C8BE7',
+    //               },
+    //             },
+    //             uiConfig: {
+    //               overlay: 'dialog',
+    //             }
+    //           });
+    //         };
+    //         setError(null);
 
-          }, (err: any) => {
-            setError(err);
-          })
-      }, [stripeLoaded, setupStatus]);
+    //       }, (err: any) => {
+    //         setError(err);
+    //       })
+    //   }, [stripeLoaded, setupStatus]);
 
     if (loading) return (<Box textAlign='center'><CircularProgress /></Box>);
 
@@ -273,7 +273,7 @@ function Payments(props: any) {
             <Button variant="contained" onClick={handleSave}>Save Changes</Button>
         </Stack>
         </Card>
-        {setupStatus === "complete" &&
+        {/* {setupStatus === "complete" &&
         <>
             <Card sx={{padding: 3}}>
             <StripePayments stripeLoaded={stripeLoaded} setStripeLoaded={setStripeLoaded} />
@@ -282,7 +282,7 @@ function Payments(props: any) {
                 <StripePayouts stripeLoaded={stripeLoaded} setStripeLoaded={setStripeLoaded} />
             </Card>
         </>
-        }
+        } */}
         
     </Stack>
     );

@@ -22,7 +22,6 @@ function Billing(props: any) {
 
     const handlePortal = () => {
         getPortalSession().then(res => {
-            console.log(res);
             window.location.replace(res.url);
         }, err => {
             console.error(err);
@@ -130,7 +129,7 @@ function Billing(props: any) {
                                             </Grid>
                                         </Grid>
                                     </Stack>
-                                    {props.subscription.subscription === 'basic' && <Button variant='contained' onClick={() => handleCheckout("price_1MJLW5Keym0SOuzyP4lkwwuI")}>Upgrade</Button>}
+                                    {props.subscription.subscription === 'basic' && <Button variant='contained' onClick={() => handleCheckout(`${process.env.REACT_APP_TEAM_PRICE}`)}>Upgrade</Button>}
                                     {props.subscription.subscription === 'team' && <Button variant='outlined' onClick={handlePortal}>Manage</Button>}
                                     {props.subscription.subscription === 'enterprise' && <Button variant='contained' onClick={handlePortal}>Downgrade</Button>}
                                 </Stack>
@@ -175,7 +174,7 @@ function Billing(props: any) {
                                             </Grid>
                                         </Grid>
                                     </Stack>
-                                    {props.subscription.subscription === 'basic' && <Button variant='contained' onClick={() => handleCheckout("price_1MJLZaKeym0SOuzyq8CIDUOK")}>Upgrade</Button>}
+                                    {props.subscription.subscription === 'basic' && <Button variant='contained' onClick={() => handleCheckout(`${process.env.REACT_APP_ENTERPRISE_PRICE}`)}>Upgrade</Button>}
                                     {props.subscription.subscription === 'team' && <Button variant='contained' onClick={handlePortal}>Upgrade</Button>}
                                     {props.subscription.subscription === 'enterprise' && <Button variant='outlined' onClick={handlePortal}>Manage</Button>}
                                 </Stack>
