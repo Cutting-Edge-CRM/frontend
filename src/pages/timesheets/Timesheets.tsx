@@ -4,8 +4,9 @@ import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { clock, createTimesheet, getClockStatus, listTimesheets } from '../../api/timesheet.api';
-import { listUsers } from '../../api/user.api';
+import { getUser, listUsers } from '../../api/user.api';
 import { theme } from '../../theme/theme';
+import { currentUserClaims } from '../../auth/firebase';
 
 function Clock(props: any) {
     const [date, setDate] = useState('');
@@ -458,7 +459,7 @@ function Timesheets(props: any) {
     }, [])
 
     useEffect(() => {
-        listTimesheets(dayjs(date).format("YYYY-MM-DD"))
+        listTimesheets(dayjs(date).format("YYYY-MM-DD"), ((currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') ? false : true) )
         .then(res => {
             setTimes(res);
         }, err => {
@@ -467,13 +468,24 @@ function Timesheets(props: any) {
     }, [clockedIn, reload, date])
 
     useEffect(() => {
-        listUsers()
-        .then(res => {
-            setUsers(res);
-            setCurrentUser(res[0]);
-        }, err => {
-            console.log(err);
-        })
+        if (currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') {
+            listUsers()
+            .then(res => {
+                setUsers(res);
+                setCurrentUser(res[0]);
+            }, err => {
+                console.log(err);
+            })
+        } else {
+            getUser()
+            .then(res => {
+                setUsers([res]);
+                setCurrentUser(res);
+            }, err => {
+                console.log(err);
+            })
+        }
+
     }, [])
 
     if (props.subscription.subscription === 'basic') {
@@ -547,7 +559,7 @@ function Timesheets(props: any) {
                         value={date}
                         />
                     </Stack>
-                    <Box width="100%" >
+                    <Box width="100%" sx={{ marginBottom: "16px !important"}}>
                     {clockedIn &&
                         <Button onClick={handleClockOut} color='error' variant='contained' sx={{width: "100%"}} >
                         Clock out <Clock lastClock={lastClock} />
@@ -559,7 +571,8 @@ function Timesheets(props: any) {
                         </Button>
                     }
                     </Box>
-                    <Select
+                    {((currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner')) &&
+                        <Select
                         labelId="user-label"
                         id="user"
                         value={users.find((u: any) => u.id === currentUser.id) ?? ''}
@@ -580,6 +593,7 @@ function Timesheets(props: any) {
                         </MenuItem>
                         ))}
                     </Select>
+                    }
                     <SingleUserWeek week={week} user={currentUser} times={times} reload={reloadTimes} setError={setError} />
                 </Stack>
             }

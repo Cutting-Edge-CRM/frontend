@@ -12,6 +12,7 @@ import { EventImpl } from '@fullcalendar/core/internal'
 import { theme } from '../../theme/theme'
 import VisitModal from './VisitModal'
 import { ArrowCircleRight, CalendarMonthOutlined, EventBusy } from '@mui/icons-material'
+import { currentUserClaims } from '../../auth/firebase';
 
 const eventRender = (args: any) => {
 
@@ -229,7 +230,7 @@ export default function Schedule(props: any) {
 
 
     useEffect(() => {
-        listVisitsForCalendar()
+        listVisitsForCalendar(((currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') ? false : true))
         .then(visits => {
             setScheduledEvents(visits.filter((v: any) => !v.unscheduled));
             let unscheduled = visits.filter((v: any) => v.unscheduled)

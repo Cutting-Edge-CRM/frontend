@@ -147,7 +147,7 @@ async function listVisits(client?: string, job?: string) {
     }
 }
 
-async function listVisitsForCalendar() {
+async function listVisitsForCalendar(user: boolean) {
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -160,6 +160,7 @@ async function listVisitsForCalendar() {
         headers: headers,
     };
         let url = new URL(`${process.env.REACT_APP_SERVER_URL}/visits/list-event-calendar`);
+        if (user) url.searchParams.set('user', auth.currentUser?.uid as string);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {

@@ -88,7 +88,7 @@ async function getClockStatus() {
     }
 }
 
-async function listTimesheets(date: any) {
+async function listTimesheets(date?: any, user?: boolean) {
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -102,6 +102,7 @@ async function listTimesheets(date: any) {
     };
         let url = new URL(`${process.env.REACT_APP_SERVER_URL}/timesheets/list-timesheets`);
         url.searchParams.set('date', `${date}`);
+        if (user) url.searchParams.set('user', auth.currentUser?.uid as string);
         return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
