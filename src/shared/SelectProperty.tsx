@@ -41,6 +41,13 @@ const propertyColumns: GridColDef[] = [
     headerName: 'City',
     width: 150,
   },
+  {
+    field: 'state',
+    headerName: 'State',
+    headerClassName: 'MuiDataGrid-columnHeader',
+    width: 170,
+    sortable: false,
+  },
 ];
 
 export default function SelectProperty(props: any) {

@@ -7,6 +7,7 @@ import {
   MoneyOffOutlined,
   MoreVert,
   Numbers,
+  PreviewOutlined,
   SendOutlined,
 } from '@mui/icons-material';
 import {
@@ -409,6 +410,10 @@ function InvoiceDetails(props: any) {
     });
   };
 
+  const handlePreview = () => {
+    window.open(`${process.env.REACT_APP_URL}/client-hub/${props.invoice.invoice.client}/invoices/${props.invoice.invoice.id}`)
+  }
+
   function getActionButtons(props: any) {
 
     if (mobile) {
@@ -523,6 +528,12 @@ function InvoiceDetails(props: any) {
                   <SendOutlined />
                 </ListItemIcon>
                 <ListItemText>Send</ListItemText>
+              </MenuItem>
+              <MenuItem onClick={handlePreview}>
+                  <ListItemIcon>
+                    <PreviewOutlined />
+                  </ListItemIcon>
+                  <ListItemText>Preview as Client</ListItemText>
               </MenuItem>
               {/* <MenuItem>
                 <ListItemIcon>
@@ -799,10 +810,10 @@ function InvoiceDetails(props: any) {
         </Stack>
         {props.payments.length > 0 && (
           <>
-              <Stack mt={2.5} spacing={2}>
+              <Stack mt={3.5} spacing={1}>
                 <Grid container justifyContent={'end'}>
                   <Grid item xs={8} sm={6} >
-                  <Typography>Payments</Typography>
+                  <Typography variant="h6" color="primary" fontWeight={500}>Payments</Typography>
                   </Grid>
                 </Grid>
                 <List>

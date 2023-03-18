@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List, { ListProps } from '@mui/material/List';
@@ -9,13 +9,14 @@ import { AttachMoney, SellOutlined } from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Alert, AppBar, Avatar, IconButton, ListItemButton, Snackbar, Stack, styled } from '@mui/material';
+import { Alert, AppBar, Avatar, Grid, IconButton, ListItemButton, Snackbar, Stack, styled } from '@mui/material';
 import { Link, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import ClientHubQuotes from './ClientHubQuotes';
 import Login from '../utility/login/Login';
 import ClientHubQuote from './ClientHubQuote';
 import ClientHubInvoices from './ClientHubInvoices';
 import ClientHubInvoice from './ClientHubInvoice';
+import { getCompany } from '../../api/company.api';
 
 const NavList = styled(List)<ListProps>(({ theme }) => ({
   padding: theme.spacing(0, 3),
@@ -46,6 +47,8 @@ function ClientHub() {
   const [mobileOpen, setMobileOpen] = useState(false);
   let { clientId } = useParams();
   const location = useLocation();
+  const [company, setCompany] = useState({} as any);
+  const [logoUrl, setLogoUrl] = useState([] as any);
 
 
   const handleDrawerToggle = () => {
@@ -58,6 +61,20 @@ function ClientHub() {
     setSuccessOpen(true);
   };
 
+  useEffect(() => {
+    getCompany()
+    .then((result) => {
+        // setLoading(false);
+        if (result.logo) {
+            setLogoUrl([{url: result.logo}]);
+        }
+        setCompany(result);
+    }, (err) => {
+        // setLoading(false);
+        // setError(err.message);
+    })
+    }, []);
+
   const handleSuccessClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
@@ -69,11 +86,13 @@ function ClientHub() {
   const drawer = (
     <Stack height="100%">
       <Toolbar>
-        <Avatar sx={{ mr: 1 }} src="https://res.cloudinary.com/dtjqpussy/image/upload/v1679078662/Untitled_136_136_px_1_wz09on.png" sizes='small'>
+        <Stack alignItems={'center'} mt={2}>
+        <Avatar sx={{ mr: 1, width: 100, height: 100 }} src={logoUrl?.[0]?.url} sizes='small' variant='square'>
         </Avatar>
-        <Typography variant="h6" noWrap component="div" fontWeight={600}>
-          CuttingEdge
+        <Typography variant="h6" component="div" fontWeight={600} textAlign="center">
+          {company.companyName}
         </Typography>
+        </Stack>
       </Toolbar>
       <Stack height="100%">
         <NavList sx={{marginTop: 5}}>
@@ -168,23 +187,27 @@ function ClientHub() {
           </Box>
         <Box
           component="main"
-          sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+          sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` }, backgroundColor: "#f4f5f7" }}
         >
-        <Toolbar />
-  
-        {/* body */}
-            <Routes>
-              <Route path="/quotes" element={<ClientHubQuotes success={success} />} />
-              <Route path="/quotes/:quoteId" element={<ClientHubQuote success={success} />} />
-              <Route path="/invoices" element={<ClientHubInvoices success={success} />} />
-              <Route path="/invoices/:invoiceId" element={<ClientHubInvoice success={success} />} />
-              <Route path="*" element={<Login />} />
-            </Routes>
-            <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} open={successOpen} autoHideDuration={4000} onClose={handleSuccessClose}>
-                <Alert onClose={handleSuccessClose} severity="success" sx={{ width: '100%' }}>
-                  {successMessage}
-                </Alert>
-            </Snackbar>
+        <Grid container width={"100%"} justifyContent="center">
+          <Grid item xs={11} lg={8}>
+            <Toolbar />
+      
+          {/* body */}
+          <Routes>
+            <Route path="/quotes" element={<ClientHubQuotes success={success} />} />
+            <Route path="/quotes/:quoteId" element={<ClientHubQuote success={success} />} />
+            <Route path="/invoices" element={<ClientHubInvoices success={success} />} />
+            <Route path="/invoices/:invoiceId" element={<ClientHubInvoice success={success} />} />
+            <Route path="*" element={<Login />} />
+          </Routes>
+          <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} open={successOpen} autoHideDuration={4000} onClose={handleSuccessClose}>
+              <Alert onClose={handleSuccessClose} severity="success" sx={{ width: '100%' }}>
+                {successMessage}
+              </Alert>
+          </Snackbar>
+          </Grid>
+        </Grid>
       </Box>
       </Box>
   );

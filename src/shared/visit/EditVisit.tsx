@@ -89,8 +89,6 @@ export default function EditVisit(props: any) {
     }
   };
 
-  console.log(props.visit);
-  console.log(props.visit.property);
 
   const handleChange = (event: any) => {
     props.setVisit({ ...props.visit, [event.target.id]: event.target.value });

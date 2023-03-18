@@ -164,6 +164,13 @@ import { Directions } from '@mui/icons-material';
           width: 170,
           sortable: false,
         },
+        {
+          field: 'state',
+          headerName: 'State',
+          headerClassName: 'MuiDataGrid-columnHeader',
+          width: 170,
+          sortable: false,
+        },
       ];
   
     return (

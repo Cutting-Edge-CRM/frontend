@@ -99,8 +99,12 @@ function Week(props: any) {
         setEditting(-1);
     }
 
-    const handleChange = (event: any) => {
-        setToSave(event.target.value);
+    const handleChangeHour = (event: any) => {
+        setToSave(+(toSave%1) + +event.target.value);
+    }
+
+    const handleChangeMinute = (event: any) => {
+        setToSave((Math.floor(toSave)) + event.target.value/60);
     }
 
     let userTimesheets = props.times.find((t: any) => t.user === props.user.id);
@@ -152,7 +156,13 @@ function Week(props: any) {
                         >{Math.floor(weekDay.time/60) < 10 ? 0 : ''}{Math.floor(weekDay.time/60)}:{weekDay.time%60 < 10 ? 0 : ''}{weekDay.time%60}
                         </Typography>
                     }
-                    {editting === weekDay.number && <TextField type={'number'} onChange={handleChange} defaultValue={(weekDay.time/60).toFixed(2)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />}
+                    {editting === weekDay.number && 
+                    <Stack direction={'row'} alignItems="center">
+                        <TextField type={'number'} onChange={handleChangeHour} defaultValue={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <Typography fontWeight={700} fontSize={"1.5rem"}>:</Typography>
+                        <TextField type={'number'} onChange={handleChangeMinute} defaultValue={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                    </Stack>
+                    }
                     
                     <Popover
                         sx={{
@@ -213,7 +223,13 @@ function Week(props: any) {
                         </Box>
                     }
                     {editting !== weekDay.number && <Typography>-</Typography>}
-                    {editting === weekDay.number && <TextField type={'number'} onChange={handleChange} defaultValue={0}  sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />}
+                    {editting === weekDay.number && 
+                    <Stack direction={'row'} alignItems="center">
+                        <TextField type={'number'} onChange={handleChangeHour} defaultValue={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <Typography fontWeight={700} fontSize={"1.5rem"}>:</Typography>
+                        <TextField type={'number'} onChange={handleChangeMinute} defaultValue={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                    </Stack>
+                    }
                 </Stack>
                  }
                 
@@ -255,8 +271,12 @@ function SingleUserWeek(props: any) {
         setEditting(-1);
     }
 
-    const handleChange = (event: any) => {
-        setToSave(event.target.value);
+    const handleChangeHour = (event: any) => {
+        setToSave(+(toSave%1) + +event.target.value);
+    }
+
+    const handleChangeMinute = (event: any) => {
+        setToSave((Math.floor(toSave)) + event.target.value/60);
     }
 
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>, weekDay: any) => {
@@ -345,7 +365,13 @@ function SingleUserWeek(props: any) {
                     </Dialog>
                     </>
                     }
-                    {editting === weekDay.number && <TextField type={'number'} onChange={handleChange} defaultValue={(weekDay.time/60).toFixed(2)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />}
+                    {editting === weekDay.number && 
+                    <Stack direction={'row'} alignItems="center">
+                        <TextField type={'number'} onChange={handleChangeHour} defaultValue={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <Typography fontWeight={700} fontSize={"1.5rem"}>:</Typography>
+                        <TextField type={'number'} onChange={handleChangeMinute} defaultValue={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                    </Stack> 
+                    }
                     </Stack>
                 }
                 {weekDay.time === 0 && 
@@ -373,7 +399,13 @@ function SingleUserWeek(props: any) {
                         </Box>
                     }
                     {editting !== weekDay.number && <Typography>-</Typography>}
-                    {editting === weekDay.number && <TextField type={'number'} onChange={handleChange} defaultValue={0}  sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />}
+                    {editting === weekDay.number && 
+                    <Stack direction={'row'} alignItems="center">
+                        <TextField type={'number'} onChange={handleChangeHour} defaultValue={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <Typography fontWeight={700} fontSize={"1.5rem"}>:</Typography>
+                        <TextField type={'number'} onChange={handleChangeMinute} defaultValue={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                    </Stack> 
+                    }
                 </Stack>
                  }
                 
@@ -421,6 +453,7 @@ function Timesheets(props: any) {
         setClockedIn(true);
         clock({type: 'clock-in'})
         .then(_ => {
+            setLastClock(dayjs().format() as any)
         }, err => {
             setError(err.message);
         })
@@ -541,7 +574,12 @@ function Timesheets(props: any) {
                     {users.map((user: any) => (
                         <Grid container columns={8} borderTop="1px solid #E9EDEF" key={user.id}>
                             <Grid item xs={1} py={2}>
-                                <Typography>{user.first}</Typography>
+                                <Stack direction={'row'} alignItems={'center'} justifyContent="space-between">
+                                    <Typography>{user.first}</Typography>
+                                    {/* <Tooltip title="Clock out user">
+                                        <IconButton><AccessAlarm color="error"/></IconButton>
+                                    </Tooltip> */}
+                                </Stack>
                                 <Typography color={'neutral.light'}>{sumTimeForWeek(user, times)}</Typography>
                             </Grid>
                             <Week week={week} user={user} times={times} reload={reloadTimes} setError={setError} />

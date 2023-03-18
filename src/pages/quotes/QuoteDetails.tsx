@@ -5,10 +5,12 @@ import {
   Check,
   ContentCopyOutlined,
   DeleteOutline,
+  FileDownloadOutlined,
   FormatPaintOutlined,
   MarkEmailReadOutlined,
   MoreVert,
   Numbers,
+  PreviewOutlined,
   SendOutlined,
   ThumbDownAltOutlined,
 } from '@mui/icons-material';
@@ -797,6 +799,13 @@ function QuoteDetails(props: any) {
     setPaymentOpen(true);
   };
 
+  const handlePreview = () => {
+    window.open(`${process.env.REACT_APP_URL}/client-hub/${props.quote.quote.client}/quotes/${props.quote.quote.id}`)
+  }
+
+  // const handleDownload = () => {
+  // }
+
   const markQuoteAs = (status: string) => {
     closeMenu();
     props.quote.quote.status = status;
@@ -1026,7 +1035,13 @@ function QuoteDetails(props: any) {
                 </ListItemIcon>
                 <ListItemText>Send</ListItemText>
               </MenuItem>
-              {/* <MenuItem>
+              <MenuItem onClick={handlePreview}>
+                <ListItemIcon>
+                  <PreviewOutlined />
+                </ListItemIcon>
+                <ListItemText>Preview as Client</ListItemText>
+              </MenuItem>
+              {/* <MenuItem onClick={handleDownload}>
                 <ListItemIcon>
                   <FileDownloadOutlined />
                 </ListItemIcon>
@@ -1178,10 +1193,10 @@ function QuoteDetails(props: any) {
         {/* ))} */}
         {props.payments.length > 0 && (
           <>
-              <Stack mt={2.5} spacing={2}>
+              <Stack mt={3.5} spacing={1}>
                 <Grid container justifyContent={'end'}>
                   <Grid item xs={8} sm={6} >
-                  <Typography>Payments</Typography>
+                  <Typography variant="h6" color="primary" fontWeight={500}>Payments</Typography>
                   </Grid>
                 </Grid>
                 <List>
