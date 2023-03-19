@@ -113,13 +113,12 @@ function Visits(props: any) {
   useEffect(() => {
     listVisits(props.client, props.job?.job?.id).then(
       (result) => {
-        console.log(result);
         setLoading(false);
         result = result.map((re: any) => {
           return {
             ...re,
-            start: dayjs(re.start).format('YYYY-MM-DD HH:mm'),
-            end: dayjs(re.end).format('YYYY-MM-DD HH:mm'),
+            start: re.start ? dayjs(re.start).format('YYYY-MM-DD HH:mm') : null,
+            end: re.end ? dayjs(re.end).format('YYYY-MM-DD HH:mm') : null,
           };
         });
         setRows(result);

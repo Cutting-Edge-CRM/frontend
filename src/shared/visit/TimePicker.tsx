@@ -4,7 +4,7 @@ import RegexParser from 'regex-parser';
 
 export default function TimePicker(props: any) {
 
-    const [AM, setAM] = useState(+props.value.split(':')[0] <= 12);
+    const [AM, setAM] = useState(+props.value?.split(':')[0] <= 12);
 
 
     const formatTime = (time: string) => {
@@ -90,6 +90,7 @@ export default function TimePicker(props: any) {
     }
 
     const valid = () => {
+    if (!props.value) return false;
      let validTime = RegexParser('/^(([01]?[0-9]|2[0-3]):([0-5][0-9]))?$/');
      return !validTime.test(props.value);
     }
@@ -100,7 +101,7 @@ export default function TimePicker(props: any) {
             disabled={props.disabled}
             id={`${props.type}-time`}
             label={`${props.label}`}
-            value={ checkIfAM(props.value) ? fix12(props.value) : sub12(props.value)}
+            value={props.value ? (checkIfAM(props.value) ? fix12(props.value) : sub12(props.value)) : ''}
             onChange={handleChange}
             error={valid()}
             />

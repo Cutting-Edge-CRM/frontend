@@ -200,16 +200,14 @@ export default function ImportClients(props: any) {
         .slice(string.indexOf('\n') + 1)
         .replace(/[\r]+/g, '')
         .split('\n');
-
       const array = csvRows.map((i) => {
         const values = i.split(',');
         const obj = csvHeader.reduce((object: any, header, index) => {
-          object[header] = values[index];
+          object[header] = values[index] === "" ? null : values[index];
           return object;
         }, {});
         return obj;
       });
-
       setArray(array);
     };
 

@@ -5,7 +5,6 @@ import {
   Check,
   ContentCopyOutlined,
   DeleteOutline,
-  FileDownloadOutlined,
   FormatPaintOutlined,
   MarkEmailReadOutlined,
   MoreVert,

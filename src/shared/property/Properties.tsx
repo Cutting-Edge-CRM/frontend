@@ -263,7 +263,7 @@ function Properties(props: any) {
           return;
         }
         const feature = response.body.features[0];
-        if (feature.relevance > 0.85) {
+        if (feature.relevance > 0.70) {
           setCoords(feature.center);
         } else {
           setMapError('Not found' as any);

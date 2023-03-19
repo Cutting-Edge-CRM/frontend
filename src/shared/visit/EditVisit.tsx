@@ -37,7 +37,7 @@ export default function EditVisit(props: any) {
   const [loading, setLoading] = useState(false);
   const [properties, setProperties] = useState([] as any[]);
 
-  const visitTypes = props.job ? ['Estimate', 'Job', 'Task', 'Reminder'] : ['Estimate', 'Task', 'Reminder'];
+  const visitTypes = props.job || props.visit.job ? ['Estimate', 'Job', 'Task', 'Reminder'] : ['Estimate', 'Task', 'Reminder'];
 
   const handleCancel = () => {
     props.onClose();
@@ -50,7 +50,7 @@ export default function EditVisit(props: any) {
       updateVisit({
         ...props.visit,
         job: props.visit.type === 'Job' && !!props.job ? props.job.job?.id : props.visit.job,
-        property: props.visit.property ?? null,
+        property: (typeof props.visit?.property === 'number') ? props.visit.property : null,
         client: props.client,
         start: convertToDate('start'),
         end: convertToDate('end'),
@@ -68,10 +68,11 @@ export default function EditVisit(props: any) {
     }
     if (props.type === 'new') {
       // save value
+      console.log(convertToDate('start'));
       createVisit({
         ...props.visit,
         job: props.visit.type === 'Job' && !!props.job ? props.job.job?.id : props.visit.job,
-        property: props.visit.property ?? null,
+        property: (typeof props.visit?.property === 'number')? props.visit.property : null,
         client: props.client,
         start: convertToDate('start'),
         end: convertToDate('end'),
@@ -132,8 +133,9 @@ export default function EditVisit(props: any) {
 
   const convertToDate = (type: string) => {
     if (type === 'start') {
+      if (!props.visit.start) return null;
       let startDate = dayjs(props.visit.start);
-      let [hours, minutes] = props.startTime.split(':');
+      let [hours, minutes] = props.startTime ? props.startTime.split(':') : [null, null];
       if (hours && minutes) {
         return startDate
           .set('hour', +hours)
@@ -143,8 +145,9 @@ export default function EditVisit(props: any) {
         return startDate.toISOString();
       }
     } else {
+      if (!props.visit.end) return null;
       let endDate = dayjs(props.visit.end);
-      let [hours, minutes] = props.endTime.split(':');
+      let [hours, minutes] = props.endTime ? props.endTime.split(':'): [null,null];
       if (hours && minutes) {
         return endDate
           .add(1, 'day')

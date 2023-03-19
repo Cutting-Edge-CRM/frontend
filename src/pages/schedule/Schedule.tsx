@@ -100,8 +100,6 @@ export default function Schedule(props: any) {
         delete visit._context;
         delete visit._def;
         delete visit._instance;
-
-        console.log(calendarRef.current?.getApi().view.type);
         
         // retrieve formatted event from calendars state to add to our react state
         let events = calendarRef.current?.getApi().getEvents() as EventApi[];

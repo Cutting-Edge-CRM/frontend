@@ -204,14 +204,14 @@ import { Directions } from '@mui/icons-material';
                       </Typography>
                     </Grid>
                     <Grid item xs={9} justifyContent="start">
-                      <Typography>{property?.address ?
+                      <Box>{property?.address ?
                       <Stack direction={'row'}>
                         <Typography>{property?.address}</Typography>
                         <IconButton href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                           `${property?.address ?? ""}, ${property?.address2 ?? ""}, ${property?.city ?? ""}, ${property?.state ?? ""}`
                         )}`} target="_blank" sx={{paddingTop: 0}}><Directions color='primary'/></IconButton>
                       </Stack>
-                      : "No property"}</Typography>
+                      : <Typography>No property</Typography>}</Box>
                     </Grid>
                   </Grid>
                   <Grid container>
@@ -509,7 +509,6 @@ import { Directions } from '@mui/icons-material';
         setStartTime={setStartTime}
         setEndTime={setEndTime}
         success={props.success}
-        job={props.visit.job}
         reload={props.reload}
         setReload={props.setReload}
       />
