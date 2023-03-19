@@ -14,6 +14,7 @@ import { deleteJob } from '../api/job.api';
 import { deleteNote } from '../api/note.api';
 import { deleteProperty } from '../api/property.api';
 import { deleteQuote } from '../api/quote.api';
+import { deleteUser } from '../api/user.api';
 import { deleteVisit } from '../api/visit.api';
 
 export default function ConfirmDelete(props: any) {
@@ -53,7 +54,7 @@ export default function ConfirmDelete(props: any) {
         response = deleteNote(deleteable);
         break;
       case 'employee':
-        // response = deleteEmployee(deleteable);
+        response = deleteUser(deleteable);
         break;
       default:
         break;

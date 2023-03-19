@@ -193,7 +193,7 @@ import { Directions } from '@mui/icons-material';
                         Visit type
                       </Typography>
                     </Grid>
-                    <Grid item xs={9} justifyContent="start">
+                    <Grid item xs={9} justifyContent="start" pl={2}>
                       <Chip sx={{backgroundColor: getEventColor(props.visit?.type), color: getBorderColor(props.visit?.type), fontSize: "16px"}} label={props.visit?.type} />
                     </Grid>
                   </Grid>
@@ -203,7 +203,7 @@ import { Directions } from '@mui/icons-material';
                         Property
                       </Typography>
                     </Grid>
-                    <Grid item xs={9} justifyContent="start">
+                    <Grid item xs={9} justifyContent="start" pl={2}>
                       <Box>{property?.address ?
                       <Stack direction={'row'}>
                         <Typography>{property?.address}</Typography>
@@ -220,7 +220,7 @@ import { Directions } from '@mui/icons-material';
                         Assigned
                       </Typography>
                     </Grid>
-                    <Grid item xs={9} justifyContent="start">
+                    <Grid item xs={9} justifyContent="start" pl={2}>
                       <Typography>{props.visit.users?.length > 0 ? props.visit.users?.map((u: any) => u.name ?? u.email)?.join(', ') : "No staff assigned"}</Typography>
                     </Grid>
                   </Grid>
@@ -230,7 +230,7 @@ import { Directions } from '@mui/icons-material';
                         Schedule
                       </Typography>
                     </Grid>
-                    <Grid item xs={9} justifyContent="start">
+                    <Grid item xs={9} justifyContent="start" pl={2}>
                     {props.visit.unscheduled === (1 || true) ?
                             <Typography
                               >

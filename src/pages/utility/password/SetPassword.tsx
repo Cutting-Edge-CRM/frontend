@@ -30,9 +30,9 @@ function Register() {
               <Typography fontSize={14} fontWeight={500}>Choose and new password and we'll log you in.</Typography>
             </Stack>
             <TextField 
-              name="email"
-              type='email'
-              placeholder="Email"
+              name="password"
+              type='password'
+              placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
               InputProps={{
                 startAdornment: (
