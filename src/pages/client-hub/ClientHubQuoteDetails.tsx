@@ -338,7 +338,7 @@ import PaymentModal from './PaymentModal';
                 Opened
               </Typography>
               <Typography textAlign="center" variant="body2">
-                {dayjs(props.opened).format("MM/DD/YYYY")}
+                {props.opened ? dayjs(props.opened).format("MM/DD/YYYY") : '-'}
               </Typography>
             </Stack>
             {!mobile &&

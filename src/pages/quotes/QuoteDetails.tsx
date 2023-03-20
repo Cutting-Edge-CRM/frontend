@@ -1090,7 +1090,7 @@ function QuoteDetails(props: any) {
               Opened by client
             </Typography>
             <Typography textAlign="center" variant="body2">
-              {dayjs(props.opened).format("MM/DD/YYYY")}
+              {props.opened ? dayjs(props.opened).format("MM/DD/YYYY"): '-'}
             </Typography>
           </Stack>
           <Stack spacing={2}>
