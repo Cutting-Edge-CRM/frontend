@@ -183,5 +183,5 @@ export {
     createVisit,
     updateVisit,
     deleteVisit,
-    listVisitsForCalendar
+    listVisitsForCalendar,
   };

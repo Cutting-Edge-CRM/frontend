@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list'
-import { Alert, Box, Card, Divider, Grid, IconButton, List, ListItemButton, Popover, Stack, Typography, useMediaQuery } from '@mui/material'
+import { Alert, Box, Card, Divider, Grid, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Popover, Stack, Typography, useMediaQuery } from '@mui/material'
 import { ButtonTextCompoundInput, EventApi, ToolbarInput } from '@fullcalendar/core'
 import { listVisitsForCalendar, updateVisit } from '../../api/visit.api'
 import EmptyState from '../../shared/EmptyState'
@@ -11,8 +11,9 @@ import dayjs from 'dayjs'
 import { EventImpl } from '@fullcalendar/core/internal'
 import { theme } from '../../theme/theme'
 import VisitModal from './VisitModal'
-import { ArrowCircleRight, CalendarMonthOutlined, EventBusy } from '@mui/icons-material'
+import { ArrowCircleRight, CalendarMonthOutlined, EventBusy, MoreVertOutlined } from '@mui/icons-material'
 import { currentUserClaims } from '../../auth/firebase';
+import ExportCalendarModal from './ExportCalendar'
 
 const eventRender = (args: any) => {
 
@@ -54,6 +55,9 @@ export default function Schedule(props: any) {
     // eslint-disable-next-line
     const [mobile, _] = useState(useMediaQuery(theme.breakpoints.down("sm")));
     const [drawerOpen, setDrawerOpen] = useState(!useMediaQuery(theme.breakpoints.down("sm")));
+    const [anchorElMenu, setAnchorElMenu] = useState<null | HTMLElement>(null);
+    const isOpenMenu = Boolean(anchorElMenu);
+    const [exportCalendarOpen, setExportCalendarOpen] = useState(false);
   
     const toggleDrawer = () => {
         setDrawerOpen(!drawerOpen);
@@ -225,7 +229,21 @@ export default function Schedule(props: any) {
         setOpen(true);
     }
 
+    const openMoreMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorElMenu(event.currentTarget);
+      };
 
+    const closeMenu = () => {
+        setAnchorElMenu(null);
+    }
+
+    const openExportCalendarModal = () => {
+        setExportCalendarOpen(true);
+    }
+
+    const closeExportCalendar = () => {
+        setExportCalendarOpen(false);
+    }
 
     useEffect(() => {
         listVisitsForCalendar(((currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') ? false : true))
@@ -283,10 +301,30 @@ export default function Schedule(props: any) {
         
         <Stack direction={'row'} justifyContent="space-between">
             <Typography fontSize={20} fontWeight={600} mb={2}>Schedule</Typography>
-            <IconButton onClick={toggleDrawer}>
-                {!drawerOpen && <EventBusy color='primary' fontSize='large'/>}
-                {drawerOpen && <ArrowCircleRight color='primary' fontSize='large' />}
-            </IconButton>
+            <Stack direction={'row'}>
+                <IconButton onClick={openMoreMenu}>
+                    <MoreVertOutlined color='primary' />
+                </IconButton>
+                <Menu
+                id="dropdown-menu"
+                anchorEl={anchorElMenu}
+                open={isOpenMenu}
+                onClose={closeMenu}
+                >
+                <MenuList onClick={openExportCalendarModal}>
+                    <MenuItem>
+                    <ListItemIcon>
+                        <CalendarMonthOutlined />
+                    </ListItemIcon>
+                    <ListItemText>Export Calendar</ListItemText>
+                    </MenuItem>
+                </MenuList>
+                </Menu>
+                <IconButton onClick={toggleDrawer}>
+                    {!drawerOpen && <EventBusy color='primary' fontSize='large'/>}
+                    {drawerOpen && <ArrowCircleRight color='primary' fontSize='large' />}
+                </IconButton>
+            </Stack>
         </Stack>
         
         <Divider sx={{mb: 2}} />
@@ -503,6 +541,10 @@ export default function Schedule(props: any) {
         startTime={startTime}
         endTime={endTime}
         success={props.success}
+      />
+      <ExportCalendarModal
+      open={exportCalendarOpen}
+      onClose={closeExportCalendar}
       />
       {error && <Alert severity="error">{error}</Alert>}
     </Card>
