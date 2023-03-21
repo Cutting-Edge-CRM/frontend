@@ -2,7 +2,7 @@ import { Alert, Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogT
 import { Stack } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { getClient } from '../api/client.api';
-import { sendEmail } from '../api/email.api';
+import { sendEmail, sendQuote } from '../api/email.api';
 import { sendSMS } from '../api/sms.api';
 import { currentUser } from '../auth/firebase';
 import { theme } from '../theme/theme';
@@ -42,7 +42,7 @@ export default function SendQuoteModal(props: any) {
                     quote: props.quote.quote.id,
                     client: props.quote.quote.client,
                 }
-                sendEmail(email)
+                sendQuote(email)
                 .then(res => {
                     setLoading(false);
                     props.success('Sent email successfully');
