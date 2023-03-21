@@ -2,6 +2,8 @@ import {
   AddCircleOutlineOutlined,
   AttachMoney,
   DeleteOutline,
+  Edit,
+  FileDownloadOutlined,
   FormatPaintOutlined,
   MarkEmailReadOutlined,
   MoneyOffOutlined,
@@ -41,7 +43,7 @@ import {
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { updateInvoice } from '../../api/invoice.api';
+import { downloadInvoice, updateInvoice } from '../../api/invoice.api';
 import { createTimeline } from '../../api/timeline.api';
 import { currentUserClaims } from '../../auth/firebase';
 import ConfirmDelete from '../../shared/ConfirmDelete';
@@ -51,6 +53,7 @@ import RichText from '../../shared/richtext/RichText';
 import SendInvoiceModal from '../../shared/SendInvoiceModal';
 import { getChipColor, theme } from '../../theme/theme';
 import TaxModal from '../../shared/TaxModal';
+import BillingAddress from './BillingAddress';
 
 
 function add(accumulator: number, a: number) {
@@ -284,6 +287,7 @@ function InvoiceDetails(props: any) {
   const [loading, setLoading] = useState(false);
   let mobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [taxOpen, setTaxOpen] = useState(false);
+  const [billingOpen, setBillingOpen] = useState(false);
 
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -296,6 +300,14 @@ function InvoiceDetails(props: any) {
   const handleTaxClose = () => {
     setTaxOpen(false);
   };
+
+  const handleBillingClose = () => {
+    setBillingOpen(false);
+  };
+
+  const handleBillingOpen = () => {
+    setBillingOpen(true);
+  }
 
   const handleTaxOpen = () => {
     setTaxOpen(true);
@@ -409,6 +421,20 @@ function InvoiceDetails(props: any) {
       invoice: invoiceWithTax,
     });
   };
+
+
+  const handleDownload = () => {
+    setLoading(true);
+    downloadInvoice(props.invoice.invoice.id)
+    .then(res => {
+      const url = window.URL.createObjectURL(res as Blob);
+      window.open(url);
+      setLoading(false);
+    }, err => {
+      console.error(err);
+      setLoading(false);
+    })
+  }
 
   const handlePreview = () => {
     window.open(`${process.env.REACT_APP_URL}/client-hub/${props.invoice.invoice.client}/invoices/${props.invoice.invoice.id}`)
@@ -535,12 +561,12 @@ function InvoiceDetails(props: any) {
                   </ListItemIcon>
                   <ListItemText>Preview as Client</ListItemText>
               </MenuItem>
-              {/* <MenuItem>
+              <MenuItem onClick={handleDownload}>
                 <ListItemIcon>
                   <FileDownloadOutlined />
                 </ListItemIcon>
                 <ListItemText>Download PDF</ListItemText>
-              </MenuItem> */}
+              </MenuItem>
               <MenuItem onClick={handleDeleteOpen}>
                 <ListItemIcon>
                   <DeleteOutline color="error" />
@@ -623,9 +649,20 @@ function InvoiceDetails(props: any) {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Typography variant="h6" fontWeight={600} marginBottom={2}>
-            Invoice Details
-          </Typography>
+        <Grid container>
+          <Grid item xs={11} lg={4}>
+            <Stack direction={'row'} alignItems="baseline">
+              <IconButton onClick={handleBillingOpen}>
+                <Edit color='primary'/>
+              </IconButton>
+              <Stack>
+                <Typography fontWeight={700} >Billing Address</Typography>
+                <Typography>{props.invoice.invoice.address} {props.invoice.invoice.address2}</Typography>
+                <Typography>{props.invoice.invoice.city}{props.invoice.invoice.city && props.invoice.invoice.state ? ',' : ''} {props.invoice.invoice.state}</Typography>
+              </Stack>
+            </Stack>
+          </Grid>
+        </Grid>
           {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
           <>
           {editting ? (
@@ -910,6 +947,14 @@ function InvoiceDetails(props: any) {
           open={taxOpen}
           onClose={handleTaxClose}
           success={props.success}
+        />
+        <BillingAddress
+          open={billingOpen}
+          onClose={handleBillingClose}
+          success={props.success}
+          invoice={props.invoice}
+          setInvoice={props.setInvoice}
+          setLoading={setLoading}
         />
       </Card>
     </Stack>

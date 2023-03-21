@@ -128,6 +128,8 @@ export default function Table(props: any) {
         update={handleUpdate}
         type={props.type}
         success={props.success}
+        reload={props.reload} 
+        setReload={props.setReload}
       />
     </Box>
   );

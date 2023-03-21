@@ -124,9 +124,9 @@ export default function SendQuoteModal(props: any) {
 
     useEffect(() => {
         let replyToQuoteEmail = props.settings?.replyToQuoteEmailEmail ? props.settings?.replyToQuoteEmailEmail : currentUser.email;
-        let emailSubject = props.settings?.sendQuoteEmailSubject ? props.settings?.sendQuoteEmailSubject : 'Quote';
-        let emailBody = props.settings?.sendQuoteEmailBody ? props.settings?.sendQuoteEmailBody : `Thank you for your recent business. Your invoice is linked below.`;
-        let smsBody = props.settings?.sendQuoteSMSBody ? props.settings?.sendQuoteSMSBody : `Thank you for your recent business. Your invoice is linked below.`;
+        let emailSubject = props.settings?.sendQuoteEmailSubject ? props.settings?.sendQuoteEmailSubject : '';
+        let emailBody = props.settings?.sendQuoteEmailBody ? props.settings?.sendQuoteEmailBody : ``;
+        let smsBody = props.settings?.sendQuoteSMSBody ? props.settings?.sendQuoteSMSBody : ``;
         getClient(props.quote.quote.client)
         .then(client => {
             let phones = client?.contacts?.filter((contact: any) => contact.type === 'phone')?.map((phone: any) => phone.content);

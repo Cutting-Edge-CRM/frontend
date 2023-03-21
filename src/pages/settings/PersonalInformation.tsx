@@ -21,9 +21,9 @@ function PersonalInformation(props: any) {
         })
     }
 
-    const handleReload = () => {
-        window.location.reload();
-    }
+    // const handleReload = () => {
+    //     window.location.reload();
+    // }
 
     useEffect(() => {
     getUser()
@@ -120,7 +120,7 @@ function PersonalInformation(props: any) {
                     </Grid>
                 </Grid>
             <Stack direction={'row'} spacing={2} marginTop={3} justifyContent='center'>
-                <Button variant="outlined" onClick={handleReload}>Cancel</Button>
+                {/* <Button variant="outlined" onClick={handleReload}>Cancel</Button> */}
                 <Button variant="contained" onClick={handleSave}>Save Changes</Button>
             </Stack>
         </Card>
@@ -254,7 +254,7 @@ function PersonalInformation(props: any) {
             </AddressAutofill>
             </form>
             <Stack direction={'row'} spacing={2} marginTop={3} justifyContent='center'>
-                <Button variant="outlined" onClick={handleReload}>Cancel</Button>
+                {/* <Button variant="outlined" onClick={handleReload}>Cancel</Button> */}
                 <Button variant="contained" onClick={handleSave}>Save Changes</Button>
             </Stack>
         </Card>

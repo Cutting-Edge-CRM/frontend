@@ -128,7 +128,7 @@ const getIntent = () => {
     if (props.paymentType === 'Deposit') {
         createDeposit(props.quote.quote.client, props.quote.quote.id, (+(+props.payment.amount).toFixed(2)))
         .then(intent => {
-            loadStripe("pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww").then(loadStripe => {
+            loadStripe(process.env.REACT_APP_STRIPE_KEY as string).then(loadStripe => {
                 setStripePromise(loadStripe);
                 setIntent(intent);
                 setLoading(false);
@@ -145,7 +145,7 @@ const getIntent = () => {
     } else {
         createPayment(props.invoice.invoice.client, props.invoice.invoice.id, (+(+props.payment.amount).toFixed(2)))
         .then(intent => {
-            loadStripe("pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww").then(loadStripe => {
+            loadStripe(process.env.REACT_APP_STRIPE_KEY as string).then(loadStripe => {
                 setStripePromise(loadStripe);
                 setIntent(intent);
                 setLoading(false);

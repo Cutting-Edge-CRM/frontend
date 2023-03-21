@@ -485,6 +485,7 @@ const bottomTabs = [
               <Avatar
                 sx={{ width: '40px', height: '40px', bgcolor: 'primary.main' }}
               >
+                <a href='/settings?tab=personal-details' style={{textDecoration: 'none', color: 'white'}}>
                 {user.first && user.last ?
                   <>
                 {user?.first?.[0]}
@@ -492,7 +493,8 @@ const bottomTabs = [
                 </>
                 :
                 company.companyName?.[0]
-              }
+                }
+                </a>
               </Avatar>
               <Typography
                 variant="body2"
@@ -500,7 +502,9 @@ const bottomTabs = [
                 component="div"
                 sx={{ display: { xs: 'none', lg: 'block' } }}
               >
+                <a href='/settings?tab=company-info' style={{textDecoration: 'none', color: 'black'}}>
                 {company.companyName}
+                </a>
               </Typography>
               <IconButton onClick={handleClick} size="small">
                 <ArrowDropDown color="primary" />

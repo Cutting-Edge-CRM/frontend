@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { auth, logInWithEmailAndPassword } from '../../../auth/firebase';
+import { auth, currentUserClaims, logInWithEmailAndPassword } from '../../../auth/firebase';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { ErrorTypes } from '../../../util/errors';
@@ -48,7 +48,7 @@ function Login() {
       // maybe trigger a loading screen
       return;
     }
-    if (user) navigate("/");
+    if (user && (currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner' || currentUserClaims.role === 'staff')) navigate("/");
   }, [user, loading, navigate]);
 
   return (

@@ -149,11 +149,40 @@ async function listQuotes(client?: string, query?: string, page?: number, pageSi
     }
 }
 
+async function downloadQuote(id?: string) {
+    try {
+    var headers: HeadersInit = {
+        'Content-Type': 'application/pdf',
+        'Authorization': 'Bearer ' + await currentUser.getIdToken(),
+        'tenantId': auth.tenantId as string,
+        'userId': auth.currentUser?.uid as string
+    }
+    const requestOptions: RequestInit = {
+        method: 'GET',
+        headers: headers,
+    };
+        let url = new URL(`${process.env.REACT_APP_SERVER_URL}/quotes/download-pdf/${id}`);
+        return fetch(url, requestOptions)
+        .then(res => {
+            if (res.ok) {
+                return res.blob();
+            }
+            return res.json().then(err => {
+                console.error(`Error downloading quote: ${res.type} ${res.statusText} ${err.kind} ${err.message}`);
+                throw new Error(`Error downloading quote`);
+            })
+        })
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 
 export {
     listQuotes,
     getQuote,
     updateQuote,
     createQuote,
-    deleteQuote
+    deleteQuote,
+    downloadQuote
   };

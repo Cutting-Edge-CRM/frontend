@@ -11,7 +11,7 @@ import dayjs from 'dayjs'
 import { EventImpl } from '@fullcalendar/core/internal'
 import { theme } from '../../theme/theme'
 import VisitModal from './VisitModal'
-import { ArrowCircleRight, CalendarMonthOutlined, EventBusy, MoreVertOutlined } from '@mui/icons-material'
+import { ArrowCircleLeft, CalendarMonthOutlined, Download, Fullscreen, MoreVertOutlined } from '@mui/icons-material'
 import { currentUserClaims } from '../../auth/firebase';
 import ExportCalendarModal from './ExportCalendar'
 
@@ -314,15 +314,15 @@ export default function Schedule(props: any) {
                 <MenuList onClick={openExportCalendarModal}>
                     <MenuItem>
                     <ListItemIcon>
-                        <CalendarMonthOutlined />
+                        <Download />
                     </ListItemIcon>
                     <ListItemText>Export Calendar</ListItemText>
                     </MenuItem>
                 </MenuList>
                 </Menu>
                 <IconButton onClick={toggleDrawer}>
-                    {!drawerOpen && <EventBusy color='primary' fontSize='large'/>}
-                    {drawerOpen && <ArrowCircleRight color='primary' fontSize='large' />}
+                    {!drawerOpen && <ArrowCircleLeft color='primary' fontSize='large'/>}
+                    {drawerOpen && <Fullscreen color='primary' fontSize='large' />}
                 </IconButton>
             </Stack>
         </Stack>

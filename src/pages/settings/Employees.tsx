@@ -21,6 +21,7 @@ function Employees(props: any) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isOpen = Boolean(anchorEl);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [reload, setReload] = useState(false);
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>, row: any) => {
     setEmployee(row);
@@ -106,7 +107,7 @@ function Employees(props: any) {
       setEmployeesAreLoading(false);
       setErrorListingEmployees(err.message);
     })
-  }, []);
+  }, [reload]);
 
   const employeeColumns: GridColDef[] = [
     { 
@@ -267,6 +268,8 @@ function Employees(props: any) {
                 employee={employee}
                 setEmployee={setEmployee}
                 type={type}
+                reload={reload}
+                setReload={setReload}
             />
               <ConfirmDelete
                 open={deleteOpen}

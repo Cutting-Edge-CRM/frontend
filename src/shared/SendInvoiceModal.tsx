@@ -122,9 +122,9 @@ export default function SendInvoiceModal(props: any) {
 
     useEffect(() => {
         let replyToInvoiceEmail = props.settings?.replyToInvoiceEmailEmail ? props.settings?.replyToInvoiceEmailEmail : currentUser.email;
-        let emailSubject = props.settings?.sendInvoiceEmailSubject ? props.settings?.sendInvoiceEmailSubject : 'Invoice';
-        let emailBody = props.settings?.sendInvoiceEmailBody ? props.settings?.sendInvoiceEmailBody : `Thank you for your recent business. Your invoice is linked below.`;
-        let smsBody = props.settings?.sendInvoiceSMSBody ? props.settings?.sendInvoiceSMSBody : `Thank you for your recent business. Your invoice is linked below.`;
+        let emailSubject = props.settings?.sendInvoiceEmailSubject ? props.settings?.sendInvoiceEmailSubject : '';
+        let emailBody = props.settings?.sendInvoiceEmailBody ? props.settings?.sendInvoiceEmailBody : ``;
+        let smsBody = props.settings?.sendInvoiceSMSBody ? props.settings?.sendInvoiceSMSBody : ``;
         getClient(props.invoice.invoice.client)
         .then(client => {
             let phones = client?.contacts?.filter((contact: any) => contact.type === 'phone')?.map((phone: any) => phone.content);

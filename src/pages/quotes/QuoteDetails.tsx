@@ -5,6 +5,7 @@ import {
   Check,
   ContentCopyOutlined,
   DeleteOutline,
+  FileDownloadOutlined,
   FormatPaintOutlined,
   MarkEmailReadOutlined,
   MoreVert,
@@ -46,7 +47,7 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createJob, updateJob } from '../../api/job.api';
-import { updateQuote } from '../../api/quote.api';
+import { downloadQuote, updateQuote } from '../../api/quote.api';
 import { createTimeline } from '../../api/timeline.api';
 import { currentUserClaims } from '../../auth/firebase';
 import ConfirmDelete from '../../shared/ConfirmDelete';
@@ -577,7 +578,7 @@ function TabPanel(props: any) {
                         fontWeight={600}
                         color="neutral.main"
                       >
-                        ${depositAmount?.toFixed(2)}
+                        ${(+depositAmount)?.toFixed(2)}
                       </Typography>
                     )}
                   </Grid>
@@ -802,8 +803,18 @@ function QuoteDetails(props: any) {
     window.open(`${process.env.REACT_APP_URL}/client-hub/${props.quote.quote.client}/quotes/${props.quote.quote.id}`)
   }
 
-  // const handleDownload = () => {
-  // }
+  const handleDownload = () => {
+    setLoading(true);
+    downloadQuote(props.quote.quote.id)
+    .then(res => {
+      const url = window.URL.createObjectURL(res as Blob);
+      window.open(url);
+      setLoading(false);
+    }, err => {
+      console.error(err);
+      setLoading(false);
+    })
+  }
 
   const markQuoteAs = (status: string) => {
     closeMenu();
@@ -1040,12 +1051,12 @@ function QuoteDetails(props: any) {
                 </ListItemIcon>
                 <ListItemText>Preview as Client</ListItemText>
               </MenuItem>
-              {/* <MenuItem onClick={handleDownload}>
+              <MenuItem onClick={handleDownload}>
                 <ListItemIcon>
                   <FileDownloadOutlined />
                 </ListItemIcon>
                 <ListItemText>Download PDF</ListItemText>
-              </MenuItem> */}
+              </MenuItem>
               {props.quote.quote.status !== ('Converted' || 'Archived') && (
                 <MenuItem onClick={() => markQuoteAs('Archived')}>
                   <ListItemIcon>

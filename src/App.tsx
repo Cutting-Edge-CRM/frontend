@@ -19,6 +19,7 @@ import { loginAnonymously, logInWithEmailAndPassword } from "./auth/firebase";
 import CryptoJS from 'crypto-js';
 import {Helmet, HelmetProvider} from "react-helmet-async";
 import { createTimeline } from './pages/client-hub/api/clientPublic.api';
+import GuardedRouteClient from './auth/GuardedRouteClient';
 
 function App() {
 
@@ -38,7 +39,7 @@ function App() {
                 <Route path='/register' element={<Register />}></Route>
                 <Route path='/forgot-password' element={<ForgotPassword />}></Route>
                 <Route path='/set-password' element={<SetPassword />}></Route>
-                <Route path='/client-hub/:clientId/*' element={<GuardedRoute><ClientHub /></GuardedRoute>}></Route>
+                <Route path='/client-hub/:clientId/*' element={<GuardedRouteClient><ClientHub /></GuardedRouteClient>}></Route>
                 <Route path="*" element={<GuardedRoute><Shell /></GuardedRoute>} />
               </Routes>
             </div>

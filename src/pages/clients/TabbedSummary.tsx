@@ -310,6 +310,8 @@ function TabbedSummary(props: any) {
           success={props.success}
           errorListing={quotesError}
           loadingList={quotesAreLoading}
+          reload={props.reload} 
+          setReload={props.setReload}
         ></TabbedTable>
       </TabPanel>
       <TabPanel value={value} index={1}>
@@ -323,6 +325,8 @@ function TabbedSummary(props: any) {
           success={props.success}
           errorListing={jobsError}
           loadingList={jobsAreLoading}
+          reload={props.reload} 
+          setReload={props.setReload}
         ></TabbedTable>
       </TabPanel>
       <TabPanel value={value} index={2}>
@@ -336,6 +340,8 @@ function TabbedSummary(props: any) {
           success={props.success}
           errorListing={invoicesError}
           loadingList={invoicesAreLoading}
+          reload={props.reload} 
+          setReload={props.setReload}
         ></TabbedTable>
       </TabPanel>
     </Card>

@@ -43,9 +43,9 @@ function CompanyInformation(props: any) {
 
     }
 
-    const handleReload = () => {
-        window.location.reload();
-    }
+    // const handleReload = () => {
+    //     window.location.reload();
+    // }
 
     const onDrop = useCallback(
         (acceptedFiles: File[]) => {
@@ -192,7 +192,7 @@ function CompanyInformation(props: any) {
                                     >
                                     <AddAPhoto color="primary" fontSize="large" />
                                     <Typography variant="body2" color="default.main">
-                                        Drop an image file here
+                                        Drop an image file here. Ensure the image is square for proper formatting.
                                     </Typography>
                                     <Divider>
                                         <Typography variant="body2" color="default.main">
@@ -220,7 +220,7 @@ function CompanyInformation(props: any) {
                     </Grid>
                 </Grid>
                 <Stack direction={'row'} justifyContent='center' spacing={2} marginTop={3}>
-                    <Button variant="outlined" onClick={handleReload}>Cancel</Button>
+                    {/* <Button variant="outlined" onClick={handleReload}>Cancel</Button> */}
                     <Button variant="contained" onClick={handleSave}>Save Changes</Button>
                 </Stack>
             </Stack>
@@ -355,7 +355,7 @@ function CompanyInformation(props: any) {
             </AddressAutofill>
             </form>
             <Stack direction={'row'} spacing={2} justifyContent='center' marginTop={3}>
-                <Button variant="outlined" onClick={handleReload}>Cancel</Button>
+                {/* <Button variant="outlined" onClick={handleReload}>Cancel</Button> */}
                 <Button variant="contained" onClick={handleSave}>Save Changes</Button>
             </Stack>
         </Card>

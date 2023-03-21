@@ -170,7 +170,7 @@ export default function SelectProperty(props: any) {
         setPropertyIsLoaded(true);
       }
     );
-  }, [props.client, newPropertyOpen]);
+  }, [props.client, newPropertyOpen, props.reload]);
 
   function PropertyToolbar(props: any) {
     return (

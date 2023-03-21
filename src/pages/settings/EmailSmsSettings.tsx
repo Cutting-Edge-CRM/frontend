@@ -78,9 +78,9 @@ function EmailSmsSettings(props: any) {
         })
     }
 
-    const handleReload = () => {
-        window.location.reload();
-    }
+    // const handleReload = () => {
+    //     window.location.reload();
+    // }
 
     return (
         <>
@@ -155,7 +155,7 @@ function EmailSmsSettings(props: any) {
                             onChange={handleChange}
                         />
                         <Stack direction={'row'} spacing={2} justifyContent="center">
-                            <Button variant="outlined" onClick={handleReload}>Cancel</Button>
+                            {/* <Button variant="outlined" onClick={handleReload}>Cancel</Button> */}
                             <Button variant="contained" onClick={handleSave}>Save Changes</Button>
                         </Stack>
                     </Stack>                        
@@ -229,7 +229,7 @@ function EmailSmsSettings(props: any) {
                             onChange={handleChange}
                         />
                         <Stack direction={'row'} spacing={2} justifyContent="center">
-                            <Button variant="outlined" onClick={handleReload}>Cancel</Button>
+                            {/* <Button variant="outlined" onClick={handleReload}>Cancel</Button> */}
                             <Button variant="contained" onClick={handleSave}>Save Changes</Button>
                         </Stack>
                     </Stack>
@@ -283,7 +283,7 @@ function EmailSmsSettings(props: any) {
                             onChange={handleChange}
                         />
                         <Stack direction={'row'} spacing={2} justifyContent="center">
-                            <Button variant="outlined" onClick={handleReload}>Cancel</Button>
+                            {/* <Button variant="outlined" onClick={handleReload}>Cancel</Button> */}
                             <Button variant="contained" onClick={handleSave}>Save Changes</Button>
                         </Stack>
                     </Stack>
@@ -337,7 +337,7 @@ function EmailSmsSettings(props: any) {
                             onChange={handleChange}
                         />
                         <Stack direction={'row'} spacing={2} justifyContent="center">
-                            <Button variant="outlined" onClick={handleReload}>Cancel</Button>
+                            {/* <Button variant="outlined" onClick={handleReload}>Cancel</Button> */}
                             <Button variant="contained"  onClick={handleSave}>Save Changes</Button>
                         </Stack>
                     </Stack>

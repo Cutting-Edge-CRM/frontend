@@ -35,6 +35,7 @@ import { theme } from '../../theme/theme';
             setLoading(false);
             handleCancel();
             props.success('Successfully updated employee');
+            props.setReload(!props.reload);
           },
           (err) => {
             setLoading(false);
@@ -49,6 +50,7 @@ import { theme } from '../../theme/theme';
             setLoading(false);
             handleCancel();
             props.success('Successfully invited employee');
+            props.setReload(!props.reload);
           },
           (err) => {
             setLoading(false);

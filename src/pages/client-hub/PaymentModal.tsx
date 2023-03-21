@@ -38,7 +38,7 @@ export default function PaymentModal(props: any) {
         if (props.type === 'deposit') {
             createDeposit(props.quote.quote.client, props.quote.quote.id, (+(+paymentAmount).toFixed(2)))
             .then(intent => {
-                loadStripe("pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww").then(loadStripe => {
+                loadStripe(process.env.REACT_APP_STRIPE_KEY as string).then(loadStripe => {
                     setStripePromise(loadStripe);
                     setIntent(intent);
                     setLoading(false);
@@ -54,7 +54,7 @@ export default function PaymentModal(props: any) {
         } else {
             createPayment(props.invoice.invoice.client, props.invoice.invoice.id, (+(+paymentAmount).toFixed(2)))
             .then(intent => {
-                loadStripe("pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww").then(loadStripe => {
+                loadStripe(process.env.REACT_APP_STRIPE_KEY as string).then(loadStripe => {
                     setStripePromise(loadStripe);
                     setIntent(intent);
                     setLoading(false);

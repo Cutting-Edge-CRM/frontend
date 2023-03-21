@@ -12,7 +12,7 @@ import { retrieveAccount } from '../../api/stripePayments.api';
 import { getClient } from '../../api/client.api';
 import { listTimeline } from '../../api/timeline.api';
 
-const stripePromise = loadStripe("pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww");
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY as string);
 
 function ClientHubInvoice(props: any) {
     const [isLoaded, setIsLoaded] = useState(false);

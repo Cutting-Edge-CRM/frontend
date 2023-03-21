@@ -453,7 +453,8 @@ function Timesheets(props: any) {
         setClockedIn(true);
         clock({type: 'clock-in'})
         .then(_ => {
-            setLastClock(dayjs().format() as any)
+            setLastClock(dayjs().format() as any);
+            reloadTimes();
         }, err => {
             setError(err.message);
         })
@@ -463,6 +464,7 @@ function Timesheets(props: any) {
         setClockedIn(false);
         clock({type: 'clock-out'})
         .then(_ => {
+            reloadTimes();
         }, err => {
             setError(err.message);
         })

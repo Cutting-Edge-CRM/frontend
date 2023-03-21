@@ -36,6 +36,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createInvoice, updateInvoice } from '../../api/invoice.api';
 import { updateJob } from '../../api/job.api';
+import { getProperty } from '../../api/property.api';
 import { createTimeline } from '../../api/timeline.api';
 import { currentUserClaims } from '../../auth/firebase';
 import ConfirmDelete from '../../shared/ConfirmDelete';
@@ -352,35 +353,45 @@ function JobDetails(props: any) {
   };
 
   const handleGenerateInvoice = () => {
-    let invoice: any = {
-      client: props.job.job.client,
-      property: props.job.job.property,
-      status: 'Draft',
-      job: props.job.job.id,
-      quote: props.job.job.quote,
-      tax: props.job?.job?.tax
-    };
-    createInvoice(invoice).then(
-      (res) => {
-        let updatingInvoice: any = {};
-        updatingInvoice.invoice = invoice;
-        updatingInvoice.invoice.id = res.id;
-        updatingInvoice.items = props.job.items;
-        updateInvoice(updatingInvoice).then(
-          (_) => {
-            props.job.job.invoice = res.id;
-            updateJob(props.job).then(
-              (res) => {},
-              (err) => {}
-            );
-            navigate(`/invoices/${res.id}`);
-            props.success('Successfully generated invoice');
-          },
-          (err) => {}
-        );
-      },
-      (err: any) => {}
-    );
+    getProperty(props.job.job.property)
+    .then(property => {
+      let invoice: any = {
+        client: props.job.job.client,
+        property: props.job.job.property,
+        status: 'Draft',
+        job: props.job.job.id,
+        quote: props.job.job.quote,
+        tax: props.job?.job?.tax,
+        address: property.address,
+        address2: property.address2,
+        city: property.city,
+        state: property.state,
+        country: property.country,
+        zip: property.zip,
+      };
+      createInvoice(invoice).then(
+        (res) => {
+          let updatingInvoice: any = {};
+          updatingInvoice.invoice = invoice;
+          updatingInvoice.invoice.id = res.id;
+          updatingInvoice.items = props.job.items;
+          updateInvoice(updatingInvoice).then(
+            (_) => {
+              props.job.job.invoice = res.id;
+              updateJob(props.job).then(
+                (res) => {},
+                (err) => {}
+              );
+              navigate(`/invoices/${res.id}`);
+              props.success('Successfully generated invoice');
+            },
+            (err) => {}
+          );
+        },
+        (err: any) => {}
+      );
+    }, err => {
+    })
   };
 
   return (

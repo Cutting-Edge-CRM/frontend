@@ -64,9 +64,9 @@ function Payments(props: any) {
         })
     }
 
-    const handleReload = () => {
-        window.location.reload();
-    }
+    // const handleReload = () => {
+    //     window.location.reload();
+    // }
 
     const handleChangeTax = (event: any, index: number) => {
         let newTaxes = props.taxes?.taxes;
@@ -124,7 +124,7 @@ function Payments(props: any) {
     //             // This is a placeholder - it should be replaced with your publishable API key.
     //             // Sign in to see your own test API key embedded in code samples.
     //             // Don’t submit any personally identifiable information in requests made with this key.
-    //             publishableKey: "pk_test_51MHcGcKeym0SOuzyTStcQlICRRKuvpbIfChvZUomCjr5kwOe5iMaJ8tqRwdP4zR81Xe1Jbu6PirohkAjQPTMwqPs001lOpJIww",
+    //             publishableKey: process.env.REACT_APP_STRIPE_KEY as string,
     //             clientSecret,
     //             appearance: {
     //               colors: {
@@ -269,7 +269,7 @@ function Payments(props: any) {
             </Grid>
         </Grid>
         <Stack direction={'row'} spacing={2} justifyContent='center'>
-            <Button variant="outlined" onClick={handleReload}>Cancel</Button>
+            {/* <Button variant="outlined" onClick={handleReload}>Cancel</Button> */}
             <Button variant="contained" onClick={handleSave}>Save Changes</Button>
         </Stack>
         </Card>
