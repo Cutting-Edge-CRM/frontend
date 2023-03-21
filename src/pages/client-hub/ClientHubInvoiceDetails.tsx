@@ -1,6 +1,8 @@
-import { Box, Button, Card, Chip, Divider, Grid, Stack, Typography, useMediaQuery } from '@mui/material';
+import { FileDownload } from '@mui/icons-material';
+import { Box, Button, Card, Chip, Divider, Grid, IconButton, LinearProgress, Stack, Typography, useMediaQuery } from '@mui/material';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
+import { downloadInvoice } from '../../api/invoice.api';
 import EmptyState from '../../shared/EmptyState';
 import { getChipColor, theme } from '../../theme/theme';
 import PaymentModal from './PaymentModal';
@@ -55,7 +57,7 @@ function InvoiceItemSaved(props: any) {
 
 function ClientHubInvoiceDetails(props: any) {
     // const [error, setError] = useState(null);
-    // const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [paymentOpen, setPaymentOpen] = useState(false);
     let mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -67,9 +69,23 @@ function ClientHubInvoiceDetails(props: any) {
         setPaymentOpen(true);
     }
 
+    const handleDownload = () => {
+      setLoading(true);
+      downloadInvoice(props.invoice.invoice.id)
+      .then(res => {
+        const url = window.URL.createObjectURL(res as Blob);
+        window.open(url);
+        setLoading(false);
+      }, err => {
+        console.error(err);
+        setLoading(false);
+      })
+    }
+
     return (
         <Stack spacing={2}>
           <Card sx={{ pb: 4, pt: 1 }}>
+            {loading && <LinearProgress/>}
             <Stack
               direction="row"
               alignItems="center"
@@ -80,6 +96,11 @@ function ClientHubInvoiceDetails(props: any) {
                 {`Invoice #${props.invoice.invoice.id}`}
               </Typography>
               {mobile && <Chip label={props.invoice.invoice.status}  sx={{backgroundColor: `${getChipColor(props.invoice.invoice.status as string)}.main`, color: `${getChipColor(props.invoice.invoice.status as string)}.dark`}}  />}
+              {!mobile && 
+              <IconButton onClick={handleDownload}>
+                <FileDownload/>
+              </IconButton>
+              }
             </Stack>
             <Stack direction="row" justifyContent="space-between">
               <Stack spacing={2}>

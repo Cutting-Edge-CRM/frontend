@@ -1,3 +1,4 @@
+import { FileDownload } from '@mui/icons-material';
 import {
     Box,
     Button,
@@ -5,6 +6,8 @@ import {
     Chip,
     Divider,
     Grid,
+    IconButton,
+    LinearProgress,
     List,
     MenuItem,
     Select,
@@ -16,6 +19,7 @@ import {
   } from '@mui/material';
   import dayjs from 'dayjs';
   import React, { useEffect, useState } from 'react';
+import { downloadQuote } from '../../api/quote.api';
   import EmptyState from '../../shared/EmptyState';
 import { getChipColor, theme } from '../../theme/theme';
 import ConfirmChangeStatus from './ConfirmChangeStatus';
@@ -270,6 +274,7 @@ import PaymentModal from './PaymentModal';
     const [confirmType, setConfirmType] = useState('');
     const [paymentOpen, setPaymentOpen] = useState(false);
     let mobile = useMediaQuery(theme.breakpoints.down("sm"));
+    const [loading, setLoading] = useState(false);
 
     const handleConfirmOpen = (status: string) => {
         setConfirmType(status);
@@ -287,9 +292,24 @@ import PaymentModal from './PaymentModal';
     const handleOpenPayment = () => {
         setPaymentOpen(true);
     }
+
+    const handleDownload = () => {
+      setLoading(true);
+      downloadQuote(props.invoice.invoice.id)
+      .then(res => {
+        const url = window.URL.createObjectURL(res as Blob);
+        window.open(url);
+        setLoading(false);
+      }, err => {
+        console.error(err);
+        setLoading(false);
+      })
+    }
+
     return (
       <Stack spacing={2}>
         <Card sx={{ pb: 4, pt: 1 }}>
+        {loading && <LinearProgress/>}
           <Stack
             direction="row"
             alignItems="center"
@@ -300,6 +320,11 @@ import PaymentModal from './PaymentModal';
               {`Quote #${props.quote.quote.id}`}
             </Typography>
             {mobile && <Chip label={props.quote.quote.status}  sx={{backgroundColor: `${getChipColor(props.quote.quote.status as string)}.main`, color: `${getChipColor(props.quote.quote.status as string)}.dark`}}  />}
+            {!mobile && 
+              <IconButton onClick={handleDownload}>
+                <FileDownload/>
+              </IconButton>
+              }
           </Stack>
           <Stack direction="row" justifyContent="space-between">
             <Stack spacing={2}>
