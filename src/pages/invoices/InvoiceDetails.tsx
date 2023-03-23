@@ -942,6 +942,7 @@ function InvoiceDetails(props: any) {
           invoice={props.invoice}
           reload={props.reload}
           setReload={props.setReload}
+          settings={props.settings}
         />
         <TaxModal
           open={taxOpen}

@@ -780,12 +780,12 @@ function QuoteDetails(props: any) {
       details: `Deposit for quote #${props.quote.quote.id}`,
       transDate: dayjs(),
       method: 'Cheque',
-      amount: (props.quote.options?.[0]?.depositPercent
+      amount: (+(props.quote.options?.[0]?.depositPercent
       ? (+props.quote.options?.[0]?.deposit / 100) *
           (props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) +
             +props.taxes.find((t: any) => t.id === props.quote.options?.[0]?.tax)?.tax *
               props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))
-      : props.quote.options?.[0]?.deposit)?.toFixed(2)
+      : props.quote.options?.[0]?.deposit))?.toFixed(2)
     });
     setPaymentOpen(true);
   };
@@ -1304,6 +1304,7 @@ function QuoteDetails(props: any) {
           quote={props.quote}
           reload={props.reload}
           setReload={props.setReload}
+          settings={props.settings}
         />
       </Card>
     </Stack>

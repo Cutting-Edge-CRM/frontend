@@ -34,6 +34,7 @@ import { createDeposit, createPayment, retrieveAccount } from '../api/stripePaym
 import { createTimeline } from '../api/timeline.api';
 import CheckoutForm from '../pages/client-hub/CheckoutForm';
 import { theme } from '../theme/theme';
+import SendReceiptModal from './SendReceiptModal';
 
 export default function PaymentModal(props: any) {
   const [loading, setLoading] = useState(false);
@@ -43,6 +44,7 @@ export default function PaymentModal(props: any) {
   const [step, setStep] = useState(0);
   const [paymentsSetup, setPaymentsSetup] = useState(false);
   const navigate = useNavigate();
+  const [sendReceiptModalOpen, setSendReceiptModalOpen] = useState(false);
 
   const paymentMethods = [
     'Cash',
@@ -87,7 +89,43 @@ export default function PaymentModal(props: any) {
     }
   };
 
-  const handleSaveAndReciept = () => {};
+  const handleSaveAndReceipt = () => {
+    if (props.type === 'new') {
+      recordPayment(props.payment).then(
+        (res) => {
+          props.setPayment({
+            ...props.payment,
+            id: res.id,
+          });
+          let timeline_event = {
+            client: props.payment.client,
+            resourceId: res.id,
+            resourceType: props.paymentType?.toLowerCase(),
+            resourceAction: 'created'
+          };
+          createTimeline(timeline_event);
+          props.success('Successfully recorded payment');
+          props.setReload(!props.reload);
+          setSendReceiptModalOpen(true);
+        },
+        (err) => {}
+      );
+    }
+    if (props.type === 'edit') {
+      updatePayment(props.payment).then(
+        (res) => {
+          props.success('Successfully updated payment record');
+          props.setReload(!props.reload);
+          setSendReceiptModalOpen(true);
+        },
+        (err) => {}
+      );
+    }
+  };
+
+  const handleSendReceiptModalClosed = () => {
+    setSendReceiptModalOpen(false);
+  }
 
   const handleDelete = () => {
     deletePayment(props.payment.id).then(
@@ -257,7 +295,7 @@ useEffect(() => {
             Delete
           </Button>
         )}
-        <Button onClick={handleSaveAndReciept} variant="outlined">Send Receipt</Button>
+        <Button onClick={handleSaveAndReceipt} variant="outlined">Save & Send Receipt</Button>
         <Button onClick={handleSave} disabled={!props.payment.amount || props.payment?.amount === '0'} variant="contained">
           Save
         </Button>
@@ -382,6 +420,13 @@ useEffect(() => {
           </Stack>
         </DialogContent>
             }
+            <SendReceiptModal
+            open={sendReceiptModalOpen}
+            onClose={handleSendReceiptModalClosed}
+            payment={props.payment}
+            success={props.success}
+            settings={props.settings}
+            />
     </Dialog>
   );
 }
