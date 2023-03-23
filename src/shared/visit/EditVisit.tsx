@@ -150,7 +150,6 @@ export default function EditVisit(props: any) {
       let [hours, minutes] = props.endTime ? props.endTime.split(':'): [null,null];
       if (hours && minutes) {
         return endDate
-          .add(1, 'day')
           .set('hour', +hours)
           .set('minute', +minutes)
           .toISOString();

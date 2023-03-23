@@ -91,6 +91,8 @@ import { Directions } from '@mui/icons-material';
       };
 
     const handleEditVisit = () => {
+      setStartTime(dayjs(props.visit.start).format('HH:mm'));
+      setEndTime(dayjs(props.visit.end).format('HH:mm'));
       setEditVisitOpen(true);
     }
 
