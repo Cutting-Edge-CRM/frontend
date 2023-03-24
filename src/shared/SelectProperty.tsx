@@ -115,7 +115,7 @@ export default function SelectProperty(props: any) {
                 deposit: 0,
                 depositPercent: 0,
                 tax: null,
-                items: [{ quote: res.id, price: 0 }],
+                items: [{ quote: res.id, price: 0, unit: 0, quantity: 1 }],
               },
             ];
             updateQuote(updatingQuote).then(

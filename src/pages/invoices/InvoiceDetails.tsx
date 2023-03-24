@@ -124,22 +124,45 @@ function InvoiceItemSaved(props: any) {
 function InvoiceItemEdit(props: any) {
   const handleChange = (event: any) => {
     let items = props.invoice.items;
-    items.find((it: any) => it === props.item)[event.target.id] =
-      event.target.value;
+    let quantity = items.find((it: any) => it === props.item)?.quantity;
+    let unit = items.find((it: any) => it === props.item)?.unit;
 
     if (event.target.id === 'quantity') {
-      items.find((it: any) => it === props.item)['price'] =
-      event.target.value * items.find((it: any) => it === props.item)['unit']
-    }
-    if (event.target.id === 'unit') {
-      items.find((it: any) => it === props.item)['price'] =
-      event.target.value * items.find((it: any) => it === props.item)['quantity']
-    }
-    if (event.target.id === 'price') {
-      items.find((it: any) => it === props.item)['unit'] =
-      event.target.value / items.find((it: any) => it === props.item)['quantity']
+      items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
+      items.find((it: any) => it === props.item)['price'] = event.target.value * unit;
+      if (unit === '0') {
+        items.find((it: any) => it === props.item)['price'] = '0';
+      }
     }
 
+    if (event.target.id === 'unit') {
+      if (event.target.value[0] === '0') {
+        event.target.value = event.target.value[1];
+      }
+      if (event.target.value === '') {
+        event.target.value = 0;
+      }
+      items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
+      items.find((it: any) => it === props.item)['price'] = event.target.value * quantity;
+      if (event.target.value === '0') {
+        items.find((it: any) => it === props.item)['price'] = '0';
+      }
+    }
+    if (event.target.id === 'price') {
+      if (event.target.value[0] === '0') {
+        event.target.value = event.target.value[1];
+      }
+      if (event.target.value === '') {
+        event.target.value = 0;
+      }
+      items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
+      items.find((it: any) => it === props.item)['unit'] = event.target.value / quantity;
+      if (event.target.value === '0') {
+        items.find((it: any) => it === props.item)['unit'] = '0';
+      }
+    } else {
+      items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
+    }
     props.setInvoice({
       ...props.invoice,
       items: items,
@@ -214,6 +237,7 @@ function InvoiceItemEdit(props: any) {
             <TextField
               id="quantity"
               type="number"
+              error={+(props.invoice.items.find((it: any) => it === props.item)?.quantity) < 1}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -412,6 +436,15 @@ function InvoiceDetails(props: any) {
       (err) => {}
     );
   };
+
+
+  const checkValid = () => {
+    let valid = true;
+    props.invoice.items.forEach((it: any) => {
+      if (+it.quantity < 1) valid = false;
+    })
+    return valid;
+  }
 
   const handleChangeTax = (event: any) => {
     let invoiceWithTax = props.invoice.invoice;
@@ -670,7 +703,7 @@ function InvoiceDetails(props: any) {
               <Button onClick={handleCancel} variant="outlined">
                 Cancel
               </Button>
-              <Button onClick={handleEditting} variant="contained">
+              <Button onClick={handleEditting} variant="contained" disabled={!(checkValid())}>
                 Save Changes
               </Button>
             </Stack>

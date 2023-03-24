@@ -171,33 +171,44 @@ function QuoteItemSaved(props: any) {
 function QuoteItemEdit(props: any) {
   const handleChange = (event: any) => {
     let options = props.quote.options;
-    options
-      .find((op: any) => op === props.option)
-      .items.find((it: any) => it === props.item)[event.target.id] =
-      event.target.value;
+    let quantity = options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)?.quantity;
+    let unit = options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)?.unit;
+
     if (event.target.id === 'quantity') {
-      options
-        .find((op: any) => op === props.option)
-        .items.find((it: any) => it === props.item)['price'] =
-        event.target.value * options
-        .find((op: any) => op === props.option)
-        .items.find((it: any) => it === props.item)['unit'];
+      options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
+      options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)['price'] = event.target.value * unit;
+      if (unit === '0') {
+        options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)['price'] = '0';
+      }
     }
+
     if (event.target.id === 'unit') {
-      options
-        .find((op: any) => op === props.option)
-        .items.find((it: any) => it === props.item)['price'] =
-        event.target.value * options
-        .find((op: any) => op === props.option)
-        .items.find((it: any) => it === props.item)['quantity'];
+      if (event.target.value[0] === '0') {
+        event.target.value = event.target.value[1];
+      }
+      if (event.target.value === '') {
+        event.target.value = 0;
+      }
+      options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
+      options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)['price'] = event.target.value * quantity;
+      if (event.target.value === '0') {
+        options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)['price'] = '0';
+      }
     }
     if (event.target.id === 'price') {
-      options
-        .find((op: any) => op === props.option)
-        .items.find((it: any) => it === props.item)['unit'] =
-        event.target.value / options
-        .find((op: any) => op === props.option)
-        .items.find((it: any) => it === props.item)['quantity'];
+      if (event.target.value[0] === '0') {
+        event.target.value = event.target.value[1];
+      }
+      if (event.target.value === '') {
+        event.target.value = 0;
+      }
+      options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
+      options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)['unit'] = event.target.value / quantity;
+      if (event.target.value === '0') {
+        options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)['unit'] = '0';
+      }
+    } else {
+      options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
     }
     props.setQuote({
       quote: props.quote.quote,
@@ -232,6 +243,7 @@ function QuoteItemEdit(props: any) {
       options: options,
     });
   };
+
 
   return (
     <Card sx={{backgroundColor: '#F3F5F8', my: 3, py: 3, boxShadow: 'none'}}>
@@ -308,6 +320,7 @@ function QuoteItemEdit(props: any) {
                   </InputAdornment>
                 ),
               }}
+              error={+(props.quote.options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)?.quantity) < 1}
               inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
               value={props.item.quantity ? props.item.quantity : ''}
               onChange={handleChange}
@@ -370,6 +383,12 @@ function TabPanel(props: any) {
   const [taxOpen, setTaxOpen] = useState(false);
 
   const handleChangeDeposit = (event: any) => {
+    if (event.target.value[0] === '0') {
+      event.target.value = event.target.value[1];
+    }
+    if (event.target.value === '') {
+      event.target.value = 0;
+    }
     let options = props.quote.options;
     options.find((op: any) => op === props.option)[event.target.id] =
       event.target.value;
@@ -882,6 +901,14 @@ function QuoteDetails(props: any) {
     );
   };
 
+  const checkValid = () => {
+    let valid = true;
+    props.quote.options?.[0]?.items.forEach((it: any) => {
+      if (+it.quantity < 1) valid = false;
+    })
+    return valid;
+  }
+
   function getActionButtons(props: any) {
 
     if (mobile) {
@@ -1163,6 +1190,7 @@ function QuoteDetails(props: any) {
                 onClick={handleEditting}
                 variant="contained"
                 color="primary"
+                disabled={!(checkValid())}
               >
                 Save Changes
               </Button>

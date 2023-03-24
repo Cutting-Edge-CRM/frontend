@@ -484,6 +484,7 @@ const bottomTabs = [
             <Divider orientation="vertical" flexItem /> */}
               <Avatar
                 sx={{ width: '40px', height: '40px', bgcolor: 'primary.main' }}
+                src={company.logo}
               >
                 <a href='/settings?tab=personal-details' style={{textDecoration: 'none', color: 'white'}}>
                 {user.first && user.last ?
@@ -548,7 +549,7 @@ const bottomTabs = [
                   <Avatar
                   sx={{ width: '40px', height: '40px', bgcolor: 'primary.main' }}
                 >
-                  {user.first && user.last ?
+                  {user.first || user.last ?
                     <>
                   {user?.first?.[0]}
                   {user?.last?.[0]}
