@@ -48,8 +48,6 @@ export default function Schedule(props: any) {
     const [open, setOpen] = useState(false);
     const [visit, setVisit] = useState({} as any);
     const [users, setUsers] = useState([] as any[]);
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const isOpen = Boolean(anchorEl);
     // eslint-disable-next-line
@@ -72,8 +70,6 @@ export default function Schedule(props: any) {
     const handlePopoverClose = () => {
       setAnchorEl(null);
     };
-  
-    
 
     const toolbar: ToolbarInput = {
         start: "prev,next",
@@ -216,16 +212,12 @@ export default function Schedule(props: any) {
     const handleEventClick = (info: any) => {
         setVisit(info.event.extendedProps);
         setUsers(info.event.extendedProps.users);
-        setStartTime(dayjs(info.event.extendedProps.start).format("hh:mm"));
-        setEndTime(dayjs(info.event.extendedProps.end).format("hh:mm"));
         setOpen(true);
     }
 
     const handleUnscheduledEventClick = (visit: any) => {
         setVisit(visit);
         setUsers(visit.users);
-        setStartTime(dayjs(visit.start).format("hh:mm"));
-        setEndTime(dayjs(visit.end).format("hh:mm"));
         setOpen(true);
     }
 
@@ -538,8 +530,6 @@ export default function Schedule(props: any) {
         open={open}
         onClose={handleClose}
         users={users}
-        startTime={startTime}
-        endTime={endTime}
         success={props.success}
       />
       <ExportCalendarModal

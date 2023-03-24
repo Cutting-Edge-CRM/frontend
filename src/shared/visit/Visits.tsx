@@ -42,12 +42,8 @@ function Visits(props: any) {
   const isOpen = Boolean(anchorEl);
   const [users, setUsers] = useState([] as any[]);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>, visit: any) => {
-    setStartTime(visit.start?.split(' ')[1]);
-    setEndTime(visit.end?.split(' ')[1]);
     setVisit(visit);
     setAnchorEl(event.currentTarget);
     setVisit({
@@ -118,7 +114,7 @@ function Visits(props: any) {
           return {
             ...re,
             start: re.start ? dayjs(re.start).format('YYYY-MM-DD HH:mm') : null,
-            end: re.end ? dayjs(re.end).format('YYYY-MM-DD HH:mm') : null,
+            displayEnd: re.displayEnd ? dayjs(re.displayEnd).format('YYYY-MM-DD HH:mm') : null,
           };
         });
         setRows(result);
@@ -189,8 +185,8 @@ function Visits(props: any) {
                         </Typography>
                     :
                     <>
-                    {dayjs(visit.start).diff(dayjs(visit.end), 'hours') < 24 &&
-                    dayjs(visit.start).diff(dayjs(visit.end), 'hours') > -24 ? (
+                    {dayjs(visit.start).diff(dayjs(visit.displayEnd), 'hours') < 24 &&
+                    dayjs(visit.start).diff(dayjs(visit.displayEnd), 'hours') > -24 ? (
                       // if start and end within 1 day of eachother
                       visit.anytime === (1 || true) ? (
                         // if anytime: Jan 13
@@ -210,7 +206,7 @@ function Visits(props: any) {
                         >
                           {dayjs(visit.start).format('MMM D')}{' '}
                           {dayjs(visit.start).format('h:mma')} -{' '}
-                          {dayjs(visit.end).format('h:mma')}
+                          {dayjs(visit.displayEnd).format('h:mma')}
                         </Typography>
                       )
                     ) : (
@@ -221,7 +217,7 @@ function Visits(props: any) {
                         fontWeight={500}
                       >
                         {dayjs(visit.start).format('MMM D')} -{' '}
-                        {dayjs(visit.end).format('MMM D')}
+                        {dayjs(visit.displayEnd).format('MMM D')}
                       </Typography>
                     )}                    
                     </>
@@ -294,10 +290,6 @@ function Visits(props: any) {
         type={type}
         users={users}
         client={props.client}
-        startTime={startTime}
-        endTime={endTime}
-        setStartTime={setStartTime}
-        setEndTime={setEndTime}
         success={props.success}
         job={props.job}
         reload={props.reload}

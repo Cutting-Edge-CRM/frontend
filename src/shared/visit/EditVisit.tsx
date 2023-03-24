@@ -29,7 +29,7 @@ import { useEffect, useState } from 'react';
 import { listProperties } from '../../api/property.api';
 import { createVisit, updateVisit } from '../../api/visit.api';
 import { theme } from '../../theme/theme';
-import TimePicker from './TimePicker';
+import TimePickerV2 from './TimePickerV2';
 
 
 export default function EditVisit(props: any) {
@@ -53,6 +53,7 @@ export default function EditVisit(props: any) {
         property: (typeof props.visit?.property === 'number') ? props.visit.property : null,
         client: props.client,
         start: convertToDate('start'),
+        displayEnd: convertToDate('end'),
         end: convertToDate('end'),
       }).then(
         (res) => {
@@ -68,13 +69,13 @@ export default function EditVisit(props: any) {
     }
     if (props.type === 'new') {
       // save value
-      console.log(convertToDate('start'));
       createVisit({
         ...props.visit,
         job: props.visit.type === 'Job' && !!props.job ? props.job.job?.id : props.visit.job,
         property: (typeof props.visit?.property === 'number')? props.visit.property : null,
         client: props.client,
         start: convertToDate('start'),
+        displayEnd: convertToDate('end'),
         end: convertToDate('end'),
       }).then(
         (res) => {
@@ -104,11 +105,29 @@ export default function EditVisit(props: any) {
   };
 
   const handStartChange = (date: any) => {
-    props.setVisit({ ...props.visit, start: date });
+    let newTime = dayjs(date);
+    let newDate = dayjs(props.visit.start);
+    if (newDate.isValid()) {
+      newDate = newDate.set('date', newTime.get("date"));
+      newDate = newDate.set('month', newTime.get("month"));
+      newDate = newDate.set('year', newTime.get("year"));
+      props.setVisit({ ...props.visit, start: newDate }); 
+    } else {
+      props.setVisit({ ...props.visit, start: newTime }); 
+    }
   };
 
   const handEndChange = (date: any) => {
-    props.setVisit({ ...props.visit, end: date });
+    let newTime = dayjs(date);
+    let newDate = dayjs(props.visit.displayEnd);
+    if (newDate.isValid()) {
+      newDate = newDate.set('date', newTime.get("date"));
+      newDate = newDate.set('month', newTime.get("month"));
+      newDate = newDate.set('year', newTime.get("year"));
+      props.setVisit({ ...props.visit, displayEnd: newDate, end: newDate }); 
+    } else {
+      props.setVisit({ ...props.visit, displayEnd: newTime, end: newDate }); 
+    }
   };
 
   const handleChangePerson = (event: SelectChangeEvent<any>) => {
@@ -124,14 +143,28 @@ export default function EditVisit(props: any) {
   };
 
   const handleStartTimeChange = (time: string) => {
-    props.setStartTime(time);
+    let newTime = dayjs(time);
+    let newDate = dayjs(props.visit.start);
+    newDate = newDate.set('hour', newTime.get("hour"));
+    newDate = newDate.set('minute', newTime.get("minute"));
+    props.setVisit({ ...props.visit, start: newDate });
   };
 
   const handleEndTimeChange = (time: string) => {
-    props.setEndTime(time);
-  };
+    let newTime = dayjs(time);
+    let newDate = dayjs(props.visit.displayEnd);
+    newDate = newDate.set('hour', newTime.get("hour"));
+    newDate = newDate.set('minute', newTime.get("minute"));
+    props.setVisit({ ...props.visit, displayEnd: newDate, end: newDate }); 
+ };
+
+  const checkValid = () => {
+    if ((!dayjs(props.visit.start).isValid() || !dayjs(props.visit.displayEnd).isValid()) && !props.visit.unscheduled) return false;
+    return true;
+  }
 
   const convertToDate = (type: string) => {
+    if (props.visit.unscheduled) return null;
     if (type === 'start') {
       if (!props.visit.start) return null;
       let startDate = dayjs(props.visit.start);
@@ -145,9 +178,9 @@ export default function EditVisit(props: any) {
         return startDate.toISOString();
       }
     } else {
-      if (!props.visit.end) return null;
-      let endDate = dayjs(props.visit.end);
-      let [hours, minutes] = props.endTime ? props.endTime.split(':'): [null,null];
+      if (!props.visit.displayEnd) return null;
+      let endDate = dayjs(props.visit.displayEnd);
+      let [hours, minutes] = props.displayEndTime ? props.displayEndTime.split(':'): [null,null];
       if (hours && minutes) {
         return endDate
           .set('hour', +hours)
@@ -292,7 +325,7 @@ export default function EditVisit(props: any) {
               label="Start Date"
               disabled={+props.visit.unscheduled === (1 || true)}
               value={props.visit.start}
-              maxDate={props.visit.end}
+              maxDate={props.visit.displayEnd}
               onChange={handStartChange}
               renderInput={(params) => <TextField {...params} />}
               OpenPickerButtonProps={{
@@ -302,7 +335,7 @@ export default function EditVisit(props: any) {
             <DatePicker
               label="End Date"
               disabled={+props.visit.unscheduled === (1 || true)}
-              value={props.visit.end}
+              value={props.visit.displayEnd}
               minDate={props.visit.start}
               onChange={handEndChange}
               renderInput={(params) => <TextField {...params} />}
@@ -311,13 +344,13 @@ export default function EditVisit(props: any) {
               }}
             />
           </Stack>
-          <Tooltip title={(dayjs(props.visit.end).diff(props.visit.start, 'days') >= 1) ? "Can't set time if event spans multiple days" : ""}>
+          <Tooltip title={(dayjs(props.visit.displayEnd).diff(props.visit.start, 'days') >= 1) ? "Can't set time if event spans multiple days" : ""}>
           <FormControlLabel
             control={
               <Checkbox
                 id="anytime"
-                disabled={+props.visit.unscheduled === (1 || true) || (dayjs(props.visit.end).diff(props.visit.start, 'days') >= 1)}
-                checked={+props.visit.anytime === (1 || true) || +props.visit.unscheduled === (1 || true) || (dayjs(props.visit.end).diff(props.visit.start, 'days') >= 1)}
+                disabled={+props.visit.unscheduled === (1 || true) || (dayjs(props.visit.displayEnd).diff(props.visit.start, 'days') >= 1)}
+                checked={+props.visit.anytime === (1 || true) || +props.visit.unscheduled === (1 || true) || (dayjs(props.visit.displayEnd).diff(props.visit.start, 'days') >= 1)}
                 onChange={handleAnytime}
               />
             }
@@ -326,16 +359,16 @@ export default function EditVisit(props: any) {
           </Tooltip>
 
           <Stack direction="row" spacing={1}>
-            <TimePicker
-              disabled={+props.visit.anytime === (1 || true) || +props.visit.unscheduled === (1 || true) || (dayjs(props.visit.end).diff(props.visit.start, 'days') >= 1)}
+            <TimePickerV2
+              disabled={+props.visit.anytime === (1 || true) || +props.visit.unscheduled === (1 || true) || (dayjs(props.visit.displayEnd).diff(props.visit.start, 'days') >= 1)}
               label="Start Time"
-              value={props.startTime}
+              value={props.visit.start}
               onChange={handleStartTimeChange}
             />
-            <TimePicker
-              disabled={+props.visit.anytime === (1 || true) || +props.visit.unscheduled === (1 || true) || (dayjs(props.visit.end).diff(props.visit.start, 'days') >= 1)}
+            <TimePickerV2
+              disabled={+props.visit.anytime === (1 || true) || +props.visit.unscheduled === (1 || true) || (dayjs(props.visit.displayEnd).diff(props.visit.start, 'days') >= 1)}
               label="End Time"
-              value={props.endTime}
+              value={props.visit.displayEnd}
               onChange={handleEndTimeChange}
             />
           </Stack>
@@ -346,7 +379,7 @@ export default function EditVisit(props: any) {
         <Button onClick={handleCancel} variant="outlined">
           Cancel
         </Button>
-        <Button onClick={handleSave} variant="contained">
+        <Button onClick={handleSave} variant="contained" disabled={!checkValid()}>
           Save Changes
         </Button>
       </DialogActions>

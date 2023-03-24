@@ -59,7 +59,6 @@ async function getVisit(id?: string) {
 }
 
 async function updateVisit(visit: any) {
-    console.log(visit);
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',

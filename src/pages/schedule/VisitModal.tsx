@@ -76,8 +76,6 @@ import { Directions } from '@mui/icons-material';
     const [client, setClient] = useState({} as any);
     const [job, setJob] = useState({} as any);
     const [users, setUsers] = useState([] as any[]);
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
     const [editVisitOpen, setEditVisitOpen] = useState(false);
 
     let property = properties.find((p) => p.id === props.visit.property);
@@ -91,8 +89,6 @@ import { Directions } from '@mui/icons-material';
       };
 
     const handleEditVisit = () => {
-      setStartTime(dayjs(props.visit.start).format('HH:mm'));
-      setEndTime(dayjs(props.visit.end).format('HH:mm'));
       setEditVisitOpen(true);
     }
 
@@ -506,10 +502,6 @@ import { Directions } from '@mui/icons-material';
         type={'edit'}
         users={users}
         client={props.visit.client}
-        startTime={startTime}
-        endTime={endTime}
-        setStartTime={setStartTime}
-        setEndTime={setEndTime}
         success={props.success}
         reload={props.reload}
         setReload={props.setReload}
