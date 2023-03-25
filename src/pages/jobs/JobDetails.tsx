@@ -32,8 +32,8 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { createInvoice, updateInvoice } from '../../api/invoice.api';
 import { updateJob } from '../../api/job.api';
 import { getProperty } from '../../api/property.api';
@@ -297,6 +297,14 @@ function JobDetails(props: any) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   let mobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const location = useLocation();
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const edit = queryParams.get('edit') === 'true';
+    setEditting(edit);
+
+}, [location.search])
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -311,6 +319,7 @@ function JobDetails(props: any) {
       updateJob(props.job).then(
         (res) => {
           setLoading(false);
+          window.history.replaceState(null, '', window.location.pathname);
           props.success('Successfully updated job');
         },
         (err) => {
@@ -318,12 +327,15 @@ function JobDetails(props: any) {
           setError(err.message);
         }
       );
+    } else {
+      window.history.replaceState(null, '', `?edit=true`);
     }
     setEditting(!editting);
   };
 
   const handleCancel = () => {
     setEditting(false);
+    window.history.replaceState(null, '', window.location.pathname);
     props.setReload(!props.reload);
   };
 

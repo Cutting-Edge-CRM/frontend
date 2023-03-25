@@ -41,8 +41,8 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import dayjs from 'dayjs';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { downloadInvoice, updateInvoice } from '../../api/invoice.api';
 import { createTimeline } from '../../api/timeline.api';
 import { currentUserClaims } from '../../auth/firebase';
@@ -312,7 +312,14 @@ function InvoiceDetails(props: any) {
   let mobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [taxOpen, setTaxOpen] = useState(false);
   const [billingOpen, setBillingOpen] = useState(false);
+  const location = useLocation();
 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const edit = queryParams.get('edit') === 'true';
+    setEditting(edit);
+
+}, [location.search])
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -343,6 +350,7 @@ function InvoiceDetails(props: any) {
       updateInvoice(props.invoice).then(
         (res) => {
           setLoading(false);
+          window.history.replaceState(null, '', window.location.pathname);
           props.success('Successfully updated invoice');
         },
         (err) => {
@@ -350,12 +358,15 @@ function InvoiceDetails(props: any) {
           setError(err.message);
         }
       );
+    } else {
+      window.history.replaceState(null, '', `?edit=true`);
     }
     setEditting(!editting);
   };
 
   const handleCancel = () => {
     setEditting(false);
+    window.history.replaceState(null, '', window.location.pathname);
     props.setReload(!props.reload);
   };
 

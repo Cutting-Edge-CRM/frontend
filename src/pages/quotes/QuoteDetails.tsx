@@ -45,7 +45,7 @@ import {
 } from '@mui/material';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { createJob, updateJob } from '../../api/job.api';
 import { downloadQuote, updateQuote } from '../../api/quote.api';
 import { createTimeline } from '../../api/timeline.api';
@@ -709,21 +709,14 @@ function QuoteDetails(props: any) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   let mobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const location = useLocation();
 
-  // const handleChange = (event: React.SyntheticEvent, newValue: any) => {
-  //   if (newValue === 'add') {
-  //     let options = props.quote.options ? props.quote.options : [];
-  //     options.push({
-  //       deposit: 0,
-  //       depositPercent: 0,
-  //       tax: null,
-  //       items: [{ price: 0 }],
-  //     });
-  //     setValue(options.length - 1);
-  //   } else {
-  //     setValue(newValue);
-  //   }
-  // };
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const edit = queryParams.get('edit') === 'true';
+    setEditting(edit);
+
+}, [location.search])
 
   const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -738,6 +731,7 @@ function QuoteDetails(props: any) {
       updateQuote(props.quote).then(
         (res) => {
           setLoading(false);
+          window.history.replaceState(null, '', window.location.pathname);
           props.success('Successfully updated quote');
         },
         (err) => {
@@ -745,12 +739,15 @@ function QuoteDetails(props: any) {
           setError(err.message);
         }
       );
+    } else {
+      window.history.replaceState(null, '', `?edit=true`);
     }
     setEditting(!editting);
   };
 
   const handleCancel = () => {
     setEditting(false);
+    window.history.replaceState(null, '', window.location.pathname);
     props.setReload(!props.reload);
   };
 

@@ -52,6 +52,10 @@ export default function SelectClient(props: any) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [rowCount, setRowCount] = useState(0);
+  const [query, setQuery] = useState('');
 
   const handleCancel = () => {
     props.onClose();
@@ -72,7 +76,7 @@ export default function SelectClient(props: any) {
           updateInvoice(updatingInvoice).then(
             (_) => {
               setLoading(false);
-              navigate(`/invoices/${res.id}`);
+              navigate(`/invoices/${res.id}?edit=true`);
               props.onClose();
               props.success('Successfully created new invoice');
             },
@@ -120,18 +124,22 @@ export default function SelectClient(props: any) {
     return <Box textAlign='center'><CircularProgress /></Box>;
   };
 
+
+  const handleFilterChange = (filterModel: any) => {
+    setQuery(filterModel.quickFilterValues?.join(' '))
+  }
+
   useEffect(() => {
-    listClients().then(
-      (result) => {
-        setClientsAreLoading(false);
-        setClientRows(result.rows);
-      },
-      (err) => {
-        setErrorListingClients(err.message);
-        setClientsAreLoading(false);
-      }
-    );
-  }, [newClientOpen]);
+    listClients(query, page, pageSize)
+    .then((result) => {
+      setClientsAreLoading(false);
+      setClientRows(result?.rows);
+      setRowCount(result?.rowCount?.[0]?.rowCount);
+    }, (err) => {
+      setClientsAreLoading(false);
+      setErrorListingClients(err.message);
+    })
+  }, [page, pageSize, query, newClientOpen]);
 
   function ClientToolbar(props: any) {
     return (
@@ -172,9 +180,17 @@ export default function SelectClient(props: any) {
                 autoHeight
                 rows={clientRows}
                 columns={clientColumns}
-                pageSize={10}
-                disableColumnMenu
+                pagination
+                pageSize={pageSize}
                 rowsPerPageOptions={[10, 20, 50]}
+                rowCount={rowCount}
+                onPageChange={(newPage) => setPage(newPage)}
+                page={page}
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                paginationMode="server"
+                filterMode="server"
+                onFilterModelChange={handleFilterChange}
+                disableColumnMenu
                 components={{
                 Toolbar: ClientToolbar,
                 NoRowsOverlay: getClientEmptyState,

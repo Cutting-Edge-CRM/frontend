@@ -90,7 +90,6 @@ function ClientHubQuote(props: any) {
                 setPaymentsEnabled(true);
             }
         }, err => {
-            setError(err.message);
         })
     }, [])
 

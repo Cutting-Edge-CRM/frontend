@@ -83,6 +83,10 @@ export default function SelectPropertyAndClient(props: any) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [rowCount, setRowCount] = useState(0);
+  const [query, setQuery] = useState('');
 
   const handleCancel = () => {
     props.onClose();
@@ -117,7 +121,7 @@ export default function SelectPropertyAndClient(props: any) {
             updateJob(updatingJob).then(
               (_) => {
                 setLoading(false);
-                navigate(`/jobs/${res.id}`);
+                navigate(`/jobs/${res.id}?edit=true`);
                 props.onClose();
                 props.success('Successfully created new job');
               },
@@ -157,7 +161,7 @@ export default function SelectPropertyAndClient(props: any) {
             updateQuote(updatingQuote).then(
               (_) => {
                 setLoading(false);
-                navigate(`/quotes/${res.id}`);
+                navigate(`/quotes/${res.id}?edit=true`);
                 props.onClose();
                 props.success('Successfully created new quote');
               },
@@ -234,18 +238,22 @@ export default function SelectPropertyAndClient(props: any) {
     return <Box textAlign='center'><CircularProgress /></Box>;
   };
 
+
+  const handleFilterChange = (filterModel: any) => {
+    setQuery(filterModel.quickFilterValues?.join(' '))
+  }
+
   useEffect(() => {
-    listClients().then(
-      (result) => {
-        setClientsAreLoading(false);
-        setClientRows(result.rows);
-      },
-      (err) => {
-        setErrorListingClients(err.message);
-        setClientsAreLoading(false);
-      }
-    );
-  }, [newClientOpen]);
+    listClients(query, page, pageSize)
+    .then((result) => {
+      setClientsAreLoading(false);
+      setClientRows(result?.rows);
+      setRowCount(result?.rowCount?.[0]?.rowCount);
+    }, (err) => {
+      setClientsAreLoading(false);
+      setErrorListingClients(err.message);
+    })
+  }, [page, pageSize, query, newClientOpen]);
 
   useEffect(() => {
     setPropertiesAreLoading(true);
@@ -281,10 +289,18 @@ export default function SelectPropertyAndClient(props: any) {
                 rows={clientRows}
                 disableColumnMenu
                 columns={clientColumns}
-                pageSize={10}
-                rowsPerPageOptions={[10, 20, 50]}
                 loading={clientsAreLoading}
                 error={errorListingClients}
+                pagination
+                page={page}
+                pageSize={pageSize}
+                rowsPerPageOptions={[10, 20, 50]}
+                rowCount={rowCount}
+                onPageChange={(newPage) => setPage(newPage)}
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                paginationMode="server"
+                filterMode="server"
+                onFilterModelChange={handleFilterChange}
                 components={{
                   Toolbar: ClientToolbar,
                   NoRowsOverlay: getClientEmptyState,

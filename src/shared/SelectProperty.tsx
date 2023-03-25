@@ -82,7 +82,7 @@ export default function SelectProperty(props: any) {
             updateJob(updatingJob).then(
               (_) => {
                 setLoading(false);
-                navigate(`/jobs/${res.id}`);
+                navigate(`/jobs/${res.id}?edit=true`);
                 props.success('Successfully created new job');
               },
               (err) => {
@@ -121,7 +121,7 @@ export default function SelectProperty(props: any) {
             updateQuote(updatingQuote).then(
               (_) => {
                 setLoading(false);
-                navigate(`/quotes/${res.id}`);
+                navigate(`/quotes/${res.id}?edit=true`);
                 props.success('Successfully created new quote');
               },
               (err) => {

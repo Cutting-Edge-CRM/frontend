@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { deleteClient } from '../api/client.api';
+import { deleteInvoice } from '../api/invoice.api';
 import { deleteJob } from '../api/job.api';
 import { deleteNote } from '../api/note.api';
 import { deleteProperty } from '../api/property.api';
@@ -39,7 +40,7 @@ export default function ConfirmDelete(props: any) {
         response = deleteJob(deleteable);
         break;
       case 'invoices':
-        response = deleteVisit(deleteable);
+        response = deleteInvoice(deleteable);
         break;
       case 'properties':
         response = deleteProperty(deleteable);
