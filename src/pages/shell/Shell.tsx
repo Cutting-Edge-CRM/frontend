@@ -271,7 +271,6 @@ const quickCreateTabs = [
 
 const bottomTabs = [
   { display: 'Settings', slug: 'settings', icon: <SettingsOutlined /> },
-  { display: 'Log out', slug: 'dashbaord', icon: <Logout /> }
 ];
 
   useEffect(() => {
@@ -413,6 +412,17 @@ const bottomTabs = [
               </ListItemButton>
             </ListItem>
           ))}
+            <ListItem disablePadding>
+              <ListItemButton
+                onClick={logout}
+              >
+                <ListItemIcon><Logout/></ListItemIcon>
+                <ListItemText
+                  primary={"Logout"}
+                  primaryTypographyProps={{ fontSize: '14px', fontWeight: 500 }}
+                />
+              </ListItemButton>
+            </ListItem>
         </NavList>
       </Stack>
     </Stack>
@@ -636,7 +646,8 @@ const bottomTabs = [
           [theme.breakpoints.down("sm")]: {
             p: 0,
           },
-          width: { lg: `calc(100% - ${drawerWidth}px)` }
+          width: { lg: `calc(100% - ${drawerWidth}px)` },
+          minHeight: "100vh",
         })}
         
       >

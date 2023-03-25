@@ -3,32 +3,64 @@ import { Email, Person, Phone, Place } from '@mui/icons-material';
 import { Alert, Button, Card, Grid, InputAdornment, InputLabel, Stack, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { getUser, updateUser } from '../../api/user.api';
+import { sendPasswordReset, setNewEmail } from '../../auth/firebase';
+import ConfirmPasswordModal from '../../shared/ConfirmPasswordModal';
 
 function PersonalInformation(props: any) {
     const [error, setError] = useState(null);
     const [user, setUser] = useState({} as any);
+    const [orginalEmail, setOrginalEmail] = useState('');
+    const [confirmPasswordOpen, setConfirmPasswordOpen] = useState(false);
 
     const handleChange = (event: any) => {
         setUser({ ...user, [event.target.id]: event.target.value });
       };
 
-    const handleSave = () => {
-        updateUser(user)
-        .then(res => {
-            props.success('Successfully updated user');   
+    const handleChangeEmail = () => {
+        setNewEmail(user.email)
+        .then(emailRes => {
+            updateUser(user)
+            .then(res => {
+                props.success('Successfully updated user');
+            }, err => {
+                setError(err);
+            })
         }, err => {
             setError(err);
         })
     }
 
-    // const handleReload = () => {
-    //     window.location.reload();
-    // }
+    const handleConfirmPasswordClosed = () => {
+        setConfirmPasswordOpen(false);
+    }
+
+    const handleSave = () => {
+        if (user.email !== orginalEmail) {
+            setConfirmPasswordOpen(true);
+        } else {
+            updateUser(user)
+            .then(res => {
+                props.success('Successfully updated user');
+            }, err => {
+                setError(err);
+            })
+        }
+    }
+
+    const handleSendPasswordReset = () => {
+        sendPasswordReset(user.email)
+        .then(res => {
+            props.success(`Password reset email sent to ${user.email}`);
+        }, err => {
+            setError(err.message);
+        })
+    }
 
     useEffect(() => {
     getUser()
     .then((result) => {
         setUser(result);
+        setOrginalEmail(result.email)
     }, (err) => {
         setError(err.message);
     })
@@ -258,6 +290,18 @@ function PersonalInformation(props: any) {
                 <Button variant="contained" onClick={handleSave}>Save Changes</Button>
             </Stack>
         </Card>
+        <Card sx={{ py: 3 }}>
+            <Typography align='center' variant="h6" marginBottom={2}>Change Password</Typography>
+            <Stack direction={'row'} spacing={2} marginTop={3} justifyContent='center'>
+                <Button variant="contained" onClick={handleSendPasswordReset}>Send Password Reset Email</Button>
+            </Stack>
+        </Card>
+        <ConfirmPasswordModal
+        open={confirmPasswordOpen}
+        onClose={handleConfirmPasswordClosed}
+        confirmed={handleChangeEmail}
+        email={orginalEmail}
+        />
         </>
     )
 }

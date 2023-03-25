@@ -27,7 +27,7 @@ function Register() {
               logInWithEmailAndPassword(email, password)
               .then(user => {
                 setRegistering(false);
-                navigate('/clients');
+                navigate('/getting-started');
               }, err => {
                 setRegistering(false);
                 setError(err.message);
@@ -52,7 +52,7 @@ function Register() {
     }
     
     return (
-        <Grid container justifyContent={'center'} height="100%" display={'flex'} alignItems="center" sx={{backgroundColor: "backgroundColor.dark"}}>
+        <Grid container justifyContent={'center'} height="100vh" alignItems="center" sx={{backgroundColor: "backgroundColor.dark"}}>
         <Grid item xs={useMediaQuery(theme.breakpoints.down("sm")) ? 11 : 4}>
         <Card sx={{backgroundColor: "backgroundColor.light"}}>
           <CardContent>

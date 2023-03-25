@@ -52,7 +52,7 @@ function Login() {
   }, [user, loading, navigate]);
 
   return (
-    <Grid container justifyContent={'center'} height="100%" display={'flex'} alignItems="center" sx={{backgroundColor: "backgroundColor.dark"}}>
+    <Grid container justifyContent={'center'} height="100vh" display={'flex'} alignItems="center" sx={{backgroundColor: "backgroundColor.dark"}}>
       <Grid item xs={useMediaQuery(theme.breakpoints.down("sm")) ? 11 : 4}>
       <Card sx={{backgroundColor: "backgroundColor.light"}}>
         {loggingIn && <Box marginTop={2} textAlign='center'><CircularProgress /></Box>}

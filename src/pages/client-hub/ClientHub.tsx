@@ -187,7 +187,7 @@ function ClientHub() {
           </Box>
         <Box
           component="main"
-          sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` }, backgroundColor: "#f4f5f7" }}
+          sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` }, backgroundColor: "#f4f5f7", minHeight: "100vh", }}
         >
         <Grid container width={"100%"} justifyContent="center">
           <Grid item xs={11} lg={8}>

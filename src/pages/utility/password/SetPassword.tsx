@@ -19,7 +19,7 @@ function Register() {
   }
     
     return (
-      <Grid container justifyContent={'center'} height="100%" display={'flex'} alignItems="center" sx={{backgroundColor: "backgroundColor.dark"}}>
+      <Grid container justifyContent={'center'} height="100vh" display={'flex'} alignItems="center" sx={{backgroundColor: "backgroundColor.dark"}}>
       <Grid item xs={mobile ? 11 : 4}>
       <Card sx={{backgroundColor: "backgroundColor.light"}}>
         <CardContent>

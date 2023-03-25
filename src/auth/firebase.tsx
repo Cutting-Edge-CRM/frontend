@@ -10,6 +10,7 @@ import {
   signInAnonymously,
   updatePassword,
   signInWithEmailLink,
+  updateEmail
 } from "firebase/auth";
 import {
   getFirestore,
@@ -40,6 +41,19 @@ const db = getFirestore(app);
 
 const setNewPassword = (password: string) => {
   return updatePassword(currentUser, password)
+  .then(res => {
+    return res;
+  }, err => {
+    console.log(err);
+    return Promise.reject(new Error(ErrorTypes.UNKNOWNERROR));
+  }).catch(err => {
+    console.log(err);
+    return Promise.reject(new Error(ErrorTypes.UNKNOWNERROR));
+  })
+}
+
+const setNewEmail = (email: string) => {
+  return updateEmail(currentUser, email)
   .then(res => {
     return res;
   }, err => {
@@ -232,5 +246,6 @@ export {
   registerNewTenantUser,
   loginAnonymously,
   setNewPassword,
-  signInFromEmail
+  signInFromEmail,
+  setNewEmail
 };

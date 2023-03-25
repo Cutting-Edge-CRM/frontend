@@ -1,28 +1,84 @@
 import { AddressAutofill } from '@mapbox/search-js-react';
-import { AddAPhoto, Close, Email, Language, MapsHomeWork, Phone, Place } from '@mui/icons-material';
-import { Alert, Box, Button, Card, Divider, Grid, IconButton, ImageListItem, InputAdornment, InputLabel, LinearProgress, Stack, TextField, Typography } from '@mui/material';
-import React, { useCallback, useState } from 'react';
+import { AddAPhoto, Close, Email, Language, MapsHomeWork, Phone, Place, RocketLaunch } from '@mui/icons-material';
+import { Alert, Box, Button, Card, CardContent, Divider, Grid, IconButton, ImageListItem, InputAdornment, InputLabel, LinearProgress, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { updateCompany } from '../../api/company.api';
+import { useNavigate } from 'react-router-dom';
+import { getCompany, updateCompany } from '../../api/company.api';
 import { saveImagesCloudinary } from '../../api/images.api';
+import { theme } from '../../theme/theme';
 
-function CompanyInformation(props: any) {
-    const [error, setError] = useState(null);
-    const [loadingFiles, setLoadingFiles] = useState(false);
-    
 
-    const handleChange = (event: any) => {
-        props.setCompany({ ...props.company, [event.target.id]: event.target.value });
+function GettingStarted() {
+  const navigate = useNavigate();
+  const [error, setError] = useState(null);
+  let mobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [companyInfo, setCompanyInfo] = useState({} as any);
+  const [loadingFiles, setLoadingFiles] = useState(false);
+  const [fileURLs, setFileURLs] = useState([] as any);
+
+
+  const handleChangeCompanyInfo = (e: any) => {
+    setCompanyInfo({...companyInfo, [e.target.id]: e.target.value})
+  }
+
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const readAsDataURL = (files: File[]) => {
+        setLoadingFiles(true);
+        fileToDataURL(files[0]).then((file) => {
+          setLoadingFiles(false);
+          setFileURLs([file] as { url: string; file: File }[]);
+        });
       };
+      readAsDataURL(acceptedFiles);
+    },
+    []
+  );
+
+  let { getRootProps, getInputProps, isDragActive } =
+    useDropzone({
+      accept: {
+        'image/jpeg': ['.jpeg', '.jpg'],
+        'image/png': ['.png'],
+        'image/tiff': ['.tif', '.tiff'],
+        'image/svg+xml': ['.svg'],
+        'image/webp': ['.webp'],
+      },
+      maxFiles: 1,
+      onDrop,
+    });
+
+  const handleDelete = () => {
+    setFileURLs([]);
+  };
+
+  const fileToDataURL = (file: File) => {
+    var reader = new FileReader();
+    return new Promise(function (resolve, reject) {
+      reader.onload = function (event) {
+        resolve({ url: event.target?.result, file: file });
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  useEffect(() => {
+    getCompany()
+    .then((result) => {
+        setCompanyInfo(result);
+    }, (err) => {
+        setError(err.message);
+    })
+    }, []);
 
     const handleSave = () => {
-        if (props.fileURLs?.[0]?.url !== props.company?.logo) {
-            saveImagesCloudinary(props.fileURLs).then(
+        if (fileURLs?.[0]?.url !== companyInfo?.logo) {
+            saveImagesCloudinary(fileURLs).then(
               (res) => {
-                props.setCompany({...props.company, logo: res?.[0]?.url});
-                updateCompany({...props.company, logo: res?.[0]?.url})
+                updateCompany({...companyInfo, logo: res?.[0]?.url})
                     .then(res => {
-                        props.success('Successfully updated company');   
+                        navigate('/clients');
                     }, err => {
                         setError(err);
                     })
@@ -33,76 +89,39 @@ function CompanyInformation(props: any) {
               }
             );
           } else {
-            updateCompany(props.company)
+            updateCompany(companyInfo)
             .then(res => {
-                props.success('Successfully updated company');   
+                navigate('/clients'); 
             }, err => {
                 setError(err);
             })
           }
 
     }
-
-    // const handleReload = () => {
-    //     window.location.reload();
-    // }
-
-    const onDrop = useCallback(
-        (acceptedFiles: File[]) => {
-          const readAsDataURL = (files: File[]) => {
-            setLoadingFiles(true);
-            fileToDataURL(files[0]).then((file) => {
-              setLoadingFiles(false);
-              props.setFileURLs([file] as { url: string; file: File }[]);
-            });
-          };
-          readAsDataURL(acceptedFiles);
-        },
-        [props]
-      );
     
-      let { getRootProps, getInputProps, isDragActive } =
-        useDropzone({
-          accept: {
-            'image/jpeg': ['.jpeg', '.jpg'],
-            'image/png': ['.png'],
-            'image/tiff': ['.tif', '.tiff'],
-            'image/svg+xml': ['.svg'],
-            'image/webp': ['.webp'],
-          },
-          maxFiles: 1,
-          onDrop,
-        });
-    
-      const handleDelete = () => {
-        props.setFileURLs([]);
-      };
-    
-      const fileToDataURL = (file: File) => {
-        var reader = new FileReader();
-        return new Promise(function (resolve, reject) {
-          reader.onload = function (event) {
-            resolve({ url: event.target?.result, file: file });
-          };
-          reader.readAsDataURL(file);
-        });
-      };
 
     return (
-        <>
-        {error && <Alert severity="error">{error}</Alert>}
-        <Card sx={{ py: 3 }}>
-            <Stack>
-                <Typography align={'center'} variant="h6" marginBottom={2}>Company Information</Typography>
+      <Grid container justifyContent={'center'} height="100%" display={'flex'} alignItems="center" sx={{backgroundColor: "backgroundColor.dark"}}>
+      <Grid item xs={mobile ? 11 : 6}>
+      <Card sx={{backgroundColor: "backgroundColor.light", marginY: 4}}>
+        <CardContent>
+            <Stack spacing={1}>
+                <Stack alignItems={'center'} spacing={2} my={4}>
+                    <RocketLaunch color='primary' sx={{fontSize: "72px"}}/>
+                    <Typography fontSize={20} fontWeight={600}>Getting Started</Typography>
+                    <Typography fontSize={14} fontWeight={500}>Let's grab a bit more info to get you up and running!</Typography>
+                </Stack>
                 <Grid container>
-                    <Grid item xs={12} sm={6} paddingX={3}>
+                    <Grid item xs={12} sm={6} paddingX={ mobile ? 0 : 3}>
+                        <Grid container spacing={2}>
+                        <Grid item xs={12}>
                         <InputLabel id="name-label" sx={{ color: 'primary.main' }}>
                             Company Name
                         </InputLabel>
                         <TextField
                             id="companyName"
-                            value={props.company.companyName ? props.company.companyName : ''}
-                            onChange={handleChange}
+                            value={companyInfo.companyName ? companyInfo.companyName : ''}
+                            onChange={handleChangeCompanyInfo}
                             fullWidth
                             InputProps={{
                             startAdornment: (
@@ -112,13 +131,15 @@ function CompanyInformation(props: any) {
                             ),
                             }}
                         />
+                        </Grid>
+                        <Grid item xs={12}>
                         <InputLabel id="phone-label" sx={{ color: 'primary.main' }}>
-                            Phone
+                            Company Phone
                         </InputLabel>
                         <TextField
                             id="phone"
-                            defaultValue={props.company.phone ? props.company.phone : undefined}
-                            onChange={handleChange}
+                            value={companyInfo.phone ? companyInfo.phone : ''}
+                            onChange={handleChangeCompanyInfo}
                             fullWidth
                             InputProps={{
                             startAdornment: (
@@ -128,13 +149,15 @@ function CompanyInformation(props: any) {
                             ),
                             }}
                         />
+                        </Grid>
+                        <Grid item xs={12}>
                         <InputLabel id="email-label" sx={{ color: 'primary.main' }}>
-                            Email
+                            Company Email
                         </InputLabel>
                         <TextField
                             id="email"
-                            defaultValue={props.company.email ? props.company.email : undefined}
-                            onChange={handleChange}
+                            value={companyInfo.email ? companyInfo.email : ''}
+                            onChange={handleChangeCompanyInfo}
                             fullWidth
                             InputProps={{
                             startAdornment: (
@@ -144,13 +167,15 @@ function CompanyInformation(props: any) {
                             ),
                             }}
                         />
+                        </Grid>
+                        <Grid item xs={12}>
                         <InputLabel id="website-label" sx={{ color: 'primary.main' }}>
-                            Website
+                            Company Website
                         </InputLabel>
                         <TextField
                             id="website"
-                            defaultValue={props.company.website ? props.company.website : undefined}
-                            onChange={handleChange}
+                            value={companyInfo.website ? companyInfo.website : ''}
+                            onChange={handleChangeCompanyInfo}
                             fullWidth
                             InputProps={{
                             startAdornment: (
@@ -160,12 +185,15 @@ function CompanyInformation(props: any) {
                             ),
                             }}
                         />
+                        </Grid>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={6} paddingX={3}>
+                    <Grid item xs={12} sm={6} paddingX={mobile ? 0: 3}>
                         <InputLabel id="logo-label" sx={{ color: 'primary.main' }}>
-                            Logo
+                            Company Logo
                         </InputLabel>
-                        <Box>
+                        <Typography fontSize={14} fontWeight={300}>This will appear on quotes, invoices, emails & in the client portal</Typography>
+                        <Box marginTop={2}>
                             <Box
                             {...getRootProps()}
                             sx={{
@@ -179,7 +207,7 @@ function CompanyInformation(props: any) {
                                 justifyContent: 'center'
                             }}
                             >
-                            {props.fileURLs.length === 0 &&
+                            {fileURLs.length === 0 &&
                                 <>
                                 <input {...getInputProps()} />
                                 {isDragActive ? (
@@ -204,13 +232,13 @@ function CompanyInformation(props: any) {
                                 )}
                                 </>
                                 }
-                                {props.fileURLs.length > 0 &&
+                                {fileURLs.length > 0 &&
                                     <Box>
                                     <IconButton onClick={() => handleDelete()}>
                                         <Close />
                                     </IconButton>
                                     <ImageListItem>
-                                        <img src={props.fileURLs?.[0]?.url} alt="company logo" />
+                                        <img src={fileURLs?.[0]?.url} alt="company logo" />
                                     </ImageListItem>
                                     </Box>
                             }
@@ -219,17 +247,11 @@ function CompanyInformation(props: any) {
                         </Box>
                     </Grid>
                 </Grid>
-                <Stack direction={'row'} justifyContent='center' spacing={2} marginTop={3}>
-                    {/* <Button variant="outlined" onClick={handleReload}>Cancel</Button> */}
-                    <Button variant="contained" onClick={handleSave}>Save Changes</Button>
-                </Stack>
-            </Stack>
-        </Card>
-        <Card sx={{ py: 3 }}>
-            <Typography align='center' variant="h6" marginBottom={2}>Address</Typography>
+            <Divider sx={{paddingY: 2}} />
+            <Typography fontSize={20} fontWeight={600} textAlign="center">Company Address</Typography>
             <form>
             <AddressAutofill accessToken={process.env.REACT_APP_MAPBOX_TOKEN as string}>
-            <Grid container paddingX={5} spacing={2}>
+            <Grid container paddingX={mobile ? 0 : 5} spacing={2}>
                 <Grid item xs={12} sm={6} >
                     <InputLabel id="address-label" sx={{ color: 'primary.main' }}>
                             Address
@@ -238,9 +260,9 @@ function CompanyInformation(props: any) {
                             id="address"
                             autoComplete="street-address"
                             value={
-                            props.company.address ? props.company.address : ''
+                            companyInfo.address ? companyInfo.address : ''
                             }
-                            onChange={handleChange}
+                            onChange={handleChangeCompanyInfo}
                             fullWidth
                             InputProps={{
                                 startAdornment: (
@@ -258,9 +280,9 @@ function CompanyInformation(props: any) {
                         <TextField
                             id="address2"
                             value={
-                            props.company.address2 ? props.company.address2 : ''
+                            companyInfo.address2 ? companyInfo.address2 : ''
                             }
-                            onChange={handleChange}
+                            onChange={handleChangeCompanyInfo}
                             fullWidth
                             InputProps={{
                                 startAdornment: (
@@ -278,8 +300,8 @@ function CompanyInformation(props: any) {
                         <TextField
                             id="city"
                             autoComplete="address-level2"
-                            value={props.company.city ? props.company.city : ''}
-                            onChange={handleChange}
+                            value={companyInfo.city ? companyInfo.city : ''}
+                            onChange={handleChangeCompanyInfo}
                             fullWidth
                             InputProps={{
                                 startAdornment: (
@@ -298,9 +320,9 @@ function CompanyInformation(props: any) {
                             id="state"
                             autoComplete="address-level1"
                             value={
-                            props.company.state ? props.company.state : ''
+                            companyInfo.state ? companyInfo.state : ''
                             }
-                            onChange={handleChange}
+                            onChange={handleChangeCompanyInfo}
                             fullWidth
                             InputProps={{
                                 startAdornment: (
@@ -318,8 +340,8 @@ function CompanyInformation(props: any) {
                         <TextField
                             id="zip"
                             autoComplete="postal-code"
-                            value={props.company.zip ? props.company.zip : ''}
-                            onChange={handleChange}
+                            value={companyInfo.zip ? companyInfo.zip : ''}
+                            onChange={handleChangeCompanyInfo}
                             fullWidth
                             InputProps={{
                                 startAdornment: (
@@ -338,9 +360,9 @@ function CompanyInformation(props: any) {
                             id="country"
                             autoComplete="country-name"
                             value={
-                            props.company.country ? props.company.country : ''
+                            companyInfo.country ? companyInfo.country : ''
                             }
-                            onChange={handleChange}
+                            onChange={handleChangeCompanyInfo}
                             fullWidth
                             InputProps={{
                                 startAdornment: (
@@ -354,13 +376,16 @@ function CompanyInformation(props: any) {
             </Grid>
             </AddressAutofill>
             </form>
-            <Stack direction={'row'} spacing={2} justifyContent='center' marginTop={3}>
-                {/* <Button variant="outlined" onClick={handleReload}>Cancel</Button> */}
-                <Button variant="contained" onClick={handleSave}>Save Changes</Button>
             </Stack>
-        </Card>
-        </>
-    )
+        </CardContent>
+        <Box marginY={2} display="flex" justifyContent={'center'}>
+            <Button variant="contained" onClick={handleSave}>Continue</Button>
+        </Box>
+        {error && <Alert severity="error">{error}</Alert>}
+      </Card>
+    </Grid>
+  </Grid>
+  );
 }
 
-export default CompanyInformation;
+export default GettingStarted;
