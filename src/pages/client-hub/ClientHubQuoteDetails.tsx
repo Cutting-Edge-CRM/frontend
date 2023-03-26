@@ -295,7 +295,7 @@ import PaymentModal from './PaymentModal';
 
     const handleDownload = () => {
       setLoading(true);
-      downloadQuote(props.invoice.invoice.id)
+      downloadQuote(props.quote.quote.id)
       .then(res => {
         const url = window.URL.createObjectURL(res as Blob);
         window.open(url);
