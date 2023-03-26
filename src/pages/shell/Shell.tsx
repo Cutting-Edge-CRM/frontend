@@ -50,7 +50,7 @@ import Clients from '../clients/Clients';
 import Quotes from '../quotes/Quotes';
 import Jobs from '../jobs/Jobs';
 import Invoices from '../invoices/Invoices';
-import { logout } from '../../auth/firebase';
+import { logout, subscription } from '../../auth/firebase';
 import Client from '../clients/Client';
 import Quote from '../quotes/Quote';
 import Job from '../jobs/Job';
@@ -110,7 +110,14 @@ function Shell() {
   const [company, setCompany] = useState({} as any);
   const [user, setUser] = useState({} as any);
   const [alertOpen, setAlertOpen] = useState(true);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    if (subscription.subscription) {
+      setLoading(false);
+    }
+    // eslint-disable-next-line
+  }, [subscription])
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -416,6 +423,10 @@ const bottomTabs = [
       </Stack>
     </Stack>
   );
+
+  if (loading) {
+    return (<></>);
+  }
 
   return (
     // toolbar

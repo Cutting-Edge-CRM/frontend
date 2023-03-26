@@ -217,14 +217,16 @@ const logout = async () => {
 };
 
 const setSubscription = async () => {
-  getSubscription().then(res => {
+  return getSubscription().then(res => {
     console.log(res);
     if (dayjs.unix(res.expiry).isBefore(dayjs().subtract(7, 'days'))) {
       res.subscription = 'basic';
     }
     subscription = res;
+    return res;
   }, err => {
     console.error(err.message);
+    return null;
   })
 }
 
@@ -264,5 +266,6 @@ export {
   loginAnonymously,
   setNewPassword,
   signInFromEmail,
-  setNewEmail
+  setNewEmail,
+  setSubscription
 };
