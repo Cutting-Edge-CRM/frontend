@@ -1,7 +1,8 @@
 import React from 'react';
 import { Navigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, currentUserClaims } from './firebase';
+import { auth } from './firebase';
+import { isClient } from './FeatureGuards';
 
 const GuardedRoute: React.FunctionComponent<any> = ({ children }) => {
     const [user, loading] = useAuthState(auth);
@@ -14,7 +15,7 @@ const GuardedRoute: React.FunctionComponent<any> = ({ children }) => {
       return <Navigate to="/login" replace />;
     }
 
-    if (!(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner' || currentUserClaims.role === 'staff')) {
+    if (isClient()) {
       return <Navigate to="/login" replace />;
     }
     

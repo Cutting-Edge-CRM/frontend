@@ -45,7 +45,6 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { downloadInvoice, updateInvoice } from '../../api/invoice.api';
 import { createTimeline } from '../../api/timeline.api';
-import { currentUserClaims } from '../../auth/firebase';
 import ConfirmDelete from '../../shared/ConfirmDelete';
 import EmptyState from '../../shared/EmptyState';
 import PaymentModal from '../../shared/PaymentModal';
@@ -54,6 +53,7 @@ import SendInvoiceModal from '../../shared/SendInvoiceModal';
 import { getChipColor, theme } from '../../theme/theme';
 import TaxModal from '../../shared/TaxModal';
 import BillingAddress from './BillingAddress';
+import { isAllowed } from '../../auth/FeatureGuards';
 
 
 function add(accumulator: number, a: number) {
@@ -556,7 +556,7 @@ function InvoiceDetails(props: any) {
           <Typography variant="h6" fontWeight={600}>
             {`Invoice #${props.invoice.invoice.id}`}
           </Typography>
-          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+          {isAllowed('edit-invoice') &&
           <Stack direction={'row'} spacing={2}>
           {getActionButtons(props)}
           <IconButton onClick={openMenu} color="primary">
@@ -707,7 +707,7 @@ function InvoiceDetails(props: any) {
             </Stack>
           </Grid>
         </Grid>
-          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+          {isAllowed('edit-invoice') &&
           <>
           {editting ? (
             <Stack direction="row" spacing={2}>

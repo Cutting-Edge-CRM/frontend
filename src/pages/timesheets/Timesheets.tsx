@@ -5,8 +5,8 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { clock, createTimesheet, getClockStatus, listTimesheets } from '../../api/timesheet.api';
 import { getUser, listUsers } from '../../api/user.api';
+import { isAllowed } from '../../auth/FeatureGuards';
 import { theme } from '../../theme/theme';
-import { currentUserClaims } from '../../auth/firebase';
 
 function Clock(props: any) {
     const [date, setDate] = useState('');
@@ -494,7 +494,7 @@ function Timesheets(props: any) {
     }, [])
 
     useEffect(() => {
-        listTimesheets(dayjs(date).format("YYYY-MM-DD"), ((currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') ? false : true) )
+        listTimesheets(dayjs(date).format("YYYY-MM-DD"), !isAllowed('view-all-timesheets'))
         .then(res => {
             setTimes(res);
         }, err => {
@@ -503,7 +503,7 @@ function Timesheets(props: any) {
     }, [clockedIn, reload, date])
 
     useEffect(() => {
-        if (currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') {
+        if (isAllowed('view-all-timesheets')) {
             listUsers()
             .then(res => {
                 setUsers(res);
@@ -523,7 +523,7 @@ function Timesheets(props: any) {
 
     }, [])
 
-    if (props.subscription.subscription === 'basic') {
+    if (!isAllowed('team-feature')) {
         return(
         <Card sx={{padding: 5}}>
           <Box borderRadius={'15px'} overflow={'hidden'}>
@@ -611,7 +611,7 @@ function Timesheets(props: any) {
                         </Button>
                     }
                     </Box>
-                    {((currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner')) &&
+                    {(isAllowed('view-all-timesheets')) &&
                         <Select
                         labelId="user-label"
                         id="user"

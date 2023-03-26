@@ -38,7 +38,7 @@ import { createInvoice, updateInvoice } from '../../api/invoice.api';
 import { updateJob } from '../../api/job.api';
 import { getProperty } from '../../api/property.api';
 import { createTimeline } from '../../api/timeline.api';
-import { currentUserClaims } from '../../auth/firebase';
+import { isAllowed } from '../../auth/FeatureGuards';
 import ConfirmDelete from '../../shared/ConfirmDelete';
 import Duplicate from '../../shared/Duplicate';
 import EmptyState from '../../shared/EmptyState';
@@ -450,7 +450,7 @@ function JobDetails(props: any) {
           <Typography variant="h6" fontWeight={600}>
             {`Job #${props.job.job.id}`}
           </Typography>
-          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+          {isAllowed('edit-job') &&
           <Stack direction={'row'} spacing={2}>
           {props.job.job.status === 'Active' && !mobile &&
           <Button
@@ -593,7 +593,7 @@ function JobDetails(props: any) {
           <Typography variant="h6" fontWeight={600} marginBottom={2}>
             Job Details
           </Typography>
-          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+          {isAllowed('edit-job') &&
           <>
           {editting ? (
             <Stack direction="row" spacing={2}>

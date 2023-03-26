@@ -30,8 +30,8 @@ import { listProperties } from '../../api/property.api';
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
 import EmptyState from '../EmptyState';
 import ConfirmDelete from '../ConfirmDelete';
-import { currentUserClaims } from '../../auth/firebase';
 import { theme } from '../../theme/theme';
+import { isAllowed } from '../../auth/FeatureGuards';
 
 const geocodingClient = mbxGeocoding({ accessToken: mapboxgl.accessToken });
 
@@ -172,7 +172,7 @@ function Properties(props: any) {
       renderCell: (params: GridRenderCellParams<string>) => {
         return (
           <>
-          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+          {isAllowed('edit-property') &&
             <IconButton onClick={(e) => openMenu(e, params.row)}>
               <MoreVert color="primary" />
             </IconButton>
@@ -285,7 +285,7 @@ function Properties(props: any) {
         </Typography>
         {props.type === 'client' && (
           <>
-          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+          {isAllowed('add-property') &&
             <Button
               variant="contained"
               color="primary"

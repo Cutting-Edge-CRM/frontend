@@ -28,8 +28,8 @@ import EditVisit from './EditVisit';
 import dayjs from 'dayjs';
 import ConfirmDelete from '../ConfirmDelete';
 import EmptyState from '../EmptyState';
-import { currentUserClaims } from '../../auth/firebase';
 import { getBorderColor, getEventColor } from '../../theme/theme';
+import { isAllowed } from '../../auth/FeatureGuards';
 
 function Visits(props: any) {
   const [rows, setRows] = useState([] as any);
@@ -126,7 +126,7 @@ function Visits(props: any) {
     );
   }, [props, open, deleteOpen, props.reload]);
 
-  if (props.subscription.subscription === 'basic' && !loading) {
+  if (!isAllowed('team-feature') && !loading) {
     return(
       <Box borderRadius={'15px'} overflow={'hidden'}>
         <a href="/settings?tab=billing">
@@ -143,7 +143,7 @@ function Visits(props: any) {
         <Typography fontWeight={600} fontSize={18}>
           Visits
         </Typography>
-        {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+        {isAllowed('add-visit') &&
         <IconButton onClick={handleNewOpen} color="info">
           <AddCircleOutlineOutlined />
         </IconButton>
@@ -242,7 +242,7 @@ function Visits(props: any) {
                   alignItems="flex-start"
                   justifyContent="flex-end"
                 >
-                  {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+                  {isAllowed('edit-visit') &&
                   <IconButton
                     onClick={(e) => openMenu(e, visit)}
                     color="primary"

@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { getCompany } from '../../api/company.api';
 import { getSettings } from '../../api/settings.api';
 import { listTaxes } from '../../api/tax.api';
-import { currentUserClaims } from '../../auth/firebase';
+import { isAllowed } from '../../auth/FeatureGuards';
 import { theme } from '../../theme/theme';
 import Billing from './Billing';
 import CompanyInformation from './CompanyInformation';
@@ -126,23 +126,20 @@ function CompanySettings(props: any) {
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={value} onChange={handleChange} sx={{'.MuiTabs-scroller': {overflowX: 'scroll !important', '::-webkit-scrollbar': {display: 'none'}}}} >
                         <Tab label="Personal Details" id="personalDetails" />
-                        {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') && <Tab label="Company Details" id="companyDetails" />}
-                        {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') && <Tab label="Employees" id="employees" />}
-                        {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') && <Tab label="Email & SMS" id="emailAndSms" />}
-                        {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') && <Tab label="Payments" id="payments" />}
-                        {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') && <Tab label="Billing" id="billing" />}
+                        {isAllowed('view-company-settings') && <Tab label="Company Details" id="companyDetails" />}
+                        {isAllowed('view-employee-settings') && <Tab label="Employees" id="employees" />}
+                        {isAllowed('view-emailsms-settings') && <Tab label="Email & SMS" id="emailAndSms" />}
+                        {isAllowed('view-payment-settings') && <Tab label="Payments" id="payments" />}
+                        {isAllowed('view-billing-settings') && <Tab label="Billing" id="billing" />}
                     </Tabs>
                 </Box>
             </Card>
             {value === 0 && <PersonalInformation success={props.success}/>}
-            {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
-            <>
-            {value === 1 && <CompanyInformation company={company} setCompany={setCompany} success={props.success} fileURLs={logoUrl} setFileURLs={setLogoUrl} />}
-            {value === 2 && <Employees success={props.success} subscription={props.subscription}/>}
-            {value === 3 && <EmailSmsSettings settings={settings} setSettings={setSettings} success={props.success}/>}
-            {value === 4 && <Payments settings={settings} setSettings={setSettings} taxes={taxes} setTaxes={setTaxes} success={props.success} />}
-            {value === 5 && <Billing success={props.success} subscription={props.subscription}/>}
-            </>}
+            {isAllowed('view-company-settings') && value === 1 && <CompanyInformation company={company} setCompany={setCompany} success={props.success} fileURLs={logoUrl} setFileURLs={setLogoUrl} />}
+            {isAllowed('view-employee-settings') && value === 2 && <Employees success={props.success} subscription={props.subscription}/>}
+            {isAllowed('view-emailsms-settings') && value === 3 && <EmailSmsSettings settings={settings} setSettings={setSettings} success={props.success}/>}
+            {isAllowed('view-payment-settings') && value === 4 && <Payments settings={settings} setSettings={setSettings} taxes={taxes} setTaxes={setTaxes} success={props.success} />}
+            {isAllowed('view-billing-settings') && value === 5 && <Billing success={props.success} subscription={props.subscription}/>}
         </Stack>
     )
 }

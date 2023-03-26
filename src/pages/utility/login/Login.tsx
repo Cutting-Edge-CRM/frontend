@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { auth, currentUserClaims, logInWithEmailAndPassword } from '../../../auth/firebase';
+import { auth, logInWithEmailAndPassword } from '../../../auth/firebase';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { ErrorTypes } from '../../../util/errors';
@@ -7,6 +7,7 @@ import { Card, CardContent, TextField, Button, Stack, Typography, InputAdornment
 import { Email, Https } from '@mui/icons-material';
 import { emailValid } from '../../../util/tools';
 import { theme } from '../../../theme/theme';
+import { isClient } from '../../../auth/FeatureGuards';
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -48,7 +49,7 @@ function Login() {
       // maybe trigger a loading screen
       return;
     }
-    if (user && (currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner' || currentUserClaims.role === 'staff')) navigate("/");
+    if (user && !isClient()) navigate("/");
   }, [user, loading, navigate]);
 
   return (

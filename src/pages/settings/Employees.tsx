@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 import { ArrowCircleRightOutlined, CreateOutlined, DeleteOutline, EmailOutlined, MoreVert } from '@mui/icons-material';
 import { theme } from '../../theme/theme';
 import ConfirmDelete from '../../shared/ConfirmDelete';
+import { isAllowed } from '../../auth/FeatureGuards';
 
 function Employees(props: any) {
   const [rows, setRows] = useState([]);
@@ -213,7 +214,7 @@ function Employees(props: any) {
     },
   ];
 
-  if (props.subscription.subscription === 'basic') {
+  if (!isAllowed('team-feature')) {
     return(
     <Card sx={{padding: 5}}>
       <Box borderRadius={'15px'} overflow={'hidden'}>

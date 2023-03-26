@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -17,6 +18,7 @@ import {
   collection,
   addDoc,
 } from "firebase/firestore";
+import { getSubscription } from "../api/subscriptions.api";
 import { getTenantForClient, getTenantForUser } from "../api/tenant.api";
 import { addUserToTenant } from "../api/user.api";
 // import {v4 as uuidv4} from 'uuid';
@@ -38,6 +40,7 @@ var currentUser: User;
 var currentUserClaims: any;
 const db = getFirestore(app);
 // const googleProvider = new GoogleAuthProvider();
+let subscription = {} as any;
 
 const setNewPassword = (password: string) => {
   return updatePassword(currentUser, password)
@@ -213,6 +216,18 @@ const logout = async () => {
   return signOut(auth);
 };
 
+const setSubscription = async () => {
+  getSubscription().then(res => {
+    console.log(res);
+    if (dayjs.unix(res.expiry).isBefore(dayjs().subtract(7, 'days'))) {
+      res.subscription = 'basic';
+    }
+    subscription = res;
+  }, err => {
+    console.error(err.message);
+  })
+}
+
 onAuthStateChanged(auth, (user) => {
   if (user) {
     auth.tenantId = user.tenantId;
@@ -225,6 +240,7 @@ onAuthStateChanged(auth, (user) => {
     .catch((error) => {
       console.log(error);
     });
+    setSubscription();
     console.log(currentUser);
   } else {
     console.log('not logged in');
@@ -238,6 +254,7 @@ export {
   db,
   currentUser,
   currentUserClaims,
+  subscription,
   onAuthStateChanged,
   logInWithEmailAndPassword,
   registerWithEmailAndPassword,

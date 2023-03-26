@@ -92,7 +92,6 @@ function Payments(props: any) {
         setLoading(true);
         retrieveAccount()
         .then(res => {
-            console.log(res);
             setLoading(false);
             if (!res.stripeRes?.id) {
                 console.log('not started');

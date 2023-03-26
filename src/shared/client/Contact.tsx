@@ -14,7 +14,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getClient } from '../../api/client.api';
-import { currentUserClaims } from '../../auth/firebase';
+import { isAllowed } from '../../auth/FeatureGuards';
 import { getChipColor } from '../../theme/theme';
 import EditContact from './EditContact';
 
@@ -80,7 +80,7 @@ function Contact(props: any) {
         <IconButton onClick={handleGoToClient}><OpenInNew/></IconButton>
       </Typography>
       </Stack>
-      {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+      {isAllowed('edit-client') &&
       <IconButton onClick={handleEditOpen} color="info">
         <CreateOutlined />
       </IconButton>

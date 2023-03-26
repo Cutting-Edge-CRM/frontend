@@ -28,9 +28,9 @@ import {
   ImportExport,
   WorkspacePremium,
 } from '@mui/icons-material';
-import { currentUserClaims } from '../auth/firebase';
 import { useNavigate } from 'react-router-dom';
 import { theme } from '../theme/theme';
+import { hasMaxEmployees, isAllowed } from '../auth/FeatureGuards';
 
 const StyledGridToolbarContainer = styled(
   GridToolbarContainer
@@ -83,7 +83,7 @@ export default function CustomToolbar(props: any) {
       <FilterContainer>
         <Stack direction={'row'} width="100%" justifyContent={"space-between"} alignItems="center" >
           <GridToolbarQuickFilter variant="outlined" size="small" />
-          {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+          {isAllowed('add-resource') &&
           <Box justifyContent={'end'}>
           {props.type === 'Clients' && (
             <>
@@ -115,7 +115,7 @@ export default function CustomToolbar(props: any) {
               </Menu>
             </>
           )}
-          {props.type === 'employees' && props.subscription.subscription === 'team' && props.employeeCount >= 5 ?
+          {props.type === 'employees' && hasMaxEmployees(props.employeeCount) ?
             <>
             <Button
             startIcon={<WorkspacePremium sx={{color: 'yellow.dark'}} />}
@@ -127,7 +127,6 @@ export default function CustomToolbar(props: any) {
             </Button>
             </>
             :
-            props.type !== 'Employees' &&
             <>
             {mobile ?
             <IconButton onClick={props.handleNewOpen}>

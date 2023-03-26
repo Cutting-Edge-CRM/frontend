@@ -12,8 +12,8 @@ import { EventImpl } from '@fullcalendar/core/internal'
 import { theme } from '../../theme/theme'
 import VisitModal from './VisitModal'
 import { ArrowCircleLeft, CalendarMonthOutlined, Download, Fullscreen, MoreVertOutlined } from '@mui/icons-material'
-import { currentUserClaims } from '../../auth/firebase';
 import ExportCalendarModal from './ExportCalendar'
+import { isAllowed } from '../../auth/FeatureGuards'
 
 const eventRender = (args: any) => {
 
@@ -238,7 +238,7 @@ export default function Schedule(props: any) {
     }
 
     useEffect(() => {
-        listVisitsForCalendar(((currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') ? false : true))
+        listVisitsForCalendar(!isAllowed('view-full-schedule'))
         .then(visits => {
             setScheduledEvents(visits.filter((v: any) => !v.unscheduled));
             let unscheduled = visits.filter((v: any) => v.unscheduled)
@@ -275,7 +275,7 @@ export default function Schedule(props: any) {
         })
     }, [unscheduledEvents])
 
-    if (props.subscription.subscription === 'basic') {
+    if (!isAllowed('team-feature')) {
         return(
         <Card sx={{padding: 5}}>
           <Box borderRadius={'15px'} overflow={'hidden'}>

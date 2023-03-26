@@ -4,6 +4,8 @@ import { Button, Card, CardContent, Chip, Grid, TextField, Typography } from '@m
 import { Stack } from '@mui/system';
 import React from 'react';
 import { getCheckoutSession, getPortalSession } from '../../api/subscriptions.api';
+import { isFreeTrial } from '../../auth/FeatureGuards';
+import { subscription } from '../../auth/firebase';
 
 const basicFeatures = ["Client Manager", "Quoting & Estimating", "Invoicing", "Client Portal", "Email & Text Message", "Credit Card Processing", "Dashboard & Analytics"] 
 const teamFeatures = ["Job Scheduling", "Appointments & Reminders", "Employee Login", "Time Tracking"] 
@@ -41,7 +43,7 @@ function Billing(props: any) {
                         <Card sx={{height: '100%'}}>
                             <Stack direction={'row'} justifyContent={'space-between'} alignItems="center" mx='-20px' px="40px" py="14px" sx={{backgroundColor: '#9ED1F580'}}>
                                 <Typography fontWeight={600} fontSize={18}>Basic</Typography>
-                                {props.subscription.subscription === 'basic' && <Chip label="Active" sx={{backgroundColor: "blue.dark"}} />}
+                                {!isFreeTrial() && subscription.subscription === 'basic' && <Chip label="Active" sx={{backgroundColor: "blue.dark"}} />}
                             </Stack>
                             <CardContent>
                                 <Stack spacing={5}>
@@ -76,7 +78,7 @@ function Billing(props: any) {
                                             </Grid>
                                         </Grid>
                                     </Stack>
-                                    {props.subscription.subscription !== 'basic' && <Button variant='contained' onClick={handlePortal}>Downgrade</Button>}
+                                    {subscription.subscription !== 'basic' && <Button variant='contained' onClick={handlePortal}>Downgrade</Button>}
                                 </Stack>
                             </CardContent>
                         </Card>
@@ -85,7 +87,8 @@ function Billing(props: any) {
                         <Card sx={{height: '100%'}}>
                             <Stack direction={'row'} justifyContent={'space-between'} alignItems="center" mx='-20px' px="40px" py="14px" sx={{backgroundColor: '#FFF5E1'}}>
                                 <Typography fontWeight={600} fontSize={18}>Team</Typography>
-                                {props.subscription.subscription === 'team' && <Chip label="Active" sx={{backgroundColor: "yellow.dark"}} />}
+                                {!isFreeTrial() && subscription.subscription === 'team' && <Chip label="Active" sx={{backgroundColor: "yellow.dark"}} />}
+                                {isFreeTrial() && <Chip label="Free Trial Active" sx={{backgroundColor: "yellow.dark"}} />}
                             </Stack>
                             <CardContent>
                                 <Stack spacing={5}>
@@ -129,9 +132,9 @@ function Billing(props: any) {
                                             </Grid>
                                         </Grid>
                                     </Stack>
-                                    {props.subscription.subscription === 'basic' && <Button variant='contained' onClick={() => handleCheckout(`${process.env.REACT_APP_TEAM_PRICE}`)}>Upgrade</Button>}
-                                    {props.subscription.subscription === 'team' && <Button variant='outlined' onClick={handlePortal}>Manage</Button>}
-                                    {props.subscription.subscription === 'enterprise' && <Button variant='contained' onClick={handlePortal}>Downgrade</Button>}
+                                    {subscription.subscription === 'basic' && <Button variant='contained' onClick={() => handleCheckout(`${process.env.REACT_APP_TEAM_PRICE}`)}>Upgrade</Button>}
+                                    {subscription.subscription === 'team' && <Button variant='outlined' onClick={handlePortal}>Manage</Button>}
+                                    {subscription.subscription === 'enterprise' && <Button variant='contained' onClick={handlePortal}>Downgrade</Button>}
                                 </Stack>
                             </CardContent>
                         </Card>
@@ -140,7 +143,7 @@ function Billing(props: any) {
                         <Card sx={{height: '100%'}}>
                             <Stack direction={'row'} justifyContent={'space-between'} alignItems="center" mx='-20px' px="40px" py="14px" sx={{backgroundColor: '#D9F3E5'}}>
                                 <Typography fontWeight={600} fontSize={18}>Enterprise</Typography>
-                                {props.subscription.subscription === 'enterprise' && <Chip label="Active" sx={{backgroundColor: "green.dark"}} />}
+                                {!isFreeTrial() && subscription.subscription === 'enterprise' && <Chip label="Active" sx={{backgroundColor: "green.dark"}} />}
                             </Stack>
                             <CardContent>
                                 <Stack spacing={5}>
@@ -174,9 +177,9 @@ function Billing(props: any) {
                                             </Grid>
                                         </Grid>
                                     </Stack>
-                                    {props.subscription.subscription === 'basic' && <Button variant='contained' onClick={() => handleCheckout(`${process.env.REACT_APP_ENTERPRISE_PRICE}`)}>Upgrade</Button>}
-                                    {props.subscription.subscription === 'team' && <Button variant='contained' onClick={handlePortal}>Upgrade</Button>}
-                                    {props.subscription.subscription === 'enterprise' && <Button variant='outlined' onClick={handlePortal}>Manage</Button>}
+                                    {subscription.subscription === 'basic' && <Button variant='contained' onClick={() => handleCheckout(`${process.env.REACT_APP_ENTERPRISE_PRICE}`)}>Upgrade</Button>}
+                                    {subscription.subscription === 'team' && <Button variant='contained' onClick={handlePortal}>Upgrade</Button>}
+                                    {subscription.subscription === 'enterprise' && <Button variant='outlined' onClick={handlePortal}>Manage</Button>}
                                 </Stack>
                             </CardContent>
                         </Card>

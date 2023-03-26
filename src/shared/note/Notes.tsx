@@ -25,7 +25,7 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { listNotes } from '../../api/note.api';
-import { currentUserClaims } from '../../auth/firebase';
+import { isAllowed } from '../../auth/FeatureGuards';
 import ConfirmDelete from '../ConfirmDelete';
 import EmptyState from '../EmptyState';
 import EditNote from './EditNote';
@@ -118,7 +118,7 @@ function Notes(props: any) {
         <Typography fontWeight={600} fontSize={18}>
           Notes
         </Typography>
-        {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+        {isAllowed('add-note') &&
         <IconButton onClick={handleNewOpen} color="info">
           <AddCircleOutlineOutlined />
         </IconButton>
@@ -190,7 +190,7 @@ function Notes(props: any) {
                   alignItems="flex-start"
                   justifyContent="flex-end"
                 >
-                  {(currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner') &&
+                  {isAllowed('edit-note') &&
                   <IconButton
                     onClick={(e) => openMenu(e, note, note.images)}
                     color="primary"

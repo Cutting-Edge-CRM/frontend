@@ -23,6 +23,7 @@ import {
   Info,
   Warning,
   AddCircleOutline,
+  Close,
 } from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
@@ -30,6 +31,7 @@ import Typography from '@mui/material/Typography';
 import {
   Alert,
   Avatar,
+  Collapse,
   InputAdornment,
   ListItemButton,
   Menu,
@@ -57,8 +59,6 @@ import Schedule from '../schedule/Schedule';
 import { useEffect } from 'react';
 import { getSettings } from '../../api/settings.api';
 import CompanySettings from '../settings/CompanySettings';
-import { getSubscription } from '../../api/subscriptions.api';
-import dayjs from 'dayjs';
 import Timesheets from '../timesheets/Timesheets';
 import { listClients } from '../../api/client.api';
 import { listQuotes } from '../../api/quote.api';
@@ -70,6 +70,7 @@ import SelectClient from '../../shared/client/SelectClient';
 import { theme } from '../../theme/theme';
 import { getCompany } from '../../api/company.api';
 import { getUser } from '../../api/user.api';
+import { daysLeftInFreeTrial, isAllowed, isCanceled, isFreeTrial, pastDue } from '../../auth/FeatureGuards';
 
 const NavList = styled(List)<ListProps>(({ theme }) => ({
   padding: theme.spacing(0, 3),
@@ -98,7 +99,6 @@ function Shell() {
   const [successMessage, setSuccessMessage] = useState('');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [settings, setSettings] = useState({} as any);
-  const [subscription, setSubscription] = useState({} as any);
   const location = useLocation();
   const [searchItems, setSearchItems] = useState([] as any);
   const [anchorElSearch, setAnchorElSearch] = React.useState<null | HTMLElement>(null);
@@ -109,6 +109,7 @@ function Shell() {
   let mobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [company, setCompany] = useState({} as any);
   const [user, setUser] = useState({} as any);
+  const [alertOpen, setAlertOpen] = useState(true);
 
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -284,18 +285,6 @@ const bottomTabs = [
     );
   }, []);
 
-  useEffect(() => {
-    getSubscription().then(res => {
-      if (dayjs.unix(res.expiry).isBefore(dayjs().subtract(7, 'days'))) {
-        setSubscription({subscription: 'basic'});
-      }
-      setSubscription(res);
-    }, err => {
-      console.error(err.message);
-    })
-    // eslint-disable-next-line
-  }, [])
-
   const drawer = (
     <Stack height="100%">
       <Toolbar>
@@ -388,7 +377,7 @@ const bottomTabs = [
                   primary={tab.display}
                   primaryTypographyProps={{ fontSize: '14px', fontWeight: 500 }}
                 />
-                {tab.premium && subscription.subscription === 'basic' && <ListItemIcon><WorkspacePremium sx={{color: 'yellow.dark'}}/></ListItemIcon>}
+                {tab.premium && !isAllowed('team-feature') && <ListItemIcon><WorkspacePremium sx={{color: 'yellow.dark'}}/></ListItemIcon>}
               </ListItemButton>
             </ListItem>
           ))}
@@ -652,31 +641,34 @@ const bottomTabs = [
         
       >
         <Toolbar>
-          {subscription.canceled && <Alert icon={<Info fontSize="inherit" sx={{color: 'blue.dark'}}/>} sx={{mt: 4, mb: 2, width: '100%', backgroundColor: 'blue.main'}}>You have cancelled your subscription. You will still have access to your plan for X days.</Alert>}
-          {dayjs.unix(subscription.expiry).isBefore(dayjs()) && dayjs.unix(subscription.expiry).isAfter(dayjs().subtract(7, 'days')) && <Alert icon={<Warning fontSize="inherit" sx={{color: 'yellow.dark'}}/>} sx={{mt: 4, mb: 2, width: '100%', backgroundColor: 'yellow.main'}}>Your subscription is past due. Add or update payment methods to continue using service.</Alert>}
+          <Collapse in={alertOpen} sx={{width: '100%', marginRight: '30px'}}>
+          {isCanceled() && <Alert action={<IconButton onClick={() => setAlertOpen(false)}><Close fontSize="inherit" /></IconButton>} icon={<Info fontSize="inherit" sx={{color: 'blue.dark'}}/>} sx={{mt: 7, mb: 2, width: '100%', backgroundColor: 'blue.main'}}>You have cancelled your subscription. You will still have access to your plan until the end of your billing period.</Alert>}
+          {pastDue() && <Alert action={<IconButton onClick={() => setAlertOpen(false)}><Close fontSize="inherit" /></IconButton>} icon={<Warning fontSize="inherit" sx={{color: 'yellow.dark'}}/>} sx={{mt: 7, mb: 2, width: '100%', backgroundColor: 'yellow.main'}}>Your subscription is past due. Add or update payment methods to continue using service.</Alert>}
+          {isFreeTrial() && <Alert action={<IconButton onClick={() => setAlertOpen(false)}><Close fontSize="inherit" /></IconButton>} icon={<Info fontSize="inherit" sx={{color: 'blue.dark'}}/>} sx={{mt: 7, mb: 2, width: '100%', backgroundColor: 'blue.main'}}>{daysLeftInFreeTrial()} days remaining in your free trial</Alert>}
+          </Collapse>
         </Toolbar>
 
         {/* body */}
         <Routes>
-          <Route path="/dashboard" element={<Dashboard success={success} settings={settings} subscription={subscription} />} />
-          <Route path="/schedule" element={<Schedule success={success} settings={settings} subscription={subscription} />} />
-          <Route path="/clients" element={<Clients success={success} settings={settings} subscription={subscription} />} />
-          <Route path="/clients/:id" element={<Client success={success} settings={settings} subscription={subscription} />} />
-          <Route path="/quotes" element={<Quotes success={success} settings={settings} subscription={subscription} />} />
+          <Route path="/dashboard" element={<Dashboard success={success} settings={settings} />} />
+          <Route path="/schedule" element={<Schedule success={success} settings={settings} />} />
+          <Route path="/clients" element={<Clients success={success} settings={settings} />} />
+          <Route path="/clients/:id" element={<Client success={success} settings={settings} />} />
+          <Route path="/quotes" element={<Quotes success={success} settings={settings} />} />
           <Route
             path="/quotes/:id"
             element={<Quote success={success} settings={settings} />}
           />
-          <Route path="/jobs" element={<Jobs success={success} settings={settings} subscription={subscription} />} />
-          <Route path="/jobs/:id" element={<Job success={success} settings={settings} subscription={subscription} />} />
-          <Route path="/invoices" element={<Invoices success={success} settings={settings} subscription={subscription} />} />
+          <Route path="/jobs" element={<Jobs success={success} settings={settings} />} />
+          <Route path="/jobs/:id" element={<Job success={success} settings={settings} />} />
+          <Route path="/invoices" element={<Invoices success={success} settings={settings} />} />
           <Route
             path="/invoices/:id"
             element={<Invoice success={success} settings={settings} />}
           />
-          <Route path="/settings" element={<CompanySettings success={success} subscription={subscription}/>} />
-          <Route path="/timesheets" element={<Timesheets success={success} subscription={subscription}/>} />
-          <Route path="/" element={<Clients success={success} settings={settings} subscription={subscription} />} />
+          <Route path="/settings" element={<CompanySettings success={success}/>} />
+          <Route path="/timesheets" element={<Timesheets success={success}/>} />
+          <Route path="/" element={<Clients success={success} settings={settings} />} />
         </Routes>
         <Snackbar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
