@@ -218,7 +218,6 @@ const logout = async () => {
 
 const setSubscription = async () => {
   return getSubscription().then(res => {
-    console.log(res);
     if (dayjs.unix(res.expiry).isBefore(dayjs().subtract(7, 'days'))) {
       res.subscription = 'basic';
     }

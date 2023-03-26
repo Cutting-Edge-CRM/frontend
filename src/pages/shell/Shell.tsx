@@ -50,7 +50,7 @@ import Clients from '../clients/Clients';
 import Quotes from '../quotes/Quotes';
 import Jobs from '../jobs/Jobs';
 import Invoices from '../invoices/Invoices';
-import { logout, subscription } from '../../auth/firebase';
+import { logout, setSubscription } from '../../auth/firebase';
 import Client from '../clients/Client';
 import Quote from '../quotes/Quote';
 import Job from '../jobs/Job';
@@ -113,11 +113,12 @@ function Shell() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (subscription.subscription) {
+    setSubscription().then(res => {
       setLoading(false);
-    }
-    // eslint-disable-next-line
-  }, [subscription])
+    }, err => {
+      setLoading(false);
+    })
+  })
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -425,6 +426,7 @@ const bottomTabs = [
   );
 
   if (loading) {
+    console.log('returning <></>');
     return (<></>);
   }
 

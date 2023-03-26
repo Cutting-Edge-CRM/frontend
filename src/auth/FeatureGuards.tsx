@@ -25,7 +25,7 @@ export const isAllowed = (type: any) => {
             return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
         case 'add-visit':
             return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
-        case 'view-full-calendar':
+        case 'view-full-schedule':
             return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
         case 'view-company-settings':
             return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
