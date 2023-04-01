@@ -95,7 +95,7 @@ export default function Schedule(props: any) {
         let visit = {
             ...info.event.extendedProps,
             start: dayjs(info.event.start).toISOString(),
-            end: info.event.end ? dayjs(info.event.end).toISOString() : dayjs(info.event.start).toISOString(),
+            end: info.event.end ? dayjs(info.event.end).subtract(1, 'day').toISOString() : dayjs(info.event.start).toISOString(),
         };
         delete visit._context;
         delete visit._def;
@@ -132,7 +132,7 @@ export default function Schedule(props: any) {
             anytime: true,
             allDay: true,
             start: dayjs(info.event.start).toISOString(),
-            end: dayjs(info.event.start).add(1, 'day').toISOString() // event wont have end after dropped
+            end: dayjs(info.event.start).toISOString() // event wont have end after dropped
         };
         delete visit._context;
         delete visit._def;

@@ -426,7 +426,6 @@ const bottomTabs = [
   );
 
   if (loading) {
-    console.log('returning <></>');
     return (<></>);
   }
 
