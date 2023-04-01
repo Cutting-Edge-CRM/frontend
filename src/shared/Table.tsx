@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridSortModel } from '@mui/x-data-grid';
 import { Box, Card, CircularProgress, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -59,6 +59,10 @@ export default function Table(props: any) {
     props.setQuery(filterModel.quickFilterValues?.join(' '))
   }
 
+  const handleSortChange = (sortModel: GridSortModel) => {
+    props.setSortModal(sortModel);
+  }
+
   return (
     <Card>
       <Box sx={{'& .MuiDataGrid-row': {cursor: 'pointer'}, '& .MuiDataGrid-cell:focus-within': {outline: 'none !important'}}}>
@@ -81,6 +85,9 @@ export default function Table(props: any) {
         onFilterModelChange={handleFilterChange}
         rowHeight={props.mobile ? 100 : 52}
         headerHeight={props.mobile ? 0 : 52}
+        sortingMode="server"
+        onSortModelChange={handleSortChange}
+        sortModel={props.sortModal}
         components={{
           Toolbar: CustomToolbar,
           NoRowsOverlay: getEmptyState,

@@ -16,9 +16,11 @@ function Quotes(props: any) {
   const [quotesAreLoading, setQuotesAreLoading] = useState(true);
   const [errorListingQuotes, setErrorListingQuotes] = useState(null);
   const [query, setQuery] = useState('');
+  const [sortModal, setSortModal] = useState([]);
+
 
   useEffect(() => {
-    listQuotes(undefined, query, page, pageSize)
+    listQuotes(undefined, query, page, pageSize, sortModal)
     .then((result) => {
       setQuotesAreLoading(false);
       setRows(result?.rows);
@@ -27,7 +29,7 @@ function Quotes(props: any) {
       setQuotesAreLoading(false);
       setErrorListingQuotes(err.message)
     })
-  }, [page, pageSize, query])
+  }, [page, pageSize, query, sortModal])
 
   const quoteColumns: GridColDef[] = [
     { 
@@ -116,6 +118,8 @@ function Quotes(props: any) {
           errorListing={errorListingQuotes}
           listLoading={quotesAreLoading}
           setQuery={setQuery}
+          sortModal={sortModal}
+          setSortModal={setSortModal}
           ></Table>
       </Box>
     )

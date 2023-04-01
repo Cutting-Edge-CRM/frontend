@@ -19,6 +19,7 @@ function Clients(props: any) {
   const [pageSize, setPageSize] = useState(10);
   const [rowCount, setRowCount] = useState(0);
   const [query, setQuery] = useState('');
+  const [sortModal, setSortModal] = useState([]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -52,7 +53,7 @@ function Clients(props: any) {
   }
 
   useEffect(() => {
-    listClients(query, page, pageSize)
+    listClients(query, page, pageSize, sortModal)
     .then((result) => {
       setClientsAreLoading(false);
       setRows(result?.rows);
@@ -61,7 +62,7 @@ function Clients(props: any) {
       setClientsAreLoading(false);
       setErrorListingClients(err.message);
     })
-  }, [page, pageSize, query]);
+  }, [page, pageSize, query, sortModal]);
 
  const clientColumns: GridColDef[] = [
     { 
@@ -152,6 +153,8 @@ function Clients(props: any) {
           errorListing={errorListingClients}
           listLoading={clientsAreLoading}
           setQuery={setQuery}
+          sortModal={sortModal}
+          setSortModal={setSortModal}
           ></Table>
           <ImportClients
             selectedValue={selectedValue}

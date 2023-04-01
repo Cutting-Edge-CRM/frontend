@@ -15,9 +15,10 @@ function Invoices(props: any) {
   const [invoicesAreLoading, setInvoicesAreLoading] = useState(true);
   const [errorListingInvoices, setErrorListingInvoices] = useState(null);
   const [query, setQuery] = useState('');
+  const [sortModal, setSortModal] = useState([]);
 
   useEffect(() => {
-    listInvoices(undefined, query, page, pageSize)
+    listInvoices(undefined, query, page, pageSize, sortModal)
     .then((result) => {
       setInvoicesAreLoading(false);
       setRows(result?.rows);
@@ -26,7 +27,7 @@ function Invoices(props: any) {
       setInvoicesAreLoading(false);
       setErrorListingInvoices(err.message)
     })
-  }, [page, pageSize, query])
+  }, [page, pageSize, query, sortModal])
 
   const invoiceColumns: GridColDef[] = [
     { 
@@ -121,6 +122,8 @@ function Invoices(props: any) {
           errorListing={errorListingInvoices}
           listLoading={invoicesAreLoading}
           setQuery={setQuery}
+          sortModal={sortModal}
+          setSortModal={setSortModal}
           ></Table>
       </Box>
     )

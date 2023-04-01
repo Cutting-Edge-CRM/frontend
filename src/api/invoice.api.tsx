@@ -117,7 +117,7 @@ async function deleteInvoice(id: any) {
     }
 }
 
-async function listInvoices(client?: string, query?: string, page?: number, pageSize?: number) {
+async function listInvoices(client?: string, query?: string, page?: number, pageSize?: number, sortModal?: any) {
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -134,6 +134,10 @@ async function listInvoices(client?: string, query?: string, page?: number, page
     if (client) url.searchParams.set('client', client);
     if (pageSize) url.searchParams.set('pageSize', `${pageSize}`);
     if (query) url.searchParams.set('query', query);
+    if (sortModal?.[0]) {
+        url.searchParams.set('field', sortModal?.[0]?.field);
+        url.searchParams.set('sort', sortModal?.[0]?.sort);
+    }
     return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {

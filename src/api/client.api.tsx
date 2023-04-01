@@ -116,7 +116,7 @@ async function deleteClient(id: any) {
     }
 }
 
-async function listClients( query?: string, page?: number, pageSize?: number) {
+async function listClients( query?: string, page?: number, pageSize?: number, sortModal?: any) {
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -132,6 +132,10 @@ async function listClients( query?: string, page?: number, pageSize?: number) {
     if (page) url.searchParams.set('page', `${page}`);
     if (pageSize) url.searchParams.set('pageSize', `${pageSize}`);
     if (query) url.searchParams.set('query', query);
+    if (sortModal?.[0]) {
+        url.searchParams.set('field', sortModal?.[0]?.field);
+        url.searchParams.set('sort', sortModal?.[0]?.sort);
+    }
     return fetch(url, requestOptions)
         .then(res => {
             if (res.ok) {
