@@ -1,10 +1,12 @@
 import { AddressAutofill } from '@mapbox/search-js-react';
-import { AddCircleOutlineOutlined, DeleteOutline, OpenInNew, Percent } from '@mui/icons-material';
+import { AddCircleOutlineOutlined, DeleteOutline, EditOutlined, OpenInNew } from '@mui/icons-material';
 import { Alert, Box, Button, Card, CircularProgress, Grid, IconButton, InputLabel, ListItemText, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { updateSettings } from '../../api/settings.api';
 import { retrieveAccount, startPaymentSetUp, continuePaymentSetUp } from '../../api/stripePayments.api';
-import { updateTaxes } from '../../api/tax.api';
+import { listTaxes } from '../../api/tax.api';
+import ConfirmDelete from '../../shared/ConfirmDelete';
+import TaxModal from '../../shared/TaxModal';
 // import StripePayments from './StripePayments'
 // import StripePayouts from './StripePayouts';
 
@@ -15,7 +17,12 @@ function Payments(props: any) {
     const [loading, setLoading] = useState(false);
     const [loginLink, setLoginLink] = useState('');
     const [error, setError] = useState(null);
+    const [taxes, setTaxes] = useState([] as any);
     // const [stripeLoaded, setStripeLoaded] = useState(false);
+    const [taxModalOpen, setTaxModalOpen] = useState(false);
+    const [taxGroup, setTaxGroup] = useState({} as any);
+    const [taxModalType, setTaxModalType] = useState('');
+    const [deleteOpen, setDeleteOpen] = useState(false);
 
     const handleStartSetUp = () => {
         setLoading(true);
@@ -53,40 +60,33 @@ function Payments(props: any) {
     const handleSave = () => {
         updateSettings(props.settings)
         .then(res => {
-            updateTaxes(props.taxes)
-            .then(taxRes => {
-                props.success('Successfully updated settings');   
-            }, err => {
-                setError(err);
-            })
+            props.success('Successfully updated settings');  
         }, err => {
             setError(err);
         })
     }
 
-    // const handleReload = () => {
-    //     window.location.reload();
-    // }
 
-    const handleChangeTax = (event: any, index: number) => {
-        let newTaxes = props.taxes?.taxes;
-        newTaxes[index][event.target.id] = event.target.value;
-        props.setTaxes({taxes: newTaxes});
+    const handleRemoveTaxGroup = (event: any, index: number) => {
+        setTaxGroup(taxes[index]);
+        setDeleteOpen(true);
       };
-    
-      const handleRemoveTax = (event: any, index: number) => {
-        let newTaxes = props.taxes?.taxes;
-        newTaxes = newTaxes
-          .slice(undefined, index)
-          .concat(newTaxes.slice(index + 1, undefined));
-          props.setTaxes({taxes: newTaxes});
+
+    const handleDeleteClose = () => {
+        setDeleteOpen(false);
+    }
+
+    const handleAddTaxGroup = (event: any) => {
+        setTaxModalType('New');
+        setTaxGroup({title: "", taxes: [{title: '', tax: ''}]});
+        setTaxModalOpen(true);
       };
-    
-      const handleAddTax = (event: any) => {
-        let newTaxes = props.taxes?.taxes;
-        newTaxes.push({tax: '', title: ''});
-        props.setTaxes({taxes: newTaxes});
-      };
+
+    const handleEditTaxGroup = (event: any, index: number) => {
+        setTaxModalType("Edit");
+        setTaxGroup(taxes[index]);
+        setTaxModalOpen(true);
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -107,6 +107,21 @@ function Payments(props: any) {
             setLoading(false);
         })
     }, [])
+
+    useEffect(() => {
+        listTaxes()
+        .then((result) => {
+            // setLoading(false);
+            setTaxes(result);
+        }, (err) => {
+            // setLoading(false);
+            // setError(err.message);
+        })
+        }, [deleteOpen, taxModalOpen]);
+
+    const handleTaxModalClose = () => {
+        setTaxModalOpen(false);
+    }
 
     // useEffect(() => {
     //     if (setupStatus !== 'complete') return;
@@ -179,38 +194,41 @@ function Payments(props: any) {
                 ))}
             </Select>
             <InputLabel id="tax-label" sx={{ color: 'primary.main' }}>
-                Tax Rates
+                Tax Groups
             </InputLabel>
-            {props.taxes?.taxes?.map((tax: any, index: number) => (
-                <Stack key={index} direction='row' spacing={2}>
-                    <TextField
-                        id="title"
-                        value={tax.title}
-                        label="Name"
-                        onChange={(e) => handleChangeTax(e, index)}
-                    />
-                    <TextField
-                        id="tax"
-                        value={tax.tax}
-                        label="Rate (%)"
-                        onChange={(e) => handleChangeTax(e, index)}
-                        InputProps={{
-                            endAdornment: (
-                                <Percent />
-                            ),
-                          }}
-                    />
-                    <IconButton onClick={(e) => handleRemoveTax(e, index)}>
-                        <DeleteOutline color="error" />
-                    </IconButton>
+            {taxes.map((taxGroup: any, taxGroupIndex: number) => (
+                <Stack key={taxGroupIndex}>
+                <Stack direction={'row'}>
+                    <Grid container>
+                        <Grid item xs={3}>
+                            <Typography variant="h6" fontWeight={600}>{taxGroup.title}</Typography>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <IconButton onClick={(e) => handleEditTaxGroup(e, taxGroupIndex)}>
+                                <EditOutlined color="primary" />
+                            </IconButton>
+                        </Grid>
+                        <Grid item xs={1}>
+                            <IconButton onClick={(e) => handleRemoveTaxGroup(e, taxGroupIndex)}>
+                                <DeleteOutline color="error" />
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+                </Stack>
+                {taxGroup.taxes?.map((tax: any, index: number) => (
+                    <Stack direction={'row'} key={index} spacing={1} marginLeft={2}>
+                        <Typography variant="body2" fontStyle={'italic'} fontWeight={500}>{tax.title}</Typography>
+                        <Typography variant="body2" fontWeight={500}>{tax.tax}%</Typography>
+                    </Stack>
+                ))}
                 </Stack>
             ))}
             <Button
             sx={{ alignSelf: 'flex-start' }}
-            onClick={handleAddTax}
+            onClick={handleAddTaxGroup}
             startIcon={<AddCircleOutlineOutlined color="primary" />}
             >
-                Add Tax Rate
+                Add Tax Group
             </Button>
             </Stack>
             </Grid>
@@ -282,7 +300,21 @@ function Payments(props: any) {
             </Card>
         </>
         } */}
-        
+        <TaxModal
+        open={taxModalOpen}
+        onClose={handleTaxModalClose}
+        taxGroup={taxGroup}
+        setTaxGroup={setTaxGroup}
+        taxModalType={taxModalType}
+        />
+        <ConfirmDelete
+        type={'tax'}
+        onDelete={handleDeleteClose}
+        onClose={handleDeleteClose}
+        success={props.success}
+        open={deleteOpen}
+        deleteId={taxGroup.id}
+        />
     </Stack>
     );
 }

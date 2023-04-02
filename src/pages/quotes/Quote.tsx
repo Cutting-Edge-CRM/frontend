@@ -48,14 +48,14 @@ function Quote(props: any) {
             let none = {
                 id: null,
                 title: "No Tax",
-                tax: 0
+                taxes: [{title: "No Tax", tax: 0}]
               }
               res.unshift(none);
             setTaxes(res);
         }, (err) => {
             setError(err.message);
         })
-    }, [id])
+    }, [id, reload])
 
     useEffect(() => {
         listPayments(quote.quote?.client)

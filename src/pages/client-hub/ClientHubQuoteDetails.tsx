@@ -110,6 +110,7 @@ import PaymentModal from './PaymentModal';
   
   function TabPanel(props: any) {
     const [depositAmount, setDepositAmount] = useState(0);
+    // eslint-disable-next-line
     const [taxAmount, setTaxAmount] = useState(0);
     const [subTotalAmount, setSubtotalAmount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
@@ -121,19 +122,19 @@ import PaymentModal from './PaymentModal';
         props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0)
       );
       setTaxAmount(
-        +props.taxes.find((t: any) => t.id === props.option.tax)?.tax *
+        +props.taxes.find((t: any) => t.id === props.option.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 *
           props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0)
       );
       setTotalAmount(
         props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) +
-          +props.taxes.find((t: any) => t.id === props.option.tax)?.tax *
+          +props.taxes.find((t: any) => t.id === props.option.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 *
             props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0)
       );
       setDepositAmount(
         props.option.depositPercent
           ? (+props.option.deposit / 100) *
               (props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) +
-                +props.taxes.find((t: any) => t.id === props.option.tax)?.tax *
+                +props.taxes.find((t: any) => t.id === props.option.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 *
                   props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))
           : props.option.deposit
       );
@@ -217,22 +218,32 @@ import PaymentModal from './PaymentModal';
                 <Grid item xs={8} sm={4}>
                   <Grid container alignItems="center">
                     <Grid item xs={6}>
-                      <Typography
-                        variant="body2"
-                        color="neutral.light"
-                        fontWeight={500}
-                      >
-                        Taxes
-                      </Typography>
+                      <>
+                        {props.taxes.find((t: any) => t.id === props.option.tax)?.taxes?.map((t: any) => (
+                          <Typography
+                          variant="body2"
+                          color="neutral.light"
+                          fontWeight={500}
+                          key={t.id}
+                          >
+                            {t.title}
+                          </Typography>
+                        ))}
+                      </>
                     </Grid>
                     <Grid item xs={6}>
-                        <Typography
+                      <>
+                        {props.taxes.find((t: any) => t.id === props.option.tax)?.taxes?.map((t: any) => (
+                          <Typography
+                          key={t.id}
                           variant="body2"
                           fontWeight={600}
                           color="neutral.main"
                         >
-                          {taxAmount.toFixed(2)}
+                          {((+t.tax/100)*subTotalAmount)?.toFixed(2)}
                         </Typography>
+                        ))}
+                      </>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -398,8 +409,8 @@ import PaymentModal from './PaymentModal';
           {props.payments.length > 0 && (
                 <Stack mt={2.5} spacing={2}>
                   <Grid container justifyContent={'end'}>
-                    <Grid item xs={8} sm={6} >
-                    <Typography>Payments</Typography>
+                    <Grid item xs={8} sm={3} >
+                      <Typography variant="h6" color="primary" fontWeight={500}>Payments</Typography>
                     </Grid>
                   </Grid>
                   <List>
@@ -476,7 +487,7 @@ import PaymentModal from './PaymentModal';
             (props.quote.options?.[0]?.depositPercent
             ? (+props.quote.options?.[0]?.deposit / 100) *
                 (props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) +
-                    +props.taxes.find((t: any) => t.id === props.quote.options?.[0]?.tax)?.tax *
+                    +props.taxes.find((t: any) => t.id === props.quote.options?.[0]?.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 *
                     props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))
             : props.quote.options?.[0]?.deposit)) && props.paymentsEnabled &&
             <>
@@ -495,7 +506,7 @@ import PaymentModal from './PaymentModal';
             open={confirmOpen}
             onClose={handleConfirmClose}
             type={confirmType}
-            price={(props.quote.options?.[0].items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) + (+props.taxes.find((t: any) => t.id === props.quote.options?.[0].tax)?.tax)*(props.quote.options?.[0].items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))).toFixed(2)}
+            price={(props.quote.options?.[0].items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) + (+props.taxes.find((t: any) => t.id === props.quote.options?.[0].tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100)*(props.quote.options?.[0].items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))).toFixed(2)}
             success={props.success}
             {...props}
             />
@@ -505,7 +516,7 @@ import PaymentModal from './PaymentModal';
             success={props.success}
             quote={props.quote}
             type='deposit'
-            amount={(props.quote.options?.[0]?.depositPercent ? (+props.quote.options?.[0]?.deposit/100)*(props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) + (+props.taxes.find((t: any) => t.id === props.quote.options?.[0]?.tax)?.tax)*(props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))) : props.quote.options?.[0]?.deposit).toFixed(2)}
+            amount={(props.quote.options?.[0]?.depositPercent ? (+props.quote.options?.[0]?.deposit/100)*(props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) + (+props.taxes.find((t: any) => t.id === props.quote.options?.[0]?.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100)*(props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))) : props.quote.options?.[0]?.deposit).toFixed(2)}
             />
       </Stack>
     );

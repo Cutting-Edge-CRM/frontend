@@ -15,6 +15,7 @@ import { deleteJob } from '../api/job.api';
 import { deleteNote } from '../api/note.api';
 import { deleteProperty } from '../api/property.api';
 import { deleteQuote } from '../api/quote.api';
+import { deleteTax } from '../api/tax.api';
 import { deleteUser } from '../api/user.api';
 import { deleteVisit } from '../api/visit.api';
 
@@ -56,6 +57,9 @@ export default function ConfirmDelete(props: any) {
         break;
       case 'employee':
         response = deleteUser(deleteable);
+        break;
+      case 'tax':
+        response = deleteTax(deleteable);
         break;
       default:
         break;
@@ -120,6 +124,10 @@ export default function ConfirmDelete(props: any) {
       case 'notes':
         setTitle('Delete Note');
         setBody(`Are you sure you want to delete this note?`);
+        break;
+      case 'tax':
+        setTitle('Delete Tax Group');
+        setBody(`Are you sure you want to delete this tax group?`);
         break;
       default:
         break;

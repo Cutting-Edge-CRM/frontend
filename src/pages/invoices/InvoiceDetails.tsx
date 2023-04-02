@@ -313,6 +313,7 @@ function InvoiceDetails(props: any) {
   const [taxOpen, setTaxOpen] = useState(false);
   const [billingOpen, setBillingOpen] = useState(false);
   const location = useLocation();
+  const [taxGroup, setTaxGroup] = useState({} as any);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -341,6 +342,7 @@ function InvoiceDetails(props: any) {
   }
 
   const handleTaxOpen = () => {
+    setTaxGroup({title: "", taxes: [{title: "", tax: ""}]});
     setTaxOpen(true);
   };
 
@@ -415,7 +417,7 @@ function InvoiceDetails(props: any) {
       details: `Payment for invoice #${props.invoice.invoice.id}`,
       transDate: dayjs(),
       method: 'Cheque',
-      amount: ((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0)
+      amount: ((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 ?? 0)
       - props.payments.map((p: any) => p.amount).reduce(add, 0)).toFixed(2)
     });
     setPaymentOpen(true);
@@ -514,7 +516,7 @@ function InvoiceDetails(props: any) {
     }
     
     if (props.invoice.invoice.status === 'Awaiting Payment' && (props.payments.map((p: any) => p.amount).reduce(add, 0) < 
-    ((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0)))
+    ((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 ?? 0)))
     ) {
       return (
         <>
@@ -782,13 +784,18 @@ function InvoiceDetails(props: any) {
             <Grid item xs={8} sm={6}>
               <Grid container alignItems="center">
                 <Grid item xs={5}>
-                  <Typography
-                    variant="body2"
-                    color="neutral.light"
-                    fontWeight={500}
-                  >
-                    Taxes
-                  </Typography>
+                  <>
+                    {props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.taxes?.map((t: any) => (
+                      <Typography
+                      variant="body2"
+                      color="neutral.light"
+                      fontWeight={500}
+                      key={t.id}
+                      >
+                        {t.title}
+                      </Typography>
+                    ))}
+                    </>
                 </Grid>
                 <Grid item xs={4}>
                   {editting ? (
@@ -821,20 +828,20 @@ function InvoiceDetails(props: any) {
                       ))}
                     </Select>
                   ) : (
-                    <Typography
+                    <>
+                    {props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.taxes?.map((t: any) => (
+                      <Typography
+                      key={t.id}
                       variant="body2"
                       fontWeight={600}
                       color="neutral.main"
                     >
-                      {(+(
-                        props.taxes.find(
-                          (t: any) => t.id === props.invoice.invoice.tax
-                        )?.tax ?? 0
-                      ) *
-                        props.invoice.items
+                      {((+t.tax/100)*(props.invoice.items
                           .map((i: any) => i.price)
-                          .reduce(add, 0)).toFixed(2)}
+                          .reduce(add, 0)))?.toFixed(2)}
                     </Typography>
+                    ))}
+                    </>
                   )}
                 </Grid>
               </Grid>
@@ -860,7 +867,7 @@ function InvoiceDetails(props: any) {
                     color="neutral.main"
                   >
                     $
-                    {((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0)).toFixed(2)}
+                    {((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 ?? 0)).toFixed(2)}
                   </Typography>
                 </Grid>
               </Grid>
@@ -881,7 +888,7 @@ function InvoiceDetails(props: any) {
                     color="neutral.main"
                   >
                     $
-                    {((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0)
+                    {((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 ?? 0)
                     - props.payments.map((p: any) => p.amount).reduce(add, 0)).toFixed(2)}
                   </Typography>
                 </Grid>
@@ -992,6 +999,11 @@ function InvoiceDetails(props: any) {
           open={taxOpen}
           onClose={handleTaxClose}
           success={props.success}
+          taxGroup={taxGroup}
+          setTaxGroup={setTaxGroup}
+          taxModalType={"New"}
+          setReload={props.setReload} 
+          reload={props.reload}
         />
         <BillingAddress
           open={billingOpen}

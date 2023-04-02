@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { getCompany } from '../../api/company.api';
 import { getSettings } from '../../api/settings.api';
-import { listTaxes } from '../../api/tax.api';
 import { isAllowed } from '../../auth/FeatureGuards';
 import { theme } from '../../theme/theme';
 import Billing from './Billing';
@@ -19,7 +18,6 @@ function CompanySettings(props: any) {
     const [settings, setSettings] = useState({} as any);
     const [company, setCompany] = useState({} as any);
     const [logoUrl, setLogoUrl] = useState([] as any);
-    const [taxes, setTaxes] = useState({} as any);
     const location = useLocation();
     let mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -90,22 +88,6 @@ function CompanySettings(props: any) {
     }, []);
 
     useEffect(() => {
-        listTaxes()
-        .then((result) => {
-            // setLoading(false);
-            setTaxes({taxes: result.map((r: any) => {
-                return {
-                    ...r,
-                    tax: (r.tax*100).toFixed(2)
-                }
-            })});
-        }, (err) => {
-            // setLoading(false);
-            // setError(err.message);
-        })
-        }, []);
-
-    useEffect(() => {
         getCompany()
         .then((result) => {
             // setLoading(false);
@@ -138,7 +120,7 @@ function CompanySettings(props: any) {
             {isAllowed('view-company-settings') && value === 1 && <CompanyInformation company={company} setCompany={setCompany} success={props.success} fileURLs={logoUrl} setFileURLs={setLogoUrl} />}
             {isAllowed('view-employee-settings') && value === 2 && <Employees success={props.success} subscription={props.subscription}/>}
             {isAllowed('view-emailsms-settings') && value === 3 && <EmailSmsSettings settings={settings} setSettings={setSettings} success={props.success}/>}
-            {isAllowed('view-payment-settings') && value === 4 && <Payments settings={settings} setSettings={setSettings} taxes={taxes} setTaxes={setTaxes} success={props.success} />}
+            {isAllowed('view-payment-settings') && value === 4 && <Payments settings={settings} setSettings={setSettings} success={props.success} />}
             {isAllowed('view-billing-settings') && value === 5 && <Billing success={props.success} subscription={props.subscription}/>}
         </Stack>
     )

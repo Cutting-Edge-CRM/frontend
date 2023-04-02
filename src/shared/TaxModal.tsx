@@ -1,63 +1,65 @@
 import { Percent, DeleteOutline, AddCircleOutlineOutlined } from '@mui/icons-material';
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputLabel, LinearProgress, TextField, useMediaQuery } from '@mui/material';
 import { Stack } from '@mui/system';
-import React, { useEffect, useState } from 'react';
-import { listTaxes, updateTaxes } from '../api/tax.api';
+import React, { useState } from 'react';
+import { createTax, updateTax } from '../api/tax.api';
 import { theme } from '../theme/theme';
 
 export default function TaxModal(props: any) {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [taxes, setTaxes] = useState({} as any);
-
-
-    useEffect(() => {
-        setLoading(true)
-        listTaxes()
-        .then((result) => {
-            setLoading(false);
-            setTaxes({taxes: result.map((r: any) => {
-                return {
-                    ...r,
-                    tax: (r.tax*100).toFixed(2)
-                }
-            })});
-        }, (err) => {
-            setLoading(false);
-            setError(err.message);
-        })
-        }, []);
 
     const handleSave = () => {
-        setLoading(true);
-        updateTaxes(taxes)
-        .then(res => {
-            props.onClose();
-            setLoading(false);
-        }, err => {
-            setLoading(false);
-            setError(err);
-        })
+        if (props.taxModalType === 'New') {
+            setLoading(true);
+            createTax(props.taxGroup)
+            .then(res => {
+                props.onClose();
+                setLoading(false);
+                props.setReload(!props.reload);
+            }, err => {
+                setLoading(false);
+                setError(err);
+            })
+        } else {
+            setLoading(true);
+            updateTax(props.taxGroup)
+            .then(res => {
+                props.onClose();
+                setLoading(false);
+            }, err => {
+                setLoading(false);
+                setError(err);
+            })
+        }
     }
 
+    const handleChangeTaxGroup = (event: any) => {
+        let newTaxGroup = props.taxGroup;
+        newTaxGroup[event.target.id] = event.target.value;
+        props.setTaxGroup({...newTaxGroup});
+      };
+
     const handleChangeTax = (event: any, index: number) => {
-        let newTaxes = taxes?.taxes;
-        newTaxes[index][event.target.id] = event.target.value;
-        setTaxes({taxes: newTaxes});
+        let newTaxGroup = props.taxGroup;
+        newTaxGroup.taxes[index][event.target.id] = event.target.value;
+        props.setTaxGroup({...newTaxGroup});
       };
     
       const handleRemoveTax = (event: any, index: number) => {
-        let newTaxes = taxes?.taxes;
-        newTaxes = newTaxes
-          .slice(undefined, index)
-          .concat(newTaxes.slice(index + 1, undefined));
-          setTaxes({taxes: newTaxes});
+        let newTaxGroup = props.taxGroup;
+
+        
+        newTaxGroup.taxes = newTaxGroup.taxes?.slice(undefined, index)
+        .concat(newTaxGroup.taxes?.slice(index + 1, undefined));
+
+        props.setTaxGroup({...newTaxGroup});
       };
     
       const handleAddTax = (event: any) => {
-        let newTaxes = taxes?.taxes;
-        newTaxes.push({tax: '', title: ''});
-        setTaxes({taxes: newTaxes});
+        let newTaxGroup = props.taxGroup;
+        newTaxGroup.taxes.push({tax: '', title: ''});
+        props.setTaxGroup({...newTaxGroup});
       };
 
 
@@ -67,44 +69,57 @@ export default function TaxModal(props: any) {
 
     return (
         <Dialog fullScreen={useMediaQuery(theme.breakpoints.down("sm"))} onClose={handleCancel} open={props.open} fullWidth>
-        <DialogTitle align="center">Tax Settings</DialogTitle>
+        <DialogTitle align="center">{props.taxModalType} Tax Group</DialogTitle>
         {loading && <LinearProgress />}
         <DialogContent>
             <Stack spacing={2}>
             <InputLabel id="tax-label" sx={{ color: 'primary.main' }}>
-                Tax Rates
+                Tax Group Name
             </InputLabel>
-            {taxes?.taxes?.map((tax: any, index: number) => (
-                <Stack key={index} direction='row' spacing={2}>
+            <Stack spacing={2}>
+                <Stack direction={'row'}>
                     <TextField
                         id="title"
-                        value={tax.title}
-                        label="Name"
-                        onChange={(e) => handleChangeTax(e, index)}
+                        value={props.taxGroup?.title}
+                        placeholder='Name ie. Standard'
+                        onChange={(e) => handleChangeTaxGroup(e)}
                     />
-                    <TextField
-                        id="tax"
-                        value={tax.tax}
-                        label="Rate (%)"
-                        onChange={(e) => handleChangeTax(e, index)}
-                        InputProps={{
-                            endAdornment: (
-                                <Percent />
-                            ),
-                          }}
-                    />
-                    <IconButton onClick={(e) => handleRemoveTax(e, index)}>
-                        <DeleteOutline color="error" />
-                    </IconButton>
                 </Stack>
-            ))}
-            <Button
-            sx={{ alignSelf: 'flex-start' }}
-            onClick={handleAddTax}
-            startIcon={<AddCircleOutlineOutlined color="primary" />}
-            >
-                Add Tax Rate
-            </Button>
+                    <InputLabel id="tax-label" sx={{ color: 'primary.main' }}>
+                    Tax Rates
+                    </InputLabel>
+                    {props.taxGroup?.taxes?.map((tax: any, index: number) => (
+                        <Stack key={index} direction='row' spacing={2}>
+                        <TextField
+                            id="title"
+                            value={tax.title}
+                            placeholder='Name ie. GST'
+                            onChange={(e) => handleChangeTax(e, index)}
+                        />
+                        <TextField
+                            id="tax"
+                            value={tax.tax}
+                            label="Rate (%)"
+                            onChange={(e) => handleChangeTax(e, index)}
+                            InputProps={{
+                                endAdornment: (
+                                    <Percent />
+                                ),
+                            }}
+                        />
+                        <IconButton onClick={(e) => handleRemoveTax(e, index)}>
+                            <DeleteOutline color="error" />
+                        </IconButton>
+                        </Stack>
+                    ))}
+                    <Button
+                    sx={{ alignSelf: 'flex-start' }}
+                    onClick={(e) => handleAddTax(e)}
+                    startIcon={<AddCircleOutlineOutlined color="primary" />}
+                    >
+                        Add Tax Rate
+                    </Button>
+                </Stack>
         </Stack>
         </DialogContent>
         <DialogActions>

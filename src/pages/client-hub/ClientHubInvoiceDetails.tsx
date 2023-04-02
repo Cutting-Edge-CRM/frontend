@@ -202,29 +202,34 @@ function ClientHubInvoiceDetails(props: any) {
                 <Grid item xs={8} sm={4}>
                   <Grid container alignItems="center">
                     <Grid item xs={6}>
-                      <Typography
+                      <>
+                      {props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.taxes?.map((t: any) => (
+                        <Typography
                         variant="body2"
                         color="neutral.light"
                         fontWeight={500}
-                      >
-                        Taxes
-                      </Typography>
+                        key={t.id}
+                        >
+                          {t.title}
+                        </Typography>
+                      ))}
+                      </>
                     </Grid>
                     <Grid item xs={6}>
+                      <>
+                      {props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.taxes?.map((t: any) => (
                         <Typography
-                          variant="body2"
-                          fontWeight={600}
-                          color="neutral.main"
-                        >
-                          {(+(
-                            props.taxes.find(
-                              (t: any) => t.id === props.invoice.invoice.tax
-                            )?.tax ?? 0
-                          ) *
-                            props.invoice.items
-                              .map((i: any) => i.price)
-                              .reduce(add, 0)).toFixed(2)}
-                        </Typography>
+                        key={t.id}
+                        variant="body2"
+                        fontWeight={600}
+                        color="neutral.main"
+                      >
+                        {((+t.tax/100)*(props.invoice.items
+                            .map((i: any) => i.price)
+                            .reduce(add, 0)))?.toFixed(2)}
+                      </Typography>
+                      ))}
+                      </>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -249,7 +254,7 @@ function ClientHubInvoiceDetails(props: any) {
                         color="neutral.main"
                       >
                         $
-                        {((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0)).toFixed(2)}
+                        {((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 ?? 0)).toFixed(2)}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -270,7 +275,7 @@ function ClientHubInvoiceDetails(props: any) {
                         color="neutral.main"
                       >
                         $
-                        {((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0)
+                        {((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 ?? 0)
                         - props.payments.map((p: any) => p.amount).reduce(add, 0)).toFixed(2)}
                       </Typography>
                     </Grid>
@@ -282,8 +287,8 @@ function ClientHubInvoiceDetails(props: any) {
               <>
                   <Stack mt={2.5} spacing={2}>
                     <Grid container justifyContent={'end'}>
-                      <Grid item xs={8} sm={6} >
-                      <Typography>Payments</Typography>
+                      <Grid item xs={8} sm={4} >
+                        <Typography variant="h6" color="primary" fontWeight={500}>Payments</Typography>
                       </Grid>
                     </Grid>
                       {props.payments.map((payment: any) => (
@@ -318,7 +323,7 @@ function ClientHubInvoiceDetails(props: any) {
               </>
             )}
             {props.invoice.invoice.status === 'Awaiting Payment' &&  (props.payments.map((p: any) => p.amount).reduce(add, 0) < 
-            ((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0))) &&
+            ((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 ?? 0))) &&
             props.paymentsEnabled &&
             <Box display={'flex'} justifyContent='end'>
                 <Button
@@ -335,7 +340,7 @@ function ClientHubInvoiceDetails(props: any) {
             success={props.success}
             invoice={props.invoice}
             type='payment'
-            amount={((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.tax ?? 0)
+            amount={((+props.invoice.items.map((i: any) => i.price).reduce(add, 0)) + (+props.invoice.items.map((i: any) => i.price).reduce(add, 0))*(+props.taxes.find((t: any) => t.id === props.invoice.invoice.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 ?? 0)
                 - props.payments.map((p: any) => p.amount).reduce(add, 0)).toFixed(2)}
             />
           </Card>

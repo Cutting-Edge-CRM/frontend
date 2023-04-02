@@ -60,6 +60,7 @@ async function getTax(id: string) {
 }
 
 async function updateTax(tax: any) {
+    console.log(tax);
     try {
     var headers: HeadersInit = {
         'Content-Type': 'application/json',

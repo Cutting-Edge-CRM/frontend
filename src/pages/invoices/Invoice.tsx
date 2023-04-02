@@ -39,14 +39,14 @@ function Invoice(props: any) {
             let none = {
                 id: null,
                 title: "No Tax",
-                tax: 0
+                taxes: [{title: "No Tax", tax: 0}]
               }
               res.unshift(none);
             setTaxes(res);
         }, (err) => {
             setError(err.message);
         })
-    }, [id])
+    }, [id, reload])
 
     useEffect(() => {
         listTimeline(invoice.invoice?.client as string, "invoice", id)

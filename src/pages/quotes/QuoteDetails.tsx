@@ -377,10 +377,12 @@ function QuoteItemEdit(props: any) {
 
 function TabPanel(props: any) {
   const [depositAmount, setDepositAmount] = useState(0);
+  // eslint-disable-next-line
   const [taxAmount, setTaxAmount] = useState(0);
   const [subTotalAmount, setSubtotalAmount] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   const [taxOpen, setTaxOpen] = useState(false);
+  const [taxGroup, setTaxGroup] = useState({} as any);
 
   const handleChangeDeposit = (event: any) => {
     if (event.target.value[0] === '0') {
@@ -422,6 +424,7 @@ function TabPanel(props: any) {
   };
 
   const handleTaxOpen = () => {
+    setTaxGroup({title: "", taxes: [{title: "", tax: ""}]});
     setTaxOpen(true);
   };
 
@@ -430,19 +433,19 @@ function TabPanel(props: any) {
       props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0)
     );
     setTaxAmount(
-      +props.taxes.find((t: any) => t.id === props.option.tax)?.tax *
+      +props.taxes.find((t: any) => t.id === props.option.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 *
         props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0)
     );
     setTotalAmount(
       props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) +
-        +props.taxes.find((t: any) => t.id === props.option.tax)?.tax *
+        +props.taxes.find((t: any) => t.id === props.option.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 *
           props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0)
     );
     setDepositAmount(
       props.option.depositPercent
         ? (+props.option.deposit / 100) *
             (props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) +
-              +props.taxes.find((t: any) => t.id === props.option.tax)?.tax *
+              +props.taxes.find((t: any) => t.id === props.option.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 *
                 props.option.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))
         : props.option.deposit
     );
@@ -560,6 +563,94 @@ function TabPanel(props: any) {
               <Grid item xs={8} sm={6}>
                 <Grid container alignItems="center">
                   <Grid item xs={5}>
+                    <>
+                      {props.taxes.find((t: any) => t.id === props.option.tax)?.taxes?.map((t: any) => (
+                        <Typography
+                        variant="body2"
+                        color="neutral.light"
+                        fontWeight={500}
+                        key={t.id}
+                        >
+                          {t.title}
+                        </Typography>
+                      ))}
+                      </>
+                  </Grid>
+                  <Grid item xs={4}>
+                    {props.editting ? (
+                      <Select
+                        labelId="tax-label"
+                        id="tax"
+                        value={props.taxes.find(
+                          (t: any) => t.id === props.option.tax
+                        )}
+                        onChange={handleChangeTax}
+                        renderValue={(selected) => (
+                          <Box
+                            sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
+                          >
+                            {selected.title}
+                          </Box>
+                        )}
+                        size="small"
+                      >
+                        <MenuItem key={'goto-tax'} onClick={handleTaxOpen}>
+                            <ListItemText primary={'Add Tax'} />
+                        </MenuItem>
+                        {props.taxes.map((tax: any) => (
+                          <MenuItem key={tax.id} value={tax}>
+                            <Checkbox checked={tax.id === props.option.tax} />
+                            <ListItemText primary={tax.title} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    ) : (
+                      <>
+                      {props.taxes.find((t: any) => t.id === props.option.tax)?.taxes?.map((t: any) => (
+                        <Typography
+                        key={t.id}
+                        variant="body2"
+                        fontWeight={600}
+                        color="neutral.main"
+                      >
+                        {((+t.tax/100)*subTotalAmount)?.toFixed(2)}
+                      </Typography>
+                      ))}
+                      </>
+                    )}
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container justifyContent="flex-end">
+              <Grid item xs={8} sm={6}>
+                <Divider sx={{ width: '100%' }} />
+              </Grid>
+            </Grid>
+            <Grid container justifyContent="flex-end">
+              <Grid item xs={8} sm={6}>
+                <Grid container>
+                  <Grid item xs={5}>
+                    <Typography variant="h6" color="primary" fontWeight={700}>
+                      Total
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Typography
+                      variant="h6"
+                      fontWeight={600}
+                      color="neutral.main"
+                    >
+                      ${totalAmount?.toFixed(2)}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container justifyContent="flex-end">
+              <Grid item xs={8} sm={6}>
+                <Grid container alignItems="center">
+                  <Grid item xs={5}>
                     <Typography
                       variant="body2"
                       color="neutral.light"
@@ -604,84 +695,6 @@ function TabPanel(props: any) {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid container justifyContent="flex-end">
-              <Grid item xs={8} sm={6}>
-                <Grid container alignItems="center">
-                  <Grid item xs={5}>
-                    <Typography
-                      variant="body2"
-                      color="neutral.light"
-                      fontWeight={500}
-                    >
-                      Taxes
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    {props.editting ? (
-                      <Select
-                        labelId="tax-label"
-                        id="tax"
-                        value={props.taxes.find(
-                          (t: any) => t.id === props.option.tax
-                        )}
-                        onChange={handleChangeTax}
-                        renderValue={(selected) => (
-                          <Box
-                            sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
-                          >
-                            {selected.title}
-                          </Box>
-                        )}
-                        size="small"
-                      >
-                        <MenuItem key={'goto-tax'} onClick={handleTaxOpen}>
-                            <ListItemText primary={'Add Tax'} />
-                        </MenuItem>
-                        {props.taxes.map((tax: any) => (
-                          <MenuItem key={tax.id} value={tax}>
-                            <Checkbox checked={tax.id === props.option.tax} />
-                            <ListItemText primary={tax.title} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    ) : (
-                      <Typography
-                        variant="body2"
-                        fontWeight={600}
-                        color="neutral.main"
-                      >
-                        {taxAmount?.toFixed(2)}
-                      </Typography>
-                    )}
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid container justifyContent="flex-end">
-              <Grid item xs={8} sm={6}>
-                <Divider sx={{ width: '100%' }} />
-              </Grid>
-            </Grid>
-            <Grid container justifyContent="flex-end">
-              <Grid item xs={8} sm={6}>
-                <Grid container>
-                  <Grid item xs={5}>
-                    <Typography variant="h6" color="primary" fontWeight={700}>
-                      Total
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography
-                      variant="h6"
-                      fontWeight={600}
-                      color="neutral.main"
-                    >
-                      ${totalAmount?.toFixed(2)}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
           </Stack>
         </>
       )}
@@ -689,6 +702,11 @@ function TabPanel(props: any) {
           open={taxOpen}
           onClose={handleTaxClose}
           success={props.success}
+          taxGroup={taxGroup}
+          setTaxGroup={setTaxGroup}
+          taxModalType={"New"}
+          setReload={props.setReload} 
+          reload={props.reload}
         />
     </Box>
   );
@@ -799,7 +817,7 @@ function QuoteDetails(props: any) {
       amount: (+(props.quote.options?.[0]?.depositPercent
       ? (+props.quote.options?.[0]?.deposit / 100) *
           (props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) +
-            +props.taxes.find((t: any) => t.id === props.quote.options?.[0]?.tax)?.tax *
+            +props.taxes.find((t: any) => t.id === props.quote.options?.[0]?.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 *
               props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))
       : props.quote.options?.[0]?.deposit))?.toFixed(2)
     });
@@ -948,7 +966,7 @@ function QuoteDetails(props: any) {
     (props.quote.options?.[0]?.depositPercent
       ? (+props.quote.options?.[0]?.deposit / 100) *
           (props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) +
-            +props.taxes.find((t: any) => t.id === props.quote.options?.[0]?.tax)?.tax *
+            +props.taxes.find((t: any) => t.id === props.quote.options?.[0]?.tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100 *
               props.quote.options?.[0]?.items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))
       : props.quote.options?.[0]?.deposit))
     ) {
