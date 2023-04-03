@@ -14,6 +14,7 @@ import VisitModal from './VisitModal'
 import { ArrowCircleLeft, CalendarMonthOutlined, Download, Fullscreen, MoreVertOutlined } from '@mui/icons-material'
 import ExportCalendarModal from './ExportCalendar'
 import { isAllowed } from '../../auth/FeatureGuards'
+import NewEvent from '../../shared/NewEvent'
 
 const eventRender = (args: any) => {
 
@@ -21,7 +22,7 @@ const eventRender = (args: any) => {
         return (
             <Stack direction={'row'}>
                 <Typography ml={1}>{args.event.extendedProps.type}</Typography>
-                <Typography ml={3} color="neutral.main">{args.event.extendedProps.clientName}</Typography>
+                <Typography ml={3} color="neutral.main">{args.event.extendedProps.clientName !== "No name" ? args.event.extendedProps.clientName : ''}</Typography>
             </Stack>
         )
     } else {
@@ -30,7 +31,7 @@ const eventRender = (args: any) => {
                 <Typography className="fc-daygrid-event-dot" borderColor={args.event.textColor} visibility={args.view?.type === "listMonth" ? 'hidden' : 'visible'} ></Typography>
                 <Stack spacing={-0.5}>
                     <Typography fontWeight={500} fontSize={12} color={args.event.textColor}>{dayjs(args.event.start).format("h:mma")}</Typography>
-                    <Typography fontWeight={400} fontSize={12} color="neutral.main">{args.event.extendedProps.clientName}</Typography>
+                    <Typography fontWeight={400} fontSize={12} color="neutral.main">{args.event.extendedProps.clientName !== "No name" ? args.event.extendedProps.clientName : args.event.extendedProps.type}</Typography>
                 </Stack>
             </Stack>
         );
@@ -237,6 +238,14 @@ export default function Schedule(props: any) {
         setExportCalendarOpen(false);
     }
 
+    const [newEventOpen, setNewEventOpen] = useState(false);
+    const handleNewEvent = () => {
+      setNewEventOpen(true);
+    }
+    const handleCloseEvent = () => {
+      setNewEventOpen(false);
+    }
+
     useEffect(() => {
         listVisitsForCalendar(!isAllowed('view-full-schedule'))
         .then(visits => {
@@ -259,7 +268,7 @@ export default function Schedule(props: any) {
         }, err => {
             setError(err.message);
         })
-    }, [update])
+    }, [update, props.reload, newEventOpen])
 
     useEffect(() => {
         let els = Array.from(document.getElementsByClassName("draggable"));
@@ -303,6 +312,14 @@ export default function Schedule(props: any) {
                 open={isOpenMenu}
                 onClose={closeMenu}
                 >
+                <MenuList onClick={handleNewEvent}>
+                    <MenuItem>
+                    <ListItemIcon>
+                        <CalendarMonthOutlined />
+                    </ListItemIcon>
+                    <ListItemText>New Event</ListItemText>
+                    </MenuItem>
+                </MenuList>
                 <MenuList onClick={openExportCalendarModal}>
                     <MenuItem>
                     <ListItemIcon>
@@ -531,10 +548,17 @@ export default function Schedule(props: any) {
         onClose={handleClose}
         users={users}
         success={props.success}
+        reload={update}
+        setReload={setUpdate}
       />
       <ExportCalendarModal
       open={exportCalendarOpen}
       onClose={closeExportCalendar}
+      />
+        <NewEvent
+        open={newEventOpen}
+        onClose={handleCloseEvent}
+        success={props.success}
       />
       {error && <Alert severity="error">{error}</Alert>}
     </Card>

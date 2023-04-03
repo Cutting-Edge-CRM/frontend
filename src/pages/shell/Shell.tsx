@@ -71,6 +71,7 @@ import { theme } from '../../theme/theme';
 import { getCompany } from '../../api/company.api';
 import { getUser } from '../../api/user.api';
 import { daysLeftInFreeTrial, isAllowed, isCanceled, isFreeTrial, pastDue } from '../../auth/FeatureGuards';
+import NewEvent from '../../shared/NewEvent';
 
 const NavList = styled(List)<ListProps>(({ theme }) => ({
   padding: theme.spacing(0, 3),
@@ -259,6 +260,14 @@ function Shell() {
   const handleCloseInvoice = () => {
     setNewInvoiceOpen(false);
   }
+  const [newEventOpen, setNewEventOpen] = useState(false);
+  const handleNewEvent = () => {
+    setNewEventOpen(true);
+    setQuickCreateOpen(false);
+  }
+  const handleCloseEvent = () => {
+    setNewEventOpen(false);
+  }
 
 const drawerWidth = 270;
 const topTabs = [
@@ -353,6 +362,12 @@ const bottomTabs = [
                   <Stack alignItems={'center'}>
                     <AttachMoney color='primary'/>
                     <Typography>Invoice</Typography>
+                  </Stack>
+                </MenuItem>
+                <MenuItem onClick={handleNewEvent}>
+                  <Stack alignItems={'center'}>
+                    <CalendarMonthOutlined color='primary'/>
+                    <Typography>Event</Typography>
                   </Stack>
                 </MenuItem>
               </Stack>
@@ -711,6 +726,11 @@ const bottomTabs = [
       <SelectClient
         open={newInvoiceOpen}
         onClose={handleCloseInvoice}
+        success={success}
+      />
+      <NewEvent
+        open={newEventOpen}
+        onClose={handleCloseEvent}
         success={success}
       />
     </Box>

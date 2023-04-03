@@ -81,6 +81,7 @@ import { Directions } from '@mui/icons-material';
     let property = properties.find((p) => p.id === props.visit.property);
     
     const handleCancel = () => {
+      setValue(0);
       props.onClose();
     };
 
@@ -180,7 +181,7 @@ import { Directions } from '@mui/icons-material';
           <Box sx={{".MuiTabs-flexContainer": {justifyContent: "center"}}}>
             <Tabs value={value} onChange={handleChange}>
                 <Tab label="Visit" id="visit" />
-                <Tab label="Client" id="client" />
+                {props.visit.client &&  <Tab label="Client" id="client" />}
                 {props.visit.job && <Tab label="Job" id="job" />}
             </Tabs>
             {value === 0 &&

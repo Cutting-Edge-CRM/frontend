@@ -58,6 +58,7 @@ export default function EditVisit(props: any) {
         (res) => {
           setLoading(false);
           props.update(res);
+          props.setReload(!props.reload);
           props.success('Successfully updated visit');
         },
         (err) => {
@@ -80,6 +81,7 @@ export default function EditVisit(props: any) {
         (res) => {
           setLoading(false);
           props.create(res);
+          props.setReload(!props.reload);
           props.success('Successfully created new visit');
         },
         (err) => {
@@ -178,29 +180,9 @@ export default function EditVisit(props: any) {
   const convertToDate = (type: string) => {
     if (props.visit.unscheduled) return null;
     if (type === 'start') {
-      if (!props.visit.start) return null;
-      let startDate = dayjs(props.visit.start);
-      let [hours, minutes] = props.startTime ? props.startTime.split(':') : [null, null];
-      if (hours && minutes) {
-        return startDate
-          .set('hour', +hours)
-          .set('minute', +minutes)
-          .toISOString();
-      } else {
-        return startDate.toISOString();
-      }
+      return dayjs(props.visit.start).toISOString();
     } else {
-      if (!props.visit.displayEnd) return null;
-      let endDate = dayjs(props.visit.displayEnd);
-      let [hours, minutes] = props.displayEndTime ? props.displayEndTime.split(':'): [null,null];
-      if (hours && minutes) {
-        return endDate
-          .set('hour', +hours)
-          .set('minute', +minutes)
-          .toISOString();
-      } else {
-        return endDate.toISOString();
-      }
+      return dayjs(props.visit.displayEnd).toISOString();
     }
   };
 
