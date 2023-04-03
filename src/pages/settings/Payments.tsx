@@ -242,7 +242,7 @@ function Payments(props: any) {
                 borderColor: 'default.main',
                 border: "1px solid",
                 justifyContent: 'center',
-                height: "100%"
+                height: "300px"
             }}
             >
             

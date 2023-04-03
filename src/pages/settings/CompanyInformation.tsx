@@ -117,7 +117,7 @@ function CompanyInformation(props: any) {
                         </InputLabel>
                         <TextField
                             id="phone"
-                            defaultValue={props.company.phone ? props.company.phone : undefined}
+                            value={props.company.phone ? props.company.phone : ''}
                             onChange={handleChange}
                             fullWidth
                             InputProps={{
@@ -133,7 +133,7 @@ function CompanyInformation(props: any) {
                         </InputLabel>
                         <TextField
                             id="email"
-                            defaultValue={props.company.email ? props.company.email : undefined}
+                            value={props.company.email ? props.company.email : ''}
                             onChange={handleChange}
                             fullWidth
                             InputProps={{
@@ -149,7 +149,7 @@ function CompanyInformation(props: any) {
                         </InputLabel>
                         <TextField
                             id="website"
-                            defaultValue={props.company.website ? props.company.website : undefined}
+                            value={props.company.website ? props.company.website : ''}
                             onChange={handleChange}
                             fullWidth
                             InputProps={{

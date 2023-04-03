@@ -124,7 +124,7 @@ export default function EmptyState(props: any) {
             alignItems: 'center',
             height: '100%'
           }}>
-            <Stack direction='row' sx={{
+            <Stack direction='row' spacing={2} sx={{
                 backgroundColor: 'default.light',
                 borderRadius: '10px',
                 p: 2,
@@ -150,12 +150,12 @@ export default function EmptyState(props: any) {
                     </Avatar>
                 </Box>
                 }
+                <Stack direction={{xs: 'column', sm: 'row'}} width="100%" spacing={2} alignItems="center">
                 {title &&
                     <Typography 
                     textAlign="center"
                     variant="h6"
                     color="neutral.dark"
-                    sx={{width:'20%'}}
                     >
                     {title}
                     </Typography>
@@ -165,9 +165,10 @@ export default function EmptyState(props: any) {
                     textAlign="center"
                     variant="body2"
                     color="neutral.dark"
-                    sx={{width:'60%'}}>
+                    >
                     {body}
                 </Typography>
+                </Stack>
             </Stack>
         </Box>
     );

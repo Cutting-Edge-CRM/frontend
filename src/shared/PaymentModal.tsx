@@ -250,8 +250,8 @@ useEffect(() => {
           </InputLabel>
           <TextField
             id="amount"
-            defaultValue={
-              props.payment.amount ? props.payment.amount : undefined
+            value={
+              props.payment.amount ? props.payment.amount : ''
             }
             onChange={handleChange}
             type='number'
@@ -282,7 +282,7 @@ useEffect(() => {
             multiline
             minRows={3}
             id="details"
-            defaultValue={
+            value={
               props.payment.details ? props.payment.details : ''
             }
             onChange={handleChange}

@@ -84,8 +84,8 @@ export default function EditProperty(props: any) {
                   <TextField
                     id="address"
                     autoComplete="street-address"
-                    defaultValue={
-                      props.property.address ? props.property.address : undefined
+                    value={
+                      props.property.address ? props.property.address : ''
                     }
                     onChange={handleChange}
                   />
@@ -96,8 +96,8 @@ export default function EditProperty(props: any) {
                   </InputLabel>
                   <TextField
                     id="address2"
-                    defaultValue={
-                      props.property.address2 ? props.property.address2 : undefined
+                    value={
+                      props.property.address2 ? props.property.address2 : ''
                     }
                     onChange={handleChange}
                   />
@@ -110,7 +110,7 @@ export default function EditProperty(props: any) {
                     <TextField
                       id="city"
                       autoComplete="address-level2"
-                      defaultValue={props.property.city ? props.property.city : undefined}
+                      value={props.property.city ? props.property.city : ''}
                       onChange={handleChange}
                     />
                     </Stack>
@@ -121,8 +121,8 @@ export default function EditProperty(props: any) {
                     <TextField
                       id="state"
                       autoComplete="address-level1"
-                      defaultValue={
-                        props.property.state ? props.property.state : undefined
+                      value={
+                        props.property.state ? props.property.state : ''
                       }
                       onChange={handleChange}
                     />
@@ -136,7 +136,7 @@ export default function EditProperty(props: any) {
                     <TextField
                       id="zip"
                       autoComplete="postal-code"
-                      defaultValue={props.property.zip ? props.property.zip : undefined}
+                      value={props.property.zip ? props.property.zip : ''}
                       onChange={handleChange}
                     />
                     </Stack>
@@ -147,8 +147,8 @@ export default function EditProperty(props: any) {
                     <TextField
                       id="country"
                       autoComplete="country-name"
-                      defaultValue={
-                        props.property.country ? props.property.country : undefined
+                      value={
+                        props.property.country ? props.property.country : ''
                       }
                       onChange={handleChange}
                     />

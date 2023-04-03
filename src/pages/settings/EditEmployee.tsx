@@ -89,8 +89,8 @@ import { theme } from '../../theme/theme';
                     </InputLabel>
                     <TextField
                         id="first"
-                        defaultValue={
-                        props.employee?.first ? props.employee?.first : undefined
+                        value={
+                        props.employee?.first ? props.employee?.first : ''
                         }
                         onChange={handleChange}
                     />
@@ -101,8 +101,8 @@ import { theme } from '../../theme/theme';
                     </InputLabel>
                     <TextField
                         id="last"
-                        defaultValue={
-                        props.employee?.last ? props.employee?.last : undefined
+                        value={
+                        props.employee?.last ? props.employee?.last : ''
                         }
                         onChange={handleChange}
                     />
@@ -113,8 +113,8 @@ import { theme } from '../../theme/theme';
             </InputLabel>
             <TextField
                 id="email"
-                defaultValue={
-                props.employee?.email ? props.employee?.email : undefined
+                value={
+                props.employee?.email ? props.employee?.email : ''
                 }
                 onChange={handleChange}
             />
@@ -125,8 +125,8 @@ import { theme } from '../../theme/theme';
                     </InputLabel>
                     <TextField
                         id="phone"
-                        defaultValue={
-                        props.employee?.phone ? props.employee?.phone : undefined
+                        value={
+                        props.employee?.phone ? props.employee?.phone : ''
                         }
                         onChange={handleChange}
                     />
@@ -153,8 +153,8 @@ import { theme } from '../../theme/theme';
                         <TextField
                             id="address"
                             autoComplete="street-address"
-                            defaultValue={
-                            props.employee?.address ? props.employee?.address : undefined
+                            value={
+                            props.employee?.address ? props.employee?.address : ''
                             }
                             onChange={handleChange}
                         />
@@ -164,7 +164,7 @@ import { theme } from '../../theme/theme';
                         <TextField
                             id="city"
                             autoComplete="address-level2"
-                            defaultValue={props.employee?.city ? props.employee?.city : undefined}
+                            value={props.employee?.city ? props.employee?.city : ''}
                             onChange={props.handleChangeProperty}
                         />
                         <InputLabel id="zip-label" sx={{ color: 'primary.main' }}>
@@ -173,7 +173,7 @@ import { theme } from '../../theme/theme';
                         <TextField
                             id="zip"
                             autoComplete="postal-code"
-                            defaultValue={props.employee?.zip ? props.employee?.zip : undefined}
+                            value={props.employee?.zip ? props.employee?.zip : ''}
                             onChange={handleChange}
                         />
                         </Stack>
@@ -183,8 +183,8 @@ import { theme } from '../../theme/theme';
                         </InputLabel>
                         <TextField
                             id="address2"
-                            defaultValue={
-                            props.employee?.address2 ? props.employee?.address2 : undefined
+                            value={
+                            props.employee?.address2 ? props.employee?.address2 : ''
                             }
                             onChange={handleChange}
                         />
@@ -194,8 +194,8 @@ import { theme } from '../../theme/theme';
                         <TextField
                             id="state"
                             autoComplete="address-level1"
-                            defaultValue={
-                            props.employee?.state ? props.employee?.state : undefined
+                            value={
+                            props.employee?.state ? props.employee?.state : ''
                             }
                             onChange={handleChange}
                         />
@@ -205,8 +205,8 @@ import { theme } from '../../theme/theme';
                         <TextField
                             id="country"
                             autoComplete="country-name"
-                            defaultValue={
-                            props.employee?.country ? props.employee?.country : undefined
+                            value={
+                            props.employee?.country ? props.employee?.country : ''
                             }
                             onChange={handleChange}
                         />

@@ -276,7 +276,7 @@ export default function NewClient(props: any) {
                   </InputLabel>
                   <TextField
                     id="first"
-                    defaultValue={contact.first ? contact.first : undefined}
+                    value={contact.first ? contact.first : ''}
                     onChange={handleChange}
                     InputProps={{
                       startAdornment: (
@@ -293,7 +293,7 @@ export default function NewClient(props: any) {
                     </InputLabel>
                   <TextField
                     id="last"
-                    defaultValue={contact.last ? contact.last : undefined}
+                    value={contact.last ? contact.last : ''}
                     onChange={handleChange}
                     InputProps={{
                       startAdornment: (
@@ -333,8 +333,8 @@ export default function NewClient(props: any) {
                     <TextField
                       id="address"
                       autoComplete="street-address"
-                      defaultValue={
-                        property.address ? property.address : undefined
+                      value={
+                        property.address ? property.address : ''
                       }
                       onChange={handleChangeProperty}
                     />
@@ -345,8 +345,8 @@ export default function NewClient(props: any) {
                     </InputLabel>
                     <TextField
                       id="address2"
-                      defaultValue={
-                        property.address2 ? property.address2 : undefined
+                      value={
+                        property.address2 ? property.address2 : ''
                       }
                       onChange={handleChangeProperty}
                     />
@@ -359,7 +359,7 @@ export default function NewClient(props: any) {
                       <TextField
                         id="city"
                         autoComplete="address-level2"
-                        defaultValue={property.city ? property.city : undefined}
+                        value={property.city ? property.city : ''}
                         onChange={handleChangeProperty}
                       />
                       </Stack>
@@ -370,8 +370,8 @@ export default function NewClient(props: any) {
                       <TextField
                         id="state"
                         autoComplete="address-level1"
-                        defaultValue={
-                          property.state ? property.state : undefined
+                        value={
+                          property.state ? property.state : ''
                         }
                         onChange={handleChangeProperty}
                       />
@@ -385,7 +385,7 @@ export default function NewClient(props: any) {
                       <TextField
                         id="zip"
                         autoComplete="postal-code"
-                        defaultValue={property.zip ? property.zip : undefined}
+                        value={property.zip ? property.zip : ''}
                         onChange={handleChangeProperty}
                       />
                       </Stack>
@@ -396,8 +396,8 @@ export default function NewClient(props: any) {
                       <TextField
                         id="country"
                         autoComplete="country-name"
-                        defaultValue={
-                          property.country ? property.country : undefined
+                        value={
+                          property.country ? property.country : ''
                         }
                         onChange={handleChangeProperty}
                       />

@@ -211,8 +211,8 @@ export default function EditContact(props: any) {
             </InputLabel>
             <TextField
               id="first"
-              defaultValue={
-                props.contact?.first ? props.contact.first : undefined
+              value={
+                props.contact?.first ? props.contact.first : ''
               }
               onChange={handleChange}
               InputProps={{
@@ -230,8 +230,8 @@ export default function EditContact(props: any) {
             </InputLabel>
             <TextField
               id="last"
-              defaultValue={
-                props.contact?.last ? props.contact.last : undefined
+              value={
+                props.contact?.last ? props.contact.last : ''
               }
               onChange={handleChange}
               InputProps={{

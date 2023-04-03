@@ -170,7 +170,7 @@ export default function EditNote(props: any) {
           </InputLabel>
           <TextField
             id="title"
-            defaultValue={props.note.title ? props.note.title : undefined}
+            value={props.note.title ? props.note.title : ''}
             onChange={handleChange}
           />
           <InputLabel id="content-label" sx={{ color: 'primary.main' }}>
@@ -180,7 +180,7 @@ export default function EditNote(props: any) {
             multiline
             minRows={5}
             id="content"
-            defaultValue={props.note.content ? props.note.content : undefined}
+            value={props.note.content ? props.note.content : ''}
             onChange={handleChange}
           />
           <Box>

@@ -158,9 +158,9 @@ function Week(props: any) {
                     }
                     {editting === weekDay.number && 
                     <Stack direction={'row'} alignItems="center">
-                        <TextField type={'number'} onChange={handleChangeHour} defaultValue={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeHour} value={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                         <Typography fontWeight={700} fontSize={"1.5rem"}>:</Typography>
-                        <TextField type={'number'} onChange={handleChangeMinute} defaultValue={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeMinute} value={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                     </Stack>
                     }
                     
@@ -225,9 +225,9 @@ function Week(props: any) {
                     {editting !== weekDay.number && <Typography>-</Typography>}
                     {editting === weekDay.number && 
                     <Stack direction={'row'} alignItems="center">
-                        <TextField type={'number'} onChange={handleChangeHour} defaultValue={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeHour} value={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                         <Typography fontWeight={700} fontSize={"1.5rem"}>:</Typography>
-                        <TextField type={'number'} onChange={handleChangeMinute} defaultValue={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeMinute} value={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                     </Stack>
                     }
                 </Stack>
@@ -367,9 +367,9 @@ function SingleUserWeek(props: any) {
                     }
                     {editting === weekDay.number && 
                     <Stack direction={'row'} alignItems="center">
-                        <TextField type={'number'} onChange={handleChangeHour} defaultValue={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeHour} value={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                         <Typography fontWeight={700} fontSize={"1.5rem"}>:</Typography>
-                        <TextField type={'number'} onChange={handleChangeMinute} defaultValue={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeMinute} value={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                     </Stack> 
                     }
                     </Stack>
@@ -401,9 +401,9 @@ function SingleUserWeek(props: any) {
                     {editting !== weekDay.number && <Typography>-</Typography>}
                     {editting === weekDay.number && 
                     <Stack direction={'row'} alignItems="center">
-                        <TextField type={'number'} onChange={handleChangeHour} defaultValue={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeHour} value={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                         <Typography fontWeight={700} fontSize={"1.5rem"}>:</Typography>
-                        <TextField type={'number'} onChange={handleChangeMinute} defaultValue={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeMinute} value={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                     </Stack> 
                     }
                 </Stack>
