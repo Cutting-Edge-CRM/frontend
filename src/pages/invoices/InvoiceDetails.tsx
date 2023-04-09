@@ -67,13 +67,15 @@ function InvoiceItemSaved(props: any) {
         <Grid item={true} xs={2}>
           <Stack spacing={1.5}>
             <Typography variant="body2" color="neutral.light" fontWeight={500}>
-            Line Item
+            {props.item.note ? "Note" : "Line Item"}
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
               {props.item.title}
             </Typography>
           </Stack>
         </Grid>
+        {!props.item.note &&
+        <>
         <Grid item={true} xs={2}></Grid>
         <Grid item={true} xs={2}>
           <Stack spacing={1.5} alignItems="flex-end">
@@ -105,6 +107,8 @@ function InvoiceItemSaved(props: any) {
             </Typography>
           </Stack>
         </Grid>
+        </>
+        }
       </Grid>
       <Stack marginTop={3}>
         <Typography variant="body2" color="neutral.light">
@@ -188,7 +192,7 @@ function InvoiceItemEdit(props: any) {
         <Grid item={true} xs={12} sm={3}>
           <Stack>
           <InputLabel id="Title-label" sx={{ color: 'primary.main', width: "100%" }}>
-          Line Item
+            {props.item.note ? "Note" : "Line Item"}
           </InputLabel>
           <TextField
             id="title"
@@ -207,6 +211,8 @@ function InvoiceItemEdit(props: any) {
           />
           </Stack>
         </Grid>
+        {!props.item.note &&
+        <>
         <Grid item={true} xs={12} sm={2}></Grid>
         <Grid item={true} xs={12} sm={2}>
           <Stack>
@@ -272,6 +278,8 @@ function InvoiceItemEdit(props: any) {
             />
           </Stack>
         </Grid>
+        </>
+        }
       </Grid>
       <Stack spacing={1.5} mt={2}>
         <InputLabel id="description-label" sx={{ color: 'primary.main' }}>
@@ -375,6 +383,15 @@ function InvoiceDetails(props: any) {
   const handleAddItem = () => {
     let items = props.invoice.items;
     items.push({ price: 0, unit: 0, quantity: 1 });
+    props.setInvoice({
+      ...props.invoice,
+      items: items,
+    });
+  };
+
+  const handleAddText = () => {
+    let items = props.invoice.items;
+    items.push({ price: 0, unit: 0, quantity: 1, note: true });
     props.setInvoice({
       ...props.invoice,
       items: items,
@@ -736,15 +753,29 @@ function InvoiceDetails(props: any) {
             {props.invoice.items.map((item: any, index: number) => (
               <InvoiceItemEdit key={index} item={item} {...props} />
             ))}
-            <Stack alignItems="center" my={2}>
-              <Button
-                onClick={handleAddItem}
-                startIcon={<AddCircleOutlineOutlined />}
-                variant="contained"
+              <Stack
+                direction={mobile ? 'column' : 'row'}
+                justifyContent="center"
+                spacing={4}
+                mb={2}
               >
-                <Typography>Add Item</Typography>
-              </Button>
-            </Stack>
+                <Button
+                  onClick={handleAddItem}
+                  startIcon={<AddCircleOutlineOutlined />}
+                  variant="contained"
+                >
+                  <Typography>Add Item</Typography>
+                </Button>
+                <Tooltip title='Add a line item containing only text to add context or more information.'>
+                  <Button
+                    onClick={handleAddText}
+                    startIcon={<AddCircleOutlineOutlined />}
+                    variant="contained"
+                  >
+                    <Typography>Add Text</Typography>
+                  </Button>
+                </Tooltip>
+              </Stack>
             <Divider/>
           </>
         )}

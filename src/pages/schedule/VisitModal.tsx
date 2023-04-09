@@ -356,6 +356,8 @@ import { isAllowed } from '../../auth/FeatureGuards'
                                 </Typography>
                             </Stack>
                             </Grid>
+                            {!item.note &&
+                            <>
                             <Grid item={true} xs={4}></Grid>
                             <Grid item={true} xs={4}>
                             <Stack spacing={1.5} alignItems="flex-end">
@@ -367,6 +369,8 @@ import { isAllowed } from '../../auth/FeatureGuards'
                                 </Typography>
                             </Stack>
                             </Grid>
+                            </>
+                            }
                         </Grid>
                         <Stack marginTop={3}>
                             <Typography variant="body2" color="neutral.light">

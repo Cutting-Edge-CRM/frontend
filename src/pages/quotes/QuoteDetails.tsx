@@ -70,13 +70,15 @@ function QuoteItemSaved(props: any) {
         <Grid item={true} xs={2}>
           <Stack spacing={1.5}>
             <Typography variant="body2" color="neutral.light" fontWeight={500}>
-              Line Item
+              {props.item.note ? "Note" : "Line Item"}
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
               {props.item.title}
             </Typography>
           </Stack>
         </Grid>
+        {!props.item.note &&
+        <>
         <Grid item={true} xs={2}>
           {props.upsell && (
             <Stack alignItems="center">
@@ -152,6 +154,8 @@ function QuoteItemSaved(props: any) {
             </Typography>
           </Stack>
         </Grid>
+        </>
+        }
       </Grid>
       <Stack marginTop={3}>
         <Typography variant="body2" color="neutral.light">
@@ -251,7 +255,7 @@ function QuoteItemEdit(props: any) {
         <Grid item={true} xs={12} sm={3}>
         <Stack alignItems="center">
           <InputLabel id="Title-label" sx={{ color: 'primary.main', width: "100%" }}>
-            Line Item
+            {props.item.note ? "Note" : "Line Item"}
           </InputLabel>
           <TextField
             id="title"
@@ -269,6 +273,8 @@ function QuoteItemEdit(props: any) {
           />
           </Stack>
         </Grid>
+        {!props.item.note &&
+        <>
         <Grid item={true} xs={12} sm={2} order={{ xs: 3, sm: 2 }}>
           {props.upsell && (
             <Stack alignItems="center">
@@ -350,6 +356,8 @@ function QuoteItemEdit(props: any) {
             />
           </Stack>
         </Grid>
+        </>
+        }
       </Grid>
       <Stack spacing={1.5} mt={2}>
         <InputLabel id="description-label" sx={{ color: 'primary.main' }}>
@@ -383,6 +391,7 @@ function TabPanel(props: any) {
   const [totalAmount, setTotalAmount] = useState(0);
   const [taxOpen, setTaxOpen] = useState(false);
   const [taxGroup, setTaxGroup] = useState({} as any);
+  let mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleChangeDeposit = (event: any) => {
     if (event.target.value[0] === '0') {
@@ -473,6 +482,17 @@ function TabPanel(props: any) {
     });
   };
 
+  const handleAddText = () => {
+    let options = props.quote.options;
+    let items = props.option.items;
+    items.push({ price: 0, addon: 0, unit: 0, quantity: 1, note: true });
+    options.find((op: any) => op === props.option).items = items;
+    props.setQuote({
+      quote: props.quote.quote,
+      options: options,
+    });
+  }
+
   return (
     <Box
       role="tabpanel"
@@ -494,7 +514,7 @@ function TabPanel(props: any) {
                 />
               ))}
               <Stack
-                direction={'row'}
+                direction={mobile ? 'column' : 'row'}
                 justifyContent="center"
                 spacing={4}
                 mb={2}
@@ -513,6 +533,15 @@ function TabPanel(props: any) {
                     variant="contained"
                   >
                     <Typography>Add Optional Item</Typography>
+                  </Button>
+                </Tooltip>
+                <Tooltip title='Add a line item containing only text to add context or more information.'>
+                  <Button
+                    onClick={handleAddText}
+                    startIcon={<AddCircleOutlineOutlined />}
+                    variant="contained"
+                  >
+                    <Typography>Add Text</Typography>
                   </Button>
                 </Tooltip>
               </Stack>

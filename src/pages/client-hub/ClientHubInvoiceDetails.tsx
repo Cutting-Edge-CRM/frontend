@@ -20,13 +20,15 @@ function InvoiceItemSaved(props: any) {
             <Grid item={true} xs={4}>
               <Stack spacing={1.5}>
                 <Typography variant="body2" color="neutral.light" fontWeight={500}>
-                  Service
+                {props.item.note ? "Note" : "Line Item"}
                 </Typography>
                 <Typography variant="body2" color="neutral.main" fontWeight={600}>
                   {props.item.title}
                 </Typography>
               </Stack>
             </Grid>
+            {!props.item.note &&
+            <>
             <Grid item={true} xs={4}></Grid>
             <Grid item={true} xs={4}>
               <Stack spacing={1.5} alignItems="flex-end">
@@ -38,6 +40,8 @@ function InvoiceItemSaved(props: any) {
                 </Typography>
               </Stack>
             </Grid>
+            </>
+            }
           </Grid>
           <Stack marginTop={3}>
             <Typography variant="body2" color="neutral.light">

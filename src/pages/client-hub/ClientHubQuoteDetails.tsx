@@ -46,13 +46,15 @@ import PaymentModal from './PaymentModal';
           <Grid item={true} xs={4}>
             <Stack spacing={1.5}>
               <Typography variant="body2" color="neutral.light" fontWeight={500}>
-                Service
+              {props.item.note ? "Note" : "Line Item"}
               </Typography>
               <Typography variant="body2" color="neutral.main" fontWeight={600}>
                 {props.item.title}
               </Typography>
             </Stack>
           </Grid>
+          {!props.item.note &&
+          <>
           <Grid item={true} xs={4}>
             {props.upsell && (
               <Stack alignItems="center">
@@ -92,6 +94,8 @@ import PaymentModal from './PaymentModal';
               </Typography>
             </Stack>
           </Grid>
+          </>
+          }
         </Grid>
         <Stack marginTop={3}>
           <Typography variant="body2" color="neutral.light">
