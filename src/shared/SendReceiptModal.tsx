@@ -50,7 +50,7 @@ export default function SendReceiptModal(props: any) {
 
     const handleEmailChange = (event: any) => {
         setEmailsInvalid(false);
-        setEmailMessage({ ...emailMessage, [event.target.id]: event.target.value?.trim()});
+        setEmailMessage({ ...emailMessage, [event.target.id]: event.target.value});
     }
 
     const handleEmailDelete = (email: string) => {

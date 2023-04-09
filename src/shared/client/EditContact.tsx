@@ -56,7 +56,7 @@ export default function EditContact(props: any) {
   const handleChange = (event: any) => {
     props.setContact({
       ...props.contact,
-      [event.target.id]: event.target.value.trim(),
+      [event.target.id]: event.target.value,
     });
   };
 

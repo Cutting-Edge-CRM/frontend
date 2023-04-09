@@ -126,7 +126,7 @@ function Contact(props: any) {
               <StyledTypography color="primary" variant="body2">
                 Email
               </StyledTypography>
-              <Typography variant="body2">{email.content}</Typography>
+              <Typography variant="body2" sx={{overflowWrap: 'anywhere'}}>{email.content}</Typography>
             </Stack>
           ))}
         {contact?.contacts?.filter(

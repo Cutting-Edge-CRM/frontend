@@ -104,11 +104,11 @@ export default function NewClient(props: any) {
   };
 
   const handleChange = (event: any) => {
-    setContact({ ...contact, [event.target.id]: event.target.value.trim() });
+    setContact({ ...contact, [event.target.id]: event.target.value });
   };
 
   const handleChangeProperty = (event: any) => {
-    setProperty({ ...property, [event.target.id]: event.target.value.trim() });
+    setProperty({ ...property, [event.target.id]: event.target.value });
   };
 
   const handleChangePhone = (event: any, index: number) => {

@@ -56,7 +56,7 @@ function JobItemSaved(props: any) {
         <Grid item={true} xs={2}>
           <Stack spacing={1.5}>
             <Typography variant="body2" color="neutral.light" fontWeight={500}>
-              Title
+            Line Item
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
               {props.item.title}
@@ -178,7 +178,7 @@ function JobItemEdit(props: any) {
         <Grid item={true} xs={12} sm={3}>
           <Stack>
           <InputLabel id="Title-label" sx={{ color: 'primary.main', width: "100%" }}>
-            Title
+          Line Item
           </InputLabel>
           <TextField
             id="title"

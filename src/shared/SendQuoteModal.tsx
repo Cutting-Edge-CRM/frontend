@@ -2,7 +2,7 @@ import { Alert, Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogT
 import { Stack } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { getClient } from '../api/client.api';
-import { sendEmail, sendQuote } from '../api/email.api';
+import { sendQuote } from '../api/email.api';
 import { sendSMS } from '../api/sms.api';
 import { currentUser } from '../auth/firebase';
 import { theme } from '../theme/theme';
@@ -82,11 +82,11 @@ export default function SendQuoteModal(props: any) {
 
     const handleEmailChange = (event: any) => {
         setEmailsInvalid(false);
-        setEmailMessage({ ...emailMessage, [event.target.id]: event.target.value?.trim()});
+        setEmailMessage({ ...emailMessage, [event.target.id]: event.target.value});
     }
 
     const handleSMSChange = (event: any) => {
-        setSMSMessage({ ...smsMessage, [event.target.id]: event.target.value?.trim()});
+        setSMSMessage({ ...smsMessage, [event.target.id]: event.target.value});
     }
 
     const handleEmailDelete = (email: string) => {
