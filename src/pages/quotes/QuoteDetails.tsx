@@ -108,7 +108,7 @@ function QuoteItemSaved(props: any) {
               color="neutral.main"
               fontWeight={600}
             >
-              ${(+props.item.unit)?.toFixed(2)}
+              {isAllowed('view-pricing') ? <>${(+props.item.unit)?.toFixed(2)}</> : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>}
             </Typography>
           </Stack>
         </Grid>
@@ -128,7 +128,7 @@ function QuoteItemSaved(props: any) {
               color="neutral.main"
               fontWeight={600}
             >
-              {(+props.item.quantity)?.toFixed(2)}
+              {isAllowed('view-pricing') ? <>{(+props.item.quantity)?.toFixed(2)}</> : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>}
             </Typography>
           </Stack>
         </Grid>
@@ -148,7 +148,7 @@ function QuoteItemSaved(props: any) {
               color="neutral.main"
               fontWeight={600}
             >
-              ${(+props.item.price)?.toFixed(2)}
+              {isAllowed('view-pricing') ? <>${(+props.item.price)?.toFixed(2)}</> : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>}
             </Typography>
           </Stack>
         </Grid>
@@ -534,6 +534,7 @@ function TabPanel(props: any) {
               )}
             </>
           )}
+          {isAllowed('view-pricing') && 
           <Stack mt={2.5} spacing={2}>
             <Grid container justifyContent="flex-end">
               <Grid item xs={8} sm={6}>
@@ -696,6 +697,7 @@ function TabPanel(props: any) {
               </Grid>
             </Grid>
           </Stack>
+          }
         </>
       )}
       <TaxModal
@@ -1244,7 +1246,7 @@ function QuoteDetails(props: any) {
             {...props}
           />
         {/* ))} */}
-        {props.payments.length > 0 && (
+        {isAllowed('view-pricing') && props.payments.length > 0 && (
           <>
               <Stack mt={3.5} spacing={1}>
                 <Grid container justifyContent={'end'}>

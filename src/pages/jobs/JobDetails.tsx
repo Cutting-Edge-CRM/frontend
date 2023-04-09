@@ -70,7 +70,7 @@ function JobItemSaved(props: any) {
               Unit $
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
-            ${(+props.item.unit)?.toFixed(2)}
+            {isAllowed('view-pricing') ? <>${(+props.item.unit)?.toFixed(2)}</> : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>}
             </Typography>
           </Stack>
         </Grid>
@@ -80,7 +80,7 @@ function JobItemSaved(props: any) {
               Qty
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
-            {(+props.item.quantity)?.toFixed(2)}
+            {isAllowed('view-pricing') ? <>{(+props.item.quantity)?.toFixed(2)}</> : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>}
             </Typography>
           </Stack>
         </Grid>
@@ -90,7 +90,7 @@ function JobItemSaved(props: any) {
               Price
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
-            ${(+props.item.price)?.toFixed(2)}
+            {isAllowed('view-pricing') ? <>${(+props.item.price)?.toFixed(2)}</> : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>}
             </Typography>
           </Stack>
         </Grid>
@@ -638,7 +638,8 @@ function JobDetails(props: any) {
             {props.job?.items?.length === 0 && <EmptyState type="job-items" />}
           </>
         )}
-        <Grid container justifyContent="flex-end" mt={2.5}>
+        {isAllowed('view-pricing') &&
+          <Grid container justifyContent="flex-end" mt={2.5}>
           <Grid item xs={8}  sm={6}>
             <Grid container>
               <Grid item xs={5} marginRight={3}>
@@ -654,6 +655,7 @@ function JobDetails(props: any) {
             </Grid>
           </Grid>
         </Grid>
+        }
         {error && <Alert severity="error">{error}</Alert>}
         <ConfirmDelete
           open={deleteOpen}

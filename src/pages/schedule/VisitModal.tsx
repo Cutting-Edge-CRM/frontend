@@ -32,6 +32,7 @@ import EmptyState from '../../shared/EmptyState';
 import { getChipColor, theme } from '../../theme/theme';
 import EditVisit from '../../shared/visit/EditVisit';
 import { Directions } from '@mui/icons-material';
+import { isAllowed } from '../../auth/FeatureGuards'
 
   function add(accumulator: number, a: number) {
       return +accumulator + +a;
@@ -362,7 +363,7 @@ import { Directions } from '@mui/icons-material';
                                 Total
                                 </Typography>
                                 <Typography variant="body2" color="neutral.main" fontWeight={600}>
-                                ${item.price}
+                                {isAllowed('view-pricing') ? <>${item.price}</> : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>}
                                 </Typography>
                             </Stack>
                             </Grid>
@@ -390,7 +391,7 @@ import { Directions } from '@mui/icons-material';
                         </Grid>
                         <Grid item xs={3}>
                           <Typography variant="h6" fontWeight={600} color="neutral.main">
-                            ${job.items.map((i: any) => i.price).reduce(add, 0)}
+                            {isAllowed('view-pricing') ? <>${job.items.map((i: any) => i.price).reduce(add, 0)}</> : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>}
                           </Typography>
                         </Grid>
                   </Grid>

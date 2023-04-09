@@ -4,6 +4,7 @@ import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { listJobs } from '../../api/job.api';
+import { isAllowed } from '../../auth/FeatureGuards';
 import Table from '../../shared/Table'
 import { getChipColor, theme } from '../../theme/theme';
 
@@ -47,6 +48,11 @@ function Jobs(props: any) {
       headerName: 'Price',
       flex: 1,
       hide: useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {
+        return (
+          isAllowed('view-pricing') ? params.value : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>
+        );
+      }
     },
     {
       field: 'status',

@@ -81,7 +81,7 @@ function InvoiceItemSaved(props: any) {
               Unit $
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
-            ${(+props.item.unit)?.toFixed(2)}
+            {isAllowed('view-pricing') ? <>${(+props.item.unit)?.toFixed(2)}</> : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>}
             </Typography>
           </Stack>
         </Grid>
@@ -91,7 +91,7 @@ function InvoiceItemSaved(props: any) {
               Qty
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
-            {(+props.item.quantity)?.toFixed(2)}
+            {isAllowed('view-pricing') ? <>{(+props.item.quantity)?.toFixed(2)}</> : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>}
             </Typography>
           </Stack>
         </Grid>
@@ -101,7 +101,7 @@ function InvoiceItemSaved(props: any) {
               Price
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
-              ${(+props.item.price)?.toFixed(2)}
+              {isAllowed('view-pricing') ? <>${(+props.item.price)?.toFixed(2)}</> : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>}
             </Typography>
           </Stack>
         </Grid>
@@ -698,9 +698,11 @@ function InvoiceDetails(props: any) {
         <Grid container>
           <Grid item xs={11} lg={4}>
             <Stack direction={'row'} alignItems="baseline">
-              <IconButton onClick={handleBillingOpen}>
-                <Edit color='primary'/>
-              </IconButton>
+              {isAllowed('edit-invoice') &&
+                <IconButton onClick={handleBillingOpen}>
+                  <Edit color='primary'/>
+                </IconButton>
+              }
               <Stack>
                 <Typography fontWeight={700} >Billing Address</Typography>
                 <Typography>{props.invoice.invoice.address} {props.invoice.invoice.address2}</Typography>
@@ -756,6 +758,8 @@ function InvoiceDetails(props: any) {
             )}
           </>
         )}
+        {isAllowed('view-pricing') &&
+        <>
         <Stack mt={2.5} spacing={2}>
           <Grid container justifyContent="flex-end">
             <Grid item xs={8} sm={6}>
@@ -965,6 +969,8 @@ function InvoiceDetails(props: any) {
               </Stack>
           </>
         )}
+        </>
+        }
         {error && <Alert severity="error">{error}</Alert>}
         <ConfirmDelete
           open={deleteOpen}

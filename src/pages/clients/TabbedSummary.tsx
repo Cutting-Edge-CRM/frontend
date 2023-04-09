@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { getChipColor, theme } from '../../theme/theme';
 import { ArrowCircleRightOutlined } from '@mui/icons-material';
+import { isAllowed } from '../../auth/FeatureGuards';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -99,6 +100,11 @@ function TabbedSummary(props: any) {
       headerName: 'Price',
       flex: 1,
       hide: useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {
+        return (
+          isAllowed('view-pricing') ? params.value : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>
+        );
+      }
     },
     {
       field: 'status',
@@ -168,6 +174,11 @@ function TabbedSummary(props: any) {
       headerName: 'Price',
       flex: 1,
       hide: useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {
+        return (
+          isAllowed('view-pricing') ? params.value : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>
+        );
+      }
     },
     {
       field: 'status',
@@ -231,6 +242,11 @@ function TabbedSummary(props: any) {
       headerName: 'Price',
       flex: 1,
       hide: useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {
+        return (
+          isAllowed('view-pricing') ? params.value : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>
+        );
+      }
     },
     {
       field: 'balance',
@@ -271,7 +287,7 @@ function TabbedSummary(props: any) {
             <Grid item xs={7} >
             <Stack>
               <Typography whiteSpace={'pre-wrap'} fontWeight={'500'}>{params.row.clientName}</Typography>
-              <Typography whiteSpace={'pre-wrap'} color={'neutral.light'} >{params.row.price}</Typography>
+              {isAllowed('view-pricing') ? <Typography whiteSpace={'pre-wrap'} color={'neutral.light'} >{params.row.price}</Typography> : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>}
             </Stack>
             </Grid>
             <Grid item xs={3} alignItems="center" display={'flex'}>

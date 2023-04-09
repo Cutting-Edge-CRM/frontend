@@ -34,12 +34,14 @@ export const isAllowed = (type: any) => {
         case 'view-emailsms-settings':
             return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';    
         case 'view-payment-settings':
-                return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
+            return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
         case 'view-billing-settings':
             return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
         case 'view-all-timesheets':
             return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
         case 'add-resource':
+            return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
+        case 'view-pricing':
             return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
         default:
             return false;

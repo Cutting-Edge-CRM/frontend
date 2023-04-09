@@ -4,6 +4,7 @@ import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { listInvoices } from '../../api/invoice.api';
+import { isAllowed } from '../../auth/FeatureGuards';
 import Table from '../../shared/Table'
 import { getChipColor, theme } from '../../theme/theme';
 
@@ -41,15 +42,20 @@ function Invoices(props: any) {
       headerName: 'Price',
       flex: 1,
       hide: useMediaQuery(theme.breakpoints.down("sm")),
+      renderCell: (params: GridRenderCellParams<string>) => {
+        return (
+          isAllowed('view-pricing') ? params.value : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>
+        );
+      }
     },
     {
       field: 'paymentSum',
       headerName: 'Balance',
       flex: 1,
       hide: useMediaQuery(theme.breakpoints.down("sm")),
-      renderCell: (params: GridRenderCellParams<string>) => {    
+      renderCell: (params: GridRenderCellParams<string>) => {
         return (
-          <Typography>{Math.max(params.row.price - params.row.paymentSum, 0)}</Typography>
+          isAllowed('view-pricing') ? <Typography>{Math.max(params.row.price - params.row.paymentSum, 0)}</Typography> : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>
         );
       }
     },
@@ -86,7 +92,7 @@ function Invoices(props: any) {
             <Grid item xs={7} >
             <Stack>
               <Typography whiteSpace={'pre-wrap'} fontWeight={'500'}>{params.row.clientName}</Typography>
-              <Typography whiteSpace={'pre-wrap'} color={'neutral.light'} >${params.row.price}</Typography>
+              {isAllowed('view-pricing') ? <Typography whiteSpace={'pre-wrap'} color={'neutral.light'} >${params.row.price}</Typography> : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>}
             </Stack>
             </Grid>
             <Grid item xs={3} alignItems="center" display={'flex'}>
