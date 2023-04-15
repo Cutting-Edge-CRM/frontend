@@ -80,7 +80,7 @@ function JobItemSaved(props: any) {
         <Grid item={true} xs={2}>
           <Stack spacing={1.5} alignItems="flex-end">
             <Typography variant="body2" color="neutral.light" fontWeight={500}>
-              Qty
+            {props.item.customQuantity ?? "Qty"}
             </Typography>
             <Typography variant="body2" color="neutral.main" fontWeight={600}>
             {isAllowed('view-pricing') ? <>{(+props.item.quantity)?.toFixed(2)}</> : <Typography fontStyle={'italic'} fontWeight={300}>hidden</Typography>}
@@ -155,6 +155,9 @@ function JobItemEdit(props: any) {
       if (event.target.value === '0') {
         items.find((it: any) => it === props.item)['unit'] = '0';
       }
+    }
+    if (event.target.id === 'customQuantity') {
+      items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
     } else {
       items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
     }
@@ -206,7 +209,7 @@ function JobItemEdit(props: any) {
         <>
         <Grid item={true} xs={12} sm={2}></Grid>
         <Grid item={true} xs={12} sm={2}>
-          <Stack>
+          <Stack spacing={1}>
             <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
               Unit $
             </InputLabel>
@@ -227,10 +230,14 @@ function JobItemEdit(props: any) {
           </Stack>
         </Grid>
         <Grid item={true} xs={12} sm={2}>
-          <Stack>
-            <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
-              Qty
-            </InputLabel>
+          <Stack spacing={1}>
+              <TextField
+                sx={{'.MuiInputBase-input': {padding: '0px !important', backgroundColor: 'transparent', color: '#0C8BE7', textAlign: 'center'}}}
+                id="customQuantity"
+                value={props.item.customQuantity ?? 'Qty'}
+                onChange={handleChange}
+              >
+              </TextField>
             <TextField
               id="quantity"
               type="number"
@@ -249,7 +256,7 @@ function JobItemEdit(props: any) {
           </Stack>
         </Grid>
         <Grid item={true} xs={12} sm={2}>
-          <Stack>
+          <Stack spacing={1}>
             <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
               Price
             </InputLabel>

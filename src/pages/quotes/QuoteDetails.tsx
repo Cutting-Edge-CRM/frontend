@@ -122,7 +122,7 @@ function QuoteItemSaved(props: any) {
               color="neutral.light"
               fontWeight={500}
             >
-              Qty
+              {props.item.customQuantity ?? "Qty"}
             </Typography>
             <Typography
               variant="body2"
@@ -211,6 +211,9 @@ function QuoteItemEdit(props: any) {
       if (event.target.value === '0') {
         options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)['unit'] = '0';
       }
+    }
+    if (event.target.id === 'customQuantity') {
+      options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
     } else {
       options.find((op: any) => op === props.option).items.find((it: any) => it === props.item)[event.target.id] = event.target.value;
     }
@@ -247,7 +250,6 @@ function QuoteItemEdit(props: any) {
       options: options,
     });
   };
-
 
   return (
     <Card sx={{backgroundColor: '#F3F5F8', my: 3, py: 3, boxShadow: 'none'}}>
@@ -290,7 +292,7 @@ function QuoteItemEdit(props: any) {
           )}
         </Grid>
         <Grid item={true} xs={12} sm={2} order={{ xs: 2, sm: 3 }}>
-          <Stack alignItems="center">
+          <Stack alignItems="center" spacing={1}>
             <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
                 Unit $
             </InputLabel>
@@ -312,10 +314,14 @@ function QuoteItemEdit(props: any) {
           </Stack>
         </Grid>
         <Grid item={true} xs={12} sm={2} order={{ xs: 2, sm: 3 }}>
-          <Stack alignItems="center">
-            <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
-                Qty
-            </InputLabel>
+          <Stack alignItems="center" spacing={1}>
+            <TextField
+              sx={{'.MuiInputBase-input': {padding: '0px !important', backgroundColor: 'transparent', color: '#0C8BE7', textAlign: 'center'}}}
+              id="customQuantity"
+              value={props.item.customQuantity ?? 'Qty'}
+              onChange={handleChange}
+            >
+            </TextField>
             <TextField
               id="quantity"
               type="number"
@@ -335,7 +341,7 @@ function QuoteItemEdit(props: any) {
           </Stack>
         </Grid>
         <Grid item={true} xs={12} sm={2} order={{ xs: 2, sm: 3 }}>
-          <Stack alignItems="center">
+          <Stack alignItems="center" spacing={1}>
             <InputLabel id="price-label" sx={{ color: 'primary.main' }}>
                 Price
             </InputLabel>

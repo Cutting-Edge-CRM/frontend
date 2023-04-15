@@ -55,7 +55,7 @@ import PaymentModal from './PaymentModal';
           </Grid>
           {!props.item.note &&
           <>
-          <Grid item={true} xs={4}>
+          <Grid item={true} xs={2}>
             {props.upsell && (
               <Stack alignItems="center">
                 <Typography
@@ -74,7 +74,47 @@ import PaymentModal from './PaymentModal';
                 </Stack>
             )}
           </Grid>
-          <Grid item={true} xs={4}>
+          <Grid item={true} xs={2}>
+          <Stack spacing={1.5} alignItems="center">
+            <Typography
+              variant="body2"
+              textAlign="center"
+              color="neutral.light"
+              fontWeight={500}
+            >
+              Unit $
+            </Typography>
+            <Typography
+              variant="body2"
+              textAlign="center"
+              color="neutral.main"
+              fontWeight={600}
+            >
+              ${(+props.item.unit)?.toFixed(2)}
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item={true} xs={2}>
+          <Stack spacing={1.5} alignItems="center">
+            <Typography
+              variant="body2"
+              textAlign="center"
+              color="neutral.light"
+              fontWeight={500}
+            >
+              {props.item.customQuantity ?? "Qty"}
+            </Typography>
+            <Typography
+              variant="body2"
+              textAlign="center"
+              color="neutral.main"
+              fontWeight={600}
+            >
+              {(+props.item.quantity)?.toFixed(2)}
+            </Typography>
+          </Stack>
+        </Grid>
+          <Grid item={true} xs={2}>
             <Stack spacing={1.5} alignItems="flex-end">
               <Typography
                 variant="body2"

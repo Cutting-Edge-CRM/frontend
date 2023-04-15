@@ -16,6 +16,7 @@ function GettingStarted() {
   const [companyInfo, setCompanyInfo] = useState({} as any);
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [fileURLs, setFileURLs] = useState([] as any);
+  const [loading, setLoading] = useState(false);
 
 
   const handleChangeCompanyInfo = (e: any) => {
@@ -73,25 +74,29 @@ function GettingStarted() {
     }, []);
 
     const handleSave = () => {
+        setLoading(true);
         if (fileURLs?.[0]?.url !== companyInfo?.logo) {
             saveImagesCloudinary(fileURLs).then(
               (res) => {
                 updateCompany({...companyInfo, logo: res?.[0]?.url})
                     .then(res => {
                         navigate('/clients');
+                        setLoading(false);
                     }, err => {
                         setError(err);
                     })
               },
               (err) => {
                 setError(err.message);
+                setLoading(false);
                 console.log('error' + err.message);
               }
             );
           } else {
             updateCompany(companyInfo)
             .then(res => {
-                navigate('/clients'); 
+                navigate('/clients');
+                setLoading(false);
             }, err => {
                 setError(err);
             })
@@ -377,6 +382,7 @@ function GettingStarted() {
             </AddressAutofill>
             </form>
             </Stack>
+            {loading && <LinearProgress sx={{marginTop: 2}} />}
         </CardContent>
         <Box marginY={2} display="flex" justifyContent={'center'}>
             <Button variant="contained" onClick={handleSave}>Continue</Button>
