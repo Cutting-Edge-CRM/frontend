@@ -103,7 +103,7 @@ function Timeline(props: any) {
                       variant="caption"
                       fontWeight={500}
                     >
-                      {dayjs(event.created).format('MM/DD/YYYY')}
+                      {dayjs(event.created).format('MM/DD/YYYY h:mm a')}
                     </Typography>
                   </Stack>
                 </Grid>
