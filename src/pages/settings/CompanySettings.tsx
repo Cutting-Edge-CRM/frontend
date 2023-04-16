@@ -110,7 +110,7 @@ function CompanySettings(props: any) {
                         <Tab label="Personal Details" id="personalDetails" />
                         {isAllowed('view-company-settings') && <Tab label="Company Details" id="companyDetails" />}
                         {isAllowed('view-employee-settings') && <Tab label="Employees" id="employees" />}
-                        {isAllowed('view-emailsms-settings') && <Tab label="Email & SMS" id="emailAndSms" />}
+                        {isAllowed('view-template-settings') && <Tab label="Templates" id="templates" />}
                         {isAllowed('view-payment-settings') && <Tab label="Payments" id="payments" />}
                         {isAllowed('view-billing-settings') && <Tab label="Billing" id="billing" />}
                     </Tabs>
@@ -119,7 +119,7 @@ function CompanySettings(props: any) {
             {value === 0 && <PersonalInformation success={props.success}/>}
             {isAllowed('view-company-settings') && value === 1 && <CompanyInformation company={company} setCompany={setCompany} success={props.success} fileURLs={logoUrl} setFileURLs={setLogoUrl} />}
             {isAllowed('view-employee-settings') && value === 2 && <Employees success={props.success} subscription={props.subscription}/>}
-            {isAllowed('view-emailsms-settings') && value === 3 && <EmailSmsSettings settings={settings} setSettings={setSettings} success={props.success}/>}
+            {isAllowed('view-template-settings') && value === 3 && <EmailSmsSettings settings={settings} setSettings={setSettings} success={props.success}/>}
             {isAllowed('view-payment-settings') && value === 4 && <Payments settings={settings} setSettings={setSettings} success={props.success} />}
             {isAllowed('view-billing-settings') && value === 5 && <Billing success={props.success} subscription={props.subscription}/>}
         </Stack>

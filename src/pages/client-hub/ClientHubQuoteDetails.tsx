@@ -552,6 +552,7 @@ import PaymentModal from './PaymentModal';
             type={confirmType}
             price={(props.quote.options?.[0].items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) + (+props.taxes.find((t: any) => t.id === props.quote.options?.[0].tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100)*(props.quote.options?.[0].items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))).toFixed(2)}
             success={props.success}
+            settings={props.settings}
             {...props}
             />
             <PaymentModal

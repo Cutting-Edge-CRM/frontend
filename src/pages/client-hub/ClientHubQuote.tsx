@@ -104,7 +104,7 @@ function ClientHubQuote(props: any) {
     return (
         <Elements stripe={stripePromise}>
         <PaymentStatus/>
-        <ClientHubQuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload} paymentsEnabled={paymentsEnabled} client={client} opened={opened} sent={sent} />
+        <ClientHubQuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload} paymentsEnabled={paymentsEnabled} client={client} opened={opened} sent={sent} settings={props.settings} />
         </Elements>
     )
 }

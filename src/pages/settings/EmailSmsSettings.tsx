@@ -4,6 +4,7 @@ import { AddCircleOutlineOutlined, ExpandMore } from '@mui/icons-material';
 import { Stack } from '@mui/system';
 import { updateSettings } from '../../api/settings.api';
 import { AddressAutofill } from '@mapbox/search-js-react';
+import RichText from '../../shared/richtext/RichText';
 
 
 function EmailSmsSettings(props: any) {
@@ -73,7 +74,9 @@ function EmailSmsSettings(props: any) {
     }
 
     const handleChange = (event: any) => {
-        props.setSettings({ ...props.settings, [event.target.id]: event.target.value });
+        if (props.settings.id) {
+            props.setSettings({ ...props.settings, [event.target.id]: event.target.value });
+        }
       };
 
     const handleSave = () => {
@@ -419,6 +422,47 @@ function EmailSmsSettings(props: any) {
                         />
                         <Stack direction={'row'} spacing={2} justifyContent="center">
                             {/* <Button variant="outlined" onClick={handleReload}>Cancel</Button> */}
+                            <Button variant="contained"  onClick={handleSave}>Save Changes</Button>
+                        </Stack>
+                    </Stack>
+                    </Grid>
+                </Grid>
+            </AccordionDetails>
+        </Accordion>
+        <Accordion sx={{ py: 3, px: 2, position: 'static'  }}>
+            <AccordionSummary
+            expandIcon={<ExpandMore />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+            >
+            <Typography
+            color={'primary'}
+            variant='h6'
+            >Terms & Conditions</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <Grid container>
+                    <Grid item xs={12} sm={6} >
+                    <Typography
+                    width="100%"
+                    marginBottom={2}
+                    variant="body2"
+                    color="neutral.dark"
+                    >Update how your Terms & Conditions section will look on quotes and in the client hub.</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6} >
+                    <Stack spacing={2} width="100%">
+                    <Stack direction={'row'} justifyContent="space-between" alignItems={'center'}>
+                            <InputLabel id="terms-label" sx={{ color: 'primary.main' }}>
+                                Terms & Conditions
+                            </InputLabel>
+                        </Stack>
+                        <RichText
+                        id="terms"
+                        value={props.settings.terms ?? ''}
+                        onChange={handleChange}
+                        />
+                        <Stack direction={'row'} spacing={2} justifyContent="center">
                             <Button variant="contained"  onClick={handleSave}>Save Changes</Button>
                         </Stack>
                     </Stack>

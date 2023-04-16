@@ -17,6 +17,7 @@ import ClientHubQuote from './ClientHubQuote';
 import ClientHubInvoices from './ClientHubInvoices';
 import ClientHubInvoice from './ClientHubInvoice';
 import { getCompany } from '../../api/company.api';
+import { getSettings } from '../../api/settings.api';
 
 const NavList = styled(List)<ListProps>(({ theme }) => ({
   padding: theme.spacing(0, 3),
@@ -49,6 +50,7 @@ function ClientHub() {
   const location = useLocation();
   const [company, setCompany] = useState({} as any);
   const [logoUrl, setLogoUrl] = useState([] as any);
+  const [settings, setSettings] = useState({} as any);
 
 
   const handleDrawerToggle = () => {
@@ -74,6 +76,14 @@ function ClientHub() {
         // setError(err.message);
     })
     }, []);
+
+    useEffect(() => {
+      getSettings()
+      .then((result) => {
+          setSettings(result)
+      }, (err) => {
+      })
+      }, []);
 
   const handleSuccessClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
@@ -196,7 +206,7 @@ function ClientHub() {
           {/* body */}
           <Routes>
             <Route path="/quotes" element={<ClientHubQuotes success={success} />} />
-            <Route path="/quotes/:quoteId" element={<ClientHubQuote success={success} />} />
+            <Route path="/quotes/:quoteId" element={<ClientHubQuote success={success} settings={settings} />} />
             <Route path="/invoices" element={<ClientHubInvoices success={success} />} />
             <Route path="/invoices/:invoiceId" element={<ClientHubInvoice success={success} />} />
             <Route path="*" element={<Login />} />

@@ -1,6 +1,7 @@
-import { Alert, Button, Dialog, DialogActions, DialogContent, LinearProgress, Stack, Typography } from '@mui/material';
+import { Alert, Button, Checkbox, Dialog, DialogActions, DialogContent, LinearProgress, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { createTimeline, updateQuote } from './api/clientPublic.api';
+import Terms from './Terms';
 
 
 export default function ConfirmDelete(props: any) {
@@ -8,10 +9,24 @@ export default function ConfirmDelete(props: any) {
     const [body, setBody] = useState('');
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [termsOpen, setTermsOpen] = useState(false);
+    const [termsChecked, setTermsChecked] = useState(false);
 
     const handleCancel = () => {
         props.onClose();
       };
+
+    const handleTermsClose = (value: string) => {
+      setTermsOpen(false);
+    };
+
+    const handleOpenTerms = () => {
+        setTermsOpen(true);
+    }
+
+    const handleTermsCheck = (event: any) => {
+      setTermsChecked(event.target.checked);
+    }
 
   
     const handleConfirm = () => {
@@ -78,17 +93,28 @@ export default function ConfirmDelete(props: any) {
               <Typography textAlign="center" variant="body1" color="neutral.main">
                 {body}
               </Typography>
+              <Stack direction={'row'} alignItems="center" sx={{display: props.settings?.terms?.length > 20 ? 'flex' : 'none'}}>
+                <Checkbox onChange={handleTermsCheck} checked={termsChecked} />
+                <Typography textAlign="center" variant="body2" color="neutral.main">
+                I agree to the {<Button onClick={handleOpenTerms} sx={{padding: 0}} >Terms & Conditions</Button>}
+                </Typography>
+              </Stack>
             </Stack>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCancel} variant="outlined">
               Cancel
             </Button>
-            <Button onClick={handleConfirm} variant="contained" color="primary">
+            <Button onClick={handleConfirm} variant="contained" color="primary" disabled={!termsChecked && props.settings?.terms?.length > 20}>
               {title}
             </Button>
           </DialogActions>
           {error && <Alert severity="error">{error}</Alert>}
+          <Terms
+            open={termsOpen}
+            onClose={handleTermsClose}
+            settings={props.settings}
+            />
         </Dialog>
     );
   }
