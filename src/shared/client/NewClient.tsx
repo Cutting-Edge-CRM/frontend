@@ -77,6 +77,13 @@ export default function NewClient(props: any) {
               navigate(`/clients/${res.id}`);
               props.onClose();
               props.success('Client created successfully');
+              setContact({
+                contacts: [
+                  { type: 'phone', content: '' },
+                  { type: 'email', content: '' },
+                ],
+              } as any);
+              setActiveStep(0);
             },
             (propErr) => {
               setLoading(false);
@@ -88,6 +95,13 @@ export default function NewClient(props: any) {
           navigate(`/clients/${res.id}`);
           props.onClose();
           props.success('Client created successfully');
+          setContact({
+            contacts: [
+              { type: 'phone', content: '' },
+              { type: 'email', content: '' },
+            ],
+          } as any);
+          setActiveStep(0);
         }
       },
       (err) => {

@@ -16,6 +16,7 @@ import {
 import {
   DataGrid,
   GridColDef,
+  GridSortModel,
   GridToolbarContainer,
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid';
@@ -77,6 +78,11 @@ export default function SelectClient(props: any) {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [rowCount, setRowCount] = useState(0);
+  const [query, setQuery] = useState('');
+  const [sortModal, setSortModal] = useState([] as any);
 
   const handleCancel = () => {
     props.onClose();
@@ -198,17 +204,26 @@ export default function SelectClient(props: any) {
     return <EmptyState type="properties" />;
   };
 
+  const handleFilterChange = (filterModel: any) => {
+    setQuery(filterModel.quickFilterValues?.join(' '))
+  }
+
+  const handleSortChange = (sortModel: GridSortModel) => {
+    setSortModal(sortModel);
+  }
+
   useEffect(() => {
-    listClients().then(
+    listClients(query, page, pageSize, sortModal).then(
       (result) => {
         setClientIsLoaded(true);
         setClientRows(result.rows);
+        setRowCount(result?.rowCount?.[0]?.rowCount);
       },
       (err) => {
         setClientIsLoaded(true);
       }
     );
-  }, [newClientOpen]);
+  }, [newClientOpen, page, pageSize, query, sortModal]);
 
   useEffect(() => {
     setPropertyIsLoaded(false);
@@ -223,6 +238,7 @@ export default function SelectClient(props: any) {
       }
     );
   }, [client, activeStep, newPropertyOpen]);
+
 
   function SelectStepper(props: any) {
     return (
@@ -245,8 +261,19 @@ export default function SelectClient(props: any) {
                   autoHeight
                   rows={clientRows}
                   columns={clientColumns}
-                  pageSize={10}
                   rowsPerPageOptions={[10, 20, 50]}
+                  pagination
+                  page={page}
+                  pageSize={pageSize}
+                  rowCount={rowCount}
+                  onPageChange={(newPage) => setPage(newPage)}
+                  onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                  paginationMode="server"
+                  filterMode="server"
+                  onFilterModelChange={handleFilterChange}
+                  sortingMode="server"
+                  onSortModelChange={handleSortChange}
+                  sortModel={sortModal}
                   components={{
                     Toolbar: ClientToolbar,
                     NoRowsOverlay: getClientEmptyState,
@@ -273,8 +300,6 @@ export default function SelectClient(props: any) {
                   autoHeight
                   rows={propertyRows}
                   columns={propertyColumns}
-                  pageSize={10}
-                  rowsPerPageOptions={[10, 20, 50]}
                   components={{
                     Toolbar: PropertyToolbar,
                     NoRowsOverlay: getPropertiesEmptyState,

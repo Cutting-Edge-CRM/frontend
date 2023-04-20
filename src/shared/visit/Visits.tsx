@@ -58,7 +58,7 @@ function Visits(props: any) {
   };
 
   const handleNewOpen = () => {
-    setVisit({ users: [], property: '', anytime: true, type: "Estimate", notes: "" });
+    setVisit({ users: [], property: '', anytime: true, type: "Estimate", notes: "", start: dayjs(), displayEnd: dayjs() });
     setType('new');
     setOpen(true);
   };

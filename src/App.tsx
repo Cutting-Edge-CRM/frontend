@@ -76,7 +76,9 @@ if (window.location.href.includes('anonymous')) {
       resourceType: resourceType,
       resourceAction: 'opened'
     };
-    createTimeline(timeline_event);
+    createTimeline(timeline_event).then(_ =>{
+      return;
+    });
     window.location.replace(baseLink);
     loading = false;
     }, err => {

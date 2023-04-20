@@ -18,7 +18,7 @@ export default function TimePickerV2(props: any) {
 
     const handleChangeHour = (e: any) => {
         let newTime = dayjs(props.value);
-        newTime = newTime.set('hour', e.target.value);
+        newTime = newTime.set('hour', AM ? (e.target.value === 12 ? 0 : e.target.value) : (e.target.value === 12 ? 12 : (+e.target.value) + 12));
         props.onChange(newTime);
 
     }
@@ -46,7 +46,7 @@ export default function TimePickerV2(props: any) {
         <TextField
             disabled={props.disabled}
             id="hours"
-            value={dayjs(props.value).get('hour') <= 12 ? dayjs(props.value).get('hour') : dayjs(props.value).get('hour') - 12}
+            value={dayjs(props.value).get('hour') === 12 || dayjs(props.value).get('hour') === 0 ? 12 : (dayjs(props.value).get('hour') < 12 ? dayjs(props.value).get('hour') : dayjs(props.value).get('hour') - 12)}
             onChange={handleChangeHour}
             variant="standard"
             InputProps={{

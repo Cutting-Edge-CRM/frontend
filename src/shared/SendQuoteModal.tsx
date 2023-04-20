@@ -129,8 +129,8 @@ export default function SendQuoteModal(props: any) {
         let smsBody = props.settings?.sendQuoteSMSBody ? props.settings?.sendQuoteSMSBody : ``;
         getClient(props.quote.quote.client)
         .then(client => {
-            let phones = client?.contacts?.filter((contact: any) => contact.type === 'phone')?.map((phone: any) => phone.content);
-            let emails = client?.contacts?.filter((contact: any) => contact.type === 'email')?.map((email: any) => email.content);
+            let phones = client?.contacts?.filter((contact: any) => contact.type === 'phone')?.filter((contact: any) => contact.content !== '').map((phone: any) => phone.content);
+            let emails = client?.contacts?.filter((contact: any) => contact.type === 'email')?.filter((contact: any) => contact.content !== '')?.map((email: any) => email.content);
             setEmailMessage({...emailMessage, replyToQuoteEmail: replyToQuoteEmail, subject: emailSubject, body: addVariables(emailBody, client), toList: emails})
             setSMSMessage({...smsMessage, body: addVariables(smsBody, client), toList: phones})
         }, err => {
