@@ -31,7 +31,7 @@ import { listUsers } from '../../api/user.api';
 import EmptyState from '../../shared/EmptyState';
 import { getChipColor, theme } from '../../theme/theme';
 import EditVisit from '../../shared/visit/EditVisit';
-import { Directions } from '@mui/icons-material';
+import { Directions, Phone } from '@mui/icons-material';
 import { isAllowed } from '../../auth/FeatureGuards'
 
   function add(accumulator: number, a: number) {
@@ -422,7 +422,10 @@ import { isAllowed } from '../../auth/FeatureGuards'
                       <StyledTypography color="primary" variant="body2">
                         Phone
                       </StyledTypography>
+                      <Stack direction={'row'}>
                       <StyledTypography variant="body2">{phone.content}</StyledTypography>
+                        <IconButton href={`tel://${phone.content}`} target="_blank" sx={{paddingTop: 0}}><Phone color='primary'/></IconButton>
+                      </Stack>
                     </Stack>
                   ))}
                 {client?.contacts?.filter(

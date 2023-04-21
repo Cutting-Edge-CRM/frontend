@@ -1,4 +1,4 @@
-import { CreateOutlined, OpenInNew } from '@mui/icons-material';
+import { CreateOutlined, OpenInNew, Phone } from '@mui/icons-material';
 import {
   Alert,
   Avatar,
@@ -104,7 +104,10 @@ function Contact(props: any) {
               <StyledTypography color="primary" variant="body2">
                 Phone
               </StyledTypography>
-              <Typography variant="body2">{phone.content}</Typography>
+              <Stack direction={'row'}>
+                <Typography variant="body2">{phone.content}</Typography>
+                  <IconButton href={`tel://${phone.content}`} target="_blank" sx={{paddingTop: 0}}><Phone color='primary'/></IconButton>
+              </Stack>
             </Stack>
           ))}
         {contact?.contacts?.filter(
