@@ -45,8 +45,8 @@ import PaymentModal from './PaymentModal';
 
     return (
       <>
-        <Grid container spacing={2} marginTop={2}>
-          <Grid item={true} xs={4}>
+        <Grid container spacing={2} marginTop={2} columns={10}>
+          <Grid item={true} xs={2}>
             <Stack spacing={1.5}>
               <Typography variant="body2" color="neutral.light" fontWeight={500}>
               {props.item.note ? "Note" : "Line Item"}
@@ -63,6 +63,7 @@ import PaymentModal from './PaymentModal';
               <Stack alignItems="center">
                 <Typography
                   variant="body2"
+                  fontSize={'0.75rem'}
                   textAlign="center"
                   color="neutral.light"
                   fontWeight={500}
@@ -81,6 +82,7 @@ import PaymentModal from './PaymentModal';
           <Stack spacing={1.5} alignItems="center">
             <Typography
               variant="body2"
+              fontSize={'0.75rem'}
               textAlign="center"
               color="neutral.light"
               fontWeight={500}
@@ -101,6 +103,7 @@ import PaymentModal from './PaymentModal';
           <Stack spacing={1.5} alignItems="center">
             <Typography
               variant="body2"
+              fontSize={'0.75rem'}
               textAlign="center"
               color="neutral.light"
               fontWeight={500}
@@ -113,7 +116,7 @@ import PaymentModal from './PaymentModal';
               color="neutral.main"
               fontWeight={600}
             >
-              {(+props.item.quantity)?.toFixed(2)}
+              {(+props.item.quantity)?.toFixed(0)}
             </Typography>
           </Stack>
         </Grid>
@@ -121,6 +124,7 @@ import PaymentModal from './PaymentModal';
             <Stack spacing={1.5} alignItems="flex-end">
               <Typography
                 variant="body2"
+                fontSize={'0.75rem'}
                 textAlign="center"
                 color="neutral.light"
                 fontWeight={500}
@@ -561,7 +565,7 @@ import PaymentModal from './PaymentModal';
         <Typography fontWeight={600} variant="h5" marginBottom={2} marginTop={8}>Products</Typography>
         <Grid container spacing={2} marginBottom={6}>
             {props.proposal?.products?.filter((p: any) => !!props.selected.find((s: any) => s.resourceId === p.id && s.resourceType === 'product'))?.map((product: any, index: number) => (
-                <Grid item lg={4} md={6} xs={12} key={index}>
+                <Grid item marginTop={4} lg={4} md={6} xs={12} key={index}>
                 <Card key={index} sx={{backgroundColor: '#F3F5F8', boxShadow: 'none', paddingY: 2, height: '100%'}}>
                 <Stack spacing={1}>
                     <Stack direction={'row'} justifyContent="space-between">

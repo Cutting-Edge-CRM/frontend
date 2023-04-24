@@ -292,11 +292,13 @@ function InvoiceItemEdit(props: any) {
         <InputLabel id="description-label" sx={{ color: 'primary.main' }}>
           Description
         </InputLabel>
+        <Box sx={{".quill": {height: '300px'}, height: {xs: '420px', sm: '370px'}}}>
         <RichText
           id="description"
           value={props.item.description ? props.item.description : ''}
           onChange={handleChange}
         />
+        </Box>
         {props.invoice.items.length > 1 && 
           <Button
           onClick={handleDeleteItem}

@@ -1,5 +1,5 @@
 import { FormatPaintOutlined, AttachMoney, Numbers, DeleteOutline } from '@mui/icons-material';
-import { Card, Grid, Stack, InputLabel, TextField, InputAdornment, Switch, Button } from '@mui/material';
+import { Card, Grid, Stack, InputLabel, TextField, InputAdornment, Switch, Button, Box } from '@mui/material';
 import React, {  } from 'react';
 import RichText from '../../shared/richtext/RichText';
 
@@ -201,11 +201,13 @@ function QuoteItemEdit(props: any) {
           <InputLabel id="description-label" sx={{ color: 'primary.main' }}>
             Description
           </InputLabel>
+          <Box sx={{".quill": {height: '300px'}, height: {xs: '420px', sm: '370px'}}}>
           <RichText
             id="description"
             value={props.item.description ? props.item.description : ''}
             onChange={handleChange}
           />
+          </Box>
           {props.option.items.length > 1 && 
             <Button
             onClick={handleDeleteItem}

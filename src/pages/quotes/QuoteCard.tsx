@@ -573,16 +573,18 @@ useEffect(() => {
         </Stack>
       </Card>
       <Card sx={{ py: 3 }}>
-        <Stack direction={'row'}>
+        <Stack direction={mobile ? 'column' :'row'}>
+        <Box order={{xs: 2, sm: 1}}>
         <Tabs value={tabValue} onChange={handleChangeTabValue} aria-label="basic tabs example">
           <Tab label="Price Details" />
           <Tab label="Proposal Options" />
         </Tabs>
-        <Box marginLeft={'auto'}>
+        </Box>
+        <Box marginLeft={mobile ? 0 : 'auto'} order={{xs: 1, sm: 2}}>
             {isAllowed('edit-quote') &&
             <>
             {editting ? (
-              <Stack direction="row" spacing={2}>
+              <Stack direction="row" spacing={2} justifyContent="center">
                 <Button onClick={handleCancel} variant="outlined">
                   Cancel
                 </Button>
@@ -598,6 +600,7 @@ useEffect(() => {
             ) : (
               <Button
                 onClick={handleEditting}
+                fullWidth
                 variant="contained"
                 color="primary"
               >
@@ -713,6 +716,7 @@ useEffect(() => {
           selected={selected}
           handleSelect={handleSelect}
           editting={editting}
+          mobile={mobile}
           />
         }
         

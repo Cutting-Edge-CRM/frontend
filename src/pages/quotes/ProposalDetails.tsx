@@ -48,7 +48,7 @@ function ProposalDetails(props: any) {
         </Stack>
         <Typography variant="body1" marginBottom={2}>Select which photos you would like to include in this proposal</Typography>
         {props.proposal.gallery?.length > 0 &&
-        <ImageList variant="woven" cols={3} rowHeight={164} sx={{maxHeight: '500px'}}>
+        <ImageList variant="woven" cols={props.mobile ? 2 : 3} rowHeight={164} sx={{maxHeight: '500px'}}>
             {props.proposal.gallery?.map((file: any) => (
                 <ImageListItem key={file.id}>
                     <Checkbox 
@@ -78,7 +78,7 @@ function ProposalDetails(props: any) {
         <Typography variant="body1" marginBottom={2}>Select which reviews you would like to display on this proposal</Typography>
         <Grid container spacing={2}>
             {props.proposal?.reviews?.map((review: any, index: number) => (
-                <Grid item xs={4} marginTop={4} key={index}>
+                <Grid item lg={4} md={6} xs={12}marginTop={4} key={index}>
                     <Card key={index} sx={{backgroundColor: '#F3F5F8', boxShadow: 'none', paddingY: 2, height: '100%'}}>
                     <Stack spacing={1}>
                         <Stack direction={'row'} justifyContent="space-between">
@@ -114,7 +114,7 @@ function ProposalDetails(props: any) {
         <Typography variant="body1" marginBottom={2}>Select which products you would like to display on this proposal</Typography>
         <Grid container spacing={2}>
             {props.proposal?.products?.map((product: any, index: number) => (
-                <Grid item xs={4} key={index}>
+                <Grid item marginTop={4} lg={4} md={6} xs={12} key={index}>
                 <Card key={index} sx={{backgroundColor: '#F3F5F8', boxShadow: 'none', paddingY: 2, height: '100%'}}>
                 <Stack spacing={1}>
                     <Stack direction={'row'} justifyContent="space-between">
@@ -175,7 +175,7 @@ function ProposalDetails(props: any) {
         {props.proposal.gallery?.filter((g: any) => !!props.selected.find((s: any) => s.resourceId === g.id && s.resourceType === 'gallery'))?.length > 0 &&
         <>
         <Typography fontWeight={600} variant="h6" marginBottom={2} marginTop={4}>Gallery</Typography>
-        <ImageList variant="woven" cols={3} rowHeight={164}>
+        <ImageList variant="woven" cols={props.mobile ? 2 : 3} rowHeight={164}>
             {props.proposal.gallery?.filter((g: any) => !!props.selected.find((s: any) => s.resourceId === g.id && s.resourceType === 'gallery'))?.map((file: any) => (
                 <ImageListItem key={file.id}>
                     {/* eslint-disable-next-line */}
@@ -190,7 +190,7 @@ function ProposalDetails(props: any) {
         <Typography fontWeight={600} variant="h6" marginBottom={2} marginTop={4}>Reviews</Typography>
         <Grid container spacing={2}>
             {props.proposal?.reviews?.filter((r: any) => !!props.selected.find((s: any) => s.resourceId === r.id && s.resourceType === 'review'))?.map((review: any, index: number) => (
-                <Grid item xs={4} marginTop={4} key={index}>
+                <Grid item lg={4} md={6} xs={12} marginTop={4} key={index}>
                     <Card key={index} sx={{backgroundColor: '#F3F5F8', boxShadow: 'none', paddingY: 2, height: '100%'}}>
                     <Stack spacing={1}>
                         <Stack direction={'row'} justifyContent="center">
@@ -214,7 +214,7 @@ function ProposalDetails(props: any) {
         <Typography fontWeight={600} variant="h6" marginBottom={2} marginTop={8}>Products</Typography>
         <Grid container spacing={2}>
             {props.proposal?.products?.filter((p: any) => !!props.selected.find((s: any) => s.resourceId === p.id && s.resourceType === 'product'))?.map((product: any, index: number) => (
-                <Grid item xs={4} key={index}>
+                <Grid item marginTop={4} lg={4} md={6} xs={12} key={index}>
                 <Card key={index} sx={{backgroundColor: '#F3F5F8', boxShadow: 'none', paddingY: 2, height: '100%'}}>
                 <Stack spacing={1}>
                     <Stack direction={'row'} justifyContent="space-between">

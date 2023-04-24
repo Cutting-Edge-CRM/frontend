@@ -1,3 +1,4 @@
+import { AddressAutofill } from '@mapbox/search-js-react';
 import { AddAPhoto, AddCircleOutlineOutlined, Close, DeleteOutline, EditOutlined, PeopleOutline } from '@mui/icons-material';
 import { Alert, Box, Button, Card, Divider, Grid, IconButton, ImageList, ImageListItem, InputAdornment, InputLabel, LinearProgress, Link, Stack, TextField, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -208,6 +209,10 @@ function ProposalSettings(props: any) {
         {error && <Alert severity="error">{error}</Alert>}
         {loading && <LinearProgress/>}
         <Card sx={{ py: 3 }}>
+            {/* for a very strange reason putting this making it style properly on mobile */}
+            <AddressAutofill accessToken=''>
+              <TextField sx={{display:'none'}} />
+            </AddressAutofill>
             <Stack>
                 <Typography align={'center'} variant="h6" marginBottom={2}>Summary</Typography>
                 <Typography align={'center'} variant="body1" marginBottom={2}>Describe why the client should choose your company over the next one. This can be displayed on your proposals to re-sell your company to ensure you land the job.</Typography>
@@ -218,7 +223,7 @@ function ProposalSettings(props: any) {
                         value={props.settings.about}
                     />
                 </Box>
-                <Stack direction={'row'} justifyContent='center' spacing={2} marginTop={3}>
+                <Stack direction={'row'} justifyContent='center' spacing={2} marginTop={{xs: 10, sm: 3}}>
                     {/* <Button variant="outlined" onClick={handleReload}>Cancel</Button> */}
                     <Button variant="contained" onClick={handleSaveSettings}>Save Changes</Button>
                 </Stack>
@@ -275,7 +280,7 @@ function ProposalSettings(props: any) {
                         {fileURLs.length > 0 &&
                             <ImageList variant="woven" cols={3} rowHeight={164} sx={{maxHeight: '500px'}}>
                             {fileURLs.map((file: any) => (
-                                <Box key={file.url}>
+                                <Box key={file.url} marginTop={4}>
                                 <Stack direction={'row'} justifyContent="space-between">
                                     <IconButton onClick={() => handleDelete(file)}>
                                         <Close />
@@ -303,7 +308,7 @@ function ProposalSettings(props: any) {
                 <Typography align={'center'} variant="body1" marginBottom={2}>Add some reviews to display on your proposals.</Typography>
                 <Grid container spacing={2}>
                     {proposal?.reviews?.map((review: any, index: number) => (
-                        <Grid item xs={4} marginTop={4} key={index}>
+                        <Grid item lg={4} md={6} xs={12} marginTop={4} key={index}>
                             <Card key={index} sx={{backgroundColor: '#F3F5F8', boxShadow: 'none', paddingY: 2, height: '100%'}}>
                             <Stack spacing={1}>
                                 <Stack direction={'row'} justifyContent="space-between">
@@ -342,7 +347,7 @@ function ProposalSettings(props: any) {
                             </Card>
                         </Grid>
                     ))}
-                    <Grid item xs={4} marginTop={4}>
+                    <Grid item lg={4} md={6} xs={12} marginTop={4}>
                     <Card sx={{backgroundColor: '#F3F5F8', boxShadow: 'none', paddingY: 2, height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                         <Button
                         onClick={handleAddReview}
@@ -366,7 +371,7 @@ function ProposalSettings(props: any) {
                 <Typography align={'center'} variant="body1" marginBottom={2}>Upload products to display on your proposals. These could be different brands of paint you use, specialty primers for unique surfaces, or whatever you like!</Typography>
                 <Grid container spacing={2}>
                     {proposal?.products?.map((product: any, index: number) => (
-                        <Grid item xs={4} key={index}>
+                        <Grid item lg={4} md={6} xs={12} marginTop={4} key={index}>
                             <Card key={index} sx={{backgroundColor: '#F3F5F8', boxShadow: 'none', paddingY: 2, height: '100%'}}>
                             <Stack spacing={1}>
                                 <Stack direction={'row'} justifyContent="space-between">
@@ -410,7 +415,7 @@ function ProposalSettings(props: any) {
                             </Card>
                         </Grid>
                     ))}
-                    <Grid item xs={4} marginTop={4}>
+                    <Grid item lg={4} md={6} xs={12} marginTop={4}>
                     <Card sx={{backgroundColor: '#F3F5F8', boxShadow: 'none', paddingY: 2, height: '100%', display: 'flex', justifyContent:"center", alignItems:"center"}}>
                         <Button
                         onClick={handleAddProduct}

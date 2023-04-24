@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Alert, Button, Grid, InputLabel, ListItemText, Menu, MenuItem, MenuList, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Alert, Box, Button, Grid, InputLabel, ListItemText, Menu, MenuItem, MenuList, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { AddCircleOutlineOutlined, ExpandMore } from '@mui/icons-material';
 import { Stack } from '@mui/system';
@@ -457,11 +457,13 @@ function EmailSmsSettings(props: any) {
                                 Terms & Conditions
                             </InputLabel>
                         </Stack>
+                        <Box sx={{".quill": {height: '300px'}, height: {xs: '420px', sm: '370px'}}}>
                         <RichText
                         id="terms"
                         value={props.settings.terms ?? ''}
                         onChange={handleChange}
                         />
+                        </Box>
                         <Stack direction={'row'} spacing={2} justifyContent="center">
                             <Button variant="contained"  onClick={handleSave}>Save Changes</Button>
                         </Stack>
