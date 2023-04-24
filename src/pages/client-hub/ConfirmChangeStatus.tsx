@@ -1,4 +1,4 @@
-import { Alert, Button, Checkbox, Dialog, DialogActions, DialogContent, LinearProgress, Stack, Typography } from '@mui/material';
+import { Alert, Button, Checkbox, Dialog, DialogActions, DialogContent, Grid, LinearProgress, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { createTimeline, updateQuote } from './api/clientPublic.api';
 import Terms from './Terms';
@@ -102,12 +102,18 @@ export default function ConfirmDelete(props: any) {
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCancel} variant="outlined">
-              Cancel
-            </Button>
-            <Button onClick={handleConfirm} variant="contained" color="primary" disabled={!termsChecked && props.settings?.terms?.length > 20}>
-              {title}
-            </Button>
+            <Stack direction={{xs: 'column', sm: 'row'}}>
+              <Grid item order={{xs: 2, sm: 1}} m={1}>
+                <Button onClick={handleCancel} variant="outlined" fullWidth>
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item order={{xs: 1, sm: 2}} m={1}>
+                <Button onClick={handleConfirm} variant="contained" color="primary" disabled={!termsChecked && props.settings?.terms?.length > 20}>
+                {title}
+                </Button>
+              </Grid>
+            </Stack>
           </DialogActions>
           {error && <Alert severity="error">{error}</Alert>}
           <Terms

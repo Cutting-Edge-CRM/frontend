@@ -1,4 +1,4 @@
-import { AttachMoney, EventAvailable, FormatListBulleted, FormatPaint, History, Map, MapsHomeWork, People, Sell } from '@mui/icons-material';
+import { AttachMoney, ColorLens, Description, EventAvailable, FormatListBulleted, FormatPaint, History, Image, Map, MapsHomeWork, People, RateReview, Sell } from '@mui/icons-material';
 import { Avatar, Box, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
@@ -112,6 +112,26 @@ export default function EmptyState(props: any) {
             case 'clienthub-Paid':
                 setLogo(<AttachMoney sx={{ fontSize: 60, color: 'primary.main' }}/>);
                 setBody(`You have no paid invoices.`);
+                break;
+            case 'proposalResources':
+                setLogo(<Description sx={{ fontSize: 60, color: 'primary.main' }}/>);
+                setTitle(`No Proposal Details`);
+                setBody(`You haven't added any resources to this proposal. Click 'Edit Quote' above to add some!`);
+                break;
+            case 'gallery':
+                setLogo(<Image sx={{ fontSize: 60, color: 'primary.main' }}/>);
+                setTitle(`No Gallery Images`);
+                setBody(`You haven't added any gallery images. Click 'Gallery Settings' above to add some!`);
+                break;
+            case 'reviews':
+                setLogo(<RateReview sx={{ fontSize: 60, color: 'primary.main' }}/>);
+                setTitle(`No Reviews`);
+                setBody(`You haven't added any reviews. Click 'Review Settings' above to add some!`);
+                break;
+            case 'products':
+                setLogo(<ColorLens sx={{ fontSize: 60, color: 'primary.main' }}/>);
+                setTitle(`No Products`);
+                setBody(`You haven't added any products. Click 'Product Settings' above to add some!`);
                 break;
             default:
                 break;

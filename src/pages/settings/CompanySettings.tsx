@@ -11,6 +11,7 @@ import EmailSmsSettings from './EmailSmsSettings';
 import Employees from './Employees';
 import Payments from './Payments';
 import PersonalInformation from './PersonalInformation';
+import ProposalSettings from './ProposalSettings'
 
 function CompanySettings(props: any) {
     const [value, setValue] = useState(0);
@@ -34,12 +35,15 @@ function CompanySettings(props: any) {
                 param = "employees";
                 break;
             case 3:
-                param = "email-sms";
+                param = "proposals";
                 break;
             case 4:
-                param = "payments";
+                param = "email-sms";
                 break;
             case 5:
+                param = "payments";
+                break;
+            case 6:
                 param = "billing";
                 break;
           }
@@ -60,14 +64,17 @@ function CompanySettings(props: any) {
             case "employees":
                 setValue(2);
                 break;
-            case "email-sms":
+            case "proposals":
                 setValue(3);
                 break;
-            case "payments":
+            case "email-sms":
                 setValue(4);
                 break;
-            case "billing":
+            case "payments":
                 setValue(5);
+                break;
+            case "billing":
+                setValue(6);
                 break;
             default:
                 setValue(0);
@@ -110,6 +117,7 @@ function CompanySettings(props: any) {
                         <Tab label="Personal Details" id="personalDetails" />
                         {isAllowed('view-company-settings') && <Tab label="Company Details" id="companyDetails" />}
                         {isAllowed('view-employee-settings') && <Tab label="Employees" id="employees" />}
+                        {isAllowed('view-proposal-settings') && <Tab label="Proposals" id="proposals" />}
                         {isAllowed('view-template-settings') && <Tab label="Templates" id="templates" />}
                         {isAllowed('view-payment-settings') && <Tab label="Payments" id="payments" />}
                         {isAllowed('view-billing-settings') && <Tab label="Billing" id="billing" />}
@@ -119,9 +127,10 @@ function CompanySettings(props: any) {
             {value === 0 && <PersonalInformation success={props.success}/>}
             {isAllowed('view-company-settings') && value === 1 && <CompanyInformation company={company} setCompany={setCompany} success={props.success} fileURLs={logoUrl} setFileURLs={setLogoUrl} />}
             {isAllowed('view-employee-settings') && value === 2 && <Employees success={props.success} subscription={props.subscription}/>}
-            {isAllowed('view-template-settings') && value === 3 && <EmailSmsSettings settings={settings} setSettings={setSettings} success={props.success}/>}
-            {isAllowed('view-payment-settings') && value === 4 && <Payments settings={settings} setSettings={setSettings} success={props.success} />}
-            {isAllowed('view-billing-settings') && value === 5 && <Billing success={props.success} subscription={props.subscription}/>}
+            {isAllowed('view-proposal-settings') && value === 3 && <ProposalSettings settings={settings} setSettings={setSettings} success={props.success}/>}
+            {isAllowed('view-template-settings') && value === 4 && <EmailSmsSettings settings={settings} setSettings={setSettings} success={props.success}/>}
+            {isAllowed('view-payment-settings') && value === 5 && <Payments settings={settings} setSettings={setSettings} success={props.success} />}
+            {isAllowed('view-billing-settings') && value === 6 && <Billing success={props.success} subscription={props.subscription}/>}
         </Stack>
     )
 }
