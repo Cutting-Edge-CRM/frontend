@@ -125,7 +125,7 @@ function Week(props: any) {
             onMouseEnter={() => handleSetVisible(weekDay.number)}
             onMouseLeave={handleSetHidden}
             item xs={1} display="flex" justifyContent={'center'} alignItems="center" sx={{backgroundColor:'#F3F5F8B2'}} borderRight="1px solid #E9EDEF" key={weekDay.number}>
-                {weekDay.time !== 0 && 
+                {(weekDay.time !== 0 || weekDay.clocks?.length > 0) && 
                     <Stack width={'100%'} alignItems="center">
                     {editting === weekDay.number &&
                     <Box
@@ -158,9 +158,9 @@ function Week(props: any) {
                     }
                     {editting === weekDay.number && 
                     <Stack direction={'row'} alignItems="center">
-                        <TextField type={'number'} onChange={handleChangeHour} value={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeHour} defaultValue={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                         <Typography fontWeight={700} fontSize={"1.5rem"}>:</Typography>
-                        <TextField type={'number'} onChange={handleChangeMinute} value={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeMinute} defaultValue={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                     </Stack>
                     }
                     
@@ -198,7 +198,7 @@ function Week(props: any) {
                     </Popover>
                     </Stack>
                 }
-                {weekDay.time === 0 && 
+                {weekDay.time === 0 && weekDay.clocks.length === 0 &&
                 <Stack width={'100%'} alignItems="center">
                     {editting === weekDay.number &&
                     <Box
@@ -225,9 +225,9 @@ function Week(props: any) {
                     {editting !== weekDay.number && <Typography>-</Typography>}
                     {editting === weekDay.number && 
                     <Stack direction={'row'} alignItems="center">
-                        <TextField type={'number'} onChange={handleChangeHour} value={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeHour} defaultValue={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                         <Typography fontWeight={700} fontSize={"1.5rem"}>:</Typography>
-                        <TextField type={'number'} onChange={handleChangeMinute} value={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeMinute} defaultValue={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                     </Stack>
                     }
                 </Stack>
@@ -313,7 +313,7 @@ function SingleUserWeek(props: any) {
             alignItems="center" 
             sx={{backgroundColor:'#F3F5F8B2'}} 
             >
-                {weekDay.time !== 0 && 
+                {(weekDay.time !== 0 || weekDay.clocks?.length > 0) &&
                     <Stack width={'100%'} alignItems="center">
                     {editting === weekDay.number &&
                     <Box
@@ -367,14 +367,14 @@ function SingleUserWeek(props: any) {
                     }
                     {editting === weekDay.number && 
                     <Stack direction={'row'} alignItems="center">
-                        <TextField type={'number'} onChange={handleChangeHour} value={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeHour} defaultValue={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                         <Typography fontWeight={700} fontSize={"1.5rem"}>:</Typography>
-                        <TextField type={'number'} onChange={handleChangeMinute} value={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeMinute} defaultValue={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                     </Stack> 
                     }
                     </Stack>
                 }
-                {weekDay.time === 0 && 
+                {weekDay.time === 0 && weekDay.clocks?.length === 0 &&
                 <Stack width={'100%'} alignItems="center">
                     {editting === weekDay.number &&
                     <Box
@@ -401,9 +401,9 @@ function SingleUserWeek(props: any) {
                     {editting !== weekDay.number && <Typography>-</Typography>}
                     {editting === weekDay.number && 
                     <Stack direction={'row'} alignItems="center">
-                        <TextField type={'number'} onChange={handleChangeHour} value={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeHour} defaultValue={Math.floor(weekDay.time/60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                         <Typography fontWeight={700} fontSize={"1.5rem"}>:</Typography>
-                        <TextField type={'number'} onChange={handleChangeMinute} value={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
+                        <TextField type={'number'} onChange={handleChangeMinute} defaultValue={Math.floor(weekDay.time%60)} sx={{margin: 1, '.MuiInputBase-input': {borderRadius: '20px'}}} />
                     </Stack> 
                     }
                 </Stack>
