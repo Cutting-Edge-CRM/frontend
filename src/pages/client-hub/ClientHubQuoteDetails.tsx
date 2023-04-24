@@ -1,4 +1,4 @@
-import { FileDownload } from '@mui/icons-material';
+import { FileDownload, Star } from '@mui/icons-material';
 import {
     Box,
     Button,
@@ -7,7 +7,10 @@ import {
     Divider,
     Grid,
     IconButton,
+    ImageList,
+    ImageListItem,
     LinearProgress,
+    Link,
     List,
     MenuItem,
     Select,
@@ -263,12 +266,12 @@ import PaymentModal from './PaymentModal';
                   <Grid container alignItems="center">
                     <Grid item xs={6}>
                       <>
-                        {props.taxes.find((t: any) => t.id === props.option.tax)?.taxes?.map((t: any) => (
+                        {props.taxes.find((t: any) => t.id === props.option.tax)?.taxes?.map((t: any, index: any) => (
                           <Typography
                           variant="body2"
                           color="neutral.light"
                           fontWeight={500}
-                          key={t.id}
+                          key={index}
                           >
                             {t.title}
                           </Typography>
@@ -277,9 +280,9 @@ import PaymentModal from './PaymentModal';
                     </Grid>
                     <Grid item xs={6}>
                       <>
-                        {props.taxes.find((t: any) => t.id === props.option.tax)?.taxes?.map((t: any) => (
+                        {props.taxes.find((t: any) => t.id === props.option.tax)?.taxes?.map((t: any, index: any) => (
                           <Typography
-                          key={t.id}
+                          key={index}
                           variant="body2"
                           fontWeight={600}
                           color="neutral.main"
@@ -437,19 +440,34 @@ import PaymentModal from './PaymentModal';
           </Stack>
         </Card>
         <Card sx={{ py: 3 }}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Typography variant="h6" fontWeight={600}>
-              Quote Details
-            </Typography>
-          </Stack>
-            <TabPanel
-              option={props.quote.options?.[0]}
-              {...props}
-            />
+        <>
+        {/* eslint-disable-next-line */}
+        {props.about?.replace(/\<.*?\>/g, "")?.length > 1 &&
+            <Typography dangerouslySetInnerHTML={{ __html: props.about }} marginBottom={6}></Typography>
+        }
+        {props.proposal.gallery?.filter((g: any) => !!props.selected.find((s: any) => s.resourceId === g.id && s.resourceType === 'gallery'))?.length > 0 &&
+        <>
+        <Typography fontWeight={600} variant="h5" marginBottom={2} marginTop={4}>Gallery</Typography>
+        <Box marginBottom={10}>
+          <ImageList variant="woven" cols={mobile ? 2 : 3} rowHeight={164}>
+              {props.proposal.gallery?.filter((g: any) => !!props.selected.find((s: any) => s.resourceId === g.id && s.resourceType === 'gallery'))?.map((file: any) => (
+                  <ImageListItem key={file.id}>
+                      {/* eslint-disable-next-line */}
+                      <img src={file.url} />
+                  </ImageListItem>
+              ))}
+          </ImageList>
+        </Box>
+        </>
+        }
+        </>
+          <Typography variant="h5" fontWeight={600}>
+            Price Details
+          </Typography>
+          <TabPanel
+            option={props.quote.options?.[0]}
+            {...props}
+          />
           {props.payments.length > 0 && (
                 <Stack mt={2.5} spacing={2}>
                   <Grid container justifyContent={'end'}>
@@ -516,12 +534,6 @@ import PaymentModal from './PaymentModal';
                 <Button
                 sx={{margin: 5}}
                 variant='contained'
-                onClick={() => handleConfirmOpen('Rejected')}
-                >Reject
-                </Button>
-                <Button
-                sx={{margin: 5}}
-                variant='contained'
                 onClick={() => handleConfirmOpen('Approved')}
                 >Approve
                 </Button>
@@ -544,6 +556,70 @@ import PaymentModal from './PaymentModal';
             </>
                 }
           </Box>
+        {props.proposal?.products?.filter((p: any) => !!props.selected.find((s: any) => s.resourceId === p.id && s.resourceType === 'product'))?.length > 0 && 
+        <>
+        <Typography fontWeight={600} variant="h5" marginBottom={2} marginTop={8}>Products</Typography>
+        <Grid container spacing={2} marginBottom={6}>
+            {props.proposal?.products?.filter((p: any) => !!props.selected.find((s: any) => s.resourceId === p.id && s.resourceType === 'product'))?.map((product: any, index: number) => (
+                <Grid item lg={4} md={6} xs={12} key={index}>
+                <Card key={index} sx={{backgroundColor: '#F3F5F8', boxShadow: 'none', paddingY: 2, height: '100%'}}>
+                <Stack spacing={1}>
+                    <Stack direction={'row'} justifyContent="space-between">
+                        <Stack direction={'row'} spacing={2}>
+                            <Typography
+                            variant='h6'
+                            >
+                                {product.name}
+                            </Typography>
+                        </Stack>
+                    </Stack>
+                    <Typography
+                    variant='body1'
+                    >
+                        {product.description}
+                    </Typography>
+                    <Link
+                        sx={{ textAlign: 'center' }}
+                        href={`${product.link}`}
+                        target="_blank"
+                        visibility={!!product.link && product.link !== '' && product.link !== 'null' ? 'visible' : 'hidden'}
+                    >
+                        More info
+                    </Link>
+                    <ImageListItem sx={{visibility: !!product.image && product.image !== '' && product.image !== 'null' && product.image !== 'undefined' ? 'visible' : 'hidden'}}>
+                        <img src={product.image} alt="" />
+                    </ImageListItem>
+                </Stack>
+                </Card>
+            </Grid>
+            ))}
+        </Grid>
+        </>
+        }
+        {props.proposal?.reviews?.filter((r: any) => !!props.selected.find((s: any) => s.resourceId === r.id && s.resourceType === 'review'))?.length > 0 && 
+        <>
+        <Typography fontWeight={600} variant="h5" marginTop={10}>Reviews</Typography>
+        <Grid container spacing={2} marginBottom={6}>
+            {props.proposal?.reviews?.filter((r: any) => !!props.selected.find((s: any) => s.resourceId === r.id && s.resourceType === 'review'))?.map((review: any, index: number) => (
+                <Grid item lg={4} md={6} xs={12} marginTop={4} key={index}>
+                    <Card key={index} sx={{backgroundColor: '#F3F5F8', boxShadow: 'none', paddingY: 2, height: '100%'}}>
+                    <Stack spacing={1}>
+                        <Stack direction={'row'} justifyContent="center">
+                            <Star sx={{color: '#FFD700'}} fontSize="large"/>
+                            <Star sx={{color: '#FFD700'}} fontSize="large"/>
+                            <Star sx={{color: '#FFD700'}} fontSize="large"/>
+                            <Star sx={{color: '#FFD700'}} fontSize="large"/>
+                            <Star sx={{color: '#FFD700'}} fontSize="large"/>
+                        </Stack>
+                        <Typography fontStyle={'italic'} >{review.content}</Typography>
+                        <Typography fontWeight={600} visibility={!!review.name ? 'visible' : 'hidden'}>- {review.name}</Typography>
+                    </Stack>
+                    </Card>
+                </Grid>
+            ))}
+        </Grid>
+        </>
+        }
         </Card>
 
             <ConfirmChangeStatus
@@ -553,6 +629,7 @@ import PaymentModal from './PaymentModal';
             price={(props.quote.options?.[0].items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0) + (+props.taxes.find((t: any) => t.id === props.quote.options?.[0].tax)?.taxes.map((t: any) => t.tax).reduce(add, 0)/100)*(props.quote.options?.[0].items.filter((i: any) => !i.addon || !!i.selected).map((i: any) => i.price).reduce(add, 0))).toFixed(2)}
             success={props.success}
             settings={props.settings}
+            mobile={mobile}
             {...props}
             />
             <PaymentModal

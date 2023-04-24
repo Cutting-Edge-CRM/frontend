@@ -35,6 +35,8 @@ export const isAllowed = (type: any) => {
             return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';    
         case 'view-payment-settings':
             return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
+        case 'view-proposal-settings':
+            return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
         case 'view-billing-settings':
             return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
         case 'view-all-timesheets':

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Unstable_Grid2'
 import Contact from '../../shared/client/Contact';
 import Notes from '../../shared/note/Notes';
-import QuoteDetails from './QuoteDetails';
+import QuoteCard from './QuoteCard';
 import { useParams } from 'react-router-dom';
 import Property from '../../shared/property/Property';
 import { getQuote } from '../../api/quote.api';
@@ -80,7 +80,7 @@ function Quote(props: any) {
           <Grid xs={12} md={8} spacing={2}>
           <Grid container>
               <Grid xs={12}>
-                <QuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload}  settings={props.settings} opened={opened} />
+                <QuoteCard quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload}  settings={props.settings} opened={opened} />
               </Grid>
               <Grid xs={12}>
                 <Property property={quote.quote?.property} success={props.success}/>

@@ -11,6 +11,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { retrieveAccount } from '../../api/stripePayments.api';
 import { getClient } from '../../api/client.api';
 import { listTimeline } from '../../api/timeline.api';
+import { listProposalResources, listQuoteResources } from '../../api/proposals.api';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY as string);
 
@@ -27,6 +28,19 @@ function ClientHubQuote(props: any) {
     const [paymentsEnabled, setPaymentsEnabled] = useState(false);
     let { quoteId } = useParams();
     let { clientId } = useParams();
+    const [about, setAbout] = useState('');
+    const [proposal, setProposal] = useState({} as any);
+    const [selected, setSelected] = useState([] as any);
+    
+    useEffect(() => {
+        setAbout(quote.quote?.about);
+        listProposalResources().then(res => {
+            setProposal(res);
+        });
+        listQuoteResources(quote.quote?.id).then(res => {
+            setSelected(res);
+        })
+    }, [quote.quote?.about, quote.quote?.id])
 
     useEffect(() => {
         setIsLoaded(false);
@@ -104,7 +118,7 @@ function ClientHubQuote(props: any) {
     return (
         <Elements stripe={stripePromise}>
         <PaymentStatus/>
-        <ClientHubQuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload} paymentsEnabled={paymentsEnabled} client={client} opened={opened} sent={sent} settings={props.settings} />
+        <ClientHubQuoteDetails quote={quote} setQuote={setQuote} taxes={taxes} payments={payments} success={props.success} setReload={setReload} reload={reload} paymentsEnabled={paymentsEnabled} client={client} opened={opened} sent={sent} settings={props.settings} about={about} proposal={proposal} selected={selected} />
         </Elements>
     )
 }
