@@ -80,7 +80,7 @@ function GettingStarted() {
               (res) => {
                 updateCompany({...companyInfo, logo: res?.[0]?.url})
                     .then(res => {
-                        navigate('/clients');
+                        navigate('/dashboard');
                         setLoading(false);
                     }, err => {
                         setError(err);
@@ -95,7 +95,7 @@ function GettingStarted() {
           } else {
             updateCompany(companyInfo)
             .then(res => {
-                navigate('/clients');
+                navigate('/dashboard');
                 setLoading(false);
             }, err => {
                 setError(err);

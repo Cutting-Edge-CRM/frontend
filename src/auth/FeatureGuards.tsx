@@ -45,6 +45,8 @@ export const isAllowed = (type: any) => {
             return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
         case 'view-pricing':
             return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
+        case 'view-dashboard':
+            return currentUserClaims.role === 'admin' || currentUserClaims.role === 'owner';
         default:
             return false;
     }
