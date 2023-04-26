@@ -33,6 +33,8 @@ import { getChipColor, theme } from '../../theme/theme';
 import EditVisit from '../../shared/visit/EditVisit';
 import { Directions, Phone } from '@mui/icons-material';
 import { isAllowed } from '../../auth/FeatureGuards'
+import { clock, getClockStatus } from '../../api/timesheet.api';
+import Clock from '../timesheets/Clock';
 
   function add(accumulator: number, a: number) {
       return +accumulator + +a;
@@ -78,6 +80,10 @@ import { isAllowed } from '../../auth/FeatureGuards'
     const [job, setJob] = useState({} as any);
     const [users, setUsers] = useState([] as any[]);
     const [editVisitOpen, setEditVisitOpen] = useState(false);
+    const [lastClock, setLastClock] = useState(null);
+    const [clockedIn, setClockedIn] = useState(false);
+    const [clockLoaded, setClockLoaded] = useState(false);
+
 
     let property = properties.find((p) => p.id === props.visit.property);
     
@@ -101,6 +107,25 @@ import { isAllowed } from '../../auth/FeatureGuards'
     const handleUpdate = (value: string) => {
       setEditVisitOpen(false);
     };
+
+    const handleClockIn = () => {
+      setClockedIn(true);
+      clock({type: 'clock-in', job: props.visit.job})
+      .then(_ => {
+          setLastClock(dayjs().format() as any);
+      }, err => {
+          setError(err.message);
+      })
+  }
+
+  const handleClockOut = () => {
+      setClockedIn(false);
+      clock({type: 'clock-out'})
+      .then(_ => {
+      }, err => {
+          setError(err.message);
+      })
+  }
   
     useEffect(() => {
         if (!props.visit.client) return;
@@ -149,6 +174,22 @@ import { isAllowed } from '../../auth/FeatureGuards'
         );
       }, []);
 
+      useEffect(() => {
+        getClockStatus()
+        .then(res => {
+            setClockLoaded(true);
+            if (!res?.type) return;
+            if (res?.type === 'clock-in') {
+                setClockedIn(true);
+                setLastClock(res?.time);
+            } else {
+                setClockedIn(false);
+            }
+        }, err => {
+            console.log(err);
+        })
+    }, [])
+
       const propertyColumns: GridColDef[] = [
         {
           field: 'address',
@@ -185,6 +226,18 @@ import { isAllowed } from '../../auth/FeatureGuards'
                 {props.visit.client &&  <Tab label="Client" id="client" />}
                 {props.visit.job && <Tab label="Job" id="job" />}
             </Tabs>
+            <Stack marginTop={2}>
+            {clockedIn &&
+              <Button onClick={handleClockOut} color='error' variant='contained' disabled={!clockLoaded}>
+              Clock out <Clock lastClock={lastClock} />
+              </Button>
+            }
+            {!clockedIn &&
+                <Button onClick={handleClockIn} variant='contained' disabled={!clockLoaded}>
+                Clock in
+                </Button>
+            }
+            </Stack>
             {value === 0 &&
                 <Stack spacing={1.5} mt={2} ml={4}>
                   <Grid container>

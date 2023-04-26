@@ -7,37 +7,7 @@ import { clock, createTimesheet, getClockStatus, listTimesheets } from '../../ap
 import { getUser, listUsers } from '../../api/user.api';
 import { isAllowed } from '../../auth/FeatureGuards';
 import { theme } from '../../theme/theme';
-
-function Clock(props: any) {
-    const [date, setDate] = useState('');
-
-    useEffect(() => {
-        setInterval(
-          () => tick(),
-          1000
-        );
-      })
-
-    const tick = () => {
-        if (!props.lastClock) {
-            return;
-        }
-        let today = dayjs();
-        let seconds = today.diff(dayjs(props.lastClock), 'second') % 60;
-        let minutes = today.diff(dayjs(props.lastClock), 'minute') % 60;
-        let hours = Math.floor(today.diff(dayjs(props.lastClock), 'hour') / 60);
-        if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
-            return;
-        }
-        let secondsString = seconds < 10 ? `0${seconds}` : `${seconds}`
-        let minutesString = minutes < 10 ? `0${minutes}` : `${minutes}`
-        let hoursString = hours < 10 ? `0${hours}` : `${hours}`
-        let timeString = `- ${hoursString}:${minutesString}:${secondsString}`;
-        setDate(timeString);
-      }
-  
-      return (<>{date}</>);
-  }
+import Clock from './Clock';
 
 function sumTimeForWeek(user: any, times: any) {
     let userTimesheets = times.find((t: any) => t.user === user.id)?.times;
@@ -434,7 +404,7 @@ function Timesheets(props: any) {
     const [currentUser, setCurrentUser] = useState({} as any)
     const [lastClock, setLastClock] = useState(null);
     let mobile = useMediaQuery(theme.breakpoints.down("sm"));
-
+    const [clockLoaded, setClockLoaded] = useState(false);
 
     const handleDateChange = (event: any) => {
         setDate(event);
@@ -481,7 +451,10 @@ function Timesheets(props: any) {
     useEffect(() => {
         getClockStatus()
         .then(res => {
-            if (!res?.type) return;
+            setClockLoaded(true);
+            if (!res?.type) {
+                return;
+            };
             if (res?.type === 'clock-in') {
                 setClockedIn(true);
                 setLastClock(res?.time);
@@ -544,12 +517,12 @@ function Timesheets(props: any) {
                 <Stack direction={'row'} justifyContent="space-between" alignItems={'center'}>
                     <Typography variant="h6" fontWeight={600}>Timesheets</Typography>
                     {clockedIn &&
-                        <Button onClick={handleClockOut} color='error' variant='contained'>
+                        <Button onClick={handleClockOut} color='error' variant='contained' disabled={!clockLoaded}>
                         Clock out <Clock lastClock={lastClock} />
                         </Button>
                     }
                     {!clockedIn &&
-                        <Button onClick={handleClockIn} variant='contained'>
+                        <Button onClick={handleClockIn} variant='contained' disabled={!clockLoaded}>
                         Clock in
                         </Button>
                     }
@@ -601,12 +574,12 @@ function Timesheets(props: any) {
                     </Stack>
                     <Box width="100%" sx={{ marginBottom: "16px !important"}}>
                     {clockedIn &&
-                        <Button onClick={handleClockOut} color='error' variant='contained' sx={{width: "100%"}} >
+                        <Button onClick={handleClockOut} color='error' variant='contained' sx={{width: "100%"}} disabled={!clockLoaded}>
                         Clock out <Clock lastClock={lastClock} />
                         </Button>
                     }
                     {!clockedIn &&
-                        <Button onClick={handleClockIn} variant='contained' sx={{width: "100%"}} >
+                        <Button onClick={handleClockIn} variant='contained' sx={{width: "100%"}} disabled={!clockLoaded}>
                         Clock in
                         </Button>
                     }
