@@ -24,6 +24,7 @@ import {
   Warning,
   AddCircleOutline,
   Close,
+  TrendingUpOutlined,
 } from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
@@ -72,6 +73,7 @@ import { getCompany } from '../../api/company.api';
 import { getUser } from '../../api/user.api';
 import { daysLeftInFreeTrial, isAllowed, isCanceled, isFreeTrial, pastDue } from '../../auth/FeatureGuards';
 import NewEvent from '../../shared/NewEvent';
+import GuardedRouteUser from '../../auth/GuardedRouteUser';
 
 const NavList = styled(List)<ListProps>(({ theme }) => ({
   padding: theme.spacing(0, 3),
@@ -271,7 +273,7 @@ function Shell() {
 
 const drawerWidth = 270;
 const topTabs = [
-  // { display: 'Dashboard', slug: 'dashbaord', icon: <TrendingUpOutlined /> },
+  { display: 'Dashboard', slug: 'dashboard', icon: <TrendingUpOutlined />, notAllowed: !isAllowed('view-dashboard') },
   { display: 'Schedule', slug: 'schedule', icon: <CalendarMonthOutlined />, premium: true },
   { display: 'Clients', slug: 'clients', icon: <PeopleOutlineOutlined /> },
   { display: 'Quotes', slug: 'quotes', icon: <SellOutlined /> },
@@ -388,7 +390,7 @@ const bottomTabs = [
             </ListItem>
           ))}
           {topTabs.map((tab, index) => (
-            <ListItem key={tab.display} disablePadding>
+            <ListItem key={tab.display} disablePadding sx={{display: tab.notAllowed ? 'none' : 'block'}}>
               <ListItemButton
                 component={Link}
                 to={topTabs[index].slug}
@@ -677,7 +679,7 @@ const bottomTabs = [
 
         {/* body */}
         <Routes>
-          <Route path="/dashboard" element={<Dashboard success={success} settings={settings} />} />
+          <Route path="/dashboard" element={<GuardedRouteUser><Dashboard success={success} settings={settings} permission="view-dashboard" /></GuardedRouteUser>} />
           <Route path="/schedule" element={<Schedule success={success} settings={settings} />} />
           <Route path="/clients" element={<Clients success={success} settings={settings} />} />
           <Route path="/clients/:id" element={<Client success={success} settings={settings} />} />
