@@ -22,6 +22,7 @@ const eventRender = (args: any) => {
         return (
             <Stack direction={'row'}>
                 <Typography ml={1}>{args.event.extendedProps.type}</Typography>
+                {args.event.extendedProps.hours?.length > 0 && <Typography ml={1}>{`(${args.event.extendedProps.hours} hours)`}</Typography>}
                 <Typography ml={3} color="neutral.main">{args.event.extendedProps.clientName !== "No name" ? args.event.extendedProps.clientName : ''}</Typography>
             </Stack>
         )
@@ -530,7 +531,10 @@ export default function Schedule(props: any) {
                     cursor: 'pointer'
                   }}>
                     <Stack spacing={0} my={0}>
+                        <Stack direction={'row'} alignItems="center">
                         <Typography fontSize={18} fontWeight={500} color={visit.textColor}>{visit.type}</Typography>
+                        {visit.hours?.length > 0 && <Typography variant='body2' fontWeight={300} ml={1}>{`(${visit.hours} hours)`}</Typography>}
+                        </Stack>
                         <Typography>{visit.clientName}</Typography>
                     </Stack>
                 </ListItemButton>

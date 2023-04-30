@@ -277,6 +277,18 @@ import Clock from '../timesheets/Clock';
                       <Typography>{props.visit.users?.length > 0 ? props.visit.users?.map((u: any) => u.name ?? u.email)?.join(', ') : "No staff assigned"}</Typography>
                     </Grid>
                   </Grid>
+                  {props.visit.type === "Job" &&
+                  <Grid container>
+                    <Grid item xs={3}>
+                      <Typography id="type-label" sx={{ color: 'primary.main', height: "32px" }}>
+                        Man-Hours
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={9} justifyContent="start" pl={2}>
+                      <Typography>{props.visit.hours ?? ""}</Typography>
+                    </Grid>
+                  </Grid>
+                  }
                   <Grid container>
                     <Grid item xs={3}>
                       <Typography id="type-label" sx={{ color: 'primary.main', height: "32px" }}>
@@ -537,7 +549,7 @@ import Clock from '../timesheets/Clock';
           <Button onClick={handleCancel} variant="outlined">
             Cancel
           </Button>
-          {value === 0 &&
+          {value === 0 && isAllowed('edit-visit') &&
             <Button variant="contained" onClick={handleEditVisit}>
               Edit Visit
             </Button>

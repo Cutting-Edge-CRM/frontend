@@ -167,6 +167,7 @@ function Visits(props: any) {
                 </Grid>
                 <Grid item={true} xs={8}>
                   <Stack>
+                    <Stack direction={'row'}>
                     <Typography
                       variant="body2"
                       fontWeight={600}
@@ -174,6 +175,16 @@ function Visits(props: any) {
                     >
                       {visit.type}
                     </Typography>
+                    {visit.hours?.length > 0 && 
+                    <Typography
+                      variant="body2"
+                      fontWeight={300}
+                      sx={{ opacity: 0.7, marginLeft: 1 }}
+                    >
+                      {`- ${visit.hours} hours`}
+                    </Typography>
+                    }
+                    </Stack>
                     <Typography variant="caption">{visit.address}</Typography>
                     {visit.unscheduled === (1 || true) ?
                       <Typography

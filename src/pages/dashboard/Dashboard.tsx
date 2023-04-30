@@ -267,7 +267,7 @@ function Dashboard(props: any) {
                 <SellOutlined sx={{width: '60px', height: '60px', color:"#403DFC", backgroundColor: "#E3E2FF", borderRadius: '7px', px: '10px'}}/>
                 <Stack paddingLeft={'20px'}>
                     <Typography fontSize={'16px'} fontWeight={500} color="#B5B7C0" >Sales</Typography>
-                    <Typography fontSize={'24px'} fontWeight={600} color="#5F666F" >${fullDataset?.sales?.totalSumQuotes}</Typography>
+                    <Typography fontSize={'24px'} fontWeight={600} color="#5F666F" >${(+fullDataset?.sales?.totalSumQuotes).toFixed(0)}</Typography>
                 </Stack>
             </Stack>
             </Card>
@@ -289,7 +289,7 @@ function Dashboard(props: any) {
                 <AttachMoneyOutlined sx={{width: '60px', height: '60px', color:"#00AC4F", backgroundColor: "#DAF3E6", borderRadius: '7px', px: '10px'}}/>
                 <Stack paddingLeft={'20px'}>
                     <Typography fontSize={'16px'} fontWeight={500} color="#B5B7C0" >Revenue</Typography>
-                    <Typography fontSize={'24px'} fontWeight={600} color="#5F666F" >${fullDataset?.revenue?.totalSumInvoices}</Typography>
+                    <Typography fontSize={'24px'} fontWeight={600} color="#5F666F" >${(+fullDataset?.revenue?.totalSumInvoices).toFixed(0)}</Typography>
                 </Stack>
             </Stack>
             </Card>

@@ -289,6 +289,20 @@ export default function EditVisit(props: any) {
               </MenuItem>
             ))}
           </Select>
+          {props.visit.type === "Job" &&
+          <>
+          <InputLabel id="notes-label" sx={{ color: 'primary.main' }}>
+              Man-Hours
+          </InputLabel>
+          <TextField
+              id="hours"
+              value={
+              props.visit.hours ?? ""
+              }
+              onChange={handleChange}
+          />
+          </>
+          }
           <InputLabel id="notes-label" sx={{ color: 'primary.main' }}>
               Notes
           </InputLabel>

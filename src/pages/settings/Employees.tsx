@@ -1,4 +1,4 @@
-import { Box, Card, CircularProgress, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
+import { Box, Card, CircularProgress, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, TextField, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { listUsers, resendInvite } from '../../api/user.api';
 import EmptyState from '../../shared/EmptyState';
@@ -7,10 +7,11 @@ import CustomToolbar from '../../shared/CutomToolbar';
 import EditEmployee from './EditEmployee';
 import { AddressAutofill } from '@mapbox/search-js-react';
 import dayjs from 'dayjs';
-import { ArrowCircleRightOutlined, CreateOutlined, DeleteOutline, EmailOutlined, MoreVert } from '@mui/icons-material';
+import { CreateOutlined, DeleteOutline, EmailOutlined, MoreVert } from '@mui/icons-material';
 import { theme } from '../../theme/theme';
 import ConfirmDelete from '../../shared/ConfirmDelete';
 import { isAllowed } from '../../auth/FeatureGuards';
+import { currentUser } from '../../auth/firebase';
 
 function Employees(props: any) {
   const [rows, setRows] = useState([]);
@@ -163,24 +164,32 @@ function Employees(props: any) {
               onClose={closeMenu}
             >
               <MenuList>
-                <MenuItem onClick={handleEditOpen}>
+                <Tooltip title={employee?.id === currentUser.uid ? "Edit your user in the 'Person Details' tab in settings" : ''}>
+                <Box>
+                <MenuItem onClick={handleEditOpen} disabled={employee?.id === currentUser.uid} >
                   <ListItemIcon>
                     <CreateOutlined />
                   </ListItemIcon>
                   <ListItemText>Edit Employee</ListItemText>
                 </MenuItem>
-                <MenuItem onClick={handleResendInvite}>
+                </Box>
+                </Tooltip>
+                <MenuItem onClick={handleResendInvite} disabled={employee?.id === currentUser.uid}>
                   <ListItemIcon>
                     <EmailOutlined />
                   </ListItemIcon>
                   <ListItemText>Resend Invite</ListItemText>
                 </MenuItem>
-                <MenuItem onClick={handleDeleteOpen}>
+                <Tooltip title={employee?.id === currentUser.uid ? "You can't delete your own user" : ''}>
+                <Box>
+                <MenuItem onClick={handleDeleteOpen} disabled={employee?.id === currentUser.uid}>
                   <ListItemIcon>
                     <DeleteOutline color="error" />
                   </ListItemIcon>
                   <ListItemText>Delete Employee</ListItemText>
                 </MenuItem>
+                </Box>
+                </Tooltip>
               </MenuList>
             </Menu>
           </>
@@ -204,9 +213,9 @@ function Employees(props: any) {
             <Grid item xs={3} alignItems="center" display={'flex'}>
             </Grid>
             <Grid item xs={2} justifyContent="right" display={'flex'}>
-              <IconButton sx={{padding: 0}} >
+              {/* <IconButton sx={{padding: 0}} >
                 <ArrowCircleRightOutlined color='primary'/>
-              </IconButton>
+              </IconButton> */}
             </Grid>
           </Grid>
         );
