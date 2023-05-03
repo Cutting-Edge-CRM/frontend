@@ -19,7 +19,7 @@ function Clock(props: any) {
         let today = dayjs();
         let seconds = today.diff(dayjs(props.lastClock), 'second') % 60;
         let minutes = today.diff(dayjs(props.lastClock), 'minute') % 60;
-        let hours = Math.floor(today.diff(dayjs(props.lastClock), 'hour') / 60);
+        let hours = Math.floor(today.diff(dayjs(props.lastClock), 'hour'));
         if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
             return;
         }

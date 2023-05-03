@@ -45,8 +45,8 @@ import PaymentModal from './PaymentModal';
 
     return (
       <>
-        <Grid container spacing={2} marginTop={2} columns={10}>
-          <Grid item={true} xs={2}>
+        <Grid container spacing={2} marginTop={2} columns={12}>
+          <Grid item={true} xs={4}>
             <Stack spacing={1.5}>
               <Typography variant="body2" color="neutral.light" fontWeight={500}>
               {props.item.note ? "Note" : "Line Item"}
@@ -54,13 +54,8 @@ import PaymentModal from './PaymentModal';
               <Typography variant="body2" color="neutral.main" fontWeight={600}>
                 {props.item.title}
               </Typography>
-            </Stack>
-          </Grid>
-          {!props.item.note &&
-          <>
-          <Grid item={true} xs={2}>
             {props.upsell && (
-              <Stack alignItems="center">
+              <Stack alignItems="start">
                 <Typography
                   variant="body2"
                   fontSize={'0.75rem'}
@@ -77,7 +72,10 @@ import PaymentModal from './PaymentModal';
                 onChange={handleCheck}></Switch>
                 </Stack>
             )}
+            </Stack>
           </Grid>
+          {!props.item.note &&
+          <>
           <Grid item={true} xs={2}>
           <Stack spacing={1.5} alignItems="center">
             <Typography
@@ -99,7 +97,7 @@ import PaymentModal from './PaymentModal';
             </Typography>
           </Stack>
         </Grid>
-        <Grid item={true} xs={2}>
+        <Grid item={true} xs={3}>
           <Stack spacing={1.5} alignItems="center">
             <Typography
               variant="body2"
@@ -120,7 +118,7 @@ import PaymentModal from './PaymentModal';
             </Typography>
           </Stack>
         </Grid>
-          <Grid item={true} xs={2}>
+          <Grid item={true} xs={3}>
             <Stack spacing={1.5} alignItems="flex-end">
               <Typography
                 variant="body2"
@@ -148,12 +146,12 @@ import PaymentModal from './PaymentModal';
           <Typography variant="body2" color="neutral.light">
             Description
           </Typography>
-          <Divider />
           <Typography
             variant="body2"
             color="neutral.main"
             dangerouslySetInnerHTML={{ __html: props.item.description }}
           ></Typography>
+          <Divider />
         </Stack>
       </>
     );
